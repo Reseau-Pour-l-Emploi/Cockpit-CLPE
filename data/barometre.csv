@@ -1,0 +1,252 @@
+trimestre,clpe_id,theme_id,theme_nom,question_id,question_texte,score,score_theme,score_global,repondants
+2024-T1,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.45,3.28,3.12,18
+2024-T1,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.20,3.28,3.12,18
+2024-T1,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.10,3.28,3.12,18
+2024-T1,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.38,3.28,3.12,18
+2024-T1,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.80,2.95,3.12,18
+2024-T1,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.05,2.95,3.12,18
+2024-T1,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.90,2.95,3.12,18
+2024-T1,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.05,2.95,3.12,18
+2024-T1,clpe-idf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.50,3.25,3.12,18
+2024-T1,clpe-idf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.10,3.25,3.12,18
+2024-T1,clpe-idf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.15,3.25,3.12,18
+2024-T1,clpe-idf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.00,3.00,3.12,18
+2024-T1,clpe-idf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.80,3.00,3.12,18
+2024-T1,clpe-idf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.20,3.00,3.12,18
+2024-T2,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.60,3.42,3.28,21
+2024-T2,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.38,3.42,3.28,21
+2024-T2,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.30,3.42,3.28,21
+2024-T2,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.40,3.42,3.28,21
+2024-T2,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.05,3.10,3.28,21
+2024-T2,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.18,3.10,3.28,21
+2024-T2,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.05,3.10,3.28,21
+2024-T2,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.12,3.10,3.28,21
+2024-T2,clpe-idf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.65,3.40,3.28,21
+2024-T2,clpe-idf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.25,3.40,3.28,21
+2024-T2,clpe-idf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.30,3.40,3.28,21
+2024-T2,clpe-idf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.20,3.20,3.28,21
+2024-T2,clpe-idf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.05,3.20,3.28,21
+2024-T2,clpe-idf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.35,3.20,3.28,21
+2024-T3,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.72,3.55,3.42,24
+2024-T3,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.50,3.55,3.42,24
+2024-T3,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.45,3.55,3.42,24
+2024-T3,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.52,3.55,3.42,24
+2024-T3,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.18,3.28,3.42,24
+2024-T3,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.35,3.28,3.42,24
+2024-T3,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.22,3.28,3.42,24
+2024-T3,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.38,3.28,3.42,24
+2024-T3,clpe-idf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.78,3.55,3.42,24
+2024-T3,clpe-idf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.40,3.55,3.42,24
+2024-T3,clpe-idf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.48,3.55,3.42,24
+2024-T3,clpe-idf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.38,3.32,3.42,24
+2024-T3,clpe-idf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.18,3.32,3.42,24
+2024-T3,clpe-idf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.40,3.32,3.42,24
+2024-T4,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.88,3.70,3.58,27
+2024-T4,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.62,3.70,3.58,27
+2024-T4,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.58,3.70,3.58,27
+2024-T4,clpe-idf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.72,3.70,3.58,27
+2024-T4,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.30,3.45,3.58,27
+2024-T4,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.52,3.45,3.58,27
+2024-T4,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.38,3.45,3.58,27
+2024-T4,clpe-idf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.60,3.45,3.58,27
+2024-T4,clpe-idf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.92,3.72,3.58,27
+2024-T4,clpe-idf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.55,3.72,3.58,27
+2024-T4,clpe-idf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.68,3.72,3.58,27
+2024-T4,clpe-idf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.55,3.48,3.58,27
+2024-T4,clpe-idf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.28,3.48,3.58,27
+2024-T4,clpe-idf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.62,3.48,3.58,27
+2024-T1,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,2.80,2.72,2.58,11
+2024-T1,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.65,2.72,2.58,11
+2024-T1,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.70,2.72,2.58,11
+2024-T1,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,2.72,2.72,2.58,11
+2024-T1,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.45,2.50,2.58,11
+2024-T1,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.55,2.50,2.58,11
+2024-T1,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.48,2.50,2.58,11
+2024-T1,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.52,2.50,2.58,11
+2024-T1,clpe-idf-02,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,2.80,2.68,2.58,11
+2024-T1,clpe-idf-02,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.60,2.68,2.58,11
+2024-T1,clpe-idf-02,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.65,2.68,2.58,11
+2024-T1,clpe-idf-02,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.55,2.60,2.58,11
+2024-T1,clpe-idf-02,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.58,2.60,2.58,11
+2024-T1,clpe-idf-02,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.68,2.60,2.58,11
+2024-T2,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,2.92,2.85,2.72,13
+2024-T2,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.78,2.85,2.72,13
+2024-T2,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.82,2.85,2.72,13
+2024-T2,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,2.88,2.85,2.72,13
+2024-T2,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.58,2.65,2.72,13
+2024-T2,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.68,2.65,2.72,13
+2024-T2,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.62,2.65,2.72,13
+2024-T2,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.72,2.65,2.72,13
+2024-T2,clpe-idf-02,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,2.92,2.80,2.72,13
+2024-T2,clpe-idf-02,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.72,2.80,2.72,13
+2024-T2,clpe-idf-02,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.76,2.80,2.72,13
+2024-T2,clpe-idf-02,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.68,2.72,2.72,13
+2024-T2,clpe-idf-02,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.72,2.72,2.72,13
+2024-T2,clpe-idf-02,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.76,2.72,2.72,13
+2024-T3,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.05,2.98,2.88,15
+2024-T3,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.90,2.98,2.88,15
+2024-T3,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.95,2.98,2.88,15
+2024-T3,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.02,2.98,2.88,15
+2024-T3,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.72,2.80,2.88,15
+2024-T3,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.82,2.80,2.88,15
+2024-T3,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.78,2.80,2.88,15
+2024-T3,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.88,2.80,2.88,15
+2024-T3,clpe-idf-02,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.05,2.95,2.88,15
+2024-T3,clpe-idf-02,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.88,2.95,2.88,15
+2024-T3,clpe-idf-02,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.92,2.95,2.88,15
+2024-T3,clpe-idf-02,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.82,2.85,2.88,15
+2024-T3,clpe-idf-02,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.85,2.85,2.88,15
+2024-T3,clpe-idf-02,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.88,2.85,2.88,15
+2024-T4,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.18,3.10,3.02,17
+2024-T4,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.02,3.10,3.02,17
+2024-T4,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.08,3.10,3.02,17
+2024-T4,clpe-idf-02,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.12,3.10,3.02,17
+2024-T4,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.85,2.95,3.02,17
+2024-T4,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.98,2.95,3.02,17
+2024-T4,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.92,2.95,3.02,17
+2024-T4,clpe-idf-02,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.05,2.95,3.02,17
+2024-T4,clpe-idf-02,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.18,3.08,3.02,17
+2024-T4,clpe-idf-02,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.00,3.08,3.02,17
+2024-T4,clpe-idf-02,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.05,3.08,3.02,17
+2024-T4,clpe-idf-02,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.98,3.00,3.02,17
+2024-T4,clpe-idf-02,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.95,3.00,3.02,17
+2024-T4,clpe-idf-02,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.08,3.00,3.02,17
+2024-T1,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,2.55,2.48,2.38,10
+2024-T1,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.40,2.48,2.38,10
+2024-T1,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.45,2.48,2.38,10
+2024-T1,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,2.52,2.48,2.38,10
+2024-T1,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.25,2.32,2.38,10
+2024-T1,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.35,2.32,2.38,10
+2024-T1,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.30,2.32,2.38,10
+2024-T1,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.38,2.32,2.38,10
+2024-T1,clpe-hdf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,2.55,2.42,2.38,10
+2024-T1,clpe-hdf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.35,2.42,2.38,10
+2024-T1,clpe-hdf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.38,2.42,2.38,10
+2024-T1,clpe-hdf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.30,2.32,2.38,10
+2024-T1,clpe-hdf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.28,2.32,2.38,10
+2024-T1,clpe-hdf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.38,2.32,2.38,10
+2024-T2,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,2.72,2.62,2.55,12
+2024-T2,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.55,2.62,2.55,12
+2024-T2,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.60,2.62,2.55,12
+2024-T2,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,2.62,2.62,2.55,12
+2024-T2,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.42,2.50,2.55,12
+2024-T2,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.52,2.50,2.55,12
+2024-T2,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.48,2.50,2.55,12
+2024-T2,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.58,2.50,2.55,12
+2024-T2,clpe-hdf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,2.72,2.58,2.55,12
+2024-T2,clpe-hdf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.50,2.58,2.55,12
+2024-T2,clpe-hdf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.52,2.58,2.55,12
+2024-T2,clpe-hdf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.48,2.52,2.55,12
+2024-T2,clpe-hdf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.50,2.52,2.55,12
+2024-T2,clpe-hdf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.58,2.52,2.55,12
+2024-T3,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,2.88,2.78,2.70,14
+2024-T3,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.70,2.78,2.70,14
+2024-T3,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.75,2.78,2.70,14
+2024-T3,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,2.80,2.78,2.70,14
+2024-T3,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.58,2.65,2.70,14
+2024-T3,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.68,2.65,2.70,14
+2024-T3,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.62,2.65,2.70,14
+2024-T3,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.72,2.65,2.70,14
+2024-T3,clpe-hdf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,2.88,2.75,2.70,14
+2024-T3,clpe-hdf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.65,2.75,2.70,14
+2024-T3,clpe-hdf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.72,2.75,2.70,14
+2024-T3,clpe-hdf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.65,2.68,2.70,14
+2024-T3,clpe-hdf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.68,2.68,2.70,14
+2024-T3,clpe-hdf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.72,2.68,2.70,14
+2024-T4,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.02,2.92,2.85,16
+2024-T4,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.85,2.92,2.85,16
+2024-T4,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,2.90,2.92,2.85,16
+2024-T4,clpe-hdf-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,2.92,2.92,2.85,16
+2024-T4,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.72,2.80,2.85,16
+2024-T4,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.82,2.80,2.85,16
+2024-T4,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.78,2.80,2.85,16
+2024-T4,clpe-hdf-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.88,2.80,2.85,16
+2024-T4,clpe-hdf-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.02,2.88,2.85,16
+2024-T4,clpe-hdf-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.78,2.88,2.85,16
+2024-T4,clpe-hdf-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.85,2.88,2.85,16
+2024-T4,clpe-hdf-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.80,2.82,2.85,16
+2024-T4,clpe-hdf-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.82,2.82,2.85,16
+2024-T4,clpe-hdf-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.85,2.82,2.85,16
+2024-T1,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.85,3.68,3.55,22
+2024-T1,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.60,3.68,3.55,22
+2024-T1,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.55,3.68,3.55,22
+2024-T1,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.72,3.68,3.55,22
+2024-T1,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.45,3.52,3.55,22
+2024-T1,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.58,3.52,3.55,22
+2024-T1,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.48,3.52,3.55,22
+2024-T1,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.58,3.52,3.55,22
+2024-T1,clpe-aura-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.72,3.55,3.55,22
+2024-T1,clpe-aura-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.42,3.55,3.55,22
+2024-T1,clpe-aura-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.52,3.55,3.55,22
+2024-T1,clpe-aura-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.48,3.45,3.55,22
+2024-T1,clpe-aura-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.38,3.45,3.55,22
+2024-T1,clpe-aura-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.50,3.45,3.55,22
+2024-T2,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,4.00,3.82,3.70,25
+2024-T2,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.75,3.82,3.70,25
+2024-T2,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.70,3.82,3.70,25
+2024-T2,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.82,3.82,3.70,25
+2024-T2,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.60,3.68,3.70,25
+2024-T2,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.72,3.68,3.70,25
+2024-T2,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.65,3.68,3.70,25
+2024-T2,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.75,3.68,3.70,25
+2024-T2,clpe-aura-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.88,3.70,3.70,25
+2024-T2,clpe-aura-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.58,3.70,3.70,25
+2024-T2,clpe-aura-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.65,3.70,3.70,25
+2024-T2,clpe-aura-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.62,3.60,3.70,25
+2024-T2,clpe-aura-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.52,3.60,3.70,25
+2024-T2,clpe-aura-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.65,3.60,3.70,25
+2024-T3,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,4.12,3.95,3.82,28
+2024-T3,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.88,3.95,3.82,28
+2024-T3,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.82,3.95,3.82,28
+2024-T3,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.98,3.95,3.82,28
+2024-T3,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.72,3.80,3.82,28
+2024-T3,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.85,3.80,3.82,28
+2024-T3,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.78,3.80,3.82,28
+2024-T3,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.85,3.80,3.82,28
+2024-T3,clpe-aura-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,4.00,3.82,3.82,28
+2024-T3,clpe-aura-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.70,3.82,3.82,28
+2024-T3,clpe-aura-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.75,3.82,3.82,28
+2024-T3,clpe-aura-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.75,3.72,3.82,28
+2024-T3,clpe-aura-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.65,3.72,3.82,28
+2024-T3,clpe-aura-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.75,3.72,3.82,28
+2024-T4,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,4.25,4.08,3.95,30
+2024-T4,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,4.00,4.08,3.95,30
+2024-T4,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.98,4.08,3.95,30
+2024-T4,clpe-aura-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,4.10,4.08,3.95,30
+2024-T4,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.85,3.92,3.95,30
+2024-T4,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,3.98,3.92,3.95,30
+2024-T4,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,3.90,3.92,3.95,30
+2024-T4,clpe-aura-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,3.95,3.92,3.95,30
+2024-T4,clpe-aura-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,4.12,3.95,3.95,30
+2024-T4,clpe-aura-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,3.82,3.95,3.95,30
+2024-T4,clpe-aura-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,3.90,3.95,3.95,30
+2024-T4,clpe-aura-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.88,3.85,3.95,30
+2024-T4,clpe-aura-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,3.78,3.85,3.95,30
+2024-T4,clpe-aura-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,3.88,3.85,3.95,30
+2024-T1,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.10,3.02,2.92,14
+2024-T1,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,2.95,3.02,2.92,14
+2024-T1,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q3,Suivi opérationnel des actions en séance,3.00,3.02,2.92,14
+2024-T1,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q4,Comptes-rendus diffusés dans les délais,3.02,3.02,2.92,14
+2024-T1,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.80,2.88,2.92,14
+2024-T1,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q2,Données emploi actualisées chaque trimestre,2.90,2.88,2.92,14
+2024-T1,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q3,Besoins des entreprises recueillis et formalisés,2.85,2.88,2.92,14
+2024-T1,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q4,Publics prioritaires identifiés et suivis,2.95,2.88,2.92,14
+2024-T1,clpe-naq-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.05,2.92,2.92,14
+2024-T1,clpe-naq-01,par,Partenariats & Animation,par_q2,Conventions de partenariat en place et actives,2.82,2.92,2.92,14
+2024-T1,clpe-naq-01,par,Partenariats & Animation,par_q3,Fréquence des réunions de coordination satisfaisante,2.88,2.92,2.92,14
+2024-T1,clpe-naq-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.82,2.85,2.92,14
+2024-T1,clpe-naq-01,num,Outillage Numérique,num_q2,Fiches actions renseignées dans l'outil numérique,2.80,2.85,2.92,14
+2024-T1,clpe-naq-01,num,Outillage Numérique,num_q3,Feuille de route numérique à jour et partagée,2.92,2.85,2.92,14
+2024-T2,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.22,3.15,3.05,16
+2024-T2,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q2,Membres associés aux décisions stratégiques,3.08,3.15,3.05,16
+2024-T2,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,2.95,3.02,3.05,16
+2024-T2,clpe-naq-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.18,3.05,3.05,16
+2024-T2,clpe-naq-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,2.98,2.98,3.05,16
+2024-T3,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.35,3.28,3.18,18
+2024-T3,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.10,3.15,3.18,18
+2024-T3,clpe-naq-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.30,3.20,3.18,18
+2024-T3,clpe-naq-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.12,3.10,3.18,18
+2024-T4,clpe-naq-01,gov,Gouvernance & Pilotage,gov_q1,Instance de gouvernance formalisée et régulière,3.48,3.40,3.32,20
+2024-T4,clpe-naq-01,ing,Ingénierie & Diagnostic,ing_q1,Diagnostic territorial partagé disponible,3.22,3.28,3.32,20
+2024-T4,clpe-naq-01,par,Partenariats & Animation,par_q1,Acteurs locaux mobilisés régulièrement,3.42,3.32,3.32,20
+2024-T4,clpe-naq-01,num,Outillage Numérique,num_q1,Tableau de bord RPE utilisé par les membres,3.25,3.25,3.32,20
