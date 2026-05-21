@@ -1,0 +1,644 @@
+// ============================================================
+// OBSERVATOIRE DES COMITÉS LOCAUX POUR L'EMPLOI — App.jsx
+// ============================================================
+import { useState, useMemo, useCallback } from "react";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
+
+function mkRng(seed) {
+  let s = seed >>> 0;
+  return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
+}
+function generateAllData() {
+  const rf = mkRng(20240601);
+  const ri = (a, b) => Math.floor(rf() * (b - a + 1)) + a;
+  const rs = (base, v) => Math.min(5, Math.max(1.5, parseFloat((base + (rf() - 0.5) * v).toFixed(2))));
+  const bar = {}, freq = {}, fiches = {};
+  CLPES.forEach(clpe => {
+    const base = 2.2 + rf() * 1.6;
+    bar[clpe.id] = QUARTERS.map((q, qi) => {
+      const t = qi * 0.12;
+      const themes = THEMES.map(theme => ({
+        ...theme,
+        questions: theme.questions.map(texte => ({ texte, score: rs(base + t, 0.9) })),
+      }));
+      themes.forEach(th => { th.score_moyen = parseFloat((th.questions.reduce((s, q) => s + q.score, 0) / th.questions.length).toFixed(2)); });
+      return { trimestre: q, themes, score_global: parseFloat((themes.reduce((s, t) => s + t.score_moyen, 0) / themes.length).toFixed(2)), repondants: ri(7, 30) };
+    });
+    const bF = 45 + rf() * 130;
+    freq[clpe.id] = QUARTERS.map((q, qi) => ({
+      trimestre: q, connexions: Math.round(bF + qi * 20 + rf() * 35),
+      utilisateurs: Math.round(bF * 0.38 + qi * 7 + rf() * 12),
+      sessions: Math.round(bF * 1.9 + qi * 28 + rf() * 50),
+      taux_retour: parseFloat((38 + rf() * 48).toFixed(1)),
+    }));
+    let stock = ri(8, 28);
+    fiches[clpe.id] = QUARTERS.map((q, qi) => {
+      const creees = ri(2, 9); stock = Math.max(6, stock + creees - ri(0, 3));
+      const bQ = 2.0 + rf() * 1.8 + qi * 0.08;
+      return { trimestre: q, creees, en_cours: stock, pct_actualisees: parseFloat((45 + rf() * 50).toFixed(1)),
+        feuille_de_route: rf() > 0.2 ? 1 : 0, feuille_de_route_1an: rf() > 0.35 ? 1 : 0,
+        creees_faisabilite: rs(bQ, 0.7), creees_impact: rs(bQ, 0.7), creees_completude: rs(bQ - 0.3, 0.7), creees_innovation: rs(bQ - 0.2, 0.7),
+        en_cours_faisabilite: rs(bQ + 0.2, 0.6), en_cours_impact: rs(bQ + 0.2, 0.6), en_cours_completude: rs(bQ - 0.1, 0.6), en_cours_innovation: rs(bQ, 0.6),
+      };
+    });
+  });
+  return { bar, freq, fiches };
+}
+
+const PASSWORD = "Gouv_CLPE";
+const QUARTERS = ["2024-T1", "2024-T2", "2024-T3", "2024-T4"];
+const REGIONS = [
+  { id: "idf",  nom: "Île-de-France",              color: "#1e3a8a" },
+  { id: "aura", nom: "Auvergne-Rhône-Alpes",       color: "#14532d" },
+  { id: "bfc",  nom: "Bourgogne-Franche-Comté",    color: "#7c2d12" },
+  { id: "bre",  nom: "Bretagne",                    color: "#065f46" },
+  { id: "cvl",  nom: "Centre-Val de Loire",         color: "#4c1d95" },
+  { id: "ges",  nom: "Grand Est",                   color: "#881337" },
+  { id: "hdf",  nom: "Hauts-de-France",             color: "#1e3a5f" },
+  { id: "nor",  nom: "Normandie",                   color: "#164e63" },
+  { id: "naq",  nom: "Nouvelle-Aquitaine",          color: "#78350f" },
+  { id: "occ",  nom: "Occitanie",                   color: "#3b0764" },
+  { id: "pdl",  nom: "Pays de la Loire",            color: "#052e16" },
+  { id: "pac",  nom: "Provence-Alpes-Côte d'Azur",  color: "#172554" },
+  { id: "cor",  nom: "Corse",                       color: "#4a044e" },
+];
+const CLPES = [
+  { id:"clpe-idf-01", regionId:"idf",  nom:"CLPE Cœur de Paris",       departement:"Paris (75)",               pos:[246,157] },
+  { id:"clpe-idf-02", regionId:"idf",  nom:"CLPE Grand Versailles",     departement:"Yvelines (78)",            pos:[226,170] },
+  { id:"clpe-idf-03", regionId:"idf",  nom:"CLPE Seine-et-Marne Ouest", departement:"Seine-et-Marne (77)",      pos:[268,172] },
+  { id:"clpe-idf-04", regionId:"idf",  nom:"CLPE Plaine Commune",       departement:"Seine-Saint-Denis (93)",   pos:[256,147] },
+  { id:"clpe-hdf-01", regionId:"hdf",  nom:"CLPE Métropole Lilloise",   departement:"Nord (59)",                pos:[268,72]  },
+  { id:"clpe-hdf-02", regionId:"hdf",  nom:"CLPE Côte d'Opale",         departement:"Pas-de-Calais (62)",       pos:[232,60]  },
+  { id:"clpe-hdf-03", regionId:"hdf",  nom:"CLPE Somme",                departement:"Somme (80)",               pos:[248,112] },
+  { id:"clpe-aura-01",regionId:"aura", nom:"CLPE Grand Lyon",           departement:"Rhône (69)",               pos:[302,228] },
+  { id:"clpe-aura-02",regionId:"aura", nom:"CLPE Grenoble Alpes",       departement:"Isère (38)",               pos:[358,270] },
+  { id:"clpe-aura-03",regionId:"aura", nom:"CLPE Clermont Métropole",   departement:"Puy-de-Dôme (63)",         pos:[258,282] },
+  { id:"clpe-naq-01", regionId:"naq",  nom:"CLPE Bordeaux Métropole",   departement:"Gironde (33)",             pos:[102,326] },
+  { id:"clpe-naq-02", regionId:"naq",  nom:"CLPE Pays Basque",          departement:"Pyrénées-Atlantiques (64)",pos:[70,395]  },
+];
+const THEMES = [
+  { id:"gov", nom:"Gouvernance & Pilotage",   icon:"🏛️", questions:["Instance de gouvernance formalisée et régulière","Membres associés aux décisions stratégiques","Suivi opérationnel des actions en séance","Comptes-rendus diffusés dans les délais"] },
+  { id:"ing", nom:"Ingénierie & Diagnostic",  icon:"🔍", questions:["Diagnostic territorial partagé disponible","Données emploi actualisées chaque trimestre","Besoins des entreprises recueillis et formalisés","Publics prioritaires identifiés et suivis"] },
+  { id:"par", nom:"Partenariats & Animation", icon:"🤝", questions:["Acteurs locaux mobilisés régulièrement","Conventions de partenariat en place et actives","Fréquence des réunions de coordination satisfaisante"] },
+  { id:"num", nom:"Outillage Numérique",      icon:"💻", questions:["Tableau de bord RPE utilisé par les membres","Fiches actions renseignées dans l'outil numérique","Feuille de route numérique à jour et partagée"] },
+];
+const REGION_MAP = {
+  bre:  { d:"M 10,195 L 52,173 L 100,162 L 108,188 L 108,232 L 10,232 Z",                                                                              bb:[10,162,108,232]  },
+  nor:  { d:"M 100,108 L 165,88 L 218,102 L 218,162 L 175,164 L 148,160 L 128,170 L 108,188 L 100,162 Z",                                              bb:[100,88,218,188]  },
+  hdf:  { d:"M 218,102 L 218,40 L 248,40 L 272,56 L 298,70 L 260,140 L 218,162 Z",                                                                     bb:[218,40,298,162]  },
+  ges:  { d:"M 298,70 L 354,28 L 382,48 L 410,70 L 410,168 L 395,230 L 378,218 L 360,168 L 322,158 L 282,170 L 280,138 L 260,140 Z",                  bb:[260,28,410,230]  },
+  idf:  { d:"M 218,162 L 260,140 L 280,138 L 282,170 L 255,185 L 218,170 Z",                                                                           bb:[218,138,282,185] },
+  cvl:  { d:"M 108,188 L 128,170 L 175,164 L 218,162 L 218,170 L 255,185 L 248,230 L 222,250 L 175,252 L 130,234 L 108,232 Z",                         bb:[108,162,255,252] },
+  pdl:  { d:"M 10,232 L 108,232 L 130,234 L 120,270 L 68,288 L 12,264 Z",                                                                              bb:[10,232,130,288]  },
+  bfc:  { d:"M 260,140 L 298,70 L 322,100 L 395,120 L 410,168 L 395,230 L 378,218 L 360,168 L 322,158 L 282,170 Z",                                    bb:[260,70,410,230]  },
+  naq:  { d:"M 12,264 L 68,288 L 120,270 L 175,252 L 222,250 L 218,315 L 192,385 L 140,418 L 68,402 L 18,342 Z",                                       bb:[12,250,222,418]  },
+  aura: { d:"M 222,250 L 255,185 L 282,170 L 360,168 L 378,218 L 395,230 L 372,285 L 362,342 L 308,362 L 262,342 L 228,315 L 218,315 Z",               bb:[218,168,395,362] },
+  occ:  { d:"M 68,402 L 140,418 L 192,385 L 218,315 L 228,315 L 262,342 L 308,362 L 318,420 L 268,455 L 198,462 L 140,458 L 80,442 Z",                 bb:[68,315,318,462]  },
+  pac:  { d:"M 308,362 L 362,342 L 392,345 L 410,400 L 378,432 L 318,420 Z",                                                                           bb:[308,342,410,432] },
+  cor:  { d:"M 442,385 L 458,370 L 468,412 L 452,452 L 432,440 L 422,412 Z",                                                                           bb:[422,370,468,452] },
+};
+const { bar: BAR_DATA, freq: FREQ_DATA, fiches: FICHES_DATA } = generateAllData();
+
+// ── helpers ────────────────────────────────────────────────
+const scoreCol = s => { const p=(s/5)*100; return p>=75?"#16a34a":p>=55?"#ca8a04":p>=38?"#ea580c":"#dc2626"; };
+function ScoreGauge({ score, size=52 }) {
+  const r=14,circ=2*Math.PI*r,fill=((score/5)*circ).toFixed(1),col=scoreCol(score);
+  return (
+    <div style={{width:size,height:size,position:"relative",flexShrink:0}}>
+      <svg viewBox="0 0 40 40" style={{width:"100%",height:"100%",transform:"rotate(-90deg)"}}>
+        <circle cx={20} cy={20} r={r} fill="none" stroke="#e5e7eb" strokeWidth="4"/>
+        <circle cx={20} cy={20} r={r} fill="none" stroke={col} strokeWidth="4" strokeDasharray={`${fill} ${circ}`} strokeLinecap="round"/>
+      </svg>
+      <span style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:size<50?9:11,fontWeight:700,color:col}}>
+        {score.toFixed(1)}
+      </span>
+    </div>
+  );
+}
+function Trend({ curr, prev }) {
+  if(prev==null)return null;
+  const d=curr-prev,col=Math.abs(d)<0.05?"#9ca3af":d>0?"#16a34a":"#dc2626";
+  return <span style={{fontSize:11,fontWeight:700,color:col,marginLeft:4}}>{Math.abs(d)<0.05?"→":d>0?"↑":"↓"} {d>0?"+":""}{d.toFixed(2)}</span>;
+}
+function Bar1({ value, max=5, h=7 }) {
+  return <div style={{height:h,borderRadius:99,background:"#e5e7eb",overflow:"hidden",flex:1}}>
+    <div style={{height:"100%",width:`${(value/max)*100}%`,background:scoreCol(value),borderRadius:99,transition:"width .5s"}}/>
+  </div>;
+}
+function Tag({ ok, label }) {
+  return <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:99,background:ok?"#dcfce7":"#fee2e2",color:ok?"#15803d":"#dc2626"}}>{ok?"✓":"✗"} {label}</span>;
+}
+function Empty({ icon, text }) {
+  return <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12,padding:60,color:"#94a3b8"}}>
+    <div style={{fontSize:52}}>{icon}</div>
+    <p style={{fontSize:15,fontWeight:500,textAlign:"center",maxWidth:320}}>{text}</p>
+    <p style={{fontSize:13,textAlign:"center",maxWidth:320}}>Utilisez la carte ou le sélecteur en haut de page</p>
+  </div>;
+}
+
+// ── LOGIN ──────────────────────────────────────────────────
+function LoginScreen({ onLogin }) {
+  const [pwd,setPwd]=useState(""),[err,setErr]=useState(false),[shake,setShake]=useState(false);
+  function submit(){if(pwd===PASSWORD){onLogin();return;}setErr(true);setShake(true);setTimeout(()=>setShake(false),500);}
+  return (
+    <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%)"}}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Spectral:wght@500;600;700&display=swap');*{box-sizing:border-box;font-family:'DM Sans',sans-serif;}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}`}</style>
+      <div style={{background:"white",borderRadius:20,padding:"40px 44px",width:400,boxShadow:"0 24px 60px rgba(0,0,0,0.4)",animation:shake?"shake 0.4s ease":"none"}}>
+        <div style={{textAlign:"center",marginBottom:32}}>
+          <div style={{width:68,height:68,borderRadius:"50%",background:"linear-gradient(135deg,#1e3a5f,#2563eb)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px",fontSize:28}}>🏛️</div>
+          <h1 style={{fontFamily:"'Spectral',serif",fontSize:22,fontWeight:700,color:"#0f172a",margin:0}}>Observatoire CLPE</h1>
+          <p style={{color:"#64748b",fontSize:13,marginTop:6}}>Comités Locaux Pour l'Emploi</p>
+          <div style={{height:2,background:"linear-gradient(90deg,#e2e8f0,#c9a84c,#e2e8f0)",margin:"14px 0 0",borderRadius:2}}/>
+        </div>
+        <label style={{fontSize:13,fontWeight:600,color:"#374151",display:"block",marginBottom:6}}>Mot de passe d'accès</label>
+        <input type="password" value={pwd} onChange={e=>{setPwd(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&submit()} placeholder="••••••••••"
+          style={{width:"100%",padding:"12px 14px",borderRadius:10,fontSize:14,border:`1.5px solid ${err?"#fca5a5":"#d1d5db"}`,background:err?"#fef2f2":"#f9fafb",outline:"none"}}/>
+        {err&&<p style={{color:"#dc2626",fontSize:12,marginTop:6}}>Mot de passe incorrect. Réessayez.</p>}
+        <button onClick={submit}
+          style={{width:"100%",padding:13,marginTop:16,borderRadius:10,border:"none",background:"linear-gradient(135deg,#1e3a5f,#2563eb)",color:"white",fontSize:14,fontWeight:600,cursor:"pointer",boxShadow:"0 4px 14px rgba(30,58,138,.4)"}}>
+          Accéder au tableau de bord →
+        </button>
+        <p style={{textAlign:"center",fontSize:11,color:"#9ca3af",marginTop:18}}>Ministère du Travail · Usage officiel uniquement</p>
+      </div>
+    </div>
+  );
+}
+
+// ── CARTE ─────────────────────────────────────────────────
+function MapView({ selectedRegion, selectedCLPE, onRegionSelect, onCLPESelect, onBack }) {
+  const [hov,setHov]=useState(null);
+  if(selectedRegion) {
+    const rCLPEs=CLPES.filter(c=>c.regionId===selectedRegion.id);
+    const mp=REGION_MAP[selectedRegion.id];
+    const [x0,y0,x1,y1]=mp?.bb||[0,0,100,100];
+    const pad=22, vb=`${x0-pad} ${y0-pad} ${x1-x0+pad*2} ${y1-y0+pad*2}`;
+    return (
+      <div style={{padding:"24px 28px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:20}}>
+          <button onClick={onBack} style={{background:"#eff6ff",border:"none",cursor:"pointer",color:"#2563eb",fontWeight:600,fontSize:13,padding:"6px 14px",borderRadius:8}}>← Carte nationale</button>
+          <span style={{color:"#94a3b8"}}>/</span>
+          <span style={{fontWeight:700,color:"#0f172a",fontSize:14}}>{selectedRegion.nom}</span>
+        </div>
+        <div style={{display:"flex",gap:28,flexWrap:"wrap"}}>
+          {/* Mini-carte zoomée */}
+          <div style={{flex:"0 0 auto"}}>
+            <p style={{fontSize:12,color:"#64748b",marginBottom:8,fontWeight:500}}>Localisation des CLPE dans la région</p>
+            <div style={{background:"#f8fafc",borderRadius:16,border:"1px solid #e2e8f0",padding:8,display:"inline-block"}}>
+              <svg viewBox={vb} style={{width:280,height:280,display:"block"}}>
+                <path d={mp?.d} fill={selectedRegion.color} opacity={0.12} stroke={selectedRegion.color} strokeWidth="1.5" strokeDasharray="5 3"/>
+                {rCLPEs.map(c=>{
+                  const isSel=selectedCLPE?.id===c.id,isH=hov===c.id;
+                  return (
+                    <g key={c.id} style={{cursor:"pointer"}} onClick={()=>onCLPESelect(c)} onMouseEnter={()=>setHov(c.id)} onMouseLeave={()=>setHov(null)}>
+                      <circle cx={c.pos[0]} cy={c.pos[1]} r={isSel?10:7} fill={isSel?selectedRegion.color:isH?selectedRegion.color:"white"} stroke={selectedRegion.color} strokeWidth="2" style={{transition:"all .2s",filter:isSel?`drop-shadow(0 2px 6px ${selectedRegion.color}99)`:"none"}}/>
+                      {isSel&&<circle cx={c.pos[0]} cy={c.pos[1]} r={14} fill="none" stroke={selectedRegion.color} strokeWidth="1.5" opacity={0.4}/>}
+                    </g>
+                  );
+                })}
+                {rCLPEs.map(c=>{
+                  if(hov!==c.id&&selectedCLPE?.id!==c.id)return null;
+                  return <text key={`l${c.id}`} x={c.pos[0]} y={c.pos[1]-16} textAnchor="middle" fontSize="7" fontWeight="700" fill="#0f172a" style={{pointerEvents:"none"}}>{c.nom.replace("CLPE ","")}</text>;
+                })}
+              </svg>
+            </div>
+          </div>
+          {/* Grille CLPE */}
+          <div style={{flex:1,minWidth:280}}>
+            <p style={{fontSize:12,color:"#64748b",marginBottom:8,fontWeight:500}}>{rCLPEs.length} CLPE{rCLPEs.length>1?"s":""} dans cette région</p>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:12}}>
+              {rCLPEs.map(clpe=>{
+                const bd=BAR_DATA[clpe.id],last=bd?.[bd.length-1],prev=bd?.[bd.length-2];
+                const fd=FICHES_DATA[clpe.id]?.[FICHES_DATA[clpe.id].length-1];
+                const isSel=selectedCLPE?.id===clpe.id;
+                return (
+                  <button key={clpe.id} onClick={()=>onCLPESelect(clpe)} onMouseEnter={()=>setHov(clpe.id)} onMouseLeave={()=>setHov(null)}
+                    style={{textAlign:"left",padding:16,borderRadius:14,border:`2px solid ${isSel?selectedRegion.color:hov===clpe.id?"#cbd5e1":"#e2e8f0"}`,background:isSel?`${selectedRegion.color}0d`:"white",cursor:"pointer",transition:"all .2s",boxShadow:isSel?`0 4px 16px ${selectedRegion.color}22`:"none"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                      <div>
+                        <div style={{fontWeight:700,fontSize:13,color:"#0f172a"}}>{clpe.nom}</div>
+                        <div style={{fontSize:11,color:"#64748b",marginTop:2}}>{clpe.departement}</div>
+                      </div>
+                      {last&&<ScoreGauge score={last.score_global} size={44}/>}
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+                      <div style={{background:"#f8fafc",borderRadius:8,padding:"6px 8px",textAlign:"center"}}>
+                        <div style={{fontSize:18,fontWeight:700,color:"#0f172a"}}>{fd?.en_cours??"—"}</div>
+                        <div style={{fontSize:10,color:"#64748b"}}>Fiches actions</div>
+                      </div>
+                      <div style={{background:"#f8fafc",borderRadius:8,padding:"6px 8px",textAlign:"center"}}>
+                        <div style={{fontSize:18,fontWeight:700,color:"#0f172a"}}>{last?.repondants??"—"}</div>
+                        <div style={{fontSize:10,color:"#64748b"}}>Répondants</div>
+                      </div>
+                    </div>
+                    {last&&prev&&<div style={{marginTop:8,fontSize:11,color:"#64748b"}}>Score : <strong style={{color:scoreCol(last.score_global)}}>{last.score_global.toFixed(2)}/5</strong><Trend curr={last.score_global} prev={prev.score_global}/></div>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div style={{padding:"24px 28px"}}>
+      <h2 style={{fontFamily:"'Spectral',serif",fontSize:20,fontWeight:700,color:"#0f172a",margin:"0 0 4px"}}>Carte nationale des régions</h2>
+      <p style={{fontSize:13,color:"#64748b",marginBottom:20}}>Cliquez sur une région pour accéder à ses Comités Locaux Pour l'Emploi</p>
+      <div style={{display:"flex",gap:28,flexWrap:"wrap",alignItems:"flex-start"}}>
+        <div style={{flex:"0 0 auto",position:"relative"}}>
+          <svg viewBox="0 0 490 490" style={{width:"min(460px,100%)",filter:"drop-shadow(0 4px 24px rgba(0,0,0,.12))"}}>
+            <defs><filter id="gl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            {REGIONS.map(region=>{
+              const mp=REGION_MAP[region.id]; if(!mp)return null;
+              const isH=hov===region.id,n=CLPES.filter(c=>c.regionId===region.id).length;
+              const cx=(mp.bb[0]+mp.bb[2])/2,cy=(mp.bb[1]+mp.bb[3])/2;
+              return (
+                <g key={region.id} style={{cursor:"pointer"}} onMouseEnter={()=>setHov(region.id)} onMouseLeave={()=>setHov(null)} onClick={()=>onRegionSelect(region)}>
+                  <path d={mp.d} fill={region.color} stroke="white" strokeWidth="1.8" opacity={isH?1:0.82} style={{transition:"opacity .2s,filter .2s",filter:isH?"url(#gl)":"none"}}/>
+                  {n>0&&<text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle" fontSize={region.id==="idf"?7:9} fill="white" fontWeight="700" style={{pointerEvents:"none",userSelect:"none",opacity:0.9}}>{n}</text>}
+                </g>
+              );
+            })}
+          </svg>
+          <div style={{position:"absolute",bottom:8,right:8,background:"white",borderRadius:8,padding:"5px 10px",fontSize:11,color:"#64748b",boxShadow:"0 2px 8px rgba(0,0,0,.1)",border:"1px solid #e2e8f0"}}>Les chiffres = nombre de CLPE</div>
+        </div>
+        <div style={{flex:1,minWidth:200}}>
+          <p style={{fontSize:12,fontWeight:600,color:"#64748b",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.05em"}}>13 régions métropolitaines</p>
+          <div style={{display:"flex",flexDirection:"column",gap:3}}>
+            {REGIONS.map(region=>{
+              const n=CLPES.filter(c=>c.regionId===region.id).length;
+              return (
+                <button key={region.id} onClick={()=>onRegionSelect(region)} onMouseEnter={()=>setHov(region.id)} onMouseLeave={()=>setHov(null)}
+                  style={{display:"flex",alignItems:"center",gap:10,padding:"8px 10px",borderRadius:8,border:"1.5px solid transparent",cursor:"pointer",textAlign:"left",background:hov===region.id?"#f1f5f9":"transparent",borderColor:hov===region.id?"#e2e8f0":"transparent",transition:"all .15s"}}>
+                  <div style={{width:11,height:11,borderRadius:"50%",background:region.color,flexShrink:0}}/>
+                  <span style={{fontSize:13,color:"#1e293b",flex:1}}>{region.nom}</span>
+                  {n>0&&<span style={{fontSize:11,background:"#f1f5f9",color:"#475569",borderRadius:99,padding:"1px 8px",fontWeight:600}}>{n} CLPE</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── BAROMÈTRE ──────────────────────────────────────────────
+function BarometreView({ clpe }) {
+  const [tri,setTri]=useState(QUARTERS[3]);
+  const [openT,setOpenT]=useState({});
+  const data=clpe?BAR_DATA[clpe.id]:null;
+  const idx=QUARTERS.indexOf(tri);
+  const curr=data?.[idx],prev=idx>0?data?.[idx-1]:null;
+  const evolData=useMemo(()=>data?.map(d=>{
+    const row={name:d.trimestre,"Score global":d.score_global};
+    d.themes.forEach(t=>{row[t.nom.split(" ")[0]]=t.score_moyen;});
+    return row;
+  }),[data]);
+  if(!clpe)return <Empty icon="📊" text="Sélectionnez un CLPE pour afficher le baromètre"/>;
+  return (
+    <div style={{padding:"24px 28px",display:"flex",flexDirection:"column",gap:20}}>
+      <div style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between",alignItems:"flex-start",gap:12}}>
+        <div>
+          <h2 style={{fontFamily:"'Spectral',serif",fontSize:20,fontWeight:700,color:"#0f172a",margin:0}}>Baromètre de maturité</h2>
+          <p style={{fontSize:13,color:"#64748b",marginTop:2}}>{clpe.nom} · {clpe.departement}</p>
+        </div>
+        <div style={{display:"flex",gap:6}}>
+          {QUARTERS.map(q=><button key={q} onClick={()=>setTri(q)} style={{padding:"7px 14px",borderRadius:8,border:"1.5px solid",borderColor:tri===q?"#1e3a8a":"#e2e8f0",background:tri===q?"#1e3a8a":"white",color:tri===q?"white":"#475569",fontSize:12,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{q}</button>)}
+        </div>
+      </div>
+      {curr&&<>
+        {/* Hero */}
+        <div style={{borderRadius:16,padding:"24px 28px",background:"linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1d4ed8 100%)",color:"white",display:"flex",flexWrap:"wrap",gap:16,alignItems:"center"}}>
+          <div style={{flex:1,minWidth:180}}>
+            <p style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.08em",color:"#93c5fd",margin:0}}>Score de maturité global</p>
+            <div style={{display:"flex",alignItems:"baseline",gap:12,marginTop:8}}>
+              <span style={{fontSize:52,fontWeight:800,lineHeight:1,fontFamily:"'Spectral',serif"}}>{curr.score_global.toFixed(2)}</span>
+              <span style={{color:"#93c5fd",fontSize:18}}>/5</span>
+              {prev&&<span style={{fontSize:18,fontWeight:700,color:curr.score_global>=prev.score_global?"#86efac":"#fca5a5"}}>{curr.score_global>=prev.score_global?"↑":"↓"} {Math.abs(curr.score_global-prev.score_global).toFixed(2)}</span>}
+            </div>
+            {prev&&<p style={{fontSize:12,color:"#93c5fd",marginTop:4}}>Trimestre précédent : {prev.score_global.toFixed(2)}/5</p>}
+          </div>
+          <div style={{textAlign:"right"}}>
+            <p style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.08em",color:"#93c5fd",margin:0}}>Répondants</p>
+            <div style={{fontSize:44,fontWeight:800,lineHeight:1,fontFamily:"'Spectral',serif",marginTop:4}}>{curr.repondants}</div>
+            {prev&&<p style={{fontSize:12,color:"#93c5fd",marginTop:4}}>Précédent : {prev.repondants} <Trend curr={curr.repondants} prev={prev.repondants}/></p>}
+          </div>
+        </div>
+        {/* Radar + évolution */}
+        <div style={{display:"flex",gap:18,flexWrap:"wrap"}}>
+          <div style={{flex:"0 0 auto",background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+            <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 10px"}}>Vue par thématique</p>
+            <ResponsiveContainer width={260} height={210}>
+              <RadarChart data={curr.themes.map(t=>({subject:t.nom.split(" ")[0],score:t.score_moyen,fullMark:5}))}>
+                <PolarGrid stroke="#f1f5f9"/><PolarAngleAxis dataKey="subject" tick={{fontSize:11,fill:"#475569"}}/>
+                <PolarRadiusAxis domain={[0,5]} tick={{fontSize:9,fill:"#94a3b8"}}/>
+                <Radar dataKey="score" stroke="#1e3a8a" fill="#1e3a8a" fillOpacity={0.25} strokeWidth={2}/>
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{flex:1,minWidth:260,background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+            <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 10px"}}>Évolution trimestrielle</p>
+            <ResponsiveContainer width="100%" height={210}>
+              <LineChart data={evolData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9"/><XAxis dataKey="name" tick={{fontSize:11}}/><YAxis domain={[0,5]} tick={{fontSize:11}}/>
+                <Tooltip contentStyle={{borderRadius:8,fontSize:12}}/><Legend wrapperStyle={{fontSize:11}}/>
+                <Line type="monotone" dataKey="Score global" stroke="#1e3a8a" strokeWidth={3} dot={{r:4}}/>
+                {THEMES.map((t,i)=><Line key={t.id} type="monotone" dataKey={t.nom.split(" ")[0]} stroke={["#3b82f6","#16a34a","#ca8a04","#9333ea"][i]} strokeWidth={1.5} strokeDasharray="5 3" dot={{r:3}}/>)}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        {/* Accordion thèmes + questions */}
+        <div>
+          <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 10px"}}>Résultats détaillés par thématique</p>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            {curr.themes.map(theme=>{
+              const prevT=prev?.themes.find(t=>t.id===theme.id),isOpen=openT[theme.id],col=scoreCol(theme.score_moyen);
+              return (
+                <div key={theme.id} style={{background:"white",borderRadius:12,border:"1.5px solid #e2e8f0",overflow:"hidden"}}>
+                  <button onClick={()=>setOpenT(p=>({...p,[theme.id]:!p[theme.id]}))}
+                    style={{width:"100%",display:"flex",alignItems:"center",gap:14,padding:"14px 18px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}
+                    onMouseEnter={e=>e.currentTarget.style.background="#f8fafc"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                    <span style={{fontSize:18}}>{theme.icon}</span>
+                    <div style={{flex:1}}>
+                      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
+                        <span style={{fontWeight:700,fontSize:14,color:"#0f172a"}}>{theme.nom}</span>
+                        {prevT&&<Trend curr={theme.score_moyen} prev={prevT.score_moyen}/>}
+                      </div>
+                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                        <Bar1 value={theme.score_moyen}/>
+                        <span style={{fontSize:12,fontWeight:700,color:col,flexShrink:0}}>{theme.score_moyen.toFixed(2)}/5</span>
+                      </div>
+                    </div>
+                    <span style={{color:"#94a3b8",fontSize:13,transform:isOpen?"rotate(180deg)":"rotate(0deg)",transition:"transform .2s",flexShrink:0}}>▼</span>
+                  </button>
+                  {isOpen&&(
+                    <div style={{borderTop:"1px solid #f1f5f9"}}>
+                      {theme.questions.map((q,qi)=>{
+                        const prevQ=prevT?.questions?.[qi],col2=scoreCol(q.score);
+                        return (
+                          <div key={qi} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 18px 10px 48px",background:"#fafbfc",borderBottom:qi<theme.questions.length-1?"1px solid #f1f5f9":"none"}}>
+                            <div style={{flex:1}}>
+                              <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
+                                <span style={{fontSize:12.5,color:"#374151"}}>{q.texte}</span>
+                                <div style={{display:"flex",alignItems:"center",gap:4,flexShrink:0,marginLeft:12}}>
+                                  <span style={{fontSize:13,fontWeight:700,color:col2}}>{q.score.toFixed(2)}</span>
+                                  {prevQ&&<Trend curr={q.score} prev={prevQ.score}/>}
+                                </div>
+                              </div>
+                              <Bar1 value={q.score} h={4}/>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </>}
+    </div>
+  );
+}
+
+// ── FRÉQUENTATION ──────────────────────────────────────────
+function FrequentationView({ clpe }) {
+  const data=clpe?FREQ_DATA[clpe.id]:null,last=data?.[data.length-1],prev=data?.[data.length-2];
+  if(!clpe)return <Empty icon="📈" text="Sélectionnez un CLPE pour afficher les statistiques RPE"/>;
+  const kpis=[{key:"connexions",label:"Connexions",icon:"🔗",d:0},{key:"utilisateurs",label:"Utilisateurs uniques",icon:"👥",d:0},{key:"sessions",label:"Sessions totales",icon:"📋",d:0},{key:"taux_retour",label:"Taux de retour",icon:"🔄",d:1,u:"%"}];
+  return (
+    <div style={{padding:"24px 28px",display:"flex",flexDirection:"column",gap:20}}>
+      <div>
+        <h2 style={{fontFamily:"'Spectral',serif",fontSize:20,fontWeight:700,color:"#0f172a",margin:0}}>Fréquentation du tableau de bord RPE</h2>
+        <p style={{fontSize:13,color:"#64748b",marginTop:2}}>{clpe.nom} · Données trimestrielles</p>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:14}}>
+        {kpis.map(k=>{
+          const val=last?.[k.key],pval=prev?.[k.key],diff=val!=null&&pval!=null?val-pval:null,isPos=diff>0;
+          return (
+            <div key={k.key} style={{background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
+                <span style={{fontSize:22}}>{k.icon}</span>
+                {diff!=null&&<span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:99,background:isPos?"#dcfce7":"#fee2e2",color:isPos?"#15803d":"#dc2626"}}>{isPos?"+":""}{diff.toFixed(k.d)}{k.u||""}</span>}
+              </div>
+              <div style={{fontSize:30,fontWeight:800,color:"#0f172a",lineHeight:1}}>{val?.toFixed(k.d)}{k.u||""}</div>
+              <div style={{fontSize:12,color:"#64748b",marginTop:4}}>{k.label}</div>
+              {pval!=null&&<div style={{fontSize:11,color:"#94a3b8",marginTop:3}}>Préc. : {pval.toFixed(k.d)}{k.u||""}</div>}
+            </div>
+          );
+        })}
+      </div>
+      <div style={{background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+        <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 14px"}}>Connexions & Sessions par trimestre</p>
+        <ResponsiveContainer width="100%" height={230}>
+          <BarChart data={data} barCategoryGap="28%">
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9"/><XAxis dataKey="trimestre" tick={{fontSize:11}}/><YAxis tick={{fontSize:11}}/>
+            <Tooltip contentStyle={{borderRadius:8,fontSize:12}}/><Legend wrapperStyle={{fontSize:12}}/>
+            <Bar dataKey="connexions" name="Connexions" fill="#1e3a8a" radius={[5,5,0,0]}/>
+            <Bar dataKey="sessions" name="Sessions" fill="#60a5fa" radius={[5,5,0,0]}/>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div style={{background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+        <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 14px"}}>Utilisateurs uniques & Taux de retour</p>
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9"/><XAxis dataKey="trimestre" tick={{fontSize:11}}/>
+            <YAxis yAxisId="l" tick={{fontSize:11}}/><YAxis yAxisId="r" orientation="right" unit="%" tick={{fontSize:11}}/>
+            <Tooltip contentStyle={{borderRadius:8,fontSize:12}}/><Legend wrapperStyle={{fontSize:12}}/>
+            <Line yAxisId="l" type="monotone" dataKey="utilisateurs" name="Utilisateurs" stroke="#16a34a" strokeWidth={2.5} dot={{r:4}}/>
+            <Line yAxisId="r" type="monotone" dataKey="taux_retour" name="Taux retour (%)" stroke="#ea580c" strokeWidth={2} strokeDasharray="5 4" dot={{r:3}}/>
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+
+// ── FICHES ACTIONS ─────────────────────────────────────────
+function FichesActionsView({ clpe }) {
+  const [tab,setTab]=useState("creees");
+  const data=clpe?FICHES_DATA[clpe.id]:null,last=data?.[data.length-1],prev=data?.[data.length-2];
+  if(!clpe)return <Empty icon="📄" text="Sélectionnez un CLPE pour afficher les fiches actions"/>;
+  const qs=pfx=>last?[{name:"Faisabilité",v:last[`${pfx}_faisabilite`],c:"#1e3a8a"},{name:"Impact",v:last[`${pfx}_impact`],c:"#2563eb"},{name:"Complétude",v:last[`${pfx}_completude`],c:"#16a34a"},{name:"Innovation",v:last[`${pfx}_innovation`],c:"#9333ea"}]:[];
+  const pqs=pfx=>prev?[{v:prev[`${pfx}_faisabilite`]},{v:prev[`${pfx}_impact`]},{v:prev[`${pfx}_completude`]},{v:prev[`${pfx}_innovation`]}]:[];
+  const scores=qs(tab),pscores=pqs(tab);
+  const avg=scores.length?parseFloat((scores.reduce((s,q)=>s+q.v,0)/scores.length).toFixed(2)):0;
+  const pavg=pscores.length?(pscores.reduce((s,q)=>s+q.v,0)/pscores.length):null;
+  return (
+    <div style={{padding:"24px 28px",display:"flex",flexDirection:"column",gap:20}}>
+      <div>
+        <h2 style={{fontFamily:"'Spectral',serif",fontSize:20,fontWeight:700,color:"#0f172a",margin:0}}>Fiches Actions & Feuilles de route</h2>
+        <p style={{fontSize:13,color:"#64748b",marginTop:2}}>{clpe.nom} · Dernier trimestre : {last?.trimestre}</p>
+      </div>
+      {last&&<>
+        {/* Métriques activité */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:14}}>
+          {[{label:"Créées ce trimestre",val:last.creees,pval:prev?.creees,icon:"✏️"},{label:"Stock en cours",val:last.en_cours,pval:prev?.en_cours,icon:"📦"},{label:"Actualisées < 3 mois",val:last.pct_actualisees,pval:prev?.pct_actualisees,icon:"🔄",d:1,u:"%"}].map(item=>(
+            <div key={item.label} style={{background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+              <div style={{fontSize:22,marginBottom:8}}>{item.icon}</div>
+              <div style={{fontSize:32,fontWeight:800,color:"#0f172a",lineHeight:1}}>{item.val?.toFixed(item.d??0)}{item.u||""}</div>
+              <div style={{fontSize:12,color:"#64748b",marginTop:4}}>{item.label}</div>
+              {item.pval!=null&&<div style={{fontSize:11,color:"#94a3b8",marginTop:3}}>Préc. : {item.pval.toFixed(item.d??0)}{item.u||""}<Trend curr={item.val} prev={item.pval}/></div>}
+            </div>
+          ))}
+          <div style={{background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+            <div style={{fontSize:22,marginBottom:10}}>🗺️</div>
+            <p style={{fontSize:13,fontWeight:700,color:"#0f172a",margin:"0 0 10px"}}>Feuille de route</p>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              <Tag ok={last.feuille_de_route===1} label="Présente"/>
+              <Tag ok={last.feuille_de_route_1an===1} label="< 1 an"/>
+            </div>
+          </div>
+        </div>
+        {/* Qualité fiches */}
+        <div style={{background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"20px 24px"}}>
+          <div style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between",alignItems:"center",gap:12,marginBottom:16}}>
+            <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:0}}>Score qualité des fiches actions</p>
+            <div style={{display:"flex",gap:6}}>
+              {[{id:"creees",label:"Créées"},{id:"en_cours",label:"En cours"}].map(t=>(
+                <button key={t.id} onClick={()=>setTab(t.id)} style={{padding:"6px 14px",borderRadius:8,border:"1.5px solid",borderColor:tab===t.id?"#1e3a8a":"#e2e8f0",background:tab===t.id?"#1e3a8a":"white",color:tab===t.id?"white":"#475569",fontSize:12,fontWeight:600,cursor:"pointer"}}>{t.label}</button>
+              ))}
+            </div>
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:20,alignItems:"flex-start"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+              <ScoreGauge score={avg} size={72}/>
+              <span style={{fontSize:11,color:"#64748b"}}>Score moyen</span>
+              {pavg&&<Trend curr={avg} prev={pavg}/>}
+            </div>
+            <div style={{flex:1,minWidth:200,display:"flex",flexDirection:"column",gap:10}}>
+              {scores.map((q,i)=>{
+                const pv=pscores[i]?.v;
+                return (
+                  <div key={q.name}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                      <span style={{fontSize:12.5,color:"#374151",fontWeight:500}}>{q.name}</span>
+                      <div style={{display:"flex",alignItems:"center",gap:4}}>
+                        <span style={{fontSize:13,fontWeight:700,color:q.c}}>{q.v.toFixed(2)}</span>
+                        {pv!=null&&<Trend curr={q.v} prev={pv}/>}
+                      </div>
+                    </div>
+                    <div style={{height:8,borderRadius:99,background:"#e5e7eb",overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${(q.v/5)*100}%`,background:q.c,borderRadius:99,transition:"width .5s"}}/>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{flex:"0 0 auto"}}>
+              <ResponsiveContainer width={190} height={175}>
+                <RadarChart data={scores.map(q=>({subject:q.name,score:q.v,fullMark:5}))}>
+                  <PolarGrid stroke="#f1f5f9"/><PolarAngleAxis dataKey="subject" tick={{fontSize:10,fill:"#475569"}}/>
+                  <PolarRadiusAxis domain={[0,5]} tick={false}/>
+                  <Radar dataKey="score" stroke="#c9a84c" fill="#c9a84c" fillOpacity={0.3} strokeWidth={2}/>
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+        {/* Évolution quantitative */}
+        <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+          <div style={{flex:1,minWidth:260,background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+            <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 14px"}}>Créées & Stock en cours</p>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={data?.map(d=>({trimestre:d.trimestre,"Créées":d.creees,"En cours":d.en_cours}))} barCategoryGap="30%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9"/><XAxis dataKey="trimestre" tick={{fontSize:11}}/><YAxis tick={{fontSize:11}}/>
+                <Tooltip contentStyle={{borderRadius:8,fontSize:12}}/><Legend wrapperStyle={{fontSize:12}}/>
+                <Bar dataKey="Créées" fill="#1e3a8a" radius={[4,4,0,0]}/><Bar dataKey="En cours" fill="#93c5fd" radius={[4,4,0,0]}/>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{flex:1,minWidth:260,background:"white",borderRadius:14,border:"1px solid #e2e8f0",padding:"18px 20px"}}>
+            <p style={{fontWeight:700,fontSize:14,color:"#0f172a",margin:"0 0 14px"}}>Part actualisée dans les 3 mois (%)</p>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={data?.map(d=>({trimestre:d.trimestre,"% Actualisées":d.pct_actualisees}))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9"/><XAxis dataKey="trimestre" tick={{fontSize:11}}/><YAxis domain={[0,100]} unit="%" tick={{fontSize:11}}/>
+                <Tooltip contentStyle={{borderRadius:8,fontSize:12}}/><Legend wrapperStyle={{fontSize:12}}/>
+                <Line type="monotone" dataKey="% Actualisées" stroke="#16a34a" strokeWidth={2.5} dot={{r:4}}/>
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </>}
+    </div>
+  );
+}
+
+// ── APP ────────────────────────────────────────────────────
+const TABS=[{id:"carte",label:"Carte",icon:"🗺️"},{id:"barometre",label:"Baromètre",icon:"📊"},{id:"frequentation",label:"Fréquentation RPE",icon:"📈"},{id:"fiches",label:"Fiches Actions",icon:"📄"}];
+
+export default function App() {
+  const [auth,setAuth]=useState(false);
+  const [selRegion,setSelRegion]=useState(null);
+  const [selCLPE,setSelCLPE]=useState(null);
+  const [tab,setTab]=useState("carte");
+
+  const pickRegion=useCallback(r=>{setSelRegion(r);setSelCLPE(null);},[]);
+  const pickCLPE=useCallback(c=>{setSelCLPE(c);if(c){setSelRegion(REGIONS.find(r=>r.id===c.regionId));setTab("barometre");}}, []);
+  const fromDropdown=useCallback(e=>{const c=CLPES.find(c=>c.id===e.target.value);if(!c){setSelCLPE(null);return;}setSelCLPE(c);setSelRegion(REGIONS.find(r=>r.id===c.regionId));},[]);
+
+  if(!auth)return <LoginScreen onLogin={()=>setAuth(true)}/>;
+
+  return (
+    <div style={{minHeight:"100vh",background:"#f1f5f9",fontFamily:"'DM Sans',sans-serif"}}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Spectral:wght@500;600;700&display=swap');*{box-sizing:border-box;}button{font-family:inherit;}select option{background:#1e3a5f;color:white;}`}</style>
+      {/* HEADER */}
+      <header style={{background:"linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%)",position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 20px rgba(0,0,0,.25)"}}>
+        <div style={{maxWidth:1280,margin:"0 auto",padding:"0 20px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:16,paddingTop:12,paddingBottom:6}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
+              <span style={{fontSize:24}}>🏛️</span>
+              <div>
+                <div style={{fontFamily:"'Spectral',serif",color:"white",fontWeight:700,fontSize:15,lineHeight:1.2}}>Observatoire CLPE</div>
+                <div style={{color:"#93c5fd",fontSize:11}}>Comités Locaux Pour l'Emploi</div>
+              </div>
+            </div>
+            <div style={{height:32,width:1,background:"rgba(255,255,255,.15)",flexShrink:0}}/>
+            <div style={{flex:1,maxWidth:420}}>
+              <select value={selCLPE?.id??""} onChange={fromDropdown}
+                style={{width:"100%",padding:"8px 12px",borderRadius:8,border:"1px solid rgba(255,255,255,.2)",background:"rgba(255,255,255,.1)",color:"white",fontSize:13,outline:"none",cursor:"pointer"}}>
+                <option value="">— Sélectionner un CLPE —</option>
+                {REGIONS.map(r=>{const rc=CLPES.filter(c=>c.regionId===r.id);if(!rc.length)return null;return(<optgroup key={r.id} label={r.nom}>{rc.map(c=><option key={c.id} value={c.id}>{c.nom}</option>)}</optgroup>);})}
+              </select>
+            </div>
+            {selCLPE&&(
+              <div style={{display:"flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.1)",borderRadius:8,padding:"6px 12px",flexShrink:0}}>
+                <div style={{width:8,height:8,borderRadius:"50%",background:REGIONS.find(r=>r.id===selCLPE.regionId)?.color??"#94a3b8"}}/>
+                <span style={{color:"white",fontSize:12,fontWeight:600}}>{selCLPE.nom}</span>
+                <button onClick={()=>setSelCLPE(null)} style={{background:"none",border:"none",color:"#93c5fd",cursor:"pointer",fontSize:16,lineHeight:1,padding:0}}>×</button>
+              </div>
+            )}
+            <button onClick={()=>setAuth(false)} style={{marginLeft:"auto",background:"none",border:"1px solid rgba(255,255,255,.2)",color:"#94a3b8",borderRadius:6,padding:"6px 12px",cursor:"pointer",fontSize:12,flexShrink:0}}>Déconnexion</button>
+          </div>
+          <div style={{display:"flex",gap:2}}>
+            {TABS.map(t=>{
+              const isA=tab===t.id;
+              return <button key={t.id} onClick={()=>setTab(t.id)}
+                style={{display:"flex",alignItems:"center",gap:7,padding:"10px 18px",border:"none",borderRadius:"8px 8px 0 0",cursor:"pointer",fontSize:13,fontWeight:600,transition:"all .2s",background:isA?"#f1f5f9":"transparent",color:isA?"#1e3a5f":"#93c5fd"}}
+                onMouseEnter={e=>{if(!isA){e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.color="white";}}}
+                onMouseLeave={e=>{if(!isA){e.currentTarget.style.background="transparent";e.currentTarget.style.color="#93c5fd";}}}>
+                <span>{t.icon}</span><span>{t.label}</span>
+              </button>;
+            })}
+          </div>
+        </div>
+      </header>
+      {/* CONTENU */}
+      <main style={{maxWidth:1280,margin:"0 auto",background:"white",minHeight:"calc(100vh - 110px)",boxShadow:"0 0 0 1px #e2e8f0"}}>
+        {tab==="carte"&&<MapView selectedRegion={selRegion} selectedCLPE={selCLPE} onRegionSelect={pickRegion} onCLPESelect={pickCLPE} onBack={()=>{setSelRegion(null);setSelCLPE(null);}}/>}
+        {tab==="barometre"&&<BarometreView clpe={selCLPE}/>}
+        {tab==="frequentation"&&<FrequentationView clpe={selCLPE}/>}
+        {tab==="fiches"&&<FichesActionsView clpe={selCLPE}/>}
+      </main>
+      <footer style={{maxWidth:1280,margin:"0 auto",padding:"12px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"1px solid #e2e8f0",background:"white"}}>
+        <span style={{fontSize:11,color:"#94a3b8"}}>Ministère du Travail · Observatoire CLPE · v1.0</span>
+        <span style={{fontSize:11,color:"#94a3b8"}}>Sources : GitHub — clpe-dashboard/data/</span>
+      </footer>
+    </div>
+  );
+}
