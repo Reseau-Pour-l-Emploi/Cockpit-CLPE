@@ -14,7 +14,7 @@ Tableau de bord interactif pour suivre l'installation et la vitalité des Comit�
 
 ```bash
 git clone https://github.com/VOTRE-ORG/clpe-dashboard.git
-cd clpe-dashboard
+cd clpe-dashboard 
 npm install
 npm run dev         # développement local
 npm run build       # production → dossier dist/
