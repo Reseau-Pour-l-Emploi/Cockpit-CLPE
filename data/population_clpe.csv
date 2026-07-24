@@ -1,0 +1,364 @@
+region;departement;clpe;population
+Hauts-de-France;Somme;Abbeville;89702
+Nouvelle-Aquitaine;Lot-et-Garonne;Agen;127202
+Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Aix-en-Provence;115079
+Corse;Corse-du-Sud;Ajaccio;46784
+Auvergne-Rhône-Alpes;Savoie;Albertville;50487
+Auvergne-Rhône-Alpes;Isère;Alpes Sud Isère et Vercors;72307
+Provence-Alpes-Côte d'Azur;Alpes-de-Haute-Provence;Alpes-de-Haute-Provence;69080
+Grand Est;Haut-Rhin;Altkirch;123079
+Centre-Val de Loire;Indre-et-Loire;Amboise;175626
+Hauts-de-France;Somme;Amiens;74572
+Pays de la Loire;Maine-et-Loire;Angers;40832
+Nouvelle-Aquitaine;Charente;Angoulême;53103
+Auvergne-Rhône-Alpes;Haute-Savoie;Annecy;134435
+Auvergne-Rhône-Alpes;Ardèche;Annonay;114469
+Occitanie;Hautes-Pyrénées;Argelès Gazost;64646
+Normandie;Orne;Argentan - Flers;146879
+Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Arles;71458
+Hauts-de-France;Pas-de-Calais;Arras;102428
+Auvergne-Rhône-Alpes;Ardèche;Aubenas;274517
+Bretagne;Morbihan;Auray - Vannes;61860
+Auvergne-Rhône-Alpes;Cantal;Aurillac;131979
+Bourgogne-Franche-Comté;Saône-et-Loire;Autun;147861
+Bourgogne-Franche-Comté;Yonne;Auxerre;79371
+Bourgogne-Franche-Comté;Yonne;Avallon;57379
+Occitanie;Hautes-Pyrénées;Bagnères de Bigorre;195762
+Grand Est;Aube;Bar-sur-Aube;182818
+Guadeloupe;Guadeloupe;Basse-Terre;171833
+Nouvelle-Aquitaine;Gironde;Bassin d'Arcachon et du Val de l'Eyre;125320
+Corse;Haute-Corse;Bastia;101440
+Normandie;Calvados;Bayeux;166805
+Centre-Val de Loire;Eure-et-Loir;Beauce dunoise;78808
+Bourgogne-Franche-Comté;Côte-d'Or;Beaune;47247
+Hauts-de-France;Oise;Beauvais;76515
+Bourgogne-Franche-Comté;Territoire de Belfort;Belfort;68539
+Nouvelle-Aquitaine;Haute-Vienne;Bellac;49009
+Nouvelle-Aquitaine;Dordogne;Bergerac;53185
+Normandie;Eure;Bernay;162757
+Bourgogne-Franche-Comté;Doubs;Besançon;76300
+Hauts-de-France;Pas-de-Calais;Béthune;34521
+Occitanie;Hérault;Béziers;73293
+Centre-Val de Loire;Loir-et-Cher;Blois ;66934
+Auvergne-Rhône-Alpes;Haute-Savoie;Bonneville;122279
+Nouvelle-Aquitaine;Gironde;Bordeaux hors Métropole;48762
+Nouvelle-Aquitaine;Gironde;Bordeaux Métropole;82086
+Île-de-France;Hauts-de-Seine;Boucle Nord de Seine ;113348
+Hauts-de-France;Pas-de-Calais;Boulogne;130058
+Centre-Val de Loire;Cher;Bourges;92138
+Nouvelle-Aquitaine;Deux-Sèvres;Bressuire;39226
+Bretagne;Finistère;Brest;78587
+Grand Est;Meurthe-et-Moselle;Briey - Longwy;93032
+Provence-Alpes-Côte d'Azur;Var;Brignoles;60422
+Auvergne-Rhône-Alpes;Haute-Loire;Brioude;123797
+Nouvelle-Aquitaine;Corrèze;Brive La Gaillarde;76253
+Normandie;Calvados;Caen;94266
+Occitanie;Lot;Cahors;102521
+Hauts-de-France;Pas-de-Calais;Calais;89148
+Hauts-de-France;Nord;Cambrai;157948
+Occitanie;Aude;Carcassonne;112560
+Occitanie;Tarn-et-Garonne;Castelsarrasin;113762
+Auvergne-Rhône-Alpes;Ardèche;Centre Ardèche;374621
+Bretagne;Morbihan;Centre Bretagne;337189
+Corse;Haute-Corse;Centre Corse - Balagne;76426
+Guadeloupe;Guadeloupe;Centre Guadeloupe;125390
+Normandie;Manche;Centre Manche;88711
+Martinique;Martinique;Centre Martinique ;346163
+Île-de-France;Seine-et-Marne;Centre Seine-et-Marne;63925
+Île-de-France;Val-d'Oise;Centre Val-d’Oise;94811
+Bretagne;Finistère;Centre-Ouest Bretagne;58798
+Mayotte;Mayotte;Centre-Ouest de Mayotte;52103
+Occitanie;Pyrénées-Orientales;Céret;237812
+Île-de-France;Val-d'Oise;Cergy-Pontoise Vexin ;214420
+Grand Est;Marne;Châlons-en-Champagne;77563
+Bourgogne-Franche-Comté;Saône-et-Loire;Chalon-sur-Saône;76139
+Auvergne-Rhône-Alpes;Savoie;Chambéry;353004
+Grand Est;Ardennes;Charleville-Mézières;202216
+Bourgogne-Franche-Comté;Saône-et-Loire;Charolles;224228
+Centre-Val de Loire;Eure-et-Loir;Chartrain;171470
+Bourgogne-Franche-Comté;Nièvre;Château-Chinon;49345
+Centre-Val de Loire;Indre;Châteauroux;227886
+Hauts-de-France;Aisne;Château-Thierry;18979
+Nouvelle-Aquitaine;Vienne;Châtellerault;140864
+Grand Est;Haute-Marne;Chaumont;72072
+Centre-Val de Loire;Indre-et-Loire;Chinon;79799
+Pays de la Loire;Maine-et-Loire;Cholet;159190
+Bourgogne-Franche-Comté;Nièvre;Clamecy;67041
+Hauts-de-France;Oise;Clermont;161144
+Auvergne-Rhône-Alpes;Puy-de-Dôme;Clermont Métropole;78340
+Nouvelle-Aquitaine;Charente;Cognac;60357
+Grand Est;Haut-Rhin;Colmar;73806
+Hauts-de-France;Oise;Compiegne;84574
+Provence-Alpes-Côte d'Azur;Vaucluse;Comtat-Venaissin;248137
+Occitanie;Gers;Condom;43905
+Bretagne;Finistère;Cornouaille;109460
+Bourgogne-Franche-Comté;Nièvre;Cosne-Cours-sur-Loire;111591
+Normandie;Manche;Cotentin;101807
+Occitanie;Ariège;Couserans;60646
+Nouvelle-Aquitaine;Creuse;Creuse;176146
+Mayotte;Mayotte;Dembeni - Mamoudzou;77583
+Normandie;Seine-Maritime;Dieppe;139036
+Bourgogne-Franche-Comté;Côte-d'Or;Dijon Hors Métropole;46852
+Bourgogne-Franche-Comté;Côte-d'Or;Dijon Métropole;78575
+Bretagne;Côtes-d'Armor;Dinan;183841
+Bourgogne-Franche-Comté;Jura;Dole;139062
+Auvergne-Rhône-Alpes;Ain;Dombes - Saône - Côtière;219488
+Hauts-de-France;Nord;Douai;135230
+Provence-Alpes-Côte d'Azur;Var;Draguignan;113249
+Centre-Val de Loire;Eure-et-Loir;Dreux et des Portes Euréliennes d'Île-de-France;99077
+Auvergne-Rhône-Alpes;Drôme;Drôme - Ardèche Centre;76553
+Auvergne-Rhône-Alpes;Drôme;Drôme - Ardèche Sud;500049
+Hauts-de-France;Nord;Dunkerque;191662
+Grand Est;Marne;Epernay;293545
+Grand Est;Vosges;Epinal;158227
+Île-de-France;Seine-Saint-Denis;Est Ensemble ;57529
+Guyane;Guyane;Est Guyanais;64142
+Nouvelle-Aquitaine;Landes;Est Landes;34595
+Île-de-France;Seine-et-Marne;Est Seine-et-Marne;130148
+Normandie;Eure;Évreux;90469
+Occitanie;Lot;Figeac;62200
+Grand Est;Moselle;Forbach - Boulay - Moselle;111555
+Occitanie;Gard;Gard Centre-Sud;71592
+Occitanie;Gard;Gard Nord-Est;119508
+Occitanie;Gard;Gard Nord-Ouest;55260
+Centre-Val de Loire;Loiret;Gien;138654
+Provence-Alpes-Côte d'Azur;Vaucluse;Grand Avignon;65660
+Auvergne-Rhône-Alpes;Ain;Grand Bourg Agglomération - Bresse - Veyle;85064
+Nouvelle-Aquitaine;Gironde;Grand Libournais;47663
+Mayotte;Mayotte;Grand Nord de Mayotte;163726
+Île-de-France;Val-de-Marne;Grand Orly Seine Bièvre ;136262
+Île-de-France;Seine-Saint-Denis;Grand Paris Grand Est ;148598
+Île-de-France;Hauts-de-Seine;Grand Paris Seine Ouest ;206788
+Île-de-France;Val-de-Marne;Grand Paris Sud-Est Avenir;102129
+Guadeloupe;Guadeloupe;Grande-Terre;215943
+Provence-Alpes-Côte d'Azur;Alpes-Maritimes;Grasse;84834
+Bourgogne-Franche-Comté;Haute-Saône;Gray;112797
+Auvergne-Rhône-Alpes;Isère;Grenoble centre;70301
+Guyane;Guyane;Guyane Centre Littoral;84521
+Grand Est;Bas-Rhin;Haguenau - Wissembourg;154019
+Auvergne-Rhône-Alpes;Ain;Haut Bugey Agglomération - Valserhône - Pays de Gex;109108
+Nouvelle-Aquitaine;Gironde;Haute Gironde;94180
+Provence-Alpes-Côte d'Azur;Hautes-Alpes;Hautes-Alpes;178056
+Provence-Alpes-Côte d'Azur;Vaucluse;Haut-Vaucluse;62451
+Centre-Val de Loire;Indre;Issoudun;185339
+Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Istres;106030
+Nouvelle-Aquitaine;Charente-Maritime;Jonzac;88921
+Centre-Val de Loire;Indre;La Châtre;45029
+La Réunion;La Réunion;La Réunion Est;186433
+La Réunion;La Réunion;La Réunion Nord;95051
+La Réunion;La Réunion;La Réunion Ouest;82818
+La Réunion;La Réunion;La Réunion Sud;315272
+Nouvelle-Aquitaine;Charente-Maritime;La Rochelle;83156
+Auvergne-Rhône-Alpes;Isère;La tour du pin;76021
+Grand Est;Haute-Marne;Langres;60895
+Hauts-de-France;Aisne;Laon;82512
+Centre-Val de Loire;Indre;Le Blanc;50955
+Normandie;Seine-Maritime;Le Havre;103972
+Auvergne-Rhône-Alpes;Haute-Loire;Le Puy-en-Velay;61717
+Hauts-de-France;Pas-de-Calais;Lens;57261
+Normandie;Eure;Les Andelys;85754
+Auvergne-Rhône-Alpes;Lyon Métropole;Les Portes du Sud;129510
+Hauts-de-France;Nord;Lille Metropole;217573
+Nouvelle-Aquitaine;Haute-Vienne;Limoges agglomération;93461
+Nouvelle-Aquitaine;Haute-Vienne;Limoges hors agglomération;197363
+Occitanie;Aude;Limoux;294295
+Normandie;Calvados;Lisieux;353285
+Occitanie;Gers;L'Isle Jourdain - Auch;53390
+Auvergne-Rhône-Alpes;Puy-de-Dôme;Livradois Forez;111858
+Centre-Val de Loire;Indre-et-Loire;Loches;228682
+Occitanie;Hérault;Lodève;191513
+Auvergne-Rhône-Alpes;Loire;Loire Sud;63479
+Pays de la Loire;Loire-Atlantique;Loire-Atlantique Centre;126545
+Pays de la Loire;Loire-Atlantique;Loire-Atlantique Nord;158412
+Pays de la Loire;Loire-Atlantique;Loire-Atlantique Ouest;107997
+Pays de la Loire;Loire-Atlantique;Loire-Atlantique Sud;332972
+Auvergne-Rhône-Alpes;Lyon Métropole;Lônes et Côteaux du Rhône;109757
+Bourgogne-Franche-Comté;Jura;Lons-le-Saunier;128147
+Bretagne;Morbihan;Lorient;147085
+Bourgogne-Franche-Comté;Saône-et-Loire;Louhans;63151
+Grand Est;Meurthe-et-Moselle;Lunéville;143237
+Bourgogne-Franche-Comté;Haute-Saône;Lure - Luxeuil - Héricourt;108093
+Auvergne-Rhône-Alpes;Lyon Métropole;Lyon;102476
+Bourgogne-Franche-Comté;Saône-et-Loire;Mâcon;210586
+Guadeloupe;Guadeloupe;Marie-Galante;126249
+Nouvelle-Aquitaine;Lot-et-Garonne;Marmande;69849
+Île-de-France;Seine-et-Marne;Marne-la-Vallée;151739
+Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Marseille;116394
+Auvergne-Rhône-Alpes;Cantal;Mauriac;61889
+Pays de la Loire;Mayenne;Mayenne Centre;184837
+Pays de la Loire;Mayenne;Mayenne Nord;137831
+Pays de la Loire;Mayenne;Mayenne Sud;112324
+Mayotte;Mayotte;Mayotte Petite-Terre;105236
+Nouvelle-Aquitaine;Gironde;Médoc;173487
+Grand Est;Moselle;Metz;47029
+Occitanie;Aveyron;Millau;102209
+Grand Est;Bas-Rhin;Molsheim;56829
+Centre-Val de Loire;Loiret;Montargis;53623
+Occitanie;Tarn-et-Garonne;Montauban;201799
+Bourgogne-Franche-Comté;Côte-d'Or;Montbard;107644
+Bourgogne-Franche-Comté;Doubs;Montbéliard;102073
+Auvergne-Rhône-Alpes;Loire;Montbrison;65072
+Hauts-de-France;Somme;Montdidier;36820
+Auvergne-Rhône-Alpes;Allier;Montluçon;156939
+Nouvelle-Aquitaine;Vienne;Montmorillon;186004
+Occitanie;Hérault;Montpellier;89447
+Hauts-de-France;Pas-de-Calais;Montreuil;86700
+Bretagne;Finistère;Morlaix;87298
+Auvergne-Rhône-Alpes;Allier;Moulins;79053
+Grand Est;Haut-Rhin;Mulhouse;110499
+Occitanie;Haute-Garonne;Muret;454318
+Grand Est;Meurthe-et-Moselle;Nancy - Pont-à-Mousson;274431
+Occitanie;Aude;Narbonne;135667
+Grand Est;Vosges;Neufchâteau;162629
+Bourgogne-Franche-Comté;Nièvre;Nevers;213329
+Provence-Alpes-Côte d'Azur;Alpes-Maritimes;Nice;88246
+Nouvelle-Aquitaine;Deux-Sèvres;Niort;104821
+Grand Est;Aube;Nogent-sur-Seine;52513
+Nouvelle-Aquitaine;Dordogne;Nontron;134661
+Auvergne-Rhône-Alpes;Drôme;Nord Ardèche - Nord Drôme;119288
+Nouvelle-Aquitaine;Charente;Nord Charente;75025
+Occitanie;Haute-Garonne;Nord Haute-Garonne;108712
+Occitanie;Lozère;Nord Lozère;103272
+Martinique;Martinique;Nord Martinique ;79286
+Grand Est;Meuse;Nord Meuse;92589
+Île-de-France;Val-d'Oise;Nord Val-d’Oise ;78284
+Île-de-France;Seine-et-Marne;Nord-Est Seine-et-Marne;195359
+Île-de-France;Essonne;Nord-Ouest Essonne;162941
+Nouvelle-Aquitaine;Landes;Nord-Ouest Landes;91971
+Nouvelle-Aquitaine;Pyrénées-Atlantiques;Oloron-Sainte-Marie;91532
+Centre-Val de Loire;Loiret;Orléans;61578
+Guyane;Guyane;Ouest Guyanais;110045
+Île-de-France;Paris;Paris;168835
+Île-de-France;Val-de-Marne;Paris Est Marne et Bois ;81840
+Île-de-France;Hauts-de-Seine;Paris Ouest La Défense ;91979
+Île-de-France;Seine-Saint-Denis;Paris Terres d'Envol;221641
+Nouvelle-Aquitaine;Deux-Sèvres;Parthenay;26935
+Nouvelle-Aquitaine;Pyrénées-Atlantiques;Pau;70528
+Nouvelle-Aquitaine;Pyrénées-Atlantiques;Pays Basque;116585
+Normandie;Orne;Pays d'Alençon et d'Andaine;197029
+Normandie;Seine-Maritime;Pays de Bray;99729
+Occitanie;Ariège;Pays des Pyrénées Cathares;132879
+Centre-Val de Loire;Eure-et-Loir;Perche - Nogent;68243
+Nouvelle-Aquitaine;Dordogne;Périgueux;167148
+Hauts-de-France;Somme;Péronne;115298
+Occitanie;Pyrénées-Orientales;Perpignan;95224
+Centre-Val de Loire;Loiret;Pithiviers;120134
+Île-de-France;Seine-Saint-Denis;Plaine Commune ;77091
+Auvergne-Rhône-Alpes;Ain;Plaine de l’Ain - Bugey Sud - Rives de l'Ain Pays du Cerdon;217537
+Corse;Haute-Corse;Plaine orientale;78247
+Nouvelle-Aquitaine;Vienne;Poitiers;108564
+Bourgogne-Franche-Comté;Doubs;Pontarlier;98557
+Auvergne-Rhône-Alpes;Lyon Métropole;Portes des Alpes;83808
+Occitanie;Pyrénées-Orientales;Prades;135240
+Bretagne;Ille-et-Vilaine;Redon;319479
+Grand Est;Marne;Reims;109731
+Grand Est;Vosges;Remiremont;207753
+Bretagne;Ille-et-Vilaine;Rennes;161544
+Grand Est;Ardennes;Rethel;36414
+Grand Est;Ardennes;Revin;108562
+Auvergne-Rhône-Alpes;Lyon Métropole;Rhône Amont;69716
+Auvergne-Rhône-Alpes;Nouveau Rhône;Rhône Nord;62938
+Auvergne-Rhône-Alpes;Nouveau Rhône;Rhône Ouest;55044
+Auvergne-Rhône-Alpes;Nouveau Rhône;Rhône Sud 1;200208
+Auvergne-Rhône-Alpes;Nouveau Rhône;Rhône Sud 2;140039
+Auvergne-Rhône-Alpes;Puy-de-Dôme;Riom Limagne Combrailles;91303
+Auvergne-Rhône-Alpes;Loire;Roanne;79193
+Nouvelle-Aquitaine;Haute-Vienne;Rochechouart;51115
+Nouvelle-Aquitaine;Charente-Maritime;Rochefort;186340
+Occitanie;Aveyron;Rodez;48643
+Île-de-France;Val-d'Oise;Roissy Pays de France ;24537
+Centre-Val de Loire;Loir-et-Cher;Romorantin-Lanthenay;69176
+Normandie;Seine-Maritime;Rouen;69755
+Nouvelle-Aquitaine;Charente-Maritime;Royan;185993
+Centre-Val de Loire;Cher;Saint-Amand-Montrond;88550
+Collectivités d'Outre-Mer;Saint-Barthélémy;Saint-Barthélémy;49418
+Bretagne;Côtes-d'Armor;Saint-Brieuc;85901
+Bourgogne-Franche-Comté;Jura;Saint-Claude;319197
+Grand Est;Vosges;Saint-Dié des Vosges;67611
+Grand Est;Haute-Marne;Saint-Dizier;94563
+Nouvelle-Aquitaine;Charente-Maritime;Saintes;95749
+Auvergne-Rhône-Alpes;Cantal;Saint-Flour;178861
+Occitanie;Haute-Garonne;Saint-Gaudens;325029
+Auvergne-Rhône-Alpes;Savoie;Saint-Jean de Maurienne;126823
+Nouvelle-Aquitaine;Charente-Maritime;Saint-Jean-d'Angély;83549
+Auvergne-Rhône-Alpes;Haute-Savoie;Saint-Julien-en-Genevois;145679
+Grand Est;Haut-Rhin;Saint-Louis;34346
+Bretagne;Ille-et-Vilaine;Saint-Malo;84547
+Collectivités d'Outre-Mer;Saint-Martin;Saint-Martin;40821
+Hauts-de-France;Pas-de-Calais;Saint-Omer;85630
+Hauts-de-France;Aisne;Saint-Quentin;51058
+Hauts-de-France;Nord;Sambre - Avesnois;156043
+Auvergne-Rhône-Alpes;Puy-de-Dôme;Sancy Val d'Allier;70964
+Nouvelle-Aquitaine;Dordogne;Sarlat;154557
+Grand Est;Moselle;Sarrebourg - Château - Salins;130161
+Grand Est;Moselle;Sarreguemines;172029
+Corse;Corse-du-Sud;Sartène - Porto-Vecchio;120649
+Pays de la Loire;Sarthe;Sarthe Centre;144422
+Pays de la Loire;Sarthe;Sarthe Nord;79555
+Pays de la Loire;Sarthe;Sarthe Sud;121739
+Pays de la Loire;Maine-et-Loire;Saumur;110083
+Guyane;Guyane;Savanes;252581
+Grand Est;Bas-Rhin;Saverne;95641
+Grand Est;Ardennes;Sedan;59041
+Pays de la Loire;Maine-et-Loire;Segré;70029
+Île-de-France;Yvelines;Seine Aval ;208263
+Île-de-France;Essonne;Seine Essonne;204248
+Grand Est;Bas-Rhin;Sélestat - Erstein;39370
+Hauts-de-France;Oise;Senlis;138510
+Bourgogne-Franche-Comté;Yonne;Sens;71538
+Grand Est;Marne;Sézanne;71318
+Hauts-de-France;Aisne;Soissons;61249
+Occitanie;Lot;Souillac;130564
+Grand Est;Bas-Rhin;Strasbourg;54978
+Nouvelle-Aquitaine;Charente;Sud Charente;134118
+Mayotte;Mayotte;Sud de Mayotte;87338
+Île-de-France;Essonne;Sud Essonne ;202087
+Nouvelle-Aquitaine;Gironde;Sud Gironde;87587
+Occitanie;Lozère;Sud Lozère;126057
+Normandie;Manche;Sud Manche;38492
+Martinique;Martinique;Sud Martinique ;96880
+Grand Est;Meuse;Sud Meuse;72516
+Île-de-France;Seine-et-Marne;Sud Seine-et-Marne ;86602
+Île-de-France;Yvelines;Sud-Ouest Francilien;92957
+Nouvelle-Aquitaine;Landes;Sud-Ouest Landes;142940
+Provence-Alpes-Côte d'Azur;Vaucluse;Sud-Vaucluse;73094
+Occitanie;Hautes-Pyrénées;Tarbes;51263
+Occitanie;Tarn;Tarn Nord;104396
+Occitanie;Tarn;Tarn Ouest;475137
+Occitanie;Tarn;Tarn Sud;39090
+Grand Est;Haut-Rhin;Thann - Guebwiller;85312
+Grand Est;Moselle;Thionville;68446
+Auvergne-Rhône-Alpes;Haute-Savoie;Thonon-les-Bains;142625
+Grand Est;Meurthe-et-Moselle;Toul;52865
+Provence-Alpes-Côte d'Azur;Var;Toulon;78670
+Occitanie;Haute-Garonne;Toulouse Métropole;107236
+Centre-Val de Loire;Indre-et-Loire;Tours;210433
+Bretagne;Côtes-d'Armor;Trégor Goëlo - Guingamp;297922
+Grand Est;Aube;Troyes;157106
+Nouvelle-Aquitaine;Corrèze;Tulle;154303
+Nouvelle-Aquitaine;Corrèze;Ussel;60684
+Auvergne-Rhône-Alpes;Lyon Métropole;Val de Saône et Plateau Nord;159557
+Auvergne-Rhône-Alpes;Lyon Métropole;Val d'Yzeron et Ouest Nord;70048
+Hauts-de-France;Nord;Valenciennes;112127
+Auvergne-Rhône-Alpes;Drôme;Vallée de la Drôme;68025
+Occitanie;Ariège;Vallée de l'Ariège;40564
+Île-de-France;Hauts-de-Seine;Vallée Sud Grand Paris ;156637
+Pays de la Loire;Vendée;Vendée Centre;134415
+Pays de la Loire;Vendée;Vendée Nord;129673
+Pays de la Loire;Vendée;Vendée Ouest;91063
+Pays de la Loire;Vendée;Vendée Sud;88842
+Centre-Val de Loire;Loir-et-Cher;Vendôme;99768
+Île-de-France;Yvelines;Versailles - Saint-Quentin-en-Yvelines ;107693
+Hauts-de-France;Aisne;Vervins;337815
+Bourgogne-Franche-Comté;Haute-Saône;Vesoul;103987
+Auvergne-Rhône-Alpes;Allier;Vichy;106053
+Auvergne-Rhône-Alpes;Isère;Vienne;58942
+Centre-Val de Loire;Cher;Vierzon;54701
+Occitanie;Aveyron;Villefranche de Rouergue;110193
+Nouvelle-Aquitaine;Lot-et-Garonne;Villeneuve-sur-Lot;125526
+Auvergne-Rhône-Alpes;Lyon Métropole;Villeurbanne;293816
+Normandie;Orne;Vimoutiers - L'Aigle - Mortagne;110354
+Normandie;Calvados;Vire;109749
+Bretagne;Ille-et-Vilaine;Vitré - Fougères;356330
+Grand Est;Marne;Vitry-le-François;91408
+Auvergne-Rhône-Alpes;Haute-Loire;Yssingeaux;58013

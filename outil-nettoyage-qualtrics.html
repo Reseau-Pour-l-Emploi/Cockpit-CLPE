@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nettoyage des réponses Qualtrics - Cockpit CLPE</title>
+<link rel="icon" type="image/svg+xml" href="assets/tdb-rpe-icon.svg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  --ft-navy:#0D1440; --ft-indigo:#293378; --ft-indigo-dark:#1C2456; --ft-indigo-light:#E3E5F1;
+  --ft-violet:#7E58A0; --ft-violet-light:#ECE6F2;
+  --ft-jaune:#FFCC52; --ft-jaune-dark:#E0A800; --ft-jaune-light:#FFF4D6;
+  --ft-bleu:#406BDE; --ft-bleu-light:#E2E8FB;
+  --ft-orange:#D96B00; --ft-orange-light:#FCEADB;
+  --ft-rouge:#D92424; --ft-bordeaux:#5C0F38;
+  --ft-sable:#F5F2EE; --ft-sable-dark:#E6E1DB;
+  --ft-gray-400:#9CA3AF; --ft-gray-500:#6B7280; --ft-gray-700:#374151;
+  --ft-white:#FFFFFF;
+  --ft-fg-1:var(--ft-navy); --ft-fg-2:var(--ft-gray-700); --ft-fg-3:var(--ft-gray-500);
+  --ft-font:'Marianne',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --sh-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 4px 10px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--ft-font);font-size:14px;line-height:1.5;color:var(--ft-fg-1);background:var(--ft-sable)}
+header.site{background:var(--ft-navy);padding:14px 0}
+.site-inner{max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:14px}
+.site-inner h1{color:#fff;font-size:19px;margin:0;font-weight:700}
+.site-inner .sub{color:#c7cbe6;font-size:12.5px;margin-top:2px}
+main{max-width:900px;margin:0 auto;padding:28px 24px 64px}
+.card{background:#fff;border:1px solid var(--ft-sable-dark);border-radius:10px;padding:22px 24px;margin-bottom:20px;box-shadow:var(--sh-sm)}
+h2{font-size:17px;margin:0 0 10px;color:var(--ft-navy)}
+p{color:var(--ft-fg-2)}
+.steps{margin:0 0 18px;padding-left:20px;color:var(--ft-fg-2);font-size:13.5px;line-height:1.8}
+.dropzone{border:2px dashed var(--ft-indigo-light);border-radius:10px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+.dropzone:hover,.dropzone.drag{border-color:var(--ft-indigo);background:var(--ft-indigo-light)}
+.dropzone .lbl{font-weight:600;color:var(--ft-navy);margin-bottom:4px}
+.dropzone .hint{font-size:12.5px;color:var(--ft-fg-3)}
+input[type=file]{display:none}
+.btn{background:var(--ft-indigo);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-family:var(--ft-font);font-size:14px;font-weight:600;cursor:pointer;transition:background .15s ease}
+.btn:hover{background:var(--ft-indigo-dark)}
+.btn:disabled{background:var(--ft-gray-400);cursor:not-allowed}
+.btn-secondary{background:#fff;color:var(--ft-indigo);border:1.5px solid var(--ft-indigo)}
+.btn-secondary:hover{background:var(--ft-indigo-light)}
+#summary{display:none}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--ft-sable-dark);font-size:13.5px}
+.summary-row:last-child{border-bottom:none}
+.summary-row .lbl{color:var(--ft-fg-2)}
+.summary-row .val{font-weight:700;color:var(--ft-navy);font-size:15px}
+.summary-row .val.neg{color:var(--ft-rouge)}
+.summary-final{background:var(--ft-indigo-light);border-radius:8px;padding:14px 16px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.summary-final .lbl{font-weight:700;color:var(--ft-navy)}
+.summary-final .val{font-size:22px;font-weight:700;color:var(--ft-navy)}
+.warn-box{background:var(--ft-jaune-light);border:1px solid var(--ft-jaune-dark);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--ft-fg-1);margin-top:14px}
+.error-box{background:#FBE0D6;border:1px solid var(--ft-rouge);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--ft-fg-1);margin-top:14px;display:none}
+#downloadRow{display:none;margin-top:18px;text-align:center}
+.filename{font-size:12.5px;color:var(--ft-fg-3);margin-top:8px}
+.loader{display:none;text-align:center;padding:20px;color:var(--ft-fg-2);font-size:13.5px}
+.note{font-size:12px;color:var(--ft-fg-3);margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="site-inner">
+    <h1>Nettoyage des réponses Qualtrics</h1>
+  </div>
+  <div class="site-inner" style="margin-top:2px"><div class="sub">Cockpit de pilotage des CLPE - préparation du fichier avant dépôt sur GitHub</div></div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Ce que fait cet outil</h2>
+    <ol class="steps">
+      <li><b>Correctif de référentiel</b> : si les questions cachées Q28_1/Q28_2/Q28_3 correspondent à une entrée du fichier de correction, les champs Région/Département/CLPE sont remplacés par les valeurs corrigées.</li>
+      <li><b>Filtre de complétude</b> : seules les réponses ayant répondu aux 10 premières questions (Fondamentaux) sont conservées.</li>
+      <li><b>Déduplication</b> : en cas d'email identique (Q27_3) pour un même CLPE, seule la réponse la plus complète est gardée (la plus récente en cas d'égalité).</li>
+      <li><b>Anonymisation</b> : les champs IPAddress, ResponseId, Q27_1, Q27_2 et Q27_3 sont vidés, dans cet ordre - après la déduplication, qui en a besoin.</li>
+    </ol>
+    <p style="font-size:13px">Le fichier obtenu est prêt à être déposé tel quel comme <code>data/answers_global.xlsx</code> dans le dépôt GitHub du cockpit.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Déposer le fichier Qualtrics brut</h2>
+    <div class="dropzone" id="dropzone">
+      <div class="lbl" id="dzLabel">Glissez votre export Qualtrics (.xlsx) ici, ou cliquez pour le choisir</div>
+      <div class="hint">Format attendu : export Qualtrics standard (2 lignes d'en-tête)</div>
+      <input type="file" id="fileInput" accept=".xlsx">
+    </div>
+    <div class="loader" id="loader">Traitement en cours…</div>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <div class="card" id="summary">
+    <h2>2. Résultat du nettoyage</h2>
+    <div class="summary-row"><span class="lbl">Lignes dans le fichier d'origine</span><span class="val" id="sRaw">-</span></div>
+    <div class="summary-row"><span class="lbl">Corrigées par le référentiel (Q28)</span><span class="val" id="sCorrected">-</span></div>
+    <div class="summary-row"><span class="lbl">Retirées (réponse incomplète aux 10 premières questions)</span><span class="val neg" id="sFiltered">-</span></div>
+    <div class="summary-row"><span class="lbl">Retirées (doublon email + CLPE)</span><span class="val neg" id="sDeduped">-</span></div>
+    <div class="summary-row"><span class="lbl">Champs anonymisés</span><span class="val" id="sAnon">-</span></div>
+    <div class="summary-final"><span class="lbl">Lignes dans le fichier nettoyé</span><span class="val" id="sFinal">-</span></div>
+    <div class="warn-box" id="unmatchedWarn" style="display:none"></div>
+    <div id="downloadRow">
+      <button class="btn" id="downloadBtn">Télécharger le fichier nettoyé</button>
+      <div class="filename" id="downloadName"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    Traitement effectué entièrement dans votre navigateur : le fichier n'est envoyé à aucun serveur.
+    Le fichier de correction du référentiel est lu depuis <code>data/correctif_referentiel.csv</code> à côté de cette page.
+  </div>
+</main>
+
+<script>
+var CORRECTIF_FILE = 'data/correctif_referentiel.csv';
+var correctifMap = {};
+var correctifLoadError = '';
+
+function parseSimpleCSV(text) {
+  var lines = (text || '').split(/\r\n|\n/).filter(function (l) { return l.length; });
+  if (!lines.length) return [];
+  var headers = lines[0].split(';').map(function (h) { return h.trim(); });
+  return lines.slice(1).map(function (line) {
+    var cols = line.split(';'), obj = {};
+    headers.forEach(function (h, i) { obj[h] = cols[i] == null ? cols[i] : cols[i].trim(); });
+    return obj;
+  });
+}
+
+fetch(CORRECTIF_FILE).then(function (r) { return r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status)); })
+  .then(function (text) {
+    parseSimpleCSV(text).forEach(function (c) {
+      var key = (c.q28_1 || '').trim() + '|' + (c.q28_2 || '').trim() + '|' + (c.q28_3 || '').trim();
+      correctifMap[key] = { region: c.region, departement: c.departement, clpe: c.clpe };
+    });
+  })
+  .catch(function (err) {
+    correctifLoadError = 'Le fichier ' + CORRECTIF_FILE + " n'a pas pu être chargé (" + err.message + ') : le correctif de référentiel ne sera pas appliqué.';
+  });
+
+var dropzone = document.getElementById('dropzone');
+var fileInput = document.getElementById('fileInput');
+var lastCleanedWorkbook = null, lastFileName = '';
+
+dropzone.addEventListener('click', function () { fileInput.click(); });
+dropzone.addEventListener('dragover', function (e) { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('drag'); });
+dropzone.addEventListener('drop', function (e) {
+  e.preventDefault(); dropzone.classList.remove('drag');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', function (e) { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+function showError(msg) {
+  var box = document.getElementById('errorBox');
+  box.textContent = msg; box.style.display = 'block';
+  document.getElementById('summary').style.display = 'none';
+}
+
+function handleFile(file) {
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('dzLabel').textContent = file.name;
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('downloadRow').style.display = 'none';
+
+  var reader = new FileReader();
+  reader.onload = function (e) {
+    setTimeout(function () {
+      try {
+        process(e.target.result, file.name);
+      } catch (err) {
+        showError("Impossible de traiter ce fichier : " + err.message + ". Vérifiez qu'il s'agit bien d'un export Qualtrics standard.");
+      }
+      document.getElementById('loader').style.display = 'none';
+    }, 30);
+  };
+  reader.onerror = function () {
+    document.getElementById('loader').style.display = 'none';
+    showError('La lecture du fichier a échoué.');
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* Identification des questions Q1..Qn : même méthode que le site principal, basée sur la
+   ligne d'intitulés (2e ligne), pas sur le nom des colonnes (qui n'est pas toujours "Q1",
+   "Q2"... de façon fiable selon les exports). */
+function findQuestionCols(labels) {
+  var reQ = /^Q(\d+)\./;
+  var cols = {};
+  labels.forEach(function (lab, i) {
+    var m = reQ.exec(String(lab == null ? '' : lab).trim());
+    if (m) cols[parseInt(m[1], 10)] = i;
+  });
+  return cols;
+}
+
+function process(arrayBuffer, fileName) {
+  var wb = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
+  var ws = wb.Sheets[wb.SheetNames[0]];
+  var aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+  if (aoa.length < 3) throw new Error('le fichier doit contenir au moins 2 lignes d\u2019en-tête et 1 ligne de réponse');
+
+  var headers = aoa[0].map(function (h) { return String(h == null ? '' : h).trim(); });
+  var labels = aoa[1];
+  var col = {}; headers.forEach(function (h, i) { if (h && col[h] === undefined) col[h] = i; });
+  var qCols = findQuestionCols(labels);
+  var qNums = Object.keys(qCols).map(Number).sort(function (a, b) { return a - b; });
+  var fondQNums = qNums.filter(function (n) { return n >= 1 && n <= 10; });
+  if (fondQNums.length < 10) {
+    console.warn('Attention : seules ' + fondQNums.length + ' questions parmi Q1-Q10 ont été identifiées.');
+  }
+
+  function get(row, name) { var i = col[name]; return i === undefined ? null : row[i]; }
+  function hasVal(v) { return v != null && String(v).trim() !== ''; }
+
+  var nRaw = aoa.length - 2;
+  var nCorrected = 0, nFilteredOut = 0;
+  var kept = []; // {row, rIndex}
+
+  for (var r = 2; r < aoa.length; r++) {
+    var row = aoa[r].slice();
+    if (!row || row.every(function (c) { return c == null || c === ''; })) { continue; }
+
+    // 1. Correctif de référentiel (Q28_1/2/3)
+    var q28key = String(get(row, 'Q28_1') || '').trim() + '|' + String(get(row, 'Q28_2') || '').trim() + '|' + String(get(row, 'Q28_3') || '').trim();
+    if (correctifMap[q28key]) {
+      var fix = correctifMap[q28key];
+      if (col['Région'] !== undefined) row[col['Région']] = fix.region;
+      if (col['Département'] !== undefined) row[col['Département']] = fix.departement;
+      if (col['CLPE'] !== undefined) row[col['CLPE']] = fix.clpe;
+      nCorrected++;
+    }
+
+    // 2. Filtre : réponse à toutes les 10 premières questions
+    var answeredAllFond = fondQNums.length > 0 && fondQNums.every(function (n) { return hasVal(row[qCols[n]]); });
+    if (!answeredAllFond) { nFilteredOut++; continue; }
+
+    kept.push(row);
+  }
+
+  // 3. Déduplication (email Q27_3 + CLPE), la plus complète puis la plus récente
+  var emailCol = col['Q27_3'], clpeCol = col['CLPE'];
+  var dateCol = (col['RecordedDate'] !== undefined) ? col['RecordedDate'] : col['EndDate'];
+  function completeness(row) { return qNums.reduce(function (s, n) { return s + (hasVal(row[qCols[n]]) ? 1 : 0); }, 0); }
+  function dateOf(row) { var v = dateCol !== undefined ? row[dateCol] : null; var t = v ? new Date(v).getTime() : NaN; return isNaN(t) ? -Infinity : t; }
+
+  var groups = {}, order = [];
+  kept.forEach(function (row) {
+    var email = emailCol !== undefined ? String(row[emailCol] || '').trim().toLowerCase() : '';
+    var clpe = clpeCol !== undefined ? String(row[clpeCol] || '').trim() : '';
+    if (!email || !clpe) { order.push(row); return; }
+    var key = email + '|' + clpe;
+    if (!groups[key]) { groups[key] = []; order.push(groups[key]); }
+    groups[key].push(row);
+  });
+  var nBeforeDedup = kept.length;
+  var finalRows = order.map(function (item) {
+    if (!Array.isArray(item)) return item;
+    return item.slice().sort(function (a, b) {
+      var c = completeness(b) - completeness(a);
+      return c !== 0 ? c : dateOf(b) - dateOf(a);
+    })[0];
+  });
+  var nDeduped = nBeforeDedup - finalRows.length;
+
+  // 4. Anonymisation (après la déduplication)
+  var anonFields = ['IPAddress', 'ResponseId', 'Q27_1', 'Q27_2', 'Q27_3'];
+  var anonCols = anonFields.map(function (f) { return col[f]; }).filter(function (i) { return i !== undefined; });
+  var nAnonCells = 0;
+  finalRows.forEach(function (row) {
+    anonCols.forEach(function (i) {
+      if (row[i] != null && row[i] !== '') { row[i] = null; nAnonCells++; }
+    });
+  });
+
+  // Reconstruction du classeur (mêmes 2 lignes d'en-tête + lignes nettoyées)
+  var outAoa = [aoa[0], aoa[1]].concat(finalRows);
+  var outWs = XLSX.utils.aoa_to_sheet(outAoa);
+  var outWb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(outWb, outWs, wb.SheetNames[0] || 'Sheet0');
+  lastCleanedWorkbook = outWb;
+  lastFileName = 'answers_global.xlsx';
+
+  document.getElementById('sRaw').textContent = nRaw;
+  document.getElementById('sCorrected').textContent = nCorrected;
+  document.getElementById('sFiltered').textContent = '-' + nFilteredOut;
+  document.getElementById('sDeduped').textContent = '-' + nDeduped;
+  document.getElementById('sAnon').textContent = nAnonCells + ' cellules';
+  document.getElementById('sFinal').textContent = finalRows.length;
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('downloadRow').style.display = 'block';
+  document.getElementById('downloadName').textContent = lastFileName;
+
+  var warn = document.getElementById('unmatchedWarn');
+  var warnMsgs = [];
+  if (correctifLoadError) warnMsgs.push(correctifLoadError);
+  if (fondQNums.length < 10) warnMsgs.push("Seules " + fondQNums.length + " des 10 premières questions ont été identifiées dans ce fichier - vérifiez qu'il s'agit bien du même modèle de questionnaire.");
+  if (emailCol === undefined) warnMsgs.push("Colonne Q27_3 (email) introuvable : la déduplication n'a pas pu être appliquée.");
+  if (warnMsgs.length) { warn.innerHTML = warnMsgs.join('<br>'); warn.style.display = 'block'; } else { warn.style.display = 'none'; }
+}
+
+document.getElementById('downloadBtn').addEventListener('click', function () {
+  if (!lastCleanedWorkbook) return;
+  XLSX.writeFile(lastCleanedWorkbook, lastFileName);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+q28_1;q28_2;q28_3;region;departement;clpe
+NORMANDIE;61 ORNE;Alençon;Normandie;Orne;Pays d'Alençon et d'Andaine
+PAYS DE LA LOIRE;44 LOIRE ATLANTIQUE;44 Ouest;Pays de la Loire;Loire-Atlantique;Loire-Atlantique Ouest
+NORMANDIE;76 SEINE MARITIME;Dieppe littoral;Normandie;Seine-Maritime;Pays de Bray
+NORMANDIE;76 SEINE MARITIME;Dieppe Pays de Bray;Normandie;Seine-Maritime;Dieppe
+NORMANDIE;50 MANCHE;Cherbourg-Cotentin;Normandie;Manche;Cotentin
+PAYS DE LA LOIRE;44 LOIRE ATLANTIQUE;44 Centre;Pays de la Loire;Loire-Atlantique;Loire-Atlantique Centre
+NORMANDIE;50 MANCHE;Avranches-Sud Manche;Normandie;Manche;Sud Manche
+NORMANDIE;50 MANCHE;Saint Lô-Coutances - Centre Manche;Normandie;Manche;Centre Manche
+NORMANDIE;61 ORNE;Mortagne au Perche;Normandie;Orne;Vimoutiers - L'Aigle - Mortagne
+PAYS DE LA LOIRE;53 MAYENNE;Centre Mayenne (Laval);Pays de la Loire;Mayenne;Mayenne Centre
+NORMANDIE;14 CALVADOS;Vire;Normandie;Calvados;Vire
+NORMANDIE;61 ORNE;Argentan;Normandie;Orne;Argentan - Flers
+NORMANDIE;14 CALVADOS;Caen;Normandie;Calvados;Caen
+NORMANDIE;14 CALVADOS;Bayeux;Normandie;Calvados;Bayeux
+PAYS DE LA LOIRE;72 SARTHE;Sud Sarthe;Pays de la Loire;Sarthe;Sarthe Sud
+NORMANDIE;27 EURE;Evreux;Normandie;Eure;Évreux
+PAYS DE LA LOIRE;85 VENDEE;85 Nord;Pays de la Loire;Vendée;Vendée Nord
+NORMANDIE;27 EURE;Les Andelys;Normandie;Eure;Les Andelys
+NORMANDIE;27 EURE;Bernay;Normandie;Eure;Bernay
+NORMANDIE;14 CALVADOS;Lisieux;Normandie;Calvados;Lisieux
+NORMANDIE;76 SEINE MARITIME;Rouen;Normandie;Seine-Maritime;Rouen
+PAYS DE LA LOIRE;53 MAYENNE;Nord Mayenne;Pays de la Loire;Mayenne;Mayenne Nord
+PAYS DE LA LOIRE;53 MAYENNE;Mayenne Sud (Chateau Gonthier);Pays de la Loire;Mayenne;Mayenne Sud
+PAYS DE LA LOIRE;85 VENDEE;85 Centre;Pays de la Loire;Vendée;Vendée Centre
+PAYS DE LA LOIRE;85 VENDEE;85 Ouest;Pays de la Loire;Vendée;Vendée Ouest
+PAYS DE LA LOIRE;85 VENDEE;85 Sud;Pays de la Loire;Vendée;Vendée Sud
+PAYS DE LA LOIRE;72 SARTHE;Nord Sarthe;Pays de la Loire;Sarthe;Sarthe Nord
+PAYS DE LA LOIRE;72 SARTHE;Centre Sarthe;Pays de la Loire;Sarthe;Sarthe Centre
+PAYS DE LA LOIRE;44 LOIRE ATLANTIQUE;44 Sud;Pays de la Loire;Loire-Atlantique;Loire-Atlantique Sud
+NORMANDIE;76 SEINE MARITIME;Le Havre;Normandie;Seine-Maritime;Le Havre
+PAYS DE LA LOIRE;49 MAINE ET LOIRE;Maine et Loire Est - Saumur;Pays de la Loire;Maine-et-Loire;Saumur
+PAYS DE LA LOIRE;49 MAINE ET LOIRE;Centre Maine et Loire - Angers;Pays de la Loire;Maine-et-Loire;Angers
+PAYS DE LA LOIRE;49 MAINE ET LOIRE;Maine et Loire Sud - Cholet;Pays de la Loire;Maine-et-Loire;Cholet
+GRAND EST;54 MEURTHE ET MOSELLE;Nancy-Pont A Mousson;Grand Est;Meurthe-et-Moselle;Nancy - Pont-à-Mousson
+AUVERGNE-RHONE-ALPES;07 ARDECHE;Centre Ardèche;Auvergne-Rhône-Alpes;Ardèche;Centre Ardèche
+OCCITANIE;34 HERAULT;Lodève;Occitanie;Hérault;Lodève
+GRAND EST;52 HAUTE-MARNE;Saint Dizier;Grand Est;Haute-Marne;Saint-Dizier
+BOURGOGNE-FRANCHE-COMTE;89 YONNE;Avallon/ Tonnerre;Bourgogne-Franche-Comté;Yonne;Avallon
+ILE DE FRANCE;77 SEINE-ET-MARNE;CLPE SUD 77;Île-de-France;Seine-et-Marne;Sud Seine-et-Marne 
+NOUVELLE-AQUITAINE;33 GIRONDE;Bordeaux Métropolitain;Nouvelle-Aquitaine;Gironde;Bordeaux Métropole
+AUVERGNE-RHONE-ALPES;01 AIN;Oyonnax Pays de Gex;Auvergne-Rhône-Alpes;Ain;Haut Bugey Agglomération - Valserhône - Pays de Gex
+AUVERGNE-RHONE-ALPES;73 SAVOIE;Tarentaise;Auvergne-Rhône-Alpes;Savoie;Albertville
+PROVENCE ALPES COTE D'AZUR;13 BOUCHES DU RHONE;Aix en Provence;Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Aix-en-Provence
+OCCITANIE;66  PYRENEES ORIENTALES;Céret;Occitanie;Pyrénées-Orientales;Céret
+OCCITANIE;09 ARIEGE;Vallée de l'Ariège;Occitanie;Ariège;Vallée de l'Ariège
+GRAND EST;51 MARNE;Sézanne;Grand Est;Marne;Sézanne
+PROVENCE ALPES COTE D'AZUR;13 BOUCHES DU RHONE;Istres;Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Istres
+ILE DE FRANCE;95 VAL-D'OISE;Val d'Oise Centre;Île-de-France;Val-d'Oise;Centre Val-dOise
+NOUVELLE-AQUITAINE;17 CHARENTE-MARITIME;Royan;Nouvelle-Aquitaine;Charente-Maritime;Royan
+HAUTS-DE-FRANCE;59 NORD;Lille Roubaix Tourcoing (MEL);Hauts-de-France;Nord;Lille Metropole
+NOUVELLE-AQUITAINE;17 CHARENTE-MARITIME;Jonzac;Nouvelle-Aquitaine;Charente-Maritime;Jonzac
+OCCITANIE;65 HAUTES PYRENEES;Tarbes;Occitanie;Hautes-Pyrénées;Tarbes
+ILE DE FRANCE;91 ESSONNE;Sud Essonne;Île-de-France;Essonne;Sud Essonne 
+ILE DE FRANCE;77 SEINE-ET-MARNE;CLPE du NORD EST 77;Île-de-France;Seine-et-Marne;Nord-Est Seine-et-Marne
+GRAND EST;55 MEUSE;Sud Meusien / Bar le Duc et Commercy;Grand Est;Meuse;Sud Meuse
+CENTRE-VAL DE LOIRE;18 CHER;Saint-Armand-Montrond;Centre-Val de Loire;Cher;Saint-Amand-Montrond
+PAYS DE LA LOIRE;44 LOIRE ATLANTIQUE;44 Nord;Pays de la Loire;Loire-Atlantique;Loire-Atlantique Nord
+AUVERGNE-RHONE-ALPES;42 LOIRE;Montbrison;Auvergne-Rhône-Alpes;Loire;Montbrison
+HAUTS-DE-FRANCE;60 OISE;Compiègne;Hauts-de-France;Oise;Compiegne
+OCCITANIE;11 AUDE;Narbonne;Occitanie;Aude;Narbonne
+NOUVELLE-AQUITAINE;17 CHARENTE-MARITIME;Saintes;Nouvelle-Aquitaine;Charente-Maritime;Saintes
+BOURGOGNE-FRANCHE-COMTE;71 SAONE ET LOIRE;Louhans;Bourgogne-Franche-Comté;Saône-et-Loire;Louhans
+NOUVELLE-AQUITAINE;40 LANDES;Nord Ouest Landes;Nouvelle-Aquitaine;Landes;Nord-Ouest Landes
+BOURGOGNE-FRANCHE-COMTE;70 HAUTE SAONE;Vesoul;Bourgogne-Franche-Comté;Haute-Saône;Vesoul
+AUVERGNE-RHONE-ALPES;73 SAVOIE;Maurienne;Auvergne-Rhône-Alpes;Savoie;Saint-Jean de Maurienne
+OCCITANIE;30 GARD;Nord Est;Occitanie;Gard;Gard Nord-Est
+AUVERGNE-RHONE-ALPES;74 HAUTE SAVOIE;Arve;Auvergne-Rhône-Alpes;Haute-Savoie;Bonneville
+GRAND EST;52 HAUTE-MARNE;Chaumont;Grand Est;Haute-Marne;Chaumont
+NOUVELLE-AQUITAINE;17 CHARENTE-MARITIME;La Rochelle;Nouvelle-Aquitaine;Charente-Maritime;La Rochelle
+AUVERGNE-RHONE-ALPES;69 RHONE;CTM Rhône Amont (Métropole de Lyon);Auvergne-Rhône-Alpes;Lyon Métropole;Rhône Amont
+GRAND EST;67 BAS RHIN;Strasbourg;Grand Est;Bas-Rhin;Strasbourg
+PROVENCE ALPES COTE D'AZUR;84 VAUCLUSE;Haut Vaucluse / Nord Vaucluse;Provence-Alpes-Côte d'Azur;Vaucluse;Haut-Vaucluse
+PROVENCE ALPES COTE D'AZUR;06 ALPES MARITIMES;Grasse;Provence-Alpes-Côte d'Azur;Alpes-Maritimes;Grasse
+PROVENCE ALPES COTE D'AZUR;06 ALPES MARITIMES;Nice;Provence-Alpes-Côte d'Azur;Alpes-Maritimes;Nice
+OCCITANIE;34 HERAULT;Béziers;Occitanie;Hérault;Béziers
+NOUVELLE-AQUITAINE;16 CHARENTE;Cognac- Rouillac;Nouvelle-Aquitaine;Charente;Cognac
+PROVENCE ALPES COTE D'AZUR;13 BOUCHES DU RHONE;Arles;Provence-Alpes-Côte d'Azur;Bouches-du-Rhône;Arles
+GRAND EST;57 MOSELLE;Thionville - Hayange;Grand Est;Moselle;Thionville
+NOUVELLE-AQUITAINE;19 CORREZE;Tulle;Nouvelle-Aquitaine;Corrèze;Tulle
+AUVERGNE-RHONE-ALPES;07 ARDECHE;Annonay;Auvergne-Rhône-Alpes;Ardèche;Annonay
+OCCITANIE;34 HERAULT;Montpellier;Occitanie;Hérault;Montpellier
+OCCITANIE;09 ARIEGE;Pays des Pyrénées Cathares;Occitanie;Ariège;Pays des Pyrénées Cathares
+BOURGOGNE-FRANCHE-COMTE;71 SAONE ET LOIRE;Autun - Creusot - Montceau;Bourgogne-Franche-Comté;Saône-et-Loire;Autun
+AUVERGNE-RHONE-ALPES;38 ISERE;Bassin grenoblois;Auvergne-Rhône-Alpes;Isère;Grenoble centre
+REUNION;974 NORD EST;CLPE Nord;La Réunion;La Réunion;La Réunion Nord
+BOURGOGNE-FRANCHE-COMTE;71 SAONE ET LOIRE;Mâcon;Bourgogne-Franche-Comté;Saône-et-Loire;Mâcon
+GRAND EST;68 HAUT RHIN;Altkirch;Grand Est;Haut-Rhin;Altkirch
+CENTRE-VAL DE LOIRE;45 LOIRET;Orléans;Centre-Val de Loire;Loiret;Orléans
+AUVERGNE-RHONE-ALPES;38 ISERE;Alpes Sud Isère et Vercors;Auvergne-Rhône-Alpes;Isère;Alpes Sud Isère et Vercors
+GUADELOUPE;971 GUADELOUPE ET ILES DU NORD;Grande Terre;Guadeloupe;Guadeloupe;Grande-Terre
+HAUTS-DE-FRANCE;62 PAS DE CALAIS;Artois ternois;Hauts-de-France;Pas-de-Calais;Arras
+ILE DE FRANCE;77 SEINE-ET-MARNE;CLPE EST 77;Île-de-France;Seine-et-Marne;Est Seine-et-Marne
+OCCITANIE;30 GARD;Centre Sud - Nimes;Occitanie;Gard;Gard Centre-Sud
+GRAND EST;57 MOSELLE;Metz;Grand Est;Moselle;Metz
+REUNION;974 NORD EST;CLPE Est;La Réunion;La Réunion;La Réunion Est
