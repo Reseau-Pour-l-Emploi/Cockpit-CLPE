@@ -838,6 +838,12 @@ function homogeneityColor(pct) {
   if (pct >= 100 / 3) return cssVar('--ft-bleu');
   return cssVar('--ft-rouge');
 }
+function homogeneityEmoji(pct) {
+  if (pct == null) return '\u26AA';
+  if (pct > 200 / 3) return '\uD83D\uDFE2';
+  if (pct >= 100 / 3) return '\uD83D\uDD35';
+  return '\uD83D\uDD34';
+}
 var HOMOG_RULE_TEXT = "Règle de calcul : à partir de 2 réponses, on calcule l'écart type des réponses individuelles à la question ou au score concerné. L'indice d'homogénéité vaut 100 % moins cet écart type rapporté à la moitié de l'échelle de la question (dispersion maximale théorique). Résultat : 100 % si toutes les réponses sont identiques, et l'indice diminue d'autant plus que les scores donnés sont éloignés les uns des autres (un écart de 2 points fait moins baisser l'indice qu'un écart de 6 points sur la même question), jusqu'à 0 % en cas de dispersion maximale (réponses aux deux extrêmes de l'échelle).";
 /* Info-bulles et badges emoji réutilisés partout où l'homogénéité et le nombre de
    répondants sont affichés : sur chaque question, sur les lignes de regroupement et dans la
@@ -847,11 +853,11 @@ var RESPONDENTS_TOOLTIP = "Nombre de répondants à cette question";
 var HOMOG_TOOLTIP = "Indice d'homogénéité\nMesure le niveau d'alignement des réponses des acteurs au sein du CLPE.\nCode couleur :\n\uD83D\uDD34 Rouge (< 1/3) : perceptions différentes, sujet à aborder en collectif.\n\uD83D\uDD35 Bleu (1/3 à 2/3) : homogénéité intermédiaire.\n\uD83D\uDFE2 Vert (> 2/3) : vision partagée entre les acteurs.\n\nRègle de calcul : disponible à partir de 2 réponses. 100 % : toutes les réponses sont identiques. 0 % : les réponses sont totalement opposées (aux deux extrêmes de l'échelle). Plus les avis s'éloignent les uns des autres, plus l'indice diminue. Pour un groupe de questions, l'indice affiché est la moyenne des indices de chaque question.";
 function respondentsBadge(cnt) {
   if (cnt == null) return '';
-  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65</span>:\u00A0' + cnt + '</span>';
+  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65</span>:\u00A0<span title="' + esc(RESPONDENTS_TOOLTIP) + '" style="cursor:help">' + cnt + '</span></span>';
 }
 function homogBadge(h) {
   if (h == null) return '';
-  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(HOMOG_TOOLTIP) + '">\u2696\uFE0F</span>:\u00A0<span style="color:' + homogeneityColor(h) + ';font-weight:700">' + fmt(h, 0) + '\u00A0%</span></span>';
+  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(HOMOG_TOOLTIP) + '">' + homogeneityEmoji(h) + '</span>:\u00A0<span title="' + esc(HOMOG_TOOLTIP) + '" style="color:' + homogeneityColor(h) + ';font-weight:700;cursor:help">' + fmt(h, 0) + '\u00A0%</span></span>';
 }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function infoIcon(text) { return '<span class="info-icon" tabindex="0" role="button" aria-label="Note de lecture" data-info="' + esc(text) + '">\u2139\uFE0F</span>'; }
