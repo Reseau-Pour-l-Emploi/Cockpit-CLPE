@@ -176,6 +176,20 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .panel .geo{font-size:12px;color:var(--ft-fg-3);margin-bottom:12px}
 .hero-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .hero-card{background:var(--ft-white);border:2px solid var(--ft-indigo);border-radius:8px;padding:11px 14px}
+.hero-card-emph{border-width:4px;box-shadow:var(--sh-sm)}
+.mat-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.niveau-explain{background:var(--ft-indigo-light);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ft-fg-1);line-height:1.55}
+.niveau-explain b{color:var(--ft-indigo)}
+.niveau-next{margin-top:6px;color:var(--ft-fg-2)}
+.priorites-box{background:var(--ft-white);border:1.5px solid var(--ft-jaune-dark);border-radius:10px;padding:14px 16px;margin-top:14px}
+.priorites-title{font-weight:700;font-size:14px;color:var(--ft-navy);margin-bottom:10px}
+.priorite-item{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--ft-sable)}
+.priorite-item:first-of-type{border-top:none}
+.priorite-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.priorite-body{flex:1;min-width:0}
+.priorite-q{font-size:12.5px;color:var(--ft-fg-1);line-height:1.4}
+.priorite-score{font-size:11px;color:var(--ft-fg-3);margin-top:2px}
+.priorites-note{font-size:11px;color:var(--ft-fg-3);margin-top:8px;font-style:italic}
 .hero-card .lbl{font-size:12px;font-weight:600;color:var(--ft-fg-2)}
 .hero-card .val{font-size:25px;font-weight:700;color:var(--ft-navy);line-height:1.1;margin-top:2px;white-space:nowrap}
 .hero-card .val .unit{font-size:0.48em;font-weight:400;color:var(--ft-fg-3)}
@@ -222,14 +236,27 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-group-title[data-open="1"] .qg-chev{transform:rotate(45deg)}
 .q-group-title .qg-label{flex:1}
 .q-group-title .qg-score{font-weight:700;color:var(--ft-indigo)}
-.q-bar-row{display:grid;grid-template-columns:40px 1fr 160px 230px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--ft-sable)}
+.q-bar-wrap{border-bottom:1px solid var(--ft-sable)}
+.q-bar-row{display:grid;grid-template-columns:40px 1fr 160px 230px 16px;gap:10px;align-items:center;padding:7px 0;cursor:pointer;border-radius:4px}
+.q-bar-row:hover{background:var(--ft-sable)}
+.q-chev{width:8px;height:8px;border-right:2px solid var(--ft-fg-3);border-bottom:2px solid var(--ft-fg-3);transform:rotate(-45deg);transition:transform .15s ease;justify-self:center}
+.q-bar-open .q-chev{transform:rotate(45deg)}
+.q-reco-body{padding:4px 0 14px 50px;font-size:12.5px;color:var(--ft-fg-2)}
+.q-reco-item,.q-reco-cap{background:var(--ft-sable);border-left:3px solid var(--ft-indigo);border-radius:4px;padding:8px 12px;margin-bottom:8px}
+.q-reco-cap{border-left-color:var(--ft-jaune-dark)}
+.q-reco-item b,.q-reco-cap b{display:block;font-size:11px;color:var(--ft-indigo);margin-bottom:3px;text-transform:uppercase;letter-spacing:.02em}
+.q-reco-cap b{color:var(--ft-jaune-dark)}
+.q-reco-item p,.q-reco-cap p{margin:0;line-height:1.5}
+.q-reco-empty,.q-reco-max{font-size:12.5px;color:var(--ft-fg-3);padding:4px 0}
+.q-reco-max{color:#1c7a4d;font-weight:600}
+@media(max-width:760px){.q-bar-row{grid-template-columns:34px 1fr 90px 150px 14px}.q-reco-body{padding-left:8px}}
 .q-bar-row .qnum{font-weight:700;font-size:13px;color:#fff;background:var(--ft-indigo);border-radius:4px;text-align:center;padding:3px 0;cursor:pointer;border:none;font-family:var(--ft-font)}
 .q-bar-row .qnum:hover{background:var(--ft-indigo-dark)}
 .q-bar-row .qtext{font-size:12.5px;color:var(--ft-fg-2)}
 .q-bar-row .q-track{height:12px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:6px;overflow:hidden}
 .q-bar-row .q-fill{height:100%;border-radius:6px}
 .q-bar-row .qval{font-weight:700;font-size:12.5px;text-align:right}
-@media(max-width:760px){.q-bar-row{grid-template-columns:34px 1fr 90px 150px}}
+.meta-badge{display:inline-block;cursor:help;white-space:nowrap}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,20,64,.5);z-index:1300;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
@@ -628,13 +655,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
 <div id="printReport"></div>
 
-<div class="modal-overlay" id="precoOverlay">
-  <div class="modal-box preco-box">
-    <div class="modal-head"><h3>Préconisations</h3><button class="modal-close" id="precoClose" aria-label="Fermer">✕</button></div>
-    <div class="modal-body" id="precoBody"></div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="fichesPrecoOverlay">
   <div class="modal-box preco-box">
     <div class="modal-head"><h3>Préconisations - Fiches action</h3><button class="modal-close" id="fichesPrecoClose" aria-label="Fermer">✕</button></div>
@@ -693,6 +713,7 @@ var CONFIG = {
   frequentationFile: 'data/tdb_rpe_frequentation.csv',
   fichesFile: 'data/fiches_action.csv',
   referentielCorrectifFile: 'data/correctif_referentiel.csv',
+  recommandationsFile: 'data/recommandations_questions.csv',
   perfFile: 'data/clpe_tae_tpe.csv',
   popFile: 'data/population_clpe.csv',
   aliases: {
@@ -800,11 +821,35 @@ function homogeneityPct(values, maxScale) {
 }
 function homogeneityLabel(pct) {
   if (pct == null) return '';
-  if (pct >= 80) return 'forte';
-  if (pct >= 60) return 'moyenne';
+  if (pct > 200 / 3) return 'forte';
+  if (pct >= 100 / 3) return 'moyenne';
   return 'faible';
 }
+function homogeneityEmoji(pct) {
+  if (pct == null) return '\u26A6\uFE0F';
+  if (pct > 200 / 3) return '\uD83D\uDFE2';
+  if (pct >= 100 / 3) return '\uD83D\uDD35';
+  return '\uD83D\uDD34';
+}
 var HOMOG_RULE_TEXT = "Règle de calcul : à partir de 2 réponses, on calcule l'écart type des réponses individuelles à la question ou au score concerné. L'indice d'homogénéité vaut 100 % moins cet écart type rapporté à la moitié de l'échelle de la question (dispersion maximale théorique). Résultat : 100 % si toutes les réponses sont identiques, et l'indice diminue d'autant plus que les scores donnés sont éloignés les uns des autres (un écart de 2 points fait moins baisser l'indice qu'un écart de 6 points sur la même question), jusqu'à 0 % en cas de dispersion maximale (réponses aux deux extrêmes de l'échelle).";
+/* Info-bulles et badges emoji réutilisés partout où l'homogénéité et le nombre de
+   répondants sont affichés : sur chaque question et dans la synthèse à côté du graphique. */
+var RESPONDENTS_TOOLTIP = "Nombre de répondants à cette question";
+var HOMOG_TOOLTIP = "Indice d'homogénéité\nMesure le niveau d'alignement des réponses des acteurs au sein du CLPE.\nCode couleur :\n\uD83D\uDD34 Rouge (< 1/3) : perceptions différentes, sujet à aborder en collectif.\n\uD83D\uDD35 Bleu (1/3 à 2/3) : homogénéité intermédiaire.\n\uD83D\uDFE2 Vert (> 2/3) : vision partagée entre les acteurs.\n\nRègle de calcul : disponible à partir de 2 réponses. 100 % : toutes les réponses sont identiques. 0 % : les réponses sont totalement opposées (aux deux extrêmes de l'échelle). Plus les avis s'éloignent les uns des autres, plus l'indice diminue. Pour un groupe de questions, l'indice affiché est la moyenne des indices de chaque question.";
+function respondentsBadge(cnt) {
+  if (cnt == null) return '';
+  return '<span class="meta-badge" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65:\u00A0' + cnt + '</span>';
+}
+function homogBadge(h) {
+  /* Sur chaque question : emoji fixe ⚖️ (le code couleur est expliqué dans l'infobulle). */
+  if (h == null) return '';
+  return '<span class="meta-badge" title="' + esc(HOMOG_TOOLTIP) + '">\u2696\uFE0F:\u00A0' + fmt(h, 0) + '\u00A0%</span>';
+}
+function homogBadgeColored(h) {
+  /* Dans la synthèse à côté du graphique : emoji dynamique selon le niveau atteint. */
+  if (h == null) return '';
+  return '<span class="meta-badge" title="' + esc(HOMOG_TOOLTIP) + '">' + homogeneityEmoji(h) + '\u00A0' + fmt(h, 0) + '\u00A0%</span>';
+}
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function infoIcon(text) { return '<span class="info-icon" tabindex="0" role="button" aria-label="Note de lecture" data-info="' + esc(text) + '">\u2139\uFE0F</span>'; }
 function partInfoText(key) { return CONFIG.partInfo[key]; }
@@ -1067,7 +1112,7 @@ function parseSimpleCSV(text) {
     return obj;
   });
 }
-var TDB_DATA = [], FICHES_DATA = [], FICHES_MENSUEL_DATA = [], PERF_DATA = [], POP_DATA = [], SESSIONS_WEEK_DATA = [];
+var TDB_DATA = [], FICHES_DATA = [], FICHES_MENSUEL_DATA = [], PERF_DATA = [], POP_DATA = [], SESSIONS_WEEK_DATA = [], RECOMMANDATIONS = {};
 function inScope(row) {
   return (!state.region || row.region === state.region) &&
     (!state.dept || row.departement === state.dept) &&
@@ -1331,6 +1376,36 @@ function renderRadar(pts, hostId) {
     el.addEventListener('click', function (e) { e.stopPropagation(); openInfoPopup(el, el.getAttribute('data-info')); });
   });
 }
+/* Descriptions courtes par niveau de maturité (1 à 4), reprises de l'intitulé de la question
+   globale Q21 du questionnaire, complétées d'un rappel des principaux leviers pour passer au
+   niveau suivant. */
+var NIVEAU_DESCRIPTIONS = {
+  1: { label: 'Émergent', desc: "Le CLPE est installé mais son fonctionnement reste en construction (cadre, feuille de route, actions).", next: "Pour passer au niveau suivant : structurer la gouvernance (co-présidence active, animation régulière), formaliser une feuille de route et engager les premières actions suivies." },
+  2: { label: 'En structuration', desc: "Le CLPE dispose d\u2019une organisation stabilisée, d\u2019une feuille de route et d\u2019actions suivies régulièrement.", next: "Pour passer au niveau suivant : outiller le pilotage par des indicateurs chiffrés, élargir l\u2019engagement des acteurs et fiabiliser le suivi des fiches action." },
+  3: { label: 'Opérationnel et coordonné', desc: "Le CLPE pilote des actions concrètes, suit les résultats obtenus, les acteurs sont collectivement mobilisés.", next: "Pour passer au niveau suivant : orienter le pilotage vers l\u2019impact réel pour les usagers, capitaliser et diffuser les actions qui fonctionnent, renforcer l\u2019articulation avec les autres échelons du RPE." },
+  4: { label: 'À impact démontré', desc: "Le CLPE produit des résultats visibles pour le territoire et s\u2019inscrit dans une logique de progrès continu.", next: "Ce niveau reflète une pratique aboutie : l\u2019enjeu est désormais de la maintenir dans la durée et de continuer à en tirer des enseignements pour le réseau." }
+};
+/* "Les 3 priorités du CLPE" : les 3 questions les plus en retrait par rapport au profil
+   propre du territoire (mêmes seuils relatifs que les préconisations détaillées, disponibles
+   dans le rapport PDF), complétées si besoin par les scores les plus faibles restants pour
+   toujours proposer 3 priorités dès qu\u2019il y a des réponses. */
+function build3PrioritesHTML(records, g) {
+  if (!g.n) return '';
+  var stats = questionStats(records, g);
+  if (!stats.length) return '';
+  var sortedPcts = stats.map(function (s) { return s.pct; }).sort(function (a, b) { return a - b; });
+  var p25 = percentileOf(sortedPcts, 0.25);
+  var main = stats.filter(function (s) { return s.pct < 50 && s.pct <= p25; }).sort(function (a, b) { return a.pct - b.pct; });
+  var rest = stats.filter(function (s) { return main.indexOf(s) === -1; }).sort(function (a, b) { return a.pct - b.pct; });
+  var top3 = main.concat(rest).slice(0, 3);
+  if (!top3.length) return '';
+  var html = '<div class="priorites-box"><div class="priorites-title">\uD83C\uDFAF Les 3 priorités du CLPE</div>';
+  top3.forEach(function (q, i) {
+    html += '<div class="priorite-item"><span class="priorite-rank">' + (i + 1) + '</span><div class="priorite-body"><div class="priorite-q">Q' + q.n + ' \u00b7 ' + esc(q.text) + '</div><div class="priorite-score">' + fmt(q.v) + ' / ' + q.mx + ' (' + fmt(q.pct, 0) + '\u00A0%)</div></div></div>';
+  });
+  html += '<div class="priorites-note">Le rapport PDF détaille les recommandations associées à chaque priorité.</div></div>';
+  return html;
+}
 function renderIndicatorPanel(hostId, g, title, geoLine) {
   var host = document.getElementById(hostId);
   if (!g || !g.n) {
@@ -1339,27 +1414,37 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   }
   var autoTxt = g.auto == null ? 'Non renseignée' : (CONFIG.autoLabels[Math.round(g.auto)] || '-');
   var totalHomog = g.n > 1 ? homogeneityPct(g.items.map(function (r) { return r.total; }), META.totalMax) : null;
+  var fondHomog = g.n > 1 ? homogeneityPct(g.items.map(function (r) { return r.fond; }), META.fondMaxTotal) : null;
+  var matHomog = g.n > 1 ? homogeneityPct(g.items.map(function (r) { return r.mat; }), META.matMaxTotal) : null;
+  var autoVals = g.items.map(function (r) { return r.auto; }).filter(function (v) { return v > 0; });
+  var autoHomog = autoVals.length > 1 ? homogeneityPct(autoVals, CONFIG.autoMax) : null;
+  var niveauLvl = Math.max(1, Math.min(4, Math.round(niveauValue(g.total, META.totalMax))));
+  var niveauInfo = NIVEAU_DESCRIPTIONS[niveauLvl];
+
   var html = '<h3>' + esc(title) + '</h3>';
   html += '<div class="mat-grid"><div class="mat-indic-stack">';
+  html += '<div class="mat-pair">';
   html += '<div class="hero-card"><div class="lbl">Niveau de maturité' + infoIcon("Score total ramené sur une échelle de 4, pour permettre une lecture directe du niveau de maturité du CLPE, indépendamment du barème détaillé du questionnaire. Le score détaillé (sur " + META.totalMax + ") est rappelé entre parenthèses.") + '</div><div class="val">' + niveauHTML(g.total, META.totalMax) + '</div><div class="track"><div class="fill" style="width:' + (niveauValue(g.total, META.totalMax) / 4 * 100) + '%"></div></div>' +
-    (totalHomog == null ? '' : '<div class="homog-line">Homogénéité des réponses' + infoIcon(HOMOG_RULE_TEXT) + ' : ' + fmt(totalHomog, 0) + '\u00A0% (' + homogeneityLabel(totalHomog) + ')</div>') + '</div>';
-  html += '<div class="hero-card"><div class="lbl">Auto-évaluation' + infoIcon(partInfoText('auto')) + '</div><div class="val">' + (g.auto == null ? '-' : fmt(g.auto, 1)) + '<span class="unit"> / 4</span></div><div class="auto-lbl">' + esc(autoTxt) + '</div></div>';
-  [{ l: 'Fondamentaux', k: 'fond', v: g.fond, mx: META.fondMaxTotal, c: cssVar('--ft-indigo') }, { l: 'Pratiques', k: 'mat', v: g.mat, mx: META.matMaxTotal, c: cssVar('--ft-violet') }].forEach(function (p) {
-    html += '<div class="hero-card"><div class="lbl">' + p.l + infoIcon(partInfoText(p.k)) + '</div><div class="val">' + niveauHTML(p.v, p.mx) + '</div><div class="track"><div class="fill" style="width:' + (p.v / p.mx * 100) + '%;background:' + p.c + '"></div></div></div>';
+    (totalHomog == null ? '' : '<div class="homog-line">' + homogBadgeColored(totalHomog) + '</div>') + '</div>';
+  html += '<div class="hero-card"><div class="lbl">Auto-évaluation' + infoIcon(partInfoText('auto')) + '</div><div class="val">' + (g.auto == null ? '-' : fmt(g.auto, 1)) + '<span class="unit"> / 4</span></div><div class="auto-lbl">' + esc(autoTxt) + '</div>' +
+    (autoHomog == null ? '' : '<div class="homog-line">' + homogBadgeColored(autoHomog) + '</div>') + '</div>';
+  html += '</div>';
+  html += '<div class="niveau-explain"><b>' + esc(niveauInfo.label) + '</b> - ' + esc(niveauInfo.desc) + '<div class="niveau-next">' + esc(niveauInfo.next) + '</div></div>';
+  html += '<div class="mat-pair">';
+  [{ l: 'Fondamentaux', k: 'fond', v: g.fond, mx: META.fondMaxTotal, c: cssVar('--ft-indigo'), h: fondHomog, emph: true },
+  { l: 'Pratiques', k: 'mat', v: g.mat, mx: META.matMaxTotal, c: cssVar('--ft-violet'), h: matHomog, emph: false }].forEach(function (p) {
+    html += '<div class="hero-card' + (p.emph ? ' hero-card-emph' : '') + '"><div class="lbl">' + p.l + infoIcon(partInfoText(p.k)) + '</div><div class="val">' + niveauHTML(p.v, p.mx) + '</div><div class="track"><div class="fill" style="width:' + (p.v / p.mx * 100) + '%;background:' + p.c + '"></div></div>' +
+      (p.h == null ? '' : '<div class="homog-line">' + homogBadgeColored(p.h) + '</div>') + '</div>';
   });
+  html += '</div>';
   html += '</div><div>';
   html += '<div class="part-title part-title-center">Thématiques</div><div class="radar-wrap" id="' + hostId + 'Radar"></div>';
-  html += '<div class="preco-pdf-row"><button class="btn-preco" id="precoBtn">Préconisations</button></div>';
+  html += build3PrioritesHTML(g.items, g);
   html += '</div></div>';
   host.innerHTML = html;
   var pts = THEME_KEYS.map(function (t) { return { t: t, v: g.themes[t], mx: META.themeMax[t] || 1, pct: g.themes[t] / (META.themeMax[t] || 1) * 100 }; });
   renderRadar(pts, hostId + 'Radar');
   host.querySelectorAll('.hero-card .val').forEach(function (el) { shrinkToFit(el); });
-  /* Le bouton Préconisations est régénéré à chaque rendu : on réattache son écouteur. */
-  document.getElementById('precoBtn').addEventListener('click', function () {
-    document.getElementById('precoBody').innerHTML = buildPreconisationsHTML();
-    document.getElementById('precoOverlay').classList.add('show');
-  });
 }
 
 function questionOrder() {
@@ -1384,6 +1469,22 @@ function toggleBlock(key) { blockCollapse[key] = !blockCollapse[key]; }
 function setAllBlocks(scopeKey, collapsed) {
   questionOrder().forEach(function (g, idx) { blockCollapse[scopeKey + '|' + state.qview + '|' + idx] = collapsed; });
 }
+var questionExpand = {}; /* true = fiche de recommandations dépliée pour cette question (repliée par défaut) */
+/* Recommandations associées à une question, pour le score moyen arrondi à l'unité la plus
+   proche (sauf au niveau maximal, où il n'y a rien à recommander). */
+function questionRecoHTML(n, m, mx) {
+  if (n > 20) return '<div class="q-reco-empty">Pas de recommandation associée à cette question.</div>';
+  if (m == null) return '<div class="q-reco-empty">Aucune réponse disponible sur ce périmètre.</div>';
+  var niveau = Math.max(1, Math.min(4, Math.round(m / (mx || 1) * 4)));
+  if (niveau >= 4) return '<div class="q-reco-max">\uD83C\uDF89 Niveau maximal atteint sur cette question : les pratiques observées sont déjà pleinement abouties, rien à recommander de plus ici.</div>';
+  var rec = RECOMMANDATIONS[n] && RECOMMANDATIONS[n][niveau];
+  if (!rec) return '<div class="q-reco-empty">Pas de recommandation disponible pour ce niveau.</div>';
+  var html = '';
+  if (rec.rec1) html += '<div class="q-reco-item"><b>Recommandation prioritaire 1</b><p>' + esc(rec.rec1).replace(/~~n~~/g, '<br>') + '</p></div>';
+  if (rec.rec2) html += '<div class="q-reco-item"><b>Recommandation prioritaire 2</b><p>' + esc(rec.rec2).replace(/~~n~~/g, '<br>') + '</p></div>';
+  if (rec.cap) html += '<div class="q-reco-cap"><b>Cap à atteindre</b><p>' + esc(rec.cap).replace(/~~n~~/g, '<br>') + '</p></div>';
+  return html || '<div class="q-reco-empty">Pas de recommandation disponible pour ce niveau.</div>';
+}
 function questionRowsHTML(qGetter, scopeKey) {
   var html = '';
   questionOrder().forEach(function (g, idx) {
@@ -1400,12 +1501,15 @@ function questionRowsHTML(qGetter, scopeKey) {
       var r = qGetter(n), m = r ? r.v : null, h = r ? r.h : null, cnt = r ? r.count : null, mx = META.qMax[n] || 1;
       var pct = m == null ? 0 : m / mx * 100;
       var metaBits = [];
-      if (cnt != null) metaBits.push(cnt + ' répondant' + (cnt > 1 ? 's' : ''));
-      if (h != null) metaBits.push('homogénéité ' + fmt(h, 0) + '\u00A0%');
-      var valTxt = m == null ? '-' : fmt(m) + ' / ' + mx + (metaBits.length ? ' (' + metaBits.join(' \u00b7 ') + ')' : '');
-      html += '<div class="q-bar-row"><button class="qnum" data-qnum="' + n + '" type="button">Q' + n + '</button><div class="qtext">' + esc(q.text) + '</div>' +
+      if (cnt != null) metaBits.push(respondentsBadge(cnt));
+      if (h != null) metaBits.push(homogBadge(h));
+      var valTxt = m == null ? '-' : fmt(m) + ' / ' + mx + (metaBits.length ? ' (' + metaBits.join(', ') + ')' : '');
+      var qKey = key + '|q' + n;
+      var qOpen = !!questionExpand[qKey];
+      html += '<div class="q-bar-wrap"><div class="q-bar-row' + (qOpen ? ' q-bar-open' : '') + '" data-qkey="' + esc(qKey) + '" role="button" tabindex="0"><button class="qnum" data-qnum="' + n + '" type="button">Q' + n + '</button><div class="qtext">' + esc(q.text) + '</div>' +
         '<div class="q-track"><div class="q-fill" style="width:' + pct + '%;background:' + themeColor(q.theme) + '"></div></div>' +
-        '<div class="qval">' + valTxt + '</div></div>';
+        '<div class="qval">' + valTxt + '</div><span class="q-chev"></span></div>' +
+        '<div class="q-reco-body"' + (qOpen ? '' : ' style="display:none"') + '>' + (qOpen ? questionRecoHTML(n, m, mx) : '') + '</div></div>';
     });
     html += '</div>';
   });
@@ -1445,7 +1549,6 @@ function openQuestionModal(n) {
   document.getElementById('modalOverlay').classList.add('show');
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
-function closePreco() { document.getElementById('precoOverlay').classList.remove('show'); }
 function closeFichesPreco() { document.getElementById('fichesPrecoOverlay').classList.remove('show'); }
 
 var tableSort = { key: 'total', dir: -1 };
@@ -2323,18 +2426,6 @@ function exportQuestionsToExcel() {
   XLSX.writeFile(wb, 'questions_' + safeFileName(scopeLabel()) + '.xlsx');
 }
 
-function bestModalityFor(n) {
-  var mods = (META.questions[n] || {}).modalities || {};
-  var best = null, bestScore = -1;
-  Object.keys(mods).forEach(function (txt) { if (mods[txt] > bestScore) { bestScore = mods[txt]; best = txt; } });
-  return best;
-}
-function reformulateSuggestion(text) {
-  if (!text) return null;
-  var m = /^[^:]{3,60}:\s*(.+)$/.exec(text);
-  var core = m ? m[1] : text;
-  return 'Viser : ' + core;
-}
 function questionStats(records, g) {
   return Object.keys(META.questions).map(Number).filter(function (n) { return n !== CONFIG.autoQ; }).map(function (n) {
     var v = g.qAvg[n]; if (v == null) return null;
@@ -2351,17 +2442,6 @@ function scoreFrequencyText(vals) {
   vals.forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
   return Object.keys(counts).map(Number).sort(function (a, b) { return a - b; })
     .map(function (k) { return fmt(k, 0) + '\u00A0: ' + counts[k]; }).join(' \u00b7 ');
-}
-function preconisationsItemHTML(q, showSuggestion) {
-  var homogTxt = q.h == null ? 'non calculable (1 répondant)' : fmt(q.h, 0) + '\u00A0% (' + homogeneityLabel(q.h) + ')';
-  var html = '<div class="preco-item"><div class="preco-q">Q' + q.n + ' \u00b7 ' + esc(q.text) + '</div>' +
-    '<div class="preco-meta">Score : ' + fmt(q.v) + ' / ' + q.mx + ' (' + fmt(q.pct, 0) + '\u00A0%) \u00b7 Homogénéité : ' + homogTxt + '</div>';
-  if (showSuggestion) {
-    var suggestion = reformulateSuggestion(bestModalityFor(q.n));
-    if (suggestion) html += '<div class="preco-suggestion">' + esc(suggestion) + '</div>';
-  }
-  html += '</div>';
-  return html;
 }
 function percentileOf(sortedArr, p) {
   if (!sortedArr.length) return null;
@@ -2426,56 +2506,6 @@ function buildFichesPreconisationsHTML() {
     g.items.forEach(function (it) { html += '<div class="preco-item">' + esc(it) + '</div>'; });
     html += '</div>';
   });
-  return html;
-}
-function buildPreconisationsHTML() {
-  var records = getFiltered();
-  var g = equalWeightAgg(records);
-  var label = scopeLabel();
-  if (!g.n) return '<p class="preco-empty">Aucune réponse sur ce périmètre : impossible de générer des préconisations.</p>';
-
-  var stats = questionStats(records, g);
-  var used = {};
-  /* Seuils relatifs au profil propre du territoire (quart supérieur / quart inférieur de ses
-     20 questions), plutôt qu'un seuil fixe : sur les 79 CLPE de ce trimestre, un seuil fixe à
-     75 %/25 % du score maximal ne faisait ressortir un axe de progrès que pour 8 CLPE sur 79
-     (contre 72/79 avec ce critère relatif), les scores individuels se répartissant surtout
-     entre 25 % et 75 % du barème. */
-  var sortedPcts = stats.map(function (s) { return s.pct; }).sort(function (a, b) { return a - b; });
-  var p75 = percentileOf(sortedPcts, 0.75), p25 = percentileOf(sortedPcts, 0.25);
-  var html = '<div class="preco-summary">Analyse générée à partir des résultats de <b>' + esc(label) + '</b> (' + g.n + ' réponse' + (g.n > 1 ? 's' : '') + '). Pour chaque thématique : jusqu\'à 2 points forts (score supérieur à 50 % et dans le quart supérieur des 20 questions de ce territoire) et jusqu\'à 2 axes de progression (score inférieur à 50 % et dans le quart inférieur), avec une piste tirée de la modalité de réponse la mieux notée. Au niveau global : jusqu\'à 3 questions où les avis divergent le plus (homogénéité inférieure à 40 %, soit le quart le plus hétérogène observé), en dehors de celles déjà citées par thématique.</div>';
-
-  THEME_KEYS.forEach(function (t) {
-    var qs = stats.filter(function (s) { return s.theme === t; });
-    if (!qs.length) return;
-    var forts = qs.filter(function (s) { return s.pct > 50 && s.pct >= p75; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 2);
-    var axes = qs.filter(function (s) { return s.pct < 50 && s.pct <= p25; }).sort(function (a, b) { return a.pct - b.pct; }).slice(0, 2);
-    if (!forts.length && !axes.length) return;
-    forts.concat(axes).forEach(function (q) { used[q.n] = true; });
-    html += '<div class="preco-section"><h4><span class="preco-dot" style="background:' + themeColor(t) + '"></span>' + esc(CONFIG.themeLabels[t]) + '</h4>';
-    if (forts.length) {
-      html += '<div class="preco-subtitle">Points forts</div>';
-      forts.forEach(function (q) { html += preconisationsItemHTML(q, false); });
-    }
-    if (axes.length) {
-      html += '<div class="preco-subtitle">Axes de progression</div>';
-      axes.forEach(function (q) { html += preconisationsItemHTML(q, true); });
-    }
-    html += '</div>';
-  });
-
-  var globalHetero = stats.filter(function (s) { return !used[s.n] && s.h != null && s.h < 40; }).sort(function (a, b) { return a.h - b.h; }).slice(0, 3);
-  html += '<div class="preco-section preco-hetero"><h4>Partage de points de vue à organiser (vision globale)</h4>';
-  if (!globalHetero.length) {
-    html += '<p class="preco-empty">Pas de question à forte hétérogénéité (moins de 40 % d\'homogénéité) en dehors de celles déjà citées ci-dessus.</p>';
-  } else {
-    html += '<p class="preco-hetero-intro">Les réponses divergent fortement sur ces questions : un temps d\'échange entre les membres du CLPE pourrait utilement confronter les points de vue et partager les pratiques de chacun.</p>';
-    globalHetero.forEach(function (q) {
-      html += '<div class="preco-item"><div class="preco-q">Q' + q.n + ' \u00b7 ' + esc(q.text) + '<span class="preco-score">(homogénéité ' + fmt(q.h, 0) + '\u00A0%)</span></div>' +
-        '<div class="preco-meta">Score moyen : ' + fmt(q.v) + ' / ' + q.mx + ' (' + fmt(q.pct, 0) + '\u00A0%) \u00b7 Répartition des réponses (score : nombre de réponses) : ' + scoreFrequencyText(q.vals) + '</div></div>';
-    });
-  }
-  html += '</div>';
   return html;
 }
 /* Mini carte du territoire pour le rapport imprimé : projection équirectangulaire simple,
@@ -2993,6 +3023,7 @@ function bindEvents() {
   document.getElementById('questionDetail').addEventListener('click', function (e) {
     if (e.target.closest('.info-icon')) return;
     var btn = e.target.closest('.qnum'); if (btn) { openQuestionModal(+btn.dataset.qnum); return; }
+    var qrow = e.target.closest('.q-bar-row'); if (qrow) { questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderQuestionDetail(); return; }
     var grp = e.target.closest('.q-group-title'); if (grp) { toggleBlock(grp.dataset.key); renderQuestionDetail(); }
   });
   document.getElementById('clpeTbody').addEventListener('click', function (e) {
@@ -3002,12 +3033,11 @@ function bindEvents() {
     var foldBtn = e.target.closest('.row-fold-all');
     if (foldBtn) { e.stopPropagation(); setAllBlocks(foldBtn.dataset.key, true); renderTable(); return; }
     var btn = e.target.closest('.qnum'); if (btn) { e.stopPropagation(); openQuestionModal(+btn.dataset.qnum); return; }
+    var qrow = e.target.closest('.q-bar-row'); if (qrow) { e.stopPropagation(); questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderTable(); return; }
     var grp = e.target.closest('.q-group-title'); if (grp) { e.stopPropagation(); toggleBlock(grp.dataset.key); renderTable(); }
   });
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', function (e) { if (e.target.id === 'modalOverlay') closeModal(); });
-  document.getElementById('precoClose').addEventListener('click', closePreco);
-  document.getElementById('precoOverlay').addEventListener('click', function (e) { if (e.target.id === 'precoOverlay') closePreco(); });
   document.getElementById('fichesPrecoBtn').addEventListener('click', function () {
     document.getElementById('fichesPrecoBody').innerHTML = buildFichesPreconisationsHTML();
     document.getElementById('fichesPrecoOverlay').classList.add('show');
@@ -3020,7 +3050,7 @@ function bindEvents() {
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closePreco(); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
@@ -3098,7 +3128,8 @@ function init() {
     fetchFresh(CONFIG.frequentationFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.fichesFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.perfFile).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.popFile).then(function (r) { return r.ok ? r.text() : ''; })
+    fetchFresh(CONFIG.popFile).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.recommandationsFile).then(function (r) { return r.ok ? r.text() : ''; })
   ])
     .then(function (res) {
       var parsed = parseWorkbook(res[0], parseSimpleCSV(res[5]));
@@ -3158,6 +3189,12 @@ function init() {
       });
       buildPerfIndex();
       POP_DATA = parseSimpleCSV(res[9]).map(function (r) { return { region: r.region, departement: r.departement, clpe: r.clpe, population: +r.population }; });
+      RECOMMANDATIONS = {};
+      parseSimpleCSV(res[10]).forEach(function (r) {
+        var q = +r.question, niv = +r.niveau;
+        if (!RECOMMANDATIONS[q]) RECOMMANDATIONS[q] = {};
+        RECOMMANDATIONS[q][niv] = { rec1: r.recommandation1, rec2: r.recommandation2, cap: r.cap };
+      });
       /* Vue mensuelle dérivée des colonnes mensuelles intégrées à chaque ligne CLPE x année
          du fichier unique de fiches action : plus de fichier séparé à tenir synchronisé. */
       FICHES_MENSUEL_DATA = [];
