@@ -241,7 +241,6 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-group-title[data-open="1"] .qg-chev{transform:rotate(45deg)}
 .q-group-title .qg-label{flex:1}
 .q-group-title .qg-score{font-weight:700;color:var(--ft-indigo)}
-.q-group-title .qg-homog{font-weight:400;font-size:11.5px}
 .q-bar-wrap{border-bottom:1px solid var(--ft-sable)}
 .q-bar-row{display:grid;grid-template-columns:40px 1fr 160px 230px 16px;gap:10px;align-items:center;padding:7px 0;cursor:pointer;border-radius:4px}
 .q-bar-row:hover{background:var(--ft-sable)}
@@ -853,11 +852,11 @@ var RESPONDENTS_TOOLTIP = "Nombre de répondants à cette question";
 var HOMOG_TOOLTIP = "Indice d'homogénéité\nMesure le niveau d'alignement des réponses des acteurs au sein du CLPE.\nCode couleur :\n\uD83D\uDD34 Rouge (< 1/3) : perceptions différentes, sujet à aborder en collectif.\n\uD83D\uDD35 Bleu (1/3 à 2/3) : homogénéité intermédiaire.\n\uD83D\uDFE2 Vert (> 2/3) : vision partagée entre les acteurs.\n\nRègle de calcul : disponible à partir de 2 réponses. 100 % : toutes les réponses sont identiques. 0 % : les réponses sont totalement opposées (aux deux extrêmes de l'échelle). Plus les avis s'éloignent les uns des autres, plus l'indice diminue. Pour un groupe de questions, l'indice affiché est la moyenne des indices de chaque question.";
 function respondentsBadge(cnt) {
   if (cnt == null) return '';
-  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65</span>:\u00A0<span title="' + esc(RESPONDENTS_TOOLTIP) + '" style="cursor:help">' + cnt + '</span></span>';
+  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65</span>\u00A0<span title="' + esc(RESPONDENTS_TOOLTIP) + '" style="cursor:help">' + cnt + '</span></span>';
 }
 function homogBadge(h) {
   if (h == null) return '';
-  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(HOMOG_TOOLTIP) + '">' + homogeneityEmoji(h) + '</span>:\u00A0<span title="' + esc(HOMOG_TOOLTIP) + '" style="color:' + homogeneityColor(h) + ';font-weight:700;cursor:help">' + fmt(h, 0) + '\u00A0%</span></span>';
+  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(HOMOG_TOOLTIP) + '">' + homogeneityEmoji(h) + '</span>\u00A0<span title="' + esc(HOMOG_TOOLTIP) + '" style="color:' + homogeneityColor(h) + ';font-weight:700;cursor:help">' + fmt(h, 0) + '\u00A0%</span></span>';
 }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function infoIcon(text) { return '<span class="info-icon" tabindex="0" role="button" aria-label="Note de lecture" data-info="' + esc(text) + '">\u2139\uFE0F</span>'; }
@@ -1531,7 +1530,7 @@ function questionRowsHTML(qGetter, scopeKey, records) {
     g.nums.forEach(function (n) { var r = qGetter(n); total += (r && r.v) || 0; totalMax += META.qMax[n] || 0; });
     var gh = groupHomogeneity(records, g.nums);
     html += '<div class="q-group-title" data-key="' + esc(key) + '" data-open="' + (open ? '1' : '0') + '" role="button" tabindex="0">' +
-      '<span class="qg-chev"></span><span class="qg-label">' + esc(g.label) + '</span>' + (gh == null ? '' : '<span class="qg-homog">' + homogBadge(gh) + '</span>') + '<span class="qg-score">' + fmt(total) + ' / ' + totalMax + '</span></div>';
+      '<span class="qg-chev"></span><span class="qg-label">' + esc(g.label) + '</span><span class="qg-score">' + fmt(total) + ' / ' + totalMax + (gh == null ? '' : ' (' + homogBadge(gh) + ')') + '</span></div>';
     if (g.info) html += '<div class="q-group-info">' + esc(g.info) + '</div>';
     html += '<div class="q-group-body"' + (open ? '' : ' style="display:none"') + '>';
     g.nums.forEach(function (n) {
