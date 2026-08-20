@@ -176,20 +176,25 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .panel .geo{font-size:12px;color:var(--ft-fg-3);margin-bottom:12px}
 .hero-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .hero-card{background:var(--ft-white);border:2px solid var(--ft-indigo);border-radius:8px;padding:11px 14px}
-.hero-card-emph{border-width:4px;box-shadow:var(--sh-sm)}
+.hero-card-emph{border-width:4px;border-color:var(--ft-orange);box-shadow:var(--sh-sm)}
 .mat-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .niveau-explain{background:var(--ft-indigo-light);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ft-fg-1);line-height:1.55}
 .niveau-explain b{color:var(--ft-indigo)}
 .niveau-next{margin-top:6px;color:var(--ft-fg-2)}
-.priorites-box{background:var(--ft-white);border:1.5px solid var(--ft-jaune-dark);border-radius:10px;padding:14px 16px;margin-top:14px}
-.priorites-title{font-weight:700;font-size:14px;color:var(--ft-navy);margin-bottom:10px}
-.priorite-item{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--ft-sable)}
-.priorite-item:first-of-type{border-top:none}
+.priorites-box{background:var(--ft-white);border:1.5px solid var(--ft-jaune-dark);border-radius:10px;padding:16px 18px;margin-top:16px;width:100%}
+.priorites-title{font-weight:700;font-size:15px;color:var(--ft-navy);margin-bottom:12px}
+.priorites-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.priorite-item{display:flex;gap:10px;align-items:flex-start}
 .priorite-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
 .priorite-body{flex:1;min-width:0}
-.priorite-q{font-size:12.5px;color:var(--ft-fg-1);line-height:1.4}
-.priorite-score{font-size:11px;color:var(--ft-fg-3);margin-top:2px}
-.priorites-note{font-size:11px;color:var(--ft-fg-3);margin-top:8px;font-style:italic}
+.priorite-q{font-size:12.5px;color:var(--ft-fg-1);line-height:1.4;font-weight:600}
+.priorite-score{display:block;font-size:11px;color:var(--ft-fg-3);font-weight:400;margin-top:2px}
+.priorite-recos{margin-top:8px}
+.priorite-reco{background:var(--ft-sable);border-left:3px solid var(--ft-indigo);border-radius:4px;padding:7px 10px;margin-bottom:6px}
+.priorite-reco b{display:block;font-size:10px;color:var(--ft-indigo);text-transform:uppercase;letter-spacing:.02em;margin-bottom:2px}
+.priorite-reco p{margin:0;font-size:11.5px;line-height:1.45;color:var(--ft-fg-2)}
+.priorites-note{font-size:11px;color:var(--ft-fg-3);margin-top:12px;font-style:italic}
+@media(max-width:900px){.priorites-grid{grid-template-columns:1fr}}
 .hero-card .lbl{font-size:12px;font-weight:600;color:var(--ft-fg-2)}
 .hero-card .val{font-size:25px;font-weight:700;color:var(--ft-navy);line-height:1.1;margin-top:2px;white-space:nowrap}
 .hero-card .val .unit{font-size:0.48em;font-weight:400;color:var(--ft-fg-3)}
@@ -236,6 +241,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-group-title[data-open="1"] .qg-chev{transform:rotate(45deg)}
 .q-group-title .qg-label{flex:1}
 .q-group-title .qg-score{font-weight:700;color:var(--ft-indigo)}
+.q-group-title .qg-homog{font-weight:400;font-size:11.5px}
 .q-bar-wrap{border-bottom:1px solid var(--ft-sable)}
 .q-bar-row{display:grid;grid-template-columns:40px 1fr 160px 230px 16px;gap:10px;align-items:center;padding:7px 0;cursor:pointer;border-radius:4px}
 .q-bar-row:hover{background:var(--ft-sable)}
@@ -256,7 +262,8 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-bar-row .q-track{height:12px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:6px;overflow:hidden}
 .q-bar-row .q-fill{height:100%;border-radius:6px}
 .q-bar-row .qval{font-weight:700;font-size:12.5px;text-align:right}
-.meta-badge{display:inline-block;cursor:help;white-space:nowrap}
+.meta-badge{display:inline-block;white-space:nowrap}
+.meta-emoji{cursor:help}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,20,64,.5);z-index:1300;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
@@ -533,7 +540,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="questions">
-              <div class="guide"><b>Guide de lecture :</b> score moyen par question, en points, avec l'homogénéité des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune.</div>
+              <div class="guide"><b>Guide de lecture :</b> score moyen par question, en points, avec le nombre de répondants 👥 et l'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.</div>
               <div class="qd-toolbar">
                 <button class="btn-reset btn-export" id="exportQuestionsBtn">Exporter en Excel</button>
                 <button class="btn-reset" id="unfoldAllBtn">Tout déplier</button>
@@ -825,30 +832,26 @@ function homogeneityLabel(pct) {
   if (pct >= 100 / 3) return 'moyenne';
   return 'faible';
 }
-function homogeneityEmoji(pct) {
-  if (pct == null) return '\u26A6\uFE0F';
-  if (pct > 200 / 3) return '\uD83D\uDFE2';
-  if (pct >= 100 / 3) return '\uD83D\uDD35';
-  return '\uD83D\uDD34';
+function homogeneityColor(pct) {
+  if (pct == null) return cssVar('--ft-fg-2');
+  if (pct > 200 / 3) return '#1C7A4D';
+  if (pct >= 100 / 3) return cssVar('--ft-bleu');
+  return cssVar('--ft-rouge');
 }
 var HOMOG_RULE_TEXT = "Règle de calcul : à partir de 2 réponses, on calcule l'écart type des réponses individuelles à la question ou au score concerné. L'indice d'homogénéité vaut 100 % moins cet écart type rapporté à la moitié de l'échelle de la question (dispersion maximale théorique). Résultat : 100 % si toutes les réponses sont identiques, et l'indice diminue d'autant plus que les scores donnés sont éloignés les uns des autres (un écart de 2 points fait moins baisser l'indice qu'un écart de 6 points sur la même question), jusqu'à 0 % en cas de dispersion maximale (réponses aux deux extrêmes de l'échelle).";
 /* Info-bulles et badges emoji réutilisés partout où l'homogénéité et le nombre de
-   répondants sont affichés : sur chaque question et dans la synthèse à côté du graphique. */
+   répondants sont affichés : sur chaque question, sur les lignes de regroupement et dans la
+   synthèse à côté du graphique. Même règle partout : emoji fixe, infobulle sur l'emoji
+   uniquement, pourcentage coloré selon le niveau atteint (vert/bleu/rouge). */
 var RESPONDENTS_TOOLTIP = "Nombre de répondants à cette question";
 var HOMOG_TOOLTIP = "Indice d'homogénéité\nMesure le niveau d'alignement des réponses des acteurs au sein du CLPE.\nCode couleur :\n\uD83D\uDD34 Rouge (< 1/3) : perceptions différentes, sujet à aborder en collectif.\n\uD83D\uDD35 Bleu (1/3 à 2/3) : homogénéité intermédiaire.\n\uD83D\uDFE2 Vert (> 2/3) : vision partagée entre les acteurs.\n\nRègle de calcul : disponible à partir de 2 réponses. 100 % : toutes les réponses sont identiques. 0 % : les réponses sont totalement opposées (aux deux extrêmes de l'échelle). Plus les avis s'éloignent les uns des autres, plus l'indice diminue. Pour un groupe de questions, l'indice affiché est la moyenne des indices de chaque question.";
 function respondentsBadge(cnt) {
   if (cnt == null) return '';
-  return '<span class="meta-badge" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65:\u00A0' + cnt + '</span>';
+  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65</span>:\u00A0' + cnt + '</span>';
 }
 function homogBadge(h) {
-  /* Sur chaque question : emoji fixe ⚖️ (le code couleur est expliqué dans l'infobulle). */
   if (h == null) return '';
-  return '<span class="meta-badge" title="' + esc(HOMOG_TOOLTIP) + '">\u2696\uFE0F:\u00A0' + fmt(h, 0) + '\u00A0%</span>';
-}
-function homogBadgeColored(h) {
-  /* Dans la synthèse à côté du graphique : emoji dynamique selon le niveau atteint. */
-  if (h == null) return '';
-  return '<span class="meta-badge" title="' + esc(HOMOG_TOOLTIP) + '">' + homogeneityEmoji(h) + '\u00A0' + fmt(h, 0) + '\u00A0%</span>';
+  return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(HOMOG_TOOLTIP) + '">\u2696\uFE0F</span>:\u00A0<span style="color:' + homogeneityColor(h) + ';font-weight:700">' + fmt(h, 0) + '\u00A0%</span></span>';
 }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function infoIcon(text) { return '<span class="info-icon" tabindex="0" role="button" aria-label="Note de lecture" data-info="' + esc(text) + '">\u2139\uFE0F</span>'; }
@@ -1399,11 +1402,19 @@ function build3PrioritesHTML(records, g) {
   var rest = stats.filter(function (s) { return main.indexOf(s) === -1; }).sort(function (a, b) { return a.pct - b.pct; });
   var top3 = main.concat(rest).slice(0, 3);
   if (!top3.length) return '';
-  var html = '<div class="priorites-box"><div class="priorites-title">\uD83C\uDFAF Les 3 priorités du CLPE</div>';
+  var html = '<div class="priorites-box"><div class="priorites-title">\uD83C\uDFAF Les 3 priorités du CLPE</div><div class="priorites-grid">';
   top3.forEach(function (q, i) {
-    html += '<div class="priorite-item"><span class="priorite-rank">' + (i + 1) + '</span><div class="priorite-body"><div class="priorite-q">Q' + q.n + ' \u00b7 ' + esc(q.text) + '</div><div class="priorite-score">' + fmt(q.v) + ' / ' + q.mx + ' (' + fmt(q.pct, 0) + '\u00A0%)</div></div></div>';
+    var rec = getQuestionRecommendation(q.n, q.v, q.mx);
+    html += '<div class="priorite-item"><span class="priorite-rank">' + (i + 1) + '</span><div class="priorite-body"><div class="priorite-q">Q' + q.n + ' \u00b7 ' + esc(q.text) + '<span class="priorite-score">' + fmt(q.v) + ' / ' + q.mx + ' (' + fmt(q.pct, 0) + '\u00A0%)</span></div>';
+    if (rec && !rec.isMax && (rec.rec1 || rec.rec2)) {
+      html += '<div class="priorite-recos">';
+      if (rec.rec1) html += '<div class="priorite-reco"><b>Recommandation 1</b><p>' + esc(rec.rec1).replace(/~~n~~/g, '<br>') + '</p></div>';
+      if (rec.rec2) html += '<div class="priorite-reco"><b>Recommandation 2</b><p>' + esc(rec.rec2).replace(/~~n~~/g, '<br>') + '</p></div>';
+      html += '</div>';
+    }
+    html += '</div></div>';
   });
-  html += '<div class="priorites-note">Le rapport PDF détaille les recommandations associées à chaque priorité.</div></div>';
+  html += '</div><div class="priorites-note">Le rapport PDF détaille aussi le cap à atteindre pour chaque priorité.</div></div>';
   return html;
 }
 function renderIndicatorPanel(hostId, g, title, geoLine) {
@@ -1425,22 +1436,22 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   html += '<div class="mat-grid"><div class="mat-indic-stack">';
   html += '<div class="mat-pair">';
   html += '<div class="hero-card"><div class="lbl">Niveau de maturité' + infoIcon("Score total ramené sur une échelle de 4, pour permettre une lecture directe du niveau de maturité du CLPE, indépendamment du barème détaillé du questionnaire. Le score détaillé (sur " + META.totalMax + ") est rappelé entre parenthèses.") + '</div><div class="val">' + niveauHTML(g.total, META.totalMax) + '</div><div class="track"><div class="fill" style="width:' + (niveauValue(g.total, META.totalMax) / 4 * 100) + '%"></div></div>' +
-    (totalHomog == null ? '' : '<div class="homog-line">' + homogBadgeColored(totalHomog) + '</div>') + '</div>';
+    (totalHomog == null ? '' : '<div class="homog-line">' + homogBadge(totalHomog) + '</div>') + '</div>';
   html += '<div class="hero-card"><div class="lbl">Auto-évaluation' + infoIcon(partInfoText('auto')) + '</div><div class="val">' + (g.auto == null ? '-' : fmt(g.auto, 1)) + '<span class="unit"> / 4</span></div><div class="auto-lbl">' + esc(autoTxt) + '</div>' +
-    (autoHomog == null ? '' : '<div class="homog-line">' + homogBadgeColored(autoHomog) + '</div>') + '</div>';
+    (autoHomog == null ? '' : '<div class="homog-line">' + homogBadge(autoHomog) + '</div>') + '</div>';
   html += '</div>';
   html += '<div class="niveau-explain"><b>' + esc(niveauInfo.label) + '</b> - ' + esc(niveauInfo.desc) + '<div class="niveau-next">' + esc(niveauInfo.next) + '</div></div>';
   html += '<div class="mat-pair">';
   [{ l: 'Fondamentaux', k: 'fond', v: g.fond, mx: META.fondMaxTotal, c: cssVar('--ft-indigo'), h: fondHomog, emph: true },
   { l: 'Pratiques', k: 'mat', v: g.mat, mx: META.matMaxTotal, c: cssVar('--ft-violet'), h: matHomog, emph: false }].forEach(function (p) {
     html += '<div class="hero-card' + (p.emph ? ' hero-card-emph' : '') + '"><div class="lbl">' + p.l + infoIcon(partInfoText(p.k)) + '</div><div class="val">' + niveauHTML(p.v, p.mx) + '</div><div class="track"><div class="fill" style="width:' + (p.v / p.mx * 100) + '%;background:' + p.c + '"></div></div>' +
-      (p.h == null ? '' : '<div class="homog-line">' + homogBadgeColored(p.h) + '</div>') + '</div>';
+      (p.h == null ? '' : '<div class="homog-line">' + homogBadge(p.h) + '</div>') + '</div>';
   });
   html += '</div>';
   html += '</div><div>';
   html += '<div class="part-title part-title-center">Thématiques</div><div class="radar-wrap" id="' + hostId + 'Radar"></div>';
-  html += build3PrioritesHTML(g.items, g);
   html += '</div></div>';
+  html += build3PrioritesHTML(g.items, g);
   host.innerHTML = html;
   var pts = THEME_KEYS.map(function (t) { return { t: t, v: g.themes[t], mx: META.themeMax[t] || 1, pct: g.themes[t] / (META.themeMax[t] || 1) * 100 }; });
   renderRadar(pts, hostId + 'Radar');
@@ -1472,12 +1483,18 @@ function setAllBlocks(scopeKey, collapsed) {
 var questionExpand = {}; /* true = fiche de recommandations dépliée pour cette question (repliée par défaut) */
 /* Recommandations associées à une question, pour le score moyen arrondi à l'unité la plus
    proche (sauf au niveau maximal, où il n'y a rien à recommander). */
+function getQuestionRecommendation(n, m, mx) {
+  if (n > 20 || m == null) return null;
+  var niveau = Math.max(1, Math.min(4, Math.round(m / (mx || 1) * 4)));
+  if (niveau >= 4) return { isMax: true };
+  var rec = RECOMMANDATIONS[n] && RECOMMANDATIONS[n][niveau];
+  return rec ? { isMax: false, rec1: rec.rec1, rec2: rec.rec2, cap: rec.cap } : null;
+}
 function questionRecoHTML(n, m, mx) {
   if (n > 20) return '<div class="q-reco-empty">Pas de recommandation associée à cette question.</div>';
   if (m == null) return '<div class="q-reco-empty">Aucune réponse disponible sur ce périmètre.</div>';
-  var niveau = Math.max(1, Math.min(4, Math.round(m / (mx || 1) * 4)));
-  if (niveau >= 4) return '<div class="q-reco-max">\uD83C\uDF89 Niveau maximal atteint sur cette question : les pratiques observées sont déjà pleinement abouties, rien à recommander de plus ici.</div>';
-  var rec = RECOMMANDATIONS[n] && RECOMMANDATIONS[n][niveau];
+  var rec = getQuestionRecommendation(n, m, mx);
+  if (rec && rec.isMax) return '<div class="q-reco-max">\uD83C\uDF89 Niveau maximal atteint sur cette question : les pratiques observées sont déjà pleinement abouties, rien à recommander de plus ici.</div>';
   if (!rec) return '<div class="q-reco-empty">Pas de recommandation disponible pour ce niveau.</div>';
   var html = '';
   if (rec.rec1) html += '<div class="q-reco-item"><b>Recommandation prioritaire 1</b><p>' + esc(rec.rec1).replace(/~~n~~/g, '<br>') + '</p></div>';
@@ -1485,15 +1502,30 @@ function questionRecoHTML(n, m, mx) {
   if (rec.cap) html += '<div class="q-reco-cap"><b>Cap à atteindre</b><p>' + esc(rec.cap).replace(/~~n~~/g, '<br>') + '</p></div>';
   return html || '<div class="q-reco-empty">Pas de recommandation disponible pour ce niveau.</div>';
 }
-function questionRowsHTML(qGetter, scopeKey) {
+/* Homogénéité d'un regroupement (partie ou thématique) : écart type calculé sur la somme des
+   scores du groupe pour chaque répondant ayant répondu à au moins une des questions du
+   groupe, rapportée au barème maximal cumulé du groupe. */
+function groupHomogeneity(records, nums) {
+  if (!records || records.length < 2) return null;
+  var sums = records.map(function (r) {
+    var s = 0, any = false;
+    nums.forEach(function (n) { if (r.q[n] != null) { s += r.q[n]; any = true; } });
+    return any ? s : null;
+  }).filter(function (v) { return v != null; });
+  if (sums.length < 2) return null;
+  var maxScale = nums.reduce(function (s, n) { return s + (META.qMax[n] || 0); }, 0);
+  return homogeneityPct(sums, maxScale);
+}
+function questionRowsHTML(qGetter, scopeKey, records) {
   var html = '';
   questionOrder().forEach(function (g, idx) {
     var key = scopeKey + '|' + state.qview + '|' + idx;
     var open = isBlockOpen(key);
     var total = 0, totalMax = 0;
     g.nums.forEach(function (n) { var r = qGetter(n); total += (r && r.v) || 0; totalMax += META.qMax[n] || 0; });
+    var gh = groupHomogeneity(records, g.nums);
     html += '<div class="q-group-title" data-key="' + esc(key) + '" data-open="' + (open ? '1' : '0') + '" role="button" tabindex="0">' +
-      '<span class="qg-chev"></span><span class="qg-label">' + esc(g.label) + '</span><span class="qg-score">' + fmt(total) + ' / ' + totalMax + '</span></div>';
+      '<span class="qg-chev"></span><span class="qg-label">' + esc(g.label) + '</span>' + (gh == null ? '' : '<span class="qg-homog">' + homogBadge(gh) + '</span>') + '<span class="qg-score">' + fmt(total) + ' / ' + totalMax + '</span></div>';
     if (g.info) html += '<div class="q-group-info">' + esc(g.info) + '</div>';
     html += '<div class="q-group-body"' + (open ? '' : ' style="display:none"') + '>';
     g.nums.forEach(function (n) {
@@ -1533,7 +1565,7 @@ function renderQuestionDetail() {
     var v = g.qAvg[n] != null ? g.qAvg[n] : null;
     var h = rawHomog(n);
     return (v == null && !h.count) ? null : { v: v, h: h.h, count: h.count };
-  }, 'global');
+  }, 'global', records);
 }
 function openQuestionModal(n) {
   var q = META.questions[n]; if (!q) return;
@@ -1593,7 +1625,7 @@ function renderTable() {
         '<div class="qhost"></div>';
       dtr.appendChild(td);
       tbody.appendChild(dtr);
-      td.querySelector('.qhost').innerHTML = questionRowsHTML(questionHomogGetter(g.items), key);
+      td.querySelector('.qhost').innerHTML = questionRowsHTML(questionHomogGetter(g.items), key, g.items);
     }
   });
 }
