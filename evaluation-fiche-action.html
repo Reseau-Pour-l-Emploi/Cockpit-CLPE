@@ -71,7 +71,7 @@ input[type=file]{display:none}
 .extract-details{margin-top:24px;font-size:12px}
 .extract-details summary{cursor:pointer;color:var(--ft-fg-3);font-weight:600}
 .extract-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
-.extract-table td{padding:6px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top}
+.extract-table td{padding:6px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top;white-space:pre-wrap}
 .extract-table td:first-child{font-weight:600;color:var(--ft-fg-2);white-space:nowrap;width:180px}
 .note{font-size:12px;color:var(--ft-fg-3);margin-top:16px;line-height:1.6}
 .reset-row{text-align:center;margin-top:20px}
@@ -192,16 +192,33 @@ var SECTION_MARKERS = [
   'Étapes de l\u2019action', 'Étapes de l\'action'
 ];
 function normApo(s) { return (s || '').replace(/[\u2019]/g, "'"); }
+/* pdf.js perd parfois l'espace entre deux mots d'un même intitulé (observé en pratique :
+   "Pointd'attention", "Problématiqueidentifiée", "Étapesdel'action", "Aucunbilan...
+   ...encoreétéréalisé"). On construit donc les repères de section comme des expressions
+   régulières tolérant zéro ou plusieurs espaces à chaque endroit où le texte d'origine en
+   contient, plutôt que de chercher une chaîne exacte. */
+function markerToRegex(marker) {
+  var pattern = normApo(marker)
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/'/g, "['\u2019]")
+    .replace(/\s+/g, '\\s*');
+  return new RegExp(pattern, 'i');
+}
+function findMarker(text, marker, fromIndex) {
+  var re = markerToRegex(marker);
+  var m = re.exec(fromIndex ? text.slice(fromIndex) : text);
+  if (!m) return null;
+  return { index: (fromIndex || 0) + m.index, length: m[0].length };
+}
 function extractBetween(text, startMarker, endMarkers) {
   var t = normApo(text);
-  var s = normApo(startMarker);
-  var startIdx = t.indexOf(s);
-  if (startIdx < 0) return '';
-  startIdx += s.length;
+  var start = findMarker(t, startMarker);
+  if (!start) return '';
+  var startIdx = start.index + start.length;
   var endIdx = t.length;
   endMarkers.forEach(function (m) {
-    var idx = t.indexOf(normApo(m), startIdx);
-    if (idx >= 0 && idx < endIdx) endIdx = idx;
+    var found = findMarker(t, m, startIdx);
+    if (found && found.index < endIdx) endIdx = found.index;
   });
   return t.slice(startIdx, endIdx).trim();
 }
@@ -209,7 +226,7 @@ function wc(s) { return (s || '').trim().split(/\s+/).filter(Boolean).length; }
 function parseFrenchDate(s) {
   if (!s) return null;
   var MOIS = { janvier: 0, février: 1, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5, juillet: 6, août: 7, aout: 7, septembre: 8, octobre: 9, novembre: 10, décembre: 11, decembre: 11 };
-  var m = /(\d{1,2})\s+([a-zéû]+)\s+(\d{4})/i.exec(s);
+  var m = /(\d{1,2})\s*([a-zéû]+)\s*(\d{4})/i.exec(s);
   if (!m) return null;
   var mois = MOIS[m[2].toLowerCase()];
   if (mois == null) return null;
@@ -224,13 +241,18 @@ function cleanProse(s) { return (s || '').replace(/\u241F/g, ' '); }
 function parseFiche(rawText) {
   var text = normApo(rawText).replace(/[\uE000-\uF8FF\uFFFD]/g, '');
   var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
-  var titre = lines[0] || 'Fiche action';
+  var titre = ((lines[0] || 'Fiche action').split('\u241F')[0] || 'Fiche action').trim();
   var STATUTS = ['En attente', 'En cours', 'Terminée', 'Abandonnée', 'À venir'];
-  var statut = STATUTS.find(function (s) { return text.indexOf(s) >= 0; }) || null;
+  var statut = STATUTS.find(function (s) { return markerToRegex(s).test(text); }) || null;
 
-  var dCree = parseFrenchDate((/Cr\u00e9\u00e9e le\s+([^|]+)/i.exec(text) || [])[1]);
-  var dFin = parseFrenchDate((/Fin pr\u00e9vue pour le\s+([^|]+)/i.exec(text) || [])[1]);
-  var dMaj = parseFrenchDate((/Derni\u00e8re mise \u00e0 jour le\s+(.+)/i.exec(text) || [])[1]);
+  function dateAfterMarker(marker) {
+    var found = findMarker(text, marker);
+    if (!found) return null;
+    return parseFrenchDate(text.slice(found.index + found.length, found.index + found.length + 60));
+  }
+  var dCree = dateAfterMarker('Créée le');
+  var dFin = dateAfterMarker('Fin prévue pour le');
+  var dMaj = dateAfterMarker('Dernière mise à jour le');
 
   var description = cleanProse(extractBetween(text, 'Description', ['Problématique identifiée']));
   var problematique = cleanProse(extractBetween(text, 'Problématique identifiée', ['PORTEURS DE L\'ACTION']));
@@ -249,12 +271,14 @@ function parseFiche(rawText) {
   var indicResultats = cleanProse(extractBetween(text, 'Indicateurs de résultats', ['Indicateurs Stratégiques', 'Étapes de l\'action']));
   var indicStrategiques = extractBetween(text, 'Indicateurs Stratégiques', ['Étapes de l\'action']);
   var etapesBlock = extractBetween(text, 'Étapes de l\'action', []);
-  var nEtapes = (etapesBlock.match(/Étape N°\d+/g) || []).length;
-  var bilanVide = /Aucun bilan n\'a encore \u00e9t\u00e9 r\u00e9alis\u00e9/i.test(text);
+  var nEtapes = (etapesBlock.match(/Étape\s*N\s*°\s*\d+/gi) || []).length;
+  var bilanVide = /Aucun[\s\S]{0,10}bilan[\s\S]{0,15}n[\s\S]{0,5}a[\s\S]{0,15}(encore|pas)[\s\S]{0,20}r\u00e9alis/i.test(text);
   var bilanText = '';
   if (!bilanVide) {
-    var idxBilan = text.search(/Principaux r\u00e9sultats|Bilan\b/i);
-    if (idxBilan >= 0) bilanText = cleanProse(text.slice(idxBilan, idxBilan + 1500));
+    var bilanRe = /Principaux\s*r\u00e9sultats|\bBilan\b/gi;
+    var bilanMatch, lastBilanMatch = null;
+    while ((bilanMatch = bilanRe.exec(text)) !== null) { lastBilanMatch = bilanMatch; }
+    if (lastBilanMatch) bilanText = cleanProse(text.slice(lastBilanMatch.index, lastBilanMatch.index + 1500));
   }
   var benefNum = (beneficiairesTxt.match(/\d+/) || [])[0];
 
@@ -407,6 +431,8 @@ function renderResults(f, s, rawText) {
   document.getElementById('axesList').innerHTML = axesHtml;
 
   var extractRows = [
+    ['Titre', f.titre || '(non détecté)'],
+    ['Statut', f.statut || '(non détecté)'],
     ['Description', f.description || '(non détectée)'],
     ['Problématique', f.problematique || '(non détectée)'],
     ['Porteurs', f.porteurs.join(', ') || '-'],
@@ -414,16 +440,18 @@ function renderResults(f, s, rawText) {
     ['Publics ciblés', f.publics.join(', ') || '-'],
     ['Solutions mobilisées', f.solutions.join(', ') || '-'],
     ['Acteurs associés', f.acteurs.join(', ') || '-'],
+    ['Rôles', f.roles || '(non renseigné)'],
     ['Points d\u2019attention', f.pointAttention || '(non renseigné)'],
     ['Ressources / moyens', (f.ressources + ' ' + f.moyens).trim() || '(non renseigné)'],
     ['Bénéficiaires', f.beneficiaires != null ? f.beneficiaires : '(non renseigné)'],
     ['Indicateurs de suivi', f.indicSuivi || '(non renseigné)'],
     ['Indicateurs de résultats', f.indicResultats || '(non renseigné)'],
+    ['Indicateurs Stratégiques', f.indicStrategiques || '(non renseigné)'],
     ["Nombre d'étapes détectées", f.nEtapes],
-    ['Bilan', f.bilanVide ? 'Aucun bilan renseigné' : (f.bilanText ? 'Bilan détecté' : '(non détecté)')]
+    ['Bilan', f.bilanVide ? 'Aucun bilan renseigné' : (f.bilanText ? f.bilanText : '(non détecté)')]
   ];
   document.getElementById('extractTable').innerHTML = extractRows.map(function (r) {
-    return '<tr><td>' + r[0] + '</td><td>' + String(r[1]).slice(0, 400) + '</td></tr>';
+    return '<tr><td>' + r[0] + '</td><td>' + String(r[1]).slice(0, 3000) + '</td></tr>';
   }).join('');
 
   document.getElementById('rawTextView').textContent = rawText || '(indisponible)';
