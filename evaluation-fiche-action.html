@@ -67,6 +67,7 @@ input[type=file]{display:none}
 .global-box .val{font-size:32px;font-weight:700;color:var(--ft-navy)}
 .global-box .txt{font-size:13px;color:var(--ft-fg-1);line-height:1.5}
 .axes-title{font-size:15px;font-weight:700;color:var(--ft-navy);margin:22px 0 12px}
+.preco-sep{border:none;border-top:2px solid var(--ft-sable-dark);margin:22px 0}
 .axe-card{background:#fff;border:1.5px solid var(--ft-jaune-dark);border-radius:8px;padding:12px 16px;margin-bottom:10px}
 .axe-card .axe-h{font-weight:700;font-size:13px;color:var(--ft-navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .axe-card .axe-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
@@ -150,10 +151,12 @@ input[type=file]{display:none}
       <b>Guide de lecture :</b> <b>Qualité de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées. Les <b>points forts</b> et <b>pistes d'amélioration</b> ci-dessous détaillent, critère par critère, ce qui est déjà bien renseigné et ce qui gagnerait à l'être davantage.
     </div>
 
-    <div class="axes-title">Points forts</div>
+    <div class="axes-title">\u2705 Points forts</div>
     <div id="pointsFortsList"></div>
 
-    <div class="axes-title">Pistes d'amélioration prioritaires</div>
+    <hr class="preco-sep">
+
+    <div class="axes-title">\uD83C\uDFAF Pistes d'amélioration prioritaires</div>
     <div id="axesList"></div>
 
     <details class="extract-details">
@@ -809,12 +812,21 @@ function renderResults(f, res, rawText) {
   document.getElementById('axesList').innerHTML = axesHtml;
 
   var strongest = sorted.filter(function (x) { return x.v >= 0.75; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 4);
+  var fallbackBest = false;
+  if (!strongest.length && sorted.length) {
+    /* Aucun critère n'atteint le seuil habituel : on met tout de même en avant le critère
+       relativement le mieux renseigné de cette fiche, pour toujours proposer un point de
+       départ positif plutôt que de ne rien montrer. */
+    strongest = [sorted[sorted.length - 1]];
+    fallbackBest = true;
+  }
   var pointsFortsHtml = '';
   if (!strongest.length) {
-    pointsFortsHtml = '<div class="preco-empty">Aucun point fort majeur ne se détache particulièrement sur cette fiche.</div>';
+    pointsFortsHtml = '<div class="preco-empty">Aucun élément exploitable pour identifier un point fort sur cette fiche.</div>';
   } else {
     strongest.forEach(function (x) {
-      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + POINT_FORT_TEXTS[x.key] + '</p></div>';
+      var note = fallbackBest ? ' <i>(élément le plus abouti de cette fiche, à consolider)</i>' : '';
+      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + POINT_FORT_TEXTS[x.key] + note + '</p></div>';
     });
   }
   document.getElementById('pointsFortsList').innerHTML = pointsFortsHtml;
@@ -1002,13 +1014,22 @@ async function processBulkFile(file) {
   var AXE_KEYS = Object.keys(AXE_LABELS_FR);
   var percentiles = {};
   AXE_KEYS.forEach(function (k) { percentiles[k] = rankPercentile(allScores.map(function (s) { return s.subs[k] == null ? 0.5 : s.subs[k]; })); });
+  /* Points forts : même principe que l'axe de progrès (classement relatif au reste du lot),
+     mais à l'autre extrémité - l'axe le mieux classé plutôt que le moins bien classé. Cela
+     garantit un point fort pour chaque fiche dès qu'au moins un critère est renseigné,
+     plutôt qu'un seuil absolu qui laissait beaucoup de fiches sans aucun point fort. */
+  var STRONG_KEYS = Object.keys(POINT_FORT_LABELS);
+  var percentilesStrong = {};
+  STRONG_KEYS.forEach(function (k) { percentilesStrong[k] = rankPercentile(allScores.map(function (s) { return s.subs[k] == null ? 0.5 : s.subs[k]; })); });
 
   var outRows = rows.map(function (row, idx) {
     var s = allScores[idx];
     var best = null, bestPct = Infinity;
     AXE_KEYS.forEach(function (k) { if (allScores[idx].subs[k] == null) return; var p = percentiles[k][idx]; if (p < bestPct) { bestPct = p; best = k; } });
-    var strongKeys = Object.keys(s.subs).filter(function (k) { return s.subs[k] != null && s.subs[k] >= 0.75; })
-      .sort(function (a, b) { return s.subs[b] - s.subs[a]; }).slice(0, 2);
+    var strongCandidates = STRONG_KEYS.filter(function (k) { return s.subs[k] != null; })
+      .map(function (k) { return { key: k, p: percentilesStrong[k][idx], v: s.subs[k] }; })
+      .sort(function (a, b) { return b.p - a.p; });
+    var strongKeys = strongCandidates.slice(0, 2).map(function (x) { return x.key; });
     var out = Object.assign({}, row);
     out['Éval - Qualité de la description (/100)'] = Math.round(s.evalDescription.total);
     out['Éval - Impact usager (/100)'] = Math.round(s.evalImpact.total);
