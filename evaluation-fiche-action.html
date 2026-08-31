@@ -75,6 +75,13 @@ input[type=file]{display:none}
 .extract-table td{padding:6px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top;white-space:pre-wrap}
 .extract-table td:first-child{font-weight:600;color:var(--ft-fg-2);white-space:nowrap;width:180px}
 .note{font-size:12px;color:var(--ft-fg-3);margin-top:16px;line-height:1.6}
+.method-details{margin-top:14px;font-size:13px}
+.method-details summary{cursor:pointer;color:var(--ft-indigo);font-weight:600}
+.method-body{margin-top:12px;font-size:12.5px;color:var(--ft-fg-2);line-height:1.55}
+.method-table{width:100%;border-collapse:collapse;margin-top:8px}
+.method-table td{padding:8px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top;font-size:12px}
+.method-table .mw{width:52px;font-weight:700;color:var(--ft-indigo);white-space:nowrap;text-align:center}
+.method-table tr:first-child td{border-top:1px solid var(--ft-sable-dark)}
 .reset-row{text-align:center;margin-top:20px}
 </style>
 </head>
@@ -92,6 +99,21 @@ input[type=file]{display:none}
     <h2>Comment ça marche</h2>
     <p style="font-size:13px">Déposez l'export PDF d'une fiche action du tableau de bord RPE. L'outil analyse son contenu et propose une évaluation de la qualité de sa saisie, avec des pistes concrètes d'amélioration - les mêmes critères que ceux utilisés pour la notation des fiches action au niveau national.</p>
     <p style="font-size:13px;margin-bottom:0"><b>Le fichier n'est jamais conservé</b> : tout le traitement se fait dans votre navigateur, rien n'est envoyé ni stocké sur un serveur.</p>
+
+    <details class="method-details">
+      <summary>\uD83D\uDCD8 Note méthodologique - comment le score est calculé</summary>
+      <div class="method-body">
+        <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
+        <table class="method-table">
+          <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions).</td></tr>
+          <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
+          <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (message "Complétez le bilan"). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
+          <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Uniquement disponible pour l'évaluation en lot (nécessite de comparer la fiche aux autres) : rareté du vocabulaire employé par rapport au reste du lot déposé, complétée par la détection de quelques leviers d'innovation courants (aller-vers, co-construction, gamification...).</td></tr>
+        </table>
+        <p style="margin-top:10px">En évaluation d'une fiche isolée (PDF), le critère "caractère innovant" n'est pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100&nbsp;%.</p>
+        <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action.</p>
+      </div>
+    </details>
   </div>
 
   <div class="card">
@@ -166,7 +188,7 @@ input[type=file]{display:none}
   </div>
 
   <div class="note">
-    Le critère "caractère innovant" n'est pas calculé ici non plus : il repose sur un regroupement des fiches par similarité (thématique, solutions, contenu textuel), une opération de type apprentissage automatique difficilement fiable à reproduire dans un navigateur. Les autres critères et les 13 axes de progrès sont en revanche calculés pour chaque ligne, exactement comme pour une fiche isolée - à la différence que l'axe de progrès de chaque fiche est ici comparé à l'ensemble du lot déposé, ce qui le rend plus pertinent qu'une évaluation isolée.
+    Le critère "caractère innovant" est calculé ici via une approximation simple : la rareté du vocabulaire employé par une fiche par rapport à l'ensemble du lot déposé (plus une fiche emploie des mots peu utilisés ailleurs, plus son score est élevé), complétée par la détection de quelques leviers d'innovation courants (aller-vers, co-construction, gamification, intelligence artificielle...). Ce n'est pas une comparaison sémantique fine par apprentissage automatique (trop lourde à reproduire dans un navigateur), mais un indicateur de tendance. Les autres critères et les 13 axes de progrès sont calculés pour chaque ligne, exactement comme pour une fiche isolée - à la différence que l'axe de progrès de chaque fiche est ici comparé à l'ensemble du lot déposé, ce qui le rend plus pertinent qu'une évaluation isolée.
   </div>
 </main>
 
@@ -309,7 +331,13 @@ function parseFiche(rawText) {
   var indicResultats = cleanProse(extractBetween(text, 'Indicateurs de résultats', ['Indicateurs Stratégiques', 'Étapes de l\'action']));
   var indicStrategiques = extractBetween(text, 'Indicateurs Stratégiques', ['Étapes de l\'action']);
   var etapesBlock = extractBetween(text, 'Étapes de l\'action', []);
-  var nEtapes = (etapesBlock.match(/Étape\s*N\s*°\s*\d+/gi) || []).length;
+  var etapeParts = etapesBlock.split(/Étape\s*N\s*°\s*\d+/gi).slice(1);
+  var nEtapes = etapeParts.length;
+  var etapeWordCounts = etapeParts.map(function (p) {
+    /* Chaque partie commence par la date de fin ("Termine le ...") avant le texte utile :
+       on la retire pour ne compter que le contenu réellement descriptif de l'étape. */
+    return wc(cleanProse(p.replace(/Termine le[^\n]*\n?/i, '')));
+  });
   var bilanVide = /Aucun[\s\S]{0,10}bilan[\s\S]{0,15}n[\s\S]{0,5}a[\s\S]{0,15}(encore|pas)[\s\S]{0,20}r\u00e9alis/i.test(text);
   var bilanText = '';
   if (!bilanVide) {
@@ -326,7 +354,7 @@ function parseFiche(rawText) {
     thematiques: thematiques, publics: publics, solutions: solutions, acteurs: acteurs,
     roles: roles, pointAttention: pointAttention, ressources: ressources, moyens: moyens,
     beneficiaires: benefNum ? +benefNum : null, indicSuivi: indicSuivi, indicResultats: indicResultats,
-    indicStrategiques: indicStrategiques, nEtapes: nEtapes, bilanVide: bilanVide, bilanText: bilanText
+    indicStrategiques: indicStrategiques, nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, bilanVide: bilanVide, bilanText: bilanText
   };
 }
 
@@ -352,70 +380,211 @@ function isUserFacing(publics) {
 function isLongRunning(f) { return f.dCree && f.dFin && (f.dFin - f.dCree) / 86400000 > 60; }
 function daysSince(d, ref) { return d ? (ref - d) / 86400000 : null; }
 
-function scoreFiche(f) {
-  var today = new Date();
-  var descW = wc(f.description), probW = wc(f.problematique);
-  var cadrageBase = Math.min(1.1, descW / 60 * 1.1) + Math.min(0.8, probW / 40 * 0.8) + Math.min(1.3, f.nEtapes / 3 * 1.3);
-  var cadrageClar = 0.55 * clarityScore(f.description) + 0.45 * clarityScore(f.problematique);
-  var unfocused = Math.max(0, (f.publics.length - 3) / 7) * 0.4 + Math.max(0, (f.thematiques.length - 4) / 6) * 0.4;
-  var scCadrage = Math.max(0, Math.min(4, cadrageBase + cadrageClar * 0.8 - unfocused));
+/* ============================================================================
+   MOTEUR DE NOTATION UNIFIÉ - partagé par l'évaluation d'une fiche isolée (PDF)
+   et l'évaluation en lot (Excel). Toutes les notes sont sur 100.
+   ============================================================================ */
+var USER_KW = ["demandeur d'emploi", 'demandeurs d\'emploi', 'jeune', 'sénior', 'senior', 'rsa', 'femme', 'scolaire', 'chercheur d\'emploi', 'salarié', 'apprenti', 'travailleur handicapé'];
+var SMART_PATTERNS = [/\d+\s*%/, /d['e\s]+ici/i, /objectif/i, /\bcible\b/i, /atteindre/i, /avant\s+(le\s+)?\d/i, /taux\s+d/i, /nombre\s+de\b.{0,20}\d/i, /\d{1,3}\s*(personnes|participants|candidats|demandeurs)/i, /\d+\s*(mois|semaines|jours)/i];
+function hasSmart(t) { return SMART_PATTERNS.some(function (p) { return p.test(t || ''); }); }
+function countSmartHits(t) { var n = 0; SMART_PATTERNS.forEach(function (p) { if (p.test(t || '')) n++; }); return n; }
+function isUserFacing(publics) {
+  var joined = (publics || []).join(' ').toLowerCase();
+  return USER_KW.some(function (k) { return joined.indexOf(k) >= 0; });
+}
+function daysSince(d, ref) { return d ? (ref - d) / 86400000 : null; }
 
-  var suiviW = wc(f.indicSuivi), resultW = wc(f.indicResultats);
-  var impactBase = Math.min(1.0, suiviW / 15) + Math.min(1.1, resultW / 20 * 1.1) + (f.beneficiaires ? 0.3 : 0);
-  var impactClar = resultW >= 6 ? clarityScore(f.indicResultats) : 0;
-  var scImpact = impactBase + impactClar * 0.5 + (hasSmart(f.indicSuivi + ' ' + f.indicResultats) ? 0.6 : 0);
-  scImpact = Math.max(0, Math.min(4, scImpact));
-  var userFacing = isUserFacing(f.publics);
-  if (!userFacing) scImpact = scImpact * 0.15;
+var VERBES_ACTION = ['mobiliser', 'former', 'orienter', 'accompagner', 'développer', 'renforcer', 'structurer',
+  'coordonner', 'informer', 'faciliter', 'créer', 'organiser', 'animer', 'déployer', 'proposer', 'construire',
+  'identifier', 'sécuriser', 'favoriser', 'améliorer', 'mettre en place', 'mettre en œuvre'];
+var JARGON_FLOU = ['synergie', 'synergies', 'dynamique', 'transversal', 'transversale', 'écosystème',
+  'proactif', 'disruptif', 'accompagnement global', 'à 360°', 'à 360'];
+var PUBLICS_PRIORITAIRES_KW = ['qpv', 'quartier prioritaire', 'zrr', 'zone de revitalisation', 'deld',
+  'longue durée', 'jeune', 'senior', 'sénior', 'travailleur handicapé', 'travailleuse handicapée', 'rsa',
+  'bénéficiaire du rsa', 'femme', 'primo-arrivant', 'réfugié'];
+var TYPOLOGIE_NIVEAU3_KW = ["accès à l'emploi", "accès direct à l'emploi", 'formation qualifiante',
+  'contrat de travail', 'embauche', 'recrutement', 'insertion professionnelle', "retour à l'emploi"];
+var TYPOLOGIE_NIVEAU2_KW = ['compétence', 'compétences', 'levée de frein', 'lever les freins',
+  'freins périphériques', 'qualification', 'montée en compétence'];
+var TYPOLOGIE_NIVEAU1_KW = ['information', 'sensibilisation', 'sensibiliser', 'découverte', 'communication'];
+var RETEX_FORTS_KW = ['point fort', 'points forts', 'réussite', 'réussites', 'succès', 'satisfaction'];
+var RETEX_AMELIO_KW = ["axe d'amélioration", "axes d'amélioration", 'point de vigilance', 'difficulté',
+  'difficultés', 'limite', 'limites', 'frein rencontré'];
+var RETEX_REPLIC_KW = ['reproductible', 'réplicable', 'transposable', 'généralisable', 'duplicable',
+  'à essaimer', 'essaimage'];
+var INNOVATION_LEVERS_KW = ['aller vers', 'aller-vers', 'co-construction', 'coconstruction', 'co-construit',
+  'open badge', 'open badges', 'gamification', 'ludification', 'intelligence artificielle', 'ia générative',
+  'hackathon', 'prototypage', 'test and learn', 'méthode agile', 'living lab', 'tiers-lieu', 'tiers lieu',
+  'pair-aidance', 'pair aidance', 'mentorat par les pairs', 'design thinking', 'expérimentation'];
+var STOPWORDS_FR = {};
+['le', 'la', 'les', 'de', 'des', 'du', 'un', 'une', 'et', 'en', 'à', 'au', 'aux', 'pour', 'dans', 'sur',
+  'par', 'avec', 'ce', 'cette', 'ces', 'est', 'sont', 'être', 'avoir', 'plus', 'ou', 'que', 'qui', 'se',
+  'sa', 'son', 'ses', 'leur', 'leurs', 'nous', 'vous', 'ils', 'elles', 'il', 'elle', 'pas', 'ne', 'sans',
+  'entre', 'vers', 'afin', 'ainsi', 'comme', 'tout', 'tous', 'toute', 'toutes', 'autre', 'autres', 'être',
+  'cette', 'leurs', 'ceux', 'celle', 'celles'].forEach(function (w) { STOPWORDS_FR[w] = true; });
 
-  var bilanW = wc(f.bilanText);
-  var staleDays = daysSince(f.dMaj, today);
-  var overdue = f.dFin && f.dFin < today;
-  var scBilan = Math.min(1.9, bilanW / 25 * 1.9) + (bilanW >= 6 ? clarityScore(f.bilanText) * 0.6 : 0);
-  scBilan = Math.max(0, Math.min(4, scBilan));
-  if ((overdue && bilanW < 5 && staleDays > 90) || staleDays > 365) scBilan = Math.min(scBilan, 0.4);
-
-  var subEtapes = !isLongRunning(f) ? 0.95 : Math.min(1, f.nEtapes / 3);
-  var subSuivi = !isLongRunning(f) ? 0.95 : Math.min(1, suiviW / 15);
-  var subDiversite = Math.min(1, f.acteurs.length / 6);
-  var subVigilance = Math.min(1, wc(f.pointAttention) / 15);
-  var subMoyens = Math.min(1, (wc(f.ressources) + wc(f.moyens)) / 20);
-  var subMaj = f.statut === 'Terminée' ? 1 : (f.statut === 'Abandonnée' ? 0 : Math.max(0, 1 - (staleDays || 0) / 365));
-  var subBilanVide = wc(f.bilanText) < 5;
-  var subBilan = Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(f.bilanText) * 0.3 : 0);
-  if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
-  var subDescription = Math.min(1, descW / 60) * 0.5 + clarityScore(f.description) * 0.5;
-  var subProblematique = Math.min(1, probW / 40) * 0.5 + clarityScore(f.problematique) * 0.5;
-  var subCiblage = Math.max(0, 1 - unfocused);
-  var subResultats = Math.min(1, Math.min(1, resultW / 20) * 0.6 + (resultW >= 6 ? clarityScore(f.indicResultats) : 0) * 0.2 + (hasSmart(f.indicSuivi + ' ' + f.indicResultats) ? 0.2 : 0));
-  var subImpactUsager = userFacing ? 1 : 0;
-
-  return {
-    scCadrage: scCadrage, scImpact: scImpact, scBilan: scBilan,
-    subs: {
-      description: subDescription, problematique: subProblematique, etapes: subEtapes,
-      ciblage: subCiblage, suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager,
-      maj: subMaj, bilan: subBilan, valorisation: null, diversite_acteurs: subDiversite,
-      vigilance: subVigilance, moyens: subMoyens
-    },
-    userFacing: userFacing, overdue: overdue, staleDays: staleDays
-  };
+function countKeywordHits(text, list) {
+  var t = (text || '').toLowerCase();
+  var n = 0;
+  list.forEach(function (k) { if (t.indexOf(k) >= 0) n++; });
+  return n;
+}
+function startsWithActionVerbRatio(text) {
+  var sentences = (text || '').split(/[.!?\n]+/).map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+  if (!sentences.length) return 0;
+  var hits = 0;
+  sentences.forEach(function (s) {
+    var cleaned = s.replace(/^[•\-\d.)\s]+/, '');
+    if (VERBES_ACTION.some(function (v) { return cleaned.indexOf(v) === 0; })) hits++;
+  });
+  return hits / sentences.length;
+}
+/* Score borné par une fourchette de mots "utile" : monte progressivement jusqu'au minimum
+   recommandé, plein tarif dans la fourchette, légère décote au-delà (texte trop long). */
+function sectionScore(text, minW, maxW, weight) {
+  var n = wc(text);
+  if (n === 0) return 0;
+  if (n < minW) return weight * (n / minW) * 0.7;
+  if (n <= maxW) return weight;
+  var over = n - maxW;
+  return Math.max(weight * 0.6, weight - (over / maxW) * weight * 0.4);
+}
+function titleScore(titre, weight) {
+  var n = wc(titre);
+  if (n === 0) return 0;
+  if (n <= 12) return weight;
+  return Math.max(0, weight * (1 - (n - 12) / 12));
+}
+function completudeScore(fields, weight) {
+  var filled = fields.filter(function (v) {
+    if (Array.isArray(v)) return v.length > 0;
+    return v != null && String(v).trim() !== '';
+  }).length;
+  return weight * (filled / fields.length);
+}
+function ciblageScore(nf, weight) {
+  var pen = 0;
+  if (nf.publics.length >= 3) pen += Math.min(1, (nf.publics.length - 2) / 6) * 0.4;
+  if (nf.thematiques.length > 4) pen += Math.min(1, (nf.thematiques.length - 4) / 6) * 0.3;
+  if (nf.solutions.length >= 5) pen += Math.min(1, (nf.solutions.length - 4) / 8) * 0.3;
+  return Math.max(0, weight * (1 - pen));
+}
+function beneficiairesScore(n, weight) {
+  if (n == null || n <= 0) return 0;
+  if (n > 1000) return weight * 0.5; /* un nombre très élevé peut signaler un manque de ciblage */
+  return weight;
+}
+function typologieScore(nf, weight) {
+  var t = (nf.indicResultats + ' ' + nf.description + ' ' + nf.problematique).toLowerCase();
+  if (countKeywordHits(t, TYPOLOGIE_NIVEAU3_KW)) return weight;
+  if (countKeywordHits(t, TYPOLOGIE_NIVEAU2_KW)) return weight * 0.65;
+  if (countKeywordHits(t, TYPOLOGIE_NIVEAU1_KW)) return weight * 0.35;
+  return 0;
+}
+function etapesScore(nf, weight) {
+  /* Compte à la fois le nombre d'étapes ET leur contenu (nombre de mots par étape) - une
+     étape "titre seul" sans détail ne vaut pas autant qu'une étape correctement décrite.
+     Contribue aussi, via hasSmart, à la logique d'objectifs SMART. */
+  if (!nf.etapeWordCounts || !nf.etapeWordCounts.length) return 0;
+  var nStep = Math.min(1, nf.etapeWordCounts.length / 3);
+  var avgW = nf.etapeWordCounts.reduce(function (s, w) { return s + w; }, 0) / nf.etapeWordCounts.length;
+  var detailScore = Math.min(1, avgW / 12);
+  return weight * (nStep * 0.5 + detailScore * 0.5);
+}
+function tokenize(text) {
+  return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z]{4,}/g) || [];
+}
+function hasLiensOuTemoignages(nf) {
+  var t = (nf.valorisationTxt || '') + ' ' + (nf.bilanText || '');
+  return /https?:\/\/|www\./i.test(t) || /«[^»]{10,}»|"[^"]{15,}"/.test(t) || /pièce jointe|document joint/i.test(t);
 }
 
-/* ============================== Textes des pistes (mêmes formulations que le cockpit) ============================== */
+/* ---------- Les 3 critères communs aux deux outils (PDF isolé et lot Excel) ---------- */
+function evalDescription(nf) {
+  var completude = completudeScore([nf.description, nf.problematique, nf.thematiques, nf.publics,
+    nf.solutions, nf.acteurs, nf.roles, nf.ressources, nf.moyens, nf.pointAttention, nf.indicSuivi,
+    nf.indicResultats], 25);
+  var volDesc = sectionScore(nf.description, 50, 800, 15);
+  var volProb = sectionScore(nf.problematique, 40, 400, 10);
+  var lisibilite = (clarityScore(nf.description) * 0.6 + clarityScore(nf.problematique) * 0.4) * 15;
+  var verbes = Math.min(1, startsWithActionVerbRatio(nf.description) * 3) * 10;
+  var jargonHits = countKeywordHits(nf.description + ' ' + nf.problematique, JARGON_FLOU);
+  var jargon = Math.max(0, 10 - jargonHits * 4);
+  var titre = titleScore(nf.titre, 5);
+  var ciblage = ciblageScore(nf, 10);
+  var total = completude + volDesc + volProb + lisibilite + verbes + jargon + titre + ciblage;
+  return { total: Math.max(0, Math.min(100, total)), detail: { completude: completude, volume: volDesc + volProb, lisibilite: lisibilite, verbes: verbes, jargon: jargon, titre: titre, ciblage: ciblage } };
+}
+function evalImpact(nf) {
+  var quantif = Math.min(1, countSmartHits(nf.indicSuivi + ' ' + nf.indicResultats) / 3) * 25;
+  var suivi = sectionScore(nf.indicSuivi, 20, 300, 15);
+  var resultats = sectionScore(nf.indicResultats, 20, 300, 10) + (wc(nf.indicResultats) >= 6 ? clarityScore(nf.indicResultats) * 5 : 0);
+  var publicsPrio = Math.min(1, countKeywordHits(nf.publics.join(' '), PUBLICS_PRIORITAIRES_KW) / 2) * 15;
+  var typo = typologieScore(nf, 15);
+  var benef = beneficiairesScore(nf.beneficiaires, 15);
+  var total = quantif + suivi + resultats + publicsPrio + typo + benef;
+  var userFacing = isUserFacing(nf.publics);
+  if (!userFacing) total = total * 0.15;
+  return { total: Math.max(0, Math.min(100, total)), userFacing: userFacing, detail: { quantif: quantif, suivi: suivi, resultats: resultats, publicsPrio: publicsPrio, typo: typo, benef: benef } };
+}
+function evalBilan(nf) {
+  var bilanW = wc(nf.bilanText);
+  if (nf.bilanVide || bilanW < 5) return null; /* signal "complétez le bilan", pas de score */
+  var tauxReal = Math.min(1, countSmartHits(nf.bilanText) / 2) * 25;
+  var volume = sectionScore(nf.bilanText, 50, 500, 14) + clarityScore(nf.bilanText) * 6;
+  var forts = countKeywordHits(nf.bilanText, RETEX_FORTS_KW) ? 10 : 0;
+  var amelio = countKeywordHits(nf.bilanText, RETEX_AMELIO_KW) ? 10 : 0;
+  var replic = countKeywordHits(nf.bilanText, RETEX_REPLIC_KW) ? 10 : 0;
+  var recondPts = nf.reconduction === 'oui' ? 8 : (nf.reconduction && nf.reconduction.indexOf('peut') >= 0 ? 4 : 0);
+  var transpPts = nf.transposition === 'oui' ? 8 : 0;
+  var valTxtPts = Math.min(9, wc(nf.valorisationTxt) / 15 * 9 + (hasLiensOuTemoignages(nf) ? 3 : 0));
+  var total = tauxReal + volume + forts + amelio + replic + recondPts + transpPts + valTxtPts;
+  return Math.max(0, Math.min(100, total));
+}
+function evalInnovation(nf, corpus) {
+  /* Uniquement disponible en évaluation de lot : mesure la rareté du vocabulaire employé
+     par rapport à l'ensemble des fiches déposées (proxy simple de "fréquence des mots",
+     sans recours à un modèle de similarité sémantique), complétée par la détection de
+     quelques leviers d'innovation courants (aller-vers, co-construction, gamification...). */
+  if (!corpus) return null;
+  var text = [nf.description, nf.problematique, nf.solutions.join(' '), nf.thematiques.join(' ')].join(' ');
+  var words = tokenize(text).filter(function (w) { return !STOPWORDS_FR[w]; });
+  var rarete = 0;
+  if (words.length) {
+    var sum = 0;
+    words.forEach(function (w) { var df = corpus.freq[w] || 1; sum += 1 - (df / corpus.totalDocs); });
+    rarete = sum / words.length;
+  }
+  var leviers = Math.min(1, countKeywordHits(text, INNOVATION_LEVERS_KW) / 3);
+  var total = rarete * 70 + leviers * 30;
+  return Math.max(0, Math.min(100, total));
+}
+function buildCorpusFreq(allTexts) {
+  var docFreq = {};
+  allTexts.forEach(function (text) {
+    var seen = {};
+    tokenize(text).filter(function (w) { return !STOPWORDS_FR[w]; }).forEach(function (w) {
+      if (!seen[w]) { seen[w] = 1; docFreq[w] = (docFreq[w] || 0) + 1; }
+    });
+  });
+  return { freq: docFreq, totalDocs: allTexts.length };
+}
+
+/* ---------- Les 13 axes de progrès détaillés (inchangés dans leur principe, formules mises à jour) ---------- */
 var AXE_LABELS = {
   description: "Mieux décrire l'action (contexte, contenu)", problematique: 'Mieux formuler la problématique traitée',
   etapes: 'Détailler davantage les étapes de mise en œuvre', ciblage: "Mieux cibler l'action",
   suivi: 'Renseigner des indicateurs de suivi', resultats: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)',
   impact_usager: "Mieux prendre en compte l'impact sur l'usager final", maj: 'Mettre à jour le suivi de l\'action plus régulièrement',
   bilan: 'Renseigner le bilan et les enseignements', diversite_acteurs: 'Élargir la diversité des acteurs mobilisés',
-  vigilance: 'Anticiper les points de vigilance', moyens: 'Préciser les moyens mobilisés (ressources, budget, RH)'
+  vigilance: 'Anticiper les points de vigilance', moyens: 'Préciser les moyens mobilisés (ressources, budget, RH)',
+  titre: 'Raccourcir le titre de l\'action'
 };
 var AXE_TEXTS = {
   description: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques.",
   problematique: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte.",
-  etapes: "Pour les actions qui se déroulent dans la durée, détaillez au moins 2 à 3 étapes de mise en œuvre avec leurs échéances : cela objective le déroulé de l'action.",
-  ciblage: "Limitez le nombre de publics cibles et de thématiques cochés à ce qui est réellement pertinent : cocher très large nuit à la lisibilité et donne l'impression d'une action mal ciblée.",
+  etapes: "Pour les actions qui se déroulent dans la durée, détaillez au moins 2 à 3 étapes de mise en œuvre avec un minimum d'explication pour chacune (une simple date sans description ne suffit pas).",
+  ciblage: "Limitez le nombre de publics cibles (moins de 3 recommandé), de thématiques et de solutions mobilisées (moins de 5 recommandé) à ce qui est réellement pertinent : cocher très large nuit à la lisibilité.",
   suivi: "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori.",
   resultats: "Fixez des objectifs de résultat chiffrés et datés (ex. « 80 % des participants en emploi à 6 mois ») plutôt que des formulations vagues.",
   impact_usager: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain.",
@@ -423,12 +592,89 @@ var AXE_TEXTS = {
   bilan: "Renseignez le bilan dès que l'échéance prévisionnelle est atteinte, même de façon synthétique : c'est surtout indispensable si la date de fin est dépassée et qu'aucun bilan n'a encore été saisi.",
   diversite_acteurs: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint.",
   vigilance: "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action.",
-  moyens: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti."
+  moyens: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti.",
+  titre: "Un titre concis (moins de 12 mots recommandé) est plus facilement lisible dans les tableaux de bord et les listes d'actions."
 };
 
-function fmt1(v) { return (Math.round(v * 10) / 10).toLocaleString('fr-FR'); }
+function isLongRunning(nf) { return nf.dCreation && nf.dFin && (nf.dFin - nf.dCreation) / 86400000 > 60; }
 
-function renderResults(f, s, rawText) {
+function evaluateFiche(nf, refDate, corpus) {
+  var today = refDate || new Date();
+  var staleDays = daysSince(nf.dMaj, today);
+  var overdue = nf.dFin && nf.dFin < today;
+
+  var evalDesc = evalDescription(nf);
+  var evalImp = evalImpact(nf);
+  var evalBil = evalBilan(nf);
+  var evalInno = evalInnovation(nf, corpus);
+
+  /* Score global sur 100, formule pondérée. Sans corpus (fiche isolée), l'innovation n'est
+     pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100 %. */
+  var wDesc = 25, wImpact = 30, wBilan = 25, wInno = 20;
+  var bilanContrib = evalBil == null ? 0 : evalBil;
+  var globalScore;
+  if (corpus) {
+    globalScore = (wDesc * evalDesc.total + wImpact * evalImp.total + wBilan * bilanContrib + wInno * (evalInno || 0)) / 100;
+  } else {
+    var wSum = wDesc + wImpact + wBilan;
+    globalScore = (wDesc * evalDesc.total + wImpact * evalImp.total + wBilan * bilanContrib) / wSum;
+  }
+
+  /* Axes de progrès détaillés (0 à 1), pour les pistes d'amélioration prioritaires. */
+  var bilanW = wc(nf.bilanText);
+  var subEtapes = !isLongRunning(nf) ? 0.95 : etapesScore(nf, 1);
+  var subSuivi = !isLongRunning(nf) ? 0.95 : Math.min(1, wc(nf.indicSuivi) / 15);
+  var subDiversite = Math.min(1, nf.acteurs.length / 6);
+  var subVigilance = Math.min(1, wc(nf.pointAttention) / 15);
+  var subMoyens = Math.min(1, (wc(nf.ressources) + wc(nf.moyens)) / 20);
+  var subMaj = nf.statut === 'Terminée' ? 1 : (nf.statut === 'Abandonnée' ? 0 : Math.max(0, 1 - (staleDays || 0) / 365));
+  var subBilanVide = nf.bilanVide || bilanW < 5;
+  var subBilan = subBilanVide ? 0 : Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(nf.bilanText) * 0.3 : 0);
+  if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
+  var subDescription = Math.min(1, wc(nf.description) / 60) * 0.5 + clarityScore(nf.description) * 0.5;
+  var subProblematique = Math.min(1, wc(nf.problematique) / 40) * 0.5 + clarityScore(nf.problematique) * 0.5;
+  var pen = 0;
+  if (nf.publics.length >= 3) pen += Math.min(1, (nf.publics.length - 2) / 6) * 0.35;
+  if (nf.thematiques.length > 4) pen += Math.min(1, (nf.thematiques.length - 4) / 6) * 0.3;
+  if (nf.solutions.length >= 5) pen += Math.min(1, (nf.solutions.length - 4) / 8) * 0.35;
+  var subCiblage = Math.max(0, 1 - pen);
+  var subResultats = Math.min(1, Math.min(1, wc(nf.indicResultats) / 20) * 0.6 + (wc(nf.indicResultats) >= 6 ? clarityScore(nf.indicResultats) : 0) * 0.2 + (hasSmart(nf.indicSuivi + ' ' + nf.indicResultats) ? 0.2 : 0));
+  var subImpactUsager = evalImp.userFacing ? 1 : 0;
+  var subValorisation = nf.reconduction != null || nf.transposition != null || nf.valorisationTxt
+    ? Math.min(1, Math.min(1, wc(nf.valorisationTxt) / 15) * 0.7 + (nf.reconduction === 'oui' ? 0.15 : 0) + (nf.transposition === 'oui' ? 0.15 : 0))
+    : null;
+  var subTitre = Math.min(1, wc(nf.titre) <= 12 ? 1 : Math.max(0, 1 - (wc(nf.titre) - 12) / 12));
+
+  return {
+    evalDescription: evalDesc, evalImpact: evalImp, evalBilan: evalBil, evalInnovation: evalInno,
+    globalScore: globalScore, hasCorpus: !!corpus,
+    subs: {
+      description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
+      suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
+      valorisation: subValorisation, diversite_acteurs: subDiversite, vigilance: subVigilance, moyens: subMoyens,
+      titre: subTitre
+    },
+    userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide
+  };
+}
+
+/* ---------- Adaptateur : fiche extraite d'un PDF -> objet normalisé ---------- */
+function normalizeFromPdf(f) {
+  return {
+    titre: f.titre, statut: f.statut, description: f.description, problematique: f.problematique,
+    roles: f.roles, ressources: f.ressources, moyens: f.moyens, pointAttention: f.pointAttention,
+    bilanText: f.bilanText, bilanVide: f.bilanVide, indicSuivi: f.indicSuivi, indicResultats: f.indicResultats,
+    indicStrategiques: f.indicStrategiques, publics: f.publics, thematiques: f.thematiques,
+    solutions: f.solutions, acteurs: f.acteurs, porteurs: f.porteurs, beneficiaires: f.beneficiaires,
+    nEtapes: f.nEtapes, etapeWordCounts: f.etapeWordCounts || [], dCreation: f.dCree, dFin: f.dFin, dMaj: f.dMaj,
+    reconduction: null, transposition: null, valorisationTxt: '', efficacite: null
+  };
+}
+
+function fmt1(v) { return (Math.round(v * 10) / 10).toLocaleString('fr-FR'); }
+function fmt0(v) { return Math.round(v).toLocaleString('fr-FR'); }
+
+function renderResults(f, res, rawText) {
   document.getElementById('ficheTitle').textContent = f.titre;
   var metaBits = [];
   if (f.statut) metaBits.push('Statut : ' + f.statut);
@@ -438,25 +684,26 @@ function renderResults(f, s, rawText) {
 
   var warnMsgs = [];
   if (!f.description && !f.problematique) warnMsgs.push("Le contenu du PDF n'a pas pu être reconnu comme une fiche action standard : les résultats peuvent être imprécis. Vérifiez qu'il s'agit bien d'un export du tableau de bord RPE.");
-  if (!s.userFacing) warnMsgs.push("Aucun public usager final (demandeurs d'emploi, jeunes...) détecté parmi les publics ciblés : le score d'impact usager est fortement réduit en conséquence, ce qui est normal pour une action institutionnelle ou de coordination interne.");
+  if (!res.userFacing) warnMsgs.push("Aucun public usager final (demandeurs d'emploi, jeunes...) détecté parmi les publics ciblés : le score d'impact usager est fortement réduit en conséquence, ce qui est normal pour une action institutionnelle ou de coordination interne.");
+  if (res.bilanVide) warnMsgs.push("\uD83D\uDCDD Bilan non renseigné : complétez le bilan pour obtenir une évaluation sur ce critère (il compte actuellement pour 0 dans le score global).");
   var warnBox = document.getElementById('warnBox');
   if (warnMsgs.length) { warnBox.innerHTML = warnMsgs.join('<br>'); warnBox.style.display = 'block'; } else warnBox.style.display = 'none';
 
-  var globalAvg = (s.scCadrage + s.scImpact + s.scBilan) / 3;
-  document.getElementById('globalScore').innerHTML = fmt1(globalAvg) + '<span style="font-size:16px;font-weight:400"> / 4</span>';
-  document.getElementById('globalTxt').textContent = "Score moyen sur les 3 critères calculables pour une fiche isolée (qualité de la description, impact usager, bilan et valorisation). Le caractère innovant n'est pas inclus : il nécessite une comparaison avec l'ensemble des fiches du réseau.";
+  document.getElementById('globalScore').innerHTML = fmt0(res.globalScore) + '<span style="font-size:16px;font-weight:400"> / 100</span>';
+  document.getElementById('globalTxt').textContent = "Score pondéré sur les critères calculables pour une fiche isolée (qualité de la description 25 %, impact usager 30 %, bilan et valorisation 25 %). Le caractère innovant (20 % au niveau national) n'est pas inclus : il nécessite de comparer la fiche à l'ensemble du réseau.";
 
   var cards = [
-    { l: 'Qualité de la description', v: s.scCadrage, c: 'var(--ft-indigo)' },
-    { l: 'Impact usager', v: s.scImpact, c: 'var(--ft-violet)' },
-    { l: 'Bilan et valorisation', v: s.scBilan, c: 'var(--ft-jaune-dark)' }
+    { l: 'Qualité de la description', v: res.evalDescription.total, c: 'var(--ft-indigo)' },
+    { l: 'Impact usager', v: res.evalImpact.total, c: 'var(--ft-violet)' },
+    { l: 'Bilan et valorisation', v: res.evalBilan, c: 'var(--ft-jaune-dark)', empty: res.evalBilan == null }
   ];
   document.getElementById('scoreGrid').innerHTML = cards.map(function (c) {
-    return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val">' + fmt1(c.v) + '<span class="unit"> / 4</span></div><div class="track"><div class="fill" style="width:' + (c.v / 4 * 100) + '%;background:' + c.c + '"></div></div></div>';
+    if (c.empty) return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val" style="font-size:14px;color:var(--ft-fg-3)">Complétez le bilan</div></div>';
+    return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val">' + fmt0(c.v) + '<span class="unit"> / 100</span></div><div class="track"><div class="fill" style="width:' + c.v + '%;background:' + c.c + '"></div></div></div>';
   }).join('');
 
-  var subKeys = Object.keys(s.subs).filter(function (k) { return s.subs[k] != null; });
-  var sorted = subKeys.map(function (k) { return { key: k, v: s.subs[k] }; }).sort(function (a, b) { return a.v - b.v; });
+  var subKeys = Object.keys(res.subs).filter(function (k) { return res.subs[k] != null; });
+  var sorted = subKeys.map(function (k) { return { key: k, v: res.subs[k] }; }).sort(function (a, b) { return a.v - b.v; });
   var weakest = sorted.filter(function (x) { return x.v < 0.6; }).slice(0, 5);
   var axesHtml = '';
   if (!weakest.length) {
@@ -519,7 +766,7 @@ function handleFile(file) {
     try {
       var text = await extractPdfText(e.target.result);
       var fiche = parseFiche(text);
-      var scores = scoreFiche(fiche);
+      var scores = evaluateFiche(normalizeFromPdf(fiche), new Date(), null);
       renderResults(fiche, scores, text.replace(/\u241F/g, ' | '));
     } catch (err) {
       var box = document.getElementById('errorBox');
@@ -571,79 +818,34 @@ function toDate(v) {
 }
 function isFilled(v, minWords) { return wc(v) >= (minWords == null ? 3 : minWords); }
 
-function scoreRow(row, refDate) {
+/* ---------- Adaptateur : ligne de l'export Excel -> objet normalisé ---------- */
+function normalizeFromXlsx(row, refDate) {
   var get = function (key) { return row[COLS[key]]; };
-  var description = get('description'), problematique = get('problematique');
-  var descW = wc(description), probW = wc(problematique);
-  var nEtapes = ETAPE_COLS.reduce(function (s, c) { return s + (isFilled(row[c]) ? 1 : 0); }, 0);
-  var publics = splitMulti(get('publicCible')), thematiques = splitMulti(get('thematique'));
-  var acteurs = splitMulti(get('acteurs'));
-  var dCreation = toDate(get('dateCreation')), dFin = toDate(get('dateFin')), dMaj = toDate(get('dateMaj'));
+  var nEtapes = 0, etapeWordCounts = [];
+  ETAPE_COLS.forEach(function (c) {
+    if (isFilled(row[c])) { nEtapes++; etapeWordCounts.push(wc(row[c])); }
+  });
+  var recond = (get('reconduction') || '').trim().toLowerCase();
+  var transp = (get('transposition') || '').trim().toLowerCase();
   var statut = (get('statut') || '').trim();
-
-  var cadrageBase = Math.min(1.1, descW / 60 * 1.1) + Math.min(0.8, probW / 40 * 0.8) + Math.min(1.3, nEtapes / 3 * 1.3);
-  var cadrageClar = 0.55 * clarityScore(description) + 0.45 * clarityScore(problematique);
-  var unfocused = Math.max(0, (publics.length - 3) / 7) * 0.4 + Math.max(0, (thematiques.length - 4) / 6) * 0.4;
-  var scCadrage = Math.max(0, Math.min(4, cadrageBase + cadrageClar * 0.8 - unfocused));
-
-  var suivi = get('suivi') || '', resultats = get('resultats') || '';
-  var suiviW = wc(suivi), resultW = wc(resultats);
-  var beneficiaires = get('beneficiaires');
-  var hasBenefNum = /\d/.test(String(beneficiaires || ''));
-  var impactBase = Math.min(1.0, suiviW / 15) + Math.min(1.1, resultW / 20 * 1.1) + (hasBenefNum ? 0.3 : 0);
-  var impactClar = resultW >= 6 ? clarityScore(resultats) : 0;
-  var scImpact = impactBase + impactClar * 0.5 + (hasSmart(suivi + ' ' + resultats) ? 0.6 : 0);
-  scImpact = Math.max(0, Math.min(4, scImpact));
-  var userFacing = isUserFacing(publics);
-  if (!userFacing) scImpact = scImpact * 0.15;
-
-  var bilanTxt = get('bilanTexte') || '', bilanW = wc(bilanTxt);
-  var staleDays = dMaj ? (refDate - dMaj) / 86400000 : 9999;
-  var overdue = dFin && dFin < refDate;
-  var recond = (get('reconduction') || '').toLowerCase(), transp = (get('transposition') || '').toLowerCase();
-  var valTxt = get('valorisationTxt') || '', valW = wc(valTxt);
-  var scBilan = Math.min(1.9, bilanW / 25 * 1.9) + Math.min(1.0, valW / 15 * 1.0);
-  scBilan += bilanW >= 6 ? clarityScore(bilanTxt) * 0.6 : 0;
-  scBilan += recond === 'oui' ? 0.3 : (recond.indexOf('peut') >= 0 ? 0.15 : 0);
-  scBilan += transp === 'oui' ? 0.3 : 0;
-  scBilan = Math.max(0, Math.min(4, scBilan));
-  if ((overdue && bilanW < 5 && staleDays > 90) || staleDays > 365) scBilan = Math.min(scBilan, 0.4);
-
-  var isLongRunning = dCreation && dFin && (dFin - dCreation) / 86400000 > 60;
-  var subEtapes = !isLongRunning ? 0.95 : Math.min(1, nEtapes / 3);
-  var subSuivi = !isLongRunning ? 0.95 : Math.min(1, suiviW / 15);
-  var subDiversite = Math.min(1, acteurs.length / 6);
-  var subVigilance = Math.min(1, wc(get('pointAttention')) / 15);
-  var subMoyens = Math.min(1, (wc(get('ressources')) + wc(get('moyens'))) / 20);
-  var subMaj = statut === 'Terminée' ? 1 : (statut === 'Abandonnée' ? 0 : Math.max(0, 1 - staleDays / 365));
-  var subBilanVide = bilanW < 5;
-  var subBilan = Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(bilanTxt) * 0.3 : 0);
-  if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
-  var subDescription = Math.min(1, descW / 60) * 0.5 + clarityScore(description) * 0.5;
-  var subProblematique = Math.min(1, probW / 40) * 0.5 + clarityScore(problematique) * 0.5;
-  var subCiblage = Math.max(0, 1 - unfocused);
-  var subResultats = Math.min(1, Math.min(1, resultW / 20) * 0.6 + (resultW >= 6 ? clarityScore(resultats) : 0) * 0.2 + (hasSmart(suivi + ' ' + resultats) ? 0.2 : 0));
-  var subImpactUsager = userFacing ? 1 : 0;
-  var subValorisation = Math.min(1, Math.min(1, valW / 15) * 0.7 + (recond === 'oui' ? 0.15 : 0) + (transp === 'oui' ? 0.15 : 0));
-  var effVal = get('efficacite');
-  var subEfficacite = (effVal == null || effVal === '' || isNaN(+effVal)) ? 0 : Math.max(0, Math.min(1, +effVal / 10));
-
+  var bilanTexte = get('bilanTexte') || '';
   return {
-    scCadrage: scCadrage, scImpact: scImpact, scBilan: scBilan,
-    subs: {
-      description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
-      suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
-      valorisation: subValorisation, diversite_acteurs: subDiversite, efficacite: subEfficacite, vigilance: subVigilance, moyens: subMoyens
-    }
+    titre: get('titre') || '', statut: statut, description: get('description') || '',
+    problematique: get('problematique') || '', roles: get('roles') || '', ressources: get('ressources') || '',
+    moyens: get('moyens') || '', pointAttention: get('pointAttention') || '', bilanText: bilanTexte,
+    bilanVide: wc(bilanTexte) < 5, indicSuivi: get('suivi') || '', indicResultats: get('resultats') || '',
+    indicStrategiques: get('strategiques') || '', publics: splitMulti(get('publicCible')),
+    thematiques: splitMulti(get('thematique')), solutions: splitMulti(get('solutions')),
+    acteurs: splitMulti(get('acteurs')), porteurs: [], beneficiaires: (function () { var v = get('beneficiaires'); var n = parseFloat(v); return isNaN(n) ? null : n; })(),
+    nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, dCreation: toDate(get('dateCreation')),
+    dFin: toDate(get('dateFin')), dMaj: toDate(get('dateMaj')),
+    reconduction: recond === 'oui' ? 'oui' : (recond || null), transposition: transp === 'oui' ? 'oui' : (transp || null),
+    valorisationTxt: get('valorisationTxt') || '',
+    efficacite: (function () { var v = get('efficacite'); var n = parseFloat(v); return isNaN(n) ? null : n; })()
   };
 }
-var AXE_LABELS_FR = {
-  description: "Mieux décrire l'action", problematique: 'Mieux formuler la problématique', etapes: 'Détailler les étapes',
-  ciblage: "Mieux cibler l'action", suivi: 'Renseigner des indicateurs de suivi', resultats: 'Objectifs chiffrés (SMART)',
-  impact_usager: "Impact sur l'usager final", maj: 'Mise à jour plus régulière', bilan: 'Renseigner le bilan',
-  valorisation: "Valoriser l'action", diversite_acteurs: 'Diversité des acteurs mobilisés',
-  efficacite: 'Auto-évaluer l\u2019efficacité', vigilance: 'Points de vigilance', moyens: 'Préciser les moyens mobilisés'
-};
+
+var AXE_LABELS_FR = AXE_LABELS; /* même référentiel de libellés que l'outil PDF, pour cohérence */
 
 function rankPercentile(values) {
   /* Rang percentile (0 à 1) de chaque valeur au sein du tableau, valeurs égales
@@ -671,21 +873,31 @@ async function processBulkFile(file) {
   if (!rows.length) throw new Error('Aucune ligne trouvée dans ce fichier.');
 
   var refDate = new Date();
-  var allScores = rows.map(function (r) { return scoreRow(r, refDate); });
+  var normalized = rows.map(function (r) { return normalizeFromXlsx(r, refDate); });
+
+  /* Corpus de fréquence des mots, sur la description + problématique + solutions +
+     thématiques de l'ensemble du lot déposé : sert de base à l'évaluation du caractère
+     innovant (plus une fiche emploie un vocabulaire rare par rapport au lot, plus son
+     score d'innovation est élevé). */
+  var corpusTexts = normalized.map(function (nf) { return [nf.description, nf.problematique, nf.solutions.join(' '), nf.thematiques.join(' ')].join(' '); });
+  var corpus = buildCorpusFreq(corpusTexts);
+
+  var allScores = normalized.map(function (nf) { return evaluateFiche(nf, refDate, corpus); });
   var AXE_KEYS = Object.keys(AXE_LABELS_FR);
   var percentiles = {};
-  AXE_KEYS.forEach(function (k) { percentiles[k] = rankPercentile(allScores.map(function (s) { return s.subs[k]; })); });
+  AXE_KEYS.forEach(function (k) { percentiles[k] = rankPercentile(allScores.map(function (s) { return s.subs[k] == null ? 0.5 : s.subs[k]; })); });
 
   var outRows = rows.map(function (row, idx) {
     var s = allScores[idx];
     var best = null, bestPct = Infinity;
-    AXE_KEYS.forEach(function (k) { var p = percentiles[k][idx]; if (p < bestPct) { bestPct = p; best = k; } });
+    AXE_KEYS.forEach(function (k) { if (allScores[idx].subs[k] == null) return; var p = percentiles[k][idx]; if (p < bestPct) { bestPct = p; best = k; } });
     var out = Object.assign({}, row);
-    out['Éval - Qualité de la description (/4)'] = Math.round(s.scCadrage * 100) / 100;
-    out['Éval - Impact usager (/4)'] = Math.round(s.scImpact * 100) / 100;
-    out['Éval - Bilan et valorisation (/4)'] = Math.round(s.scBilan * 100) / 100;
-    out['Éval - Score global (/4)'] = Math.round((s.scCadrage + s.scImpact + s.scBilan) / 3 * 100) / 100;
-    out['Éval - Axe de progrès prioritaire'] = AXE_LABELS_FR[best];
+    out['Éval - Qualité de la description (/100)'] = Math.round(s.evalDescription.total);
+    out['Éval - Impact usager (/100)'] = Math.round(s.evalImpact.total);
+    out['Éval - Bilan et valorisation (/100)'] = s.evalBilan == null ? 'Complétez le bilan' : Math.round(s.evalBilan);
+    out["Éval - Caractère innovant (/100)"] = Math.round(s.evalInnovation);
+    out['Éval - Score global (/100)'] = Math.round(s.globalScore);
+    out['Éval - Axe de progrès prioritaire'] = best ? AXE_LABELS_FR[best] : '-';
     return out;
   });
 
@@ -713,7 +925,7 @@ async function handleBulkFile(file) {
     lastBulkWorkbook = result.workbook;
     lastBulkFileName = file.name.replace(/\.xlsx$/i, '') + '_evalue.xlsx';
     document.getElementById('bulkCount').textContent = result.n;
-    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées des scores et de l'axe de progrès prioritaire de chaque fiche.";
+    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 6 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global et l'axe de progrès prioritaire de chaque fiche.";
     document.getElementById('bulkFileName').textContent = lastBulkFileName;
     document.getElementById('resultsBulk').style.display = 'block';
   } catch (err) {

@@ -298,9 +298,10 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 table.clpe{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
 .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .table-scroll table.clpe{min-width:640px}
-table.clpe th{background:var(--ft-sable);text-align:center;padding:9px 10px;font-size:12px;font-weight:700;color:var(--ft-fg-2);border-bottom:2px solid var(--ft-sable-dark);cursor:pointer;user-select:none;white-space:nowrap}
+table.clpe th{background:var(--ft-sable);text-align:left;padding:9px 10px;font-size:12px;font-weight:700;color:var(--ft-fg-2);border-bottom:2px solid var(--ft-sable-dark);cursor:pointer;user-select:none;white-space:nowrap}
 table.clpe th.sort-active{color:var(--ft-indigo)}
-table.clpe td{padding:9px 10px;border-bottom:1px solid var(--ft-sable);vertical-align:middle;text-align:center}
+table.clpe td{padding:9px 10px;border-bottom:1px solid var(--ft-sable);vertical-align:middle;text-align:left}
+table.clpe th:nth-child(n+4),table.clpe td:nth-child(n+4){text-align:right}
 table.clpe tbody tr.main{cursor:pointer}
 table.clpe tbody tr.main:hover{background:var(--ft-sable)}
 tr.expanded{background:var(--ft-indigo-light)!important}
@@ -914,10 +915,17 @@ function parseWorkbook(buf, correctifRows) {
   /* Correctif de référentiel : certaines réponses portent un Région/Département/CLPE erroné
      suite à un problème de référentiel dans le questionnaire. Les questions cachées
      Q28_1/Q28_2/Q28_3 (mêmes valeurs que Région/Département/CLPE au moment de la réponse)
-     servent de clé pour identifier ces lignes et leur appliquer la correction fournie. */
+     servent de clé pour identifier ces lignes et leur appliquer la correction fournie.
+     La clé est normalisée (apostrophes, tirets, espaces, accents) pour ne pas manquer une
+     correspondance à cause d'une simple variante typographique (ex. "Val-d'Oise" saisi
+     "Val-dOise" dans l'export Qualtrics). */
+  function normTerritoryKey(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/['\u2019\-\s]+/g, '').trim();
+  }
   var correctifMap = {};
   (correctifRows || []).forEach(function (c) {
-    var key = (c.q28_1 || '').trim() + '|' + (c.q28_2 || '').trim() + '|' + (c.q28_3 || '').trim();
+    var key = normTerritoryKey(c.q28_1) + '|' + normTerritoryKey(c.q28_2) + '|' + normTerritoryKey(c.q28_3);
     correctifMap[key] = { region: c.region, departement: c.departement, clpe: c.clpe };
   });
 
@@ -978,7 +986,7 @@ function parseWorkbook(buf, correctifRows) {
       mat: num(row, CONFIG.sc.mat) || 0,
       themes: {}, q: {}, answers: {}, auto: 0
     };
-    var q28Key = territory(row, 'Q28_1') + '|' + territory(row, 'Q28_2') + '|' + territory(row, 'Q28_3');
+    var q28Key = normTerritoryKey(territory(row, 'Q28_1')) + '|' + normTerritoryKey(territory(row, 'Q28_2')) + '|' + normTerritoryKey(territory(row, 'Q28_3'));
     if (correctifMap[q28Key]) {
       var fix = correctifMap[q28Key];
       rec.region = fix.region; rec.departement = fix.departement; rec.clpe = fix.clpe;
