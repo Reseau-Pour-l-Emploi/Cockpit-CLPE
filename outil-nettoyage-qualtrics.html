@@ -133,10 +133,17 @@ function parseSimpleCSV(text) {
   });
 }
 
+/* Normalise une clé de territoire (apostrophes, tirets, espaces, accents) pour ne pas
+   manquer une correspondance à cause d'une variante typographique (ex. "Val-d'Oise" vs
+   "Val-dOise"). */
+function normTerritoryKey(s) {
+  return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/['\u2019\-\s]+/g, '').trim();
+}
 fetch(CORRECTIF_FILE).then(function (r) { return r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status)); })
   .then(function (text) {
     parseSimpleCSV(text).forEach(function (c) {
-      var key = (c.q28_1 || '').trim() + '|' + (c.q28_2 || '').trim() + '|' + (c.q28_3 || '').trim();
+      var key = normTerritoryKey(c.q28_1) + '|' + normTerritoryKey(c.q28_2) + '|' + normTerritoryKey(c.q28_3);
       correctifMap[key] = { region: c.region, departement: c.departement, clpe: c.clpe };
     });
   })
@@ -229,7 +236,7 @@ function process(arrayBuffer, fileName) {
     if (!row || row.every(function (c) { return c == null || c === ''; })) { continue; }
 
     // 1. Correctif de référentiel (Q28_1/2/3)
-    var q28key = String(get(row, 'Q28_1') || '').trim() + '|' + String(get(row, 'Q28_2') || '').trim() + '|' + String(get(row, 'Q28_3') || '').trim();
+    var q28key = normTerritoryKey(get(row, 'Q28_1')) + '|' + normTerritoryKey(get(row, 'Q28_2')) + '|' + normTerritoryKey(get(row, 'Q28_3'));
     if (correctifMap[q28key]) {
       var fix = correctifMap[q28key];
       if (col['Région'] !== undefined) row[col['Région']] = fix.region;

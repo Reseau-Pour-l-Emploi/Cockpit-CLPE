@@ -45,10 +45,14 @@ input[type=file]{display:none}
 .btn{background:var(--ft-indigo);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-family:var(--ft-font);font-size:14px;font-weight:600;cursor:pointer}
 .btn:hover{background:var(--ft-indigo-dark)}
 .btn-secondary{background:#fff;color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:9px 16px;font-family:var(--ft-font);font-size:13px;font-weight:600;cursor:pointer}
+.link-btn{background:none;border:none;padding:0;color:var(--ft-indigo);font-family:var(--ft-font);font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer}
+.link-btn:hover{color:var(--ft-indigo-dark)}
 .btn-secondary:hover{background:var(--ft-indigo-light)}
 .loader{display:none;text-align:center;padding:24px;color:var(--ft-fg-2);font-size:13.5px}
 .error-box{background:#FBE0D6;border:1px solid var(--ft-rouge);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--ft-fg-1);margin-top:14px;display:none}
 .warn-box{background:var(--ft-jaune-light);border:1px solid var(--ft-jaune-dark);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ft-fg-1);margin-top:14px}
+.guide{background:var(--ft-indigo-light);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--ft-fg-1);line-height:1.6;margin-top:10px}
+.guide b{color:var(--ft-indigo)}
 #results{display:none}
 .fiche-title{font-size:16px;font-weight:700;color:var(--ft-navy);margin-bottom:2px}
 .fiche-meta{font-size:12px;color:var(--ft-fg-3);margin-bottom:18px}
@@ -138,6 +142,9 @@ input[type=file]{display:none}
     </div>
 
     <div class="score-grid" id="scoreGrid"></div>
+    <div class="guide">
+      <b>Guide de lecture :</b> <b>Qualité de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées.
+    </div>
 
     <div class="axes-title">Pistes d'amélioration prioritaires</div>
     <div id="axesList"></div>
@@ -163,7 +170,8 @@ input[type=file]{display:none}
   <div class="card">
     <h2>Évaluer un lot de fiches action (export Excel complet)</h2>
     <p style="font-size:13px">Déposez l'export Excel complet des fiches action (toutes les fiches, une par ligne). L'outil calcule les mêmes critères que ci-dessus pour chaque ligne, et vous renvoie un fichier Excel identique en entrée, complété des colonnes d'évaluation - prêt à servir de ressource pour votre site.</p>
-    <p style="font-size:13px;margin-bottom:0"><b>Le fichier n'est jamais conservé</b>, comme pour le PDF ci-dessus.</p>
+    <p style="font-size:13px"><b>Le fichier n'est jamais conservé</b>, comme pour le PDF ci-dessus.</p>
+    <p style="font-size:13px;margin-bottom:0">Pas encore de fichier sous la main, ou besoin de vérifier le format attendu ? <button class="link-btn" id="downloadTemplateBtn">Télécharger le modèle avec tous les champs attendus</button></p>
   </div>
 
   <div class="card">
@@ -179,6 +187,9 @@ input[type=file]{display:none}
       <div class="global-box" style="margin-top:18px">
         <div class="val" id="bulkCount">-</div>
         <div class="txt" id="bulkTxt"></div>
+      </div>
+      <div class="guide">
+        <b>Guide de lecture :</b> <b>Qualité de la description</b> - complétude, longueur et clarté du contenu. <b>Impact usager</b> - objectifs chiffrés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - noté seulement une fois rempli, et seulement après l'échéance de l'action (sinon "Pas encore d'échéance"). <b>Caractère innovant</b> - originalité du vocabulaire par rapport aux autres fiches du lot.
       </div>
       <div class="reset-row" style="margin-top:14px">
         <button class="btn" id="downloadBulkBtn">Télécharger le fichier évalué</button>
@@ -611,14 +622,20 @@ function evaluateFiche(nf, refDate, corpus) {
   /* Score global sur 100, formule pondérée. Sans corpus (fiche isolée), l'innovation n'est
      pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100 %. */
   var wDesc = 25, wImpact = 30, wBilan = 25, wInno = 20;
-  var bilanContrib = evalBil == null ? 0 : evalBil;
-  var globalScore;
-  if (corpus) {
-    globalScore = (wDesc * evalDesc.total + wImpact * evalImp.total + wBilan * bilanContrib + wInno * (evalInno || 0)) / 100;
-  } else {
-    var wSum = wDesc + wImpact + wBilan;
-    globalScore = (wDesc * evalDesc.total + wImpact * evalImp.total + wBilan * bilanContrib) / wSum;
-  }
+  /* Le score global ne moyenne que les critères réellement évalués : un bilan non
+     renseigné, ou le caractère innovant sur une fiche isolée, sont exclus du calcul
+     plutôt que comptés comme 0 - ce qui pénaliserait injustement une fiche par ailleurs
+     bien renseignée. Les critères exclus sont listés pour rester transparent. */
+  var wSum = wDesc + wImpact, weightedSum = wDesc * evalDesc.total + wImpact * evalImp.total;
+  var excludedCriteria = [];
+  var bilanEmpty = evalBil == null;
+  var bilanNotYetDue = bilanEmpty && nf.dFin && !overdue;
+  if (evalBil != null) { wSum += wBilan; weightedSum += wBilan * evalBil; }
+  else if (bilanNotYetDue) excludedCriteria.push({ label: 'Bilan et valorisation', reason: "l'action n'est pas encore arrivée à échéance (fin prévue le " + nf.dFin.toLocaleDateString('fr-FR') + ')', actionable: false });
+  else excludedCriteria.push({ label: 'Bilan et valorisation', reason: 'bilan non renseigné', actionable: true });
+  if (corpus) { wSum += wInno; weightedSum += wInno * (evalInno || 0); }
+  else excludedCriteria.push({ label: 'Caractère innovant', reason: 'non calculable sur une fiche isolée, nécessite de comparer au reste du réseau', actionable: false });
+  var globalScore = wSum ? weightedSum / wSum : 0;
 
   /* Axes de progrès détaillés (0 à 1), pour les pistes d'amélioration prioritaires. */
   var bilanW = wc(nf.bilanText);
@@ -629,8 +646,13 @@ function evaluateFiche(nf, refDate, corpus) {
   var subMoyens = Math.min(1, (wc(nf.ressources) + wc(nf.moyens)) / 20);
   var subMaj = nf.statut === 'Terminée' ? 1 : (nf.statut === 'Abandonnée' ? 0 : Math.max(0, 1 - (staleDays || 0) / 365));
   var subBilanVide = nf.bilanVide || bilanW < 5;
-  var subBilan = subBilanVide ? 0 : Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(nf.bilanText) * 0.3 : 0);
-  if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
+  var subBilan;
+  if (subBilanVide && nf.dFin && !overdue) {
+    subBilan = null; /* pas encore pertinent : l'échéance n'est pas atteinte */
+  } else {
+    subBilan = subBilanVide ? 0 : Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(nf.bilanText) * 0.3 : 0);
+    if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
+  }
   var subDescription = Math.min(1, wc(nf.description) / 60) * 0.5 + clarityScore(nf.description) * 0.5;
   var subProblematique = Math.min(1, wc(nf.problematique) / 40) * 0.5 + clarityScore(nf.problematique) * 0.5;
   var pen = 0;
@@ -647,14 +669,14 @@ function evaluateFiche(nf, refDate, corpus) {
 
   return {
     evalDescription: evalDesc, evalImpact: evalImp, evalBilan: evalBil, evalInnovation: evalInno,
-    globalScore: globalScore, hasCorpus: !!corpus,
+    globalScore: globalScore, hasCorpus: !!corpus, excludedCriteria: excludedCriteria,
     subs: {
       description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
       suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
       valorisation: subValorisation, diversite_acteurs: subDiversite, vigilance: subVigilance, moyens: subMoyens,
       titre: subTitre
     },
-    userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide
+    userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide, bilanNotYetDue: bilanNotYetDue
   };
 }
 
@@ -685,20 +707,22 @@ function renderResults(f, res, rawText) {
   var warnMsgs = [];
   if (!f.description && !f.problematique) warnMsgs.push("Le contenu du PDF n'a pas pu être reconnu comme une fiche action standard : les résultats peuvent être imprécis. Vérifiez qu'il s'agit bien d'un export du tableau de bord RPE.");
   if (!res.userFacing) warnMsgs.push("Aucun public usager final (demandeurs d'emploi, jeunes...) détecté parmi les publics ciblés : le score d'impact usager est fortement réduit en conséquence, ce qui est normal pour une action institutionnelle ou de coordination interne.");
-  if (res.bilanVide) warnMsgs.push("\uD83D\uDCDD Bilan non renseigné : complétez le bilan pour obtenir une évaluation sur ce critère (il compte actuellement pour 0 dans le score global).");
+  if (res.bilanVide && !res.bilanNotYetDue) warnMsgs.push("\uD83D\uDCDD Bilan non renseigné : complétez le bilan pour obtenir une évaluation sur ce critère (il n'entre pas dans le score global tant qu'il est vide).");
   var warnBox = document.getElementById('warnBox');
   if (warnMsgs.length) { warnBox.innerHTML = warnMsgs.join('<br>'); warnBox.style.display = 'block'; } else warnBox.style.display = 'none';
 
   document.getElementById('globalScore').innerHTML = fmt0(res.globalScore) + '<span style="font-size:16px;font-weight:400"> / 100</span>';
-  document.getElementById('globalTxt').textContent = "Score pondéré sur les critères calculables pour une fiche isolée (qualité de la description 25 %, impact usager 30 %, bilan et valorisation 25 %). Le caractère innovant (20 % au niveau national) n'est pas inclus : il nécessite de comparer la fiche à l'ensemble du réseau.";
+  var globalTxtParts = ["Score pondéré sur les seuls critères réellement évalués (les critères non évalués n'entrent pas dans la moyenne)."];
+  res.excludedCriteria.forEach(function (x) { globalTxtParts.push(x.label + ' non évalué : ' + x.reason + '.'); });
+  document.getElementById('globalTxt').textContent = globalTxtParts.join(' ');
 
   var cards = [
     { l: 'Qualité de la description', v: res.evalDescription.total, c: 'var(--ft-indigo)' },
     { l: 'Impact usager', v: res.evalImpact.total, c: 'var(--ft-violet)' },
-    { l: 'Bilan et valorisation', v: res.evalBilan, c: 'var(--ft-jaune-dark)', empty: res.evalBilan == null }
+    { l: 'Bilan et valorisation', v: res.evalBilan, c: 'var(--ft-jaune-dark)', empty: res.evalBilan == null, emptyMsg: res.bilanNotYetDue ? "Pas encore d'échéance" : 'Complétez le bilan' }
   ];
   document.getElementById('scoreGrid').innerHTML = cards.map(function (c) {
-    if (c.empty) return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val" style="font-size:14px;color:var(--ft-fg-3)">Complétez le bilan</div></div>';
+    if (c.empty) return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val" style="font-size:14px;color:var(--ft-fg-3)">' + c.emptyMsg + '</div></div>';
     return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val">' + fmt0(c.v) + '<span class="unit"> / 100</span></div><div class="track"><div class="fill" style="width:' + c.v + '%;background:' + c.c + '"></div></div></div>';
   }).join('');
 
@@ -894,9 +918,10 @@ async function processBulkFile(file) {
     var out = Object.assign({}, row);
     out['Éval - Qualité de la description (/100)'] = Math.round(s.evalDescription.total);
     out['Éval - Impact usager (/100)'] = Math.round(s.evalImpact.total);
-    out['Éval - Bilan et valorisation (/100)'] = s.evalBilan == null ? 'Complétez le bilan' : Math.round(s.evalBilan);
+    out['Éval - Bilan et valorisation (/100)'] = s.evalBilan == null ? (s.bilanNotYetDue ? "Pas encore d'échéance" : 'Complétez le bilan') : Math.round(s.evalBilan);
     out["Éval - Caractère innovant (/100)"] = Math.round(s.evalInnovation);
     out['Éval - Score global (/100)'] = Math.round(s.globalScore);
+    out['Éval - Critères non évalués (exclus du score global)'] = s.excludedCriteria.length ? s.excludedCriteria.map(function (x) { return x.label + ' (' + x.reason + ')'; }).join(' ; ') : '-';
     out['Éval - Axe de progrès prioritaire'] = best ? AXE_LABELS_FR[best] : '-';
     return out;
   });
@@ -925,7 +950,7 @@ async function handleBulkFile(file) {
     lastBulkWorkbook = result.workbook;
     lastBulkFileName = file.name.replace(/\.xlsx$/i, '') + '_evalue.xlsx';
     document.getElementById('bulkCount').textContent = result.n;
-    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 6 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global et l'axe de progrès prioritaire de chaque fiche.";
+    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 7 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global (calculé sur les seuls critères évalués), les critères exclus le cas échéant, et l'axe de progrès prioritaire de chaque fiche.";
     document.getElementById('bulkFileName').textContent = lastBulkFileName;
     document.getElementById('resultsBulk').style.display = 'block';
   } catch (err) {
@@ -938,6 +963,67 @@ async function handleBulkFile(file) {
 document.getElementById('downloadBulkBtn').addEventListener('click', function () {
   if (!lastBulkWorkbook) return;
   XLSX.writeFile(lastBulkWorkbook, lastBulkFileName);
+});
+
+document.getElementById('downloadTemplateBtn').addEventListener('click', function () {
+  /* Colonnes construites depuis COLS/ETAPE_COLS - la même source que celle lue par
+     l'outil - pour que le modèle ne puisse jamais diverger de ce qui est réellement
+     attendu à l'analyse. */
+  var order = ['statut', 'titre', 'description', 'dateFin', 'problematique', 'thematique',
+    'publicCible', 'solutions', 'acteurs', 'roles', 'pointAttention', 'ressources', 'moyens',
+    'beneficiaires', 'suivi', 'resultats', 'strategiques'];
+  var headers = order.map(function (k) { return COLS[k]; }).concat(ETAPE_COLS).concat(
+    [COLS.bilanTexte, COLS.efficacite, COLS.reconduction, COLS.transposition, COLS.valorisationTxt, COLS.dateCreation, COLS.dateMaj, COLS.clpe]
+  );
+  var example = {};
+  example[COLS.statut] = 'En cours';
+  example[COLS.titre] = 'Journée Proch\u2019Info Formation';
+  example[COLS.description] = 'Décrivez ici le contenu et la finalité de l\u2019action, de façon suffisamment détaillée pour comprendre ce qui est fait concrètement (50 mots minimum recommandés).';
+  example[COLS.dateFin] = '31/12/2026';
+  example[COLS.problematique] = 'Décrivez ici le constat ou le besoin du territoire à l\u2019origine de l\u2019action.';
+  example[COLS.thematique] = 'Accès à la formation;Orientation';
+  example[COLS.publicCible] = 'Demandeurs d\u2019emploi (tous)';
+  example[COLS.solutions] = 'Communication;Formation;Partenariat';
+  example[COLS.acteurs] = 'Cap emploi;Mission locale;France Travail';
+  example[COLS.roles] = 'Précisez ici le rôle de chaque partenaire dans l\u2019action.';
+  example[COLS.pointAttention] = 'Précisez ici les points de vigilance identifiés.';
+  example[COLS.ressources] = 'Ressources matérielles mobilisées (salle, outils, supports...).';
+  example[COLS.moyens] = 'Moyens humains et financiers mobilisés.';
+  example[COLS.beneficiaires] = 80;
+  example[COLS.suivi] = 'Indicateurs suivis pendant l\u2019action (ex. nombre de participants).';
+  example[COLS.resultats] = 'Objectif chiffré et daté visé (ex. 80 % de satisfaction d\u2019ici la fin de l\u2019année).';
+  example[COLS.strategiques] = 'Part des publics prioritaires dans les entrants en formation';
+  example['Etape 1'] = 'Définition des objectifs et du calendrier avec les partenaires.';
+  example[COLS.bilanTexte] = '(à remplir une fois l\u2019action terminée : résultats obtenus, réussites, difficultés, réplicabilité)';
+  example[COLS.efficacite] = 7;
+  example[COLS.reconduction] = 'Oui';
+  example[COLS.transposition] = 'Oui';
+  example[COLS.valorisationTxt] = 'Comment l\u2019action a été valorisée (témoignages, supports partagés...).';
+  example[COLS.dateCreation] = '01/01/2026';
+  example[COLS.dateMaj] = '31/08/2026';
+  example[COLS.clpe] = 'Nom du CLPE (facultatif, sert uniquement de repère)';
+
+  var ws = XLSX.utils.json_to_sheet([example], { header: headers });
+  var wb = XLSX.utils.book_new();
+
+  var instructions = [
+    ['Modèle de fichier pour l\u2019évaluation en lot des fiches action'],
+    [''],
+    ['- Une ligne par fiche action, dans l\u2019onglet "Fiches action".'],
+    ['- Conservez exactement les noms de colonnes fournis (première ligne) : ce sont eux que l\u2019outil recherche pour analyser chaque fiche.'],
+    ['- Les champs à plusieurs valeurs (Thématique, Public cible, Solutions mobilisées, Acteurs associés à l\u2019action) se séparent par un point-virgule ";".'],
+    ['- Les dates (Date de fin prévisionnelle, Creation date, Last update) peuvent être au format JJ/MM/AAAA ou en date Excel.'],
+    ['- "Efficacité de l\u2019action" est une auto-évaluation chiffrée de 0 à 10.'],
+    ['- "Cette action sera-t-elle recondu..." et "Cette action est-elle transposab..." attendent "Oui" ou "Non".'],
+    ['- Une colonne absente ou vide n\u2019empêche pas l\u2019analyse : elle est simplement traitée comme non renseignée pour les critères concernés.'],
+    ['- Supprimez la ligne d\u2019exemple avant de déposer votre propre fichier.']
+  ];
+  var wsInstr = XLSX.utils.aoa_to_sheet(instructions);
+  wsInstr['!cols'] = [{ wch: 100 }];
+  XLSX.utils.book_append_sheet(wb, wsInstr, 'Instructions');
+  XLSX.utils.book_append_sheet(wb, ws, 'Fiches action');
+
+  XLSX.writeFile(wb, 'modele_fiches_action.xlsx');
 });
 </script>
 </body>
