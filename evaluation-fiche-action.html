@@ -136,17 +136,31 @@ input[type=file]{display:none}
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 /* ============================== Extraction du texte du PDF ============================== */
+var TAG_SEP = '\u241F'; /* séparateur invisible entre deux tags côte à côte sur une même ligne */
 async function extractPdfText(arrayBuffer) {
   var pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   var fullText = '';
   for (var i = 1; i <= pdf.numPages; i++) {
     var page = await pdf.getPage(i);
     var content = await page.getTextContent();
-    var lastY = null, line = '';
+    var lastY = null, lastX2 = null, line = '';
     content.items.forEach(function (item) {
-      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 2) { fullText += line + '\n'; line = ''; }
+      var x1 = item.transform[4], x2 = x1 + (item.width || 0);
+      var sameLine = lastY !== null && Math.abs(item.transform[5] - lastY) <= 2;
+      if (!sameLine) {
+        if (lastY !== null) fullText += line + '\n';
+        line = '';
+        lastX2 = null;
+      } else if (lastX2 != null && x1 - lastX2 > 8) {
+        /* Grand espace horizontal entre deux morceaux de texte sur la même ligne : il
+           s'agit très probablement de deux étiquettes ("tags") distinctes affichées côte à
+           côte (thématiques, publics ciblés, solutions mobilisées...), pas d'un simple
+           espace au sein d'une même phrase. */
+        line += TAG_SEP;
+      }
       line += item.str;
       lastY = item.transform[5];
+      lastX2 = x2;
     });
     fullText += line + '\n';
   }
@@ -187,8 +201,9 @@ function parseFrenchDate(s) {
   return new Date(+m[3], mois, +m[1]);
 }
 function extractTags(sectionText) {
-  return sectionText.split('\n').map(function (l) { return l.trim(); }).filter(function (l) { return l && wc(l) <= 6; });
+  return sectionText.split(/\n|\u241F/).map(function (l) { return l.trim(); }).filter(function (l) { return l && wc(l) <= 10; });
 }
+function cleanProse(s) { return (s || '').replace(/\u241F/g, ' '); }
 
 function parseFiche(rawText) {
   var text = normApo(rawText);
@@ -201,21 +216,21 @@ function parseFiche(rawText) {
   var dFin = parseFrenchDate((/Fin pr\u00e9vue pour le\s+([^|]+)/i.exec(text) || [])[1]);
   var dMaj = parseFrenchDate((/Derni\u00e8re mise \u00e0 jour le\s+(.+)/i.exec(text) || [])[1]);
 
-  var description = extractBetween(text, 'Description', ['Problématique identifiée']);
-  var problematique = extractBetween(text, 'Problématique identifiée', ['PORTEURS DE L\'ACTION']);
+  var description = cleanProse(extractBetween(text, 'Description', ['Problématique identifiée']));
+  var problematique = cleanProse(extractBetween(text, 'Problématique identifiée', ['PORTEURS DE L\'ACTION']));
   var porteurs = extractTags(extractBetween(text, 'PORTEURS DE L\'ACTION', ['THÉMATIQUES']));
   var thematiques = extractTags(extractBetween(text, 'THÉMATIQUES', ['PUBLICS CIBLÉS']));
   var publics = extractTags(extractBetween(text, 'PUBLICS CIBLÉS', ['SOLUTIONS MOBILISÉES']));
   var solutions = extractTags(extractBetween(text, 'SOLUTIONS MOBILISÉES', ['ÉQUIPE & PARTENARIAT']));
   var equipeBlock = extractBetween(text, 'ÉQUIPE & PARTENARIAT', ['Rôles']);
   var acteurs = extractTags(equipeBlock);
-  var roles = extractBetween(text, 'Rôles', ['Point d\'attention', 'MOYENS & PILOTAGE']);
-  var pointAttention = extractBetween(text, 'Point d\'attention', ['MOYENS & PILOTAGE', 'Ressource mobilisable']);
-  var ressources = extractBetween(text, 'Ressource mobilisable', ['Moyens humains et financiers']);
-  var moyens = extractBetween(text, 'Moyens humains et financiers', ['Bénéficiaires de l\'action']);
+  var roles = cleanProse(extractBetween(text, 'Rôles', ['Point d\'attention', 'MOYENS & PILOTAGE']));
+  var pointAttention = cleanProse(extractBetween(text, 'Point d\'attention', ['MOYENS & PILOTAGE', 'Ressource mobilisable']));
+  var ressources = cleanProse(extractBetween(text, 'Ressource mobilisable', ['Moyens humains et financiers']));
+  var moyens = cleanProse(extractBetween(text, 'Moyens humains et financiers', ['Bénéficiaires de l\'action']));
   var beneficiairesTxt = extractBetween(text, 'Bénéficiaires de l\'action', ['Indicateurs de suivis']);
-  var indicSuivi = extractBetween(text, 'Indicateurs de suivis', ['Indicateurs de résultats']);
-  var indicResultats = extractBetween(text, 'Indicateurs de résultats', ['Indicateurs Stratégiques', 'Étapes de l\'action']);
+  var indicSuivi = cleanProse(extractBetween(text, 'Indicateurs de suivis', ['Indicateurs de résultats']));
+  var indicResultats = cleanProse(extractBetween(text, 'Indicateurs de résultats', ['Indicateurs Stratégiques', 'Étapes de l\'action']));
   var indicStrategiques = extractBetween(text, 'Indicateurs Stratégiques', ['Étapes de l\'action']);
   var etapesBlock = extractBetween(text, 'Étapes de l\'action', []);
   var nEtapes = (etapesBlock.match(/Étape N°\d+/g) || []).length;
@@ -223,7 +238,7 @@ function parseFiche(rawText) {
   var bilanText = '';
   if (!bilanVide) {
     var idxBilan = text.search(/Principaux r\u00e9sultats|Bilan\b/i);
-    if (idxBilan >= 0) bilanText = text.slice(idxBilan, idxBilan + 1500);
+    if (idxBilan >= 0) bilanText = cleanProse(text.slice(idxBilan, idxBilan + 1500));
   }
   var benefNum = (beneficiairesTxt.match(/\d+/) || [])[0];
 
