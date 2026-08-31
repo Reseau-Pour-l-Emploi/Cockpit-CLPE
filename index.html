@@ -156,6 +156,8 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .intro-step{background:var(--ft-sable);border-top:3px solid var(--ft-indigo);border-radius:6px;padding:12px 14px;font-size:12.5px}
 .intro-download{margin-top:14px}
 .intro-download a{display:inline-block;background:var(--ft-indigo);color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;transition:background .15s ease}
+.eval-fiche-link{display:inline-block;background:var(--ft-orange);color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;margin:10px 0 4px;transition:background .15s ease}
+.eval-fiche-link:hover{background:#B85700}
 .intro-download a:hover{background:var(--ft-indigo-dark)}
 .intro-step-title{font-weight:700;color:var(--ft-navy);margin-bottom:6px;font-size:13px}
 @media(max-width:700px){.intro-steps{grid-template-columns:1fr}}
@@ -580,6 +582,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
           <div class="guide"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et qualité moyenne sur 4 critères notés sur 4 (données réelles).</div>
+          <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
           <div class="fiches-methodo"><b>Méthodologie de notation qualité :</b> <b>Caractère innovant</b> - les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant est jugée plus innovante. <b>Impact usager</b> - majoré si des objectifs chiffrés/datés sont identifiés, ramené vers 0 si l'action ne touche pas directement un public usager. <b>Qualité de la description</b> - basée sur la clarté et la précision du texte (pas seulement sa longueur), pénalisée si trop de publics cibles ou de thématiques sont cochés (manque de ciblage). <b>Bilan et valorisation</b> - pénalisé si l'échéance est dépassée sans bilan renseigné et sans mise à jour du statut, ou si la fiche n'a simplement pas été mise à jour depuis longtemps.</div>
           <h3 id="fichesScopeTitle"></h3>
           <div class="fiches-grid">

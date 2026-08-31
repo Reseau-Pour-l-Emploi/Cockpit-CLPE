@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Évaluer une fiche action - Cockpit CLPE</title>
+<link rel="icon" type="image/svg+xml" href="assets/tdb-rpe-icon.svg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Marianne';src:url('fonts/Marianne-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  --ft-navy:#0D1440; --ft-indigo:#293378; --ft-indigo-dark:#1C2456; --ft-indigo-light:#E3E5F1;
+  --ft-violet:#7E58A0; --ft-violet-light:#ECE6F2;
+  --ft-jaune:#FFCC52; --ft-jaune-dark:#E0A800; --ft-jaune-light:#FFF4D6;
+  --ft-bleu:#406BDE; --ft-bleu-light:#E2E8FB;
+  --ft-orange:#D96B00; --ft-orange-light:#FCEADB;
+  --ft-rouge:#D92424; --ft-vert:#1C7A4D;
+  --ft-sable:#F5F2EE; --ft-sable-dark:#E6E1DB;
+  --ft-gray-400:#9CA3AF; --ft-gray-500:#6B7280; --ft-gray-700:#374151;
+  --ft-white:#FFFFFF;
+  --ft-fg-1:var(--ft-navy); --ft-fg-2:var(--ft-gray-700); --ft-fg-3:var(--ft-gray-500);
+  --ft-font:'Marianne',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --sh-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 4px 10px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--ft-font);font-size:14px;line-height:1.5;color:var(--ft-fg-1);background:var(--ft-sable)}
+header.site{background:var(--ft-navy);padding:14px 0}
+.site-inner{max-width:920px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:14px}
+.site-inner h1{color:#fff;font-size:19px;margin:0;font-weight:700}
+.site-inner .sub{color:#c7cbe6;font-size:12.5px;margin-top:2px}
+main{max-width:920px;margin:0 auto;padding:28px 24px 64px}
+.card{background:#fff;border:1px solid var(--ft-sable-dark);border-radius:10px;padding:22px 24px;margin-bottom:20px;box-shadow:var(--sh-sm)}
+h2{font-size:17px;margin:0 0 10px;color:var(--ft-navy)}
+p{color:var(--ft-fg-2)}
+.dropzone{border:2px dashed var(--ft-indigo-light);border-radius:10px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+.dropzone:hover,.dropzone.drag{border-color:var(--ft-indigo);background:var(--ft-indigo-light)}
+.dropzone .lbl{font-weight:600;color:var(--ft-navy);margin-bottom:4px}
+.dropzone .hint{font-size:12.5px;color:var(--ft-fg-3)}
+input[type=file]{display:none}
+.btn{background:var(--ft-indigo);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-family:var(--ft-font);font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--ft-indigo-dark)}
+.btn-secondary{background:#fff;color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:9px 16px;font-family:var(--ft-font);font-size:13px;font-weight:600;cursor:pointer}
+.btn-secondary:hover{background:var(--ft-indigo-light)}
+.loader{display:none;text-align:center;padding:24px;color:var(--ft-fg-2);font-size:13.5px}
+.error-box{background:#FBE0D6;border:1px solid var(--ft-rouge);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--ft-fg-1);margin-top:14px;display:none}
+.warn-box{background:var(--ft-jaune-light);border:1px solid var(--ft-jaune-dark);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ft-fg-1);margin-top:14px}
+#results{display:none}
+.fiche-title{font-size:16px;font-weight:700;color:var(--ft-navy);margin-bottom:2px}
+.fiche-meta{font-size:12px;color:var(--ft-fg-3);margin-bottom:18px}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:8px}
+.score-card{background:var(--ft-sable);border:2px solid var(--ft-indigo-light);border-radius:8px;padding:12px 14px}
+.score-card .lbl{font-size:11.5px;font-weight:600;color:var(--ft-fg-2)}
+.score-card .val{font-size:22px;font-weight:700;color:var(--ft-navy);margin-top:2px}
+.score-card .val .unit{font-size:12px;font-weight:400;color:var(--ft-fg-3)}
+.score-card .track{height:5px;background:var(--ft-sable-dark);border-radius:3px;margin-top:8px;overflow:hidden}
+.score-card .fill{height:100%;border-radius:3px}
+.global-box{background:var(--ft-indigo-light);border-radius:10px;padding:16px 18px;margin:18px 0;display:flex;align-items:center;gap:18px}
+.global-box .val{font-size:32px;font-weight:700;color:var(--ft-navy)}
+.global-box .txt{font-size:13px;color:var(--ft-fg-1);line-height:1.5}
+.axes-title{font-size:15px;font-weight:700;color:var(--ft-navy);margin:22px 0 12px}
+.axe-card{background:#fff;border:1.5px solid var(--ft-jaune-dark);border-radius:8px;padding:12px 16px;margin-bottom:10px}
+.axe-card .axe-h{font-weight:700;font-size:13px;color:var(--ft-navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.axe-card .axe-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.axe-card p{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:var(--ft-fg-2)}
+.axe-card .axe-score{font-size:11px;color:var(--ft-fg-3);font-weight:400}
+.ok-box{background:#E6F4EC;border:1px solid var(--ft-vert);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--ft-fg-1);margin-bottom:10px}
+.extract-details{margin-top:24px;font-size:12px}
+.extract-details summary{cursor:pointer;color:var(--ft-fg-3);font-weight:600}
+.extract-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+.extract-table td{padding:6px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top}
+.extract-table td:first-child{font-weight:600;color:var(--ft-fg-2);white-space:nowrap;width:180px}
+.note{font-size:12px;color:var(--ft-fg-3);margin-top:16px;line-height:1.6}
+.reset-row{text-align:center;margin-top:20px}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="site-inner">
+    <h1>Évaluer une fiche action</h1>
+  </div>
+  <div class="site-inner" style="margin-top:2px"><div class="sub">Cockpit de pilotage des CLPE - auto-évaluation avant saisie</div></div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Comment ça marche</h2>
+    <p style="font-size:13px">Déposez l'export PDF d'une fiche action du tableau de bord RPE. L'outil analyse son contenu et propose une évaluation de la qualité de sa saisie, avec des pistes concrètes d'amélioration - les mêmes critères que ceux utilisés pour la notation des fiches action au niveau national.</p>
+    <p style="font-size:13px;margin-bottom:0"><b>Le fichier n'est jamais conservé</b> : tout le traitement se fait dans votre navigateur, rien n'est envoyé ni stocké sur un serveur.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Déposer la fiche action (PDF)</h2>
+    <div class="dropzone" id="dropzone">
+      <div class="lbl" id="dzLabel">Glissez le PDF de la fiche action ici, ou cliquez pour le choisir</div>
+      <div class="hint">Export PDF standard d'une fiche action du tableau de bord RPE</div>
+      <input type="file" id="fileInput" accept=".pdf">
+    </div>
+    <div class="loader" id="loader">Analyse en cours…</div>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <div class="card" id="results">
+    <div class="fiche-title" id="ficheTitle"></div>
+    <div class="fiche-meta" id="ficheMeta"></div>
+    <div class="warn-box" id="warnBox" style="display:none"></div>
+
+    <div class="global-box">
+      <div class="val" id="globalScore">-</div>
+      <div class="txt" id="globalTxt"></div>
+    </div>
+
+    <div class="score-grid" id="scoreGrid"></div>
+
+    <div class="axes-title">Pistes d'amélioration prioritaires</div>
+    <div id="axesList"></div>
+
+    <details class="extract-details">
+      <summary>Voir le détail des champs détectés dans le PDF</summary>
+      <table class="extract-table" id="extractTable"></table>
+    </details>
+
+    <div class="reset-row"><button class="btn-secondary" id="resetBtn">Évaluer une autre fiche</button></div>
+  </div>
+
+  <div class="note">
+    L'analyse porte sur la clarté et la complétude de la saisie (description, indicateurs, bilan, acteurs...), pas sur la pertinence de l'action elle-même. Le critère "caractère innovant", calculé au niveau national par comparaison avec l'ensemble des fiches du réseau, n'est pas disponible pour une fiche isolée.
+  </div>
+</main>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+/* ============================== Extraction du texte du PDF ============================== */
+async function extractPdfText(arrayBuffer) {
+  var pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  var fullText = '';
+  for (var i = 1; i <= pdf.numPages; i++) {
+    var page = await pdf.getPage(i);
+    var content = await page.getTextContent();
+    var lastY = null, line = '';
+    content.items.forEach(function (item) {
+      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 2) { fullText += line + '\n'; line = ''; }
+      line += item.str;
+      lastY = item.transform[5];
+    });
+    fullText += line + '\n';
+  }
+  return fullText;
+}
+
+/* ============================== Découpage en champs ============================== */
+var SECTION_MARKERS = [
+  'Description', 'Problématique identifiée', 'PORTEURS DE L\u2019ACTION', 'PORTEURS DE L\'ACTION',
+  'THÉMATIQUES', 'PUBLICS CIBLÉS', 'SOLUTIONS MOBILISÉES', 'ÉQUIPE & PARTENARIAT', 'Rôles',
+  'Point d\u2019attention', 'Point d\'attention', 'MOYENS & PILOTAGE', 'Ressource mobilisable',
+  'Moyens humains et financiers', 'Bénéficiaires de l\u2019action', 'Bénéficiaires de l\'action',
+  'Indicateurs de suivis', 'Indicateurs de résultats', 'Indicateurs Stratégiques',
+  'Étapes de l\u2019action', 'Étapes de l\'action'
+];
+function normApo(s) { return (s || '').replace(/[\u2019]/g, "'"); }
+function extractBetween(text, startMarker, endMarkers) {
+  var t = normApo(text);
+  var s = normApo(startMarker);
+  var startIdx = t.indexOf(s);
+  if (startIdx < 0) return '';
+  startIdx += s.length;
+  var endIdx = t.length;
+  endMarkers.forEach(function (m) {
+    var idx = t.indexOf(normApo(m), startIdx);
+    if (idx >= 0 && idx < endIdx) endIdx = idx;
+  });
+  return t.slice(startIdx, endIdx).trim();
+}
+function wc(s) { return (s || '').trim().split(/\s+/).filter(Boolean).length; }
+function parseFrenchDate(s) {
+  if (!s) return null;
+  var MOIS = { janvier: 0, février: 1, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5, juillet: 6, août: 7, aout: 7, septembre: 8, octobre: 9, novembre: 10, décembre: 11, decembre: 11 };
+  var m = /(\d{1,2})\s+([a-zéû]+)\s+(\d{4})/i.exec(s);
+  if (!m) return null;
+  var mois = MOIS[m[2].toLowerCase()];
+  if (mois == null) return null;
+  return new Date(+m[3], mois, +m[1]);
+}
+function extractTags(sectionText) {
+  return sectionText.split('\n').map(function (l) { return l.trim(); }).filter(function (l) { return l && wc(l) <= 6; });
+}
+
+function parseFiche(rawText) {
+  var text = normApo(rawText);
+  var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+  var titre = lines[0] || 'Fiche action';
+  var STATUTS = ['En attente', 'En cours', 'Terminée', 'Abandonnée', 'À venir'];
+  var statut = STATUTS.find(function (s) { return text.indexOf(s) >= 0; }) || null;
+
+  var dCree = parseFrenchDate((/Cr\u00e9\u00e9e le\s+([^|]+)/i.exec(text) || [])[1]);
+  var dFin = parseFrenchDate((/Fin pr\u00e9vue pour le\s+([^|]+)/i.exec(text) || [])[1]);
+  var dMaj = parseFrenchDate((/Derni\u00e8re mise \u00e0 jour le\s+(.+)/i.exec(text) || [])[1]);
+
+  var description = extractBetween(text, 'Description', ['Problématique identifiée']);
+  var problematique = extractBetween(text, 'Problématique identifiée', ['PORTEURS DE L\'ACTION']);
+  var porteurs = extractTags(extractBetween(text, 'PORTEURS DE L\'ACTION', ['THÉMATIQUES']));
+  var thematiques = extractTags(extractBetween(text, 'THÉMATIQUES', ['PUBLICS CIBLÉS']));
+  var publics = extractTags(extractBetween(text, 'PUBLICS CIBLÉS', ['SOLUTIONS MOBILISÉES']));
+  var solutions = extractTags(extractBetween(text, 'SOLUTIONS MOBILISÉES', ['ÉQUIPE & PARTENARIAT']));
+  var equipeBlock = extractBetween(text, 'ÉQUIPE & PARTENARIAT', ['Rôles']);
+  var acteurs = extractTags(equipeBlock);
+  var roles = extractBetween(text, 'Rôles', ['Point d\'attention', 'MOYENS & PILOTAGE']);
+  var pointAttention = extractBetween(text, 'Point d\'attention', ['MOYENS & PILOTAGE', 'Ressource mobilisable']);
+  var ressources = extractBetween(text, 'Ressource mobilisable', ['Moyens humains et financiers']);
+  var moyens = extractBetween(text, 'Moyens humains et financiers', ['Bénéficiaires de l\'action']);
+  var beneficiairesTxt = extractBetween(text, 'Bénéficiaires de l\'action', ['Indicateurs de suivis']);
+  var indicSuivi = extractBetween(text, 'Indicateurs de suivis', ['Indicateurs de résultats']);
+  var indicResultats = extractBetween(text, 'Indicateurs de résultats', ['Indicateurs Stratégiques', 'Étapes de l\'action']);
+  var indicStrategiques = extractBetween(text, 'Indicateurs Stratégiques', ['Étapes de l\'action']);
+  var etapesBlock = extractBetween(text, 'Étapes de l\'action', []);
+  var nEtapes = (etapesBlock.match(/Étape N°\d+/g) || []).length;
+  var bilanVide = /Aucun bilan n\'a encore \u00e9t\u00e9 r\u00e9alis\u00e9/i.test(text);
+  var bilanText = '';
+  if (!bilanVide) {
+    var idxBilan = text.search(/Principaux r\u00e9sultats|Bilan\b/i);
+    if (idxBilan >= 0) bilanText = text.slice(idxBilan, idxBilan + 1500);
+  }
+  var benefNum = (beneficiairesTxt.match(/\d+/) || [])[0];
+
+  return {
+    titre: titre, statut: statut, dCree: dCree, dFin: dFin, dMaj: dMaj,
+    description: description, problematique: problematique, porteurs: porteurs,
+    thematiques: thematiques, publics: publics, solutions: solutions, acteurs: acteurs,
+    roles: roles, pointAttention: pointAttention, ressources: ressources, moyens: moyens,
+    beneficiaires: benefNum ? +benefNum : null, indicSuivi: indicSuivi, indicResultats: indicResultats,
+    indicStrategiques: indicStrategiques, nEtapes: nEtapes, bilanVide: bilanVide, bilanText: bilanText
+  };
+}
+
+/* ============================== Notation (mêmes règles que le calcul national) ============================== */
+function clarityScore(text) {
+  var words = (text || '').toLowerCase().match(/[a-zà-öø-ÿ']+/g) || [];
+  if (words.length < 6) return 0.3;
+  var sentences = (text || '').split(/[.!?\n]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+  var nSent = Math.max(1, sentences.length);
+  var avgLen = words.length / nSent;
+  var sentScore = 1 - Math.min(1, Math.abs(avgLen - 15) / 22);
+  var ttr = new Set(words).size / words.length;
+  var ttrScore = Math.min(1, ttr / 0.62);
+  return Math.max(0, Math.min(1, 0.5 * sentScore + 0.5 * ttrScore));
+}
+var USER_KW = ["demandeur d'emploi", 'demandeurs d\'emploi', 'jeune', 'sénior', 'senior', 'rsa', 'femme', 'scolaire', 'chercheur d\'emploi', 'salarié', 'apprenti', 'travailleur handicapé'];
+var SMART_PATTERNS = [/\d+\s*%/, /d['e\s]+ici/i, /objectif/i, /\bcible\b/i, /atteindre/i, /avant\s+(le\s+)?\d/i, /taux\s+d/i, /nombre\s+de\b.{0,20}\d/i, /\d{1,3}\s*(personnes|participants|candidats|demandeurs)/i, /\d+\s*(mois|semaines|jours)/i];
+function hasSmart(t) { return SMART_PATTERNS.some(function (p) { return p.test(t || ''); }); }
+function isUserFacing(publics) {
+  var joined = (publics || []).join(' ').toLowerCase();
+  return USER_KW.some(function (k) { return joined.indexOf(k) >= 0; });
+}
+function isLongRunning(f) { return f.dCree && f.dFin && (f.dFin - f.dCree) / 86400000 > 60; }
+function daysSince(d, ref) { return d ? (ref - d) / 86400000 : null; }
+
+function scoreFiche(f) {
+  var today = new Date();
+  var descW = wc(f.description), probW = wc(f.problematique);
+  var cadrageBase = Math.min(1.1, descW / 60 * 1.1) + Math.min(0.8, probW / 40 * 0.8) + Math.min(1.3, f.nEtapes / 3 * 1.3);
+  var cadrageClar = 0.55 * clarityScore(f.description) + 0.45 * clarityScore(f.problematique);
+  var unfocused = Math.max(0, (f.publics.length - 3) / 7) * 0.4 + Math.max(0, (f.thematiques.length - 4) / 6) * 0.4;
+  var scCadrage = Math.max(0, Math.min(4, cadrageBase + cadrageClar * 0.8 - unfocused));
+
+  var suiviW = wc(f.indicSuivi), resultW = wc(f.indicResultats);
+  var impactBase = Math.min(1.0, suiviW / 15) + Math.min(1.1, resultW / 20 * 1.1) + (f.indicStrategiques ? 0.5 : 0) + (f.beneficiaires ? 0.3 : 0);
+  var impactClar = resultW >= 6 ? clarityScore(f.indicResultats) : 0;
+  var scImpact = impactBase + impactClar * 0.5 + (hasSmart(f.indicSuivi + ' ' + f.indicResultats) ? 0.6 : 0);
+  scImpact = Math.max(0, Math.min(4, scImpact));
+  var userFacing = isUserFacing(f.publics);
+  if (!userFacing) scImpact = scImpact * 0.15;
+
+  var bilanW = wc(f.bilanText);
+  var staleDays = daysSince(f.dMaj, today);
+  var overdue = f.dFin && f.dFin < today;
+  var scBilan = Math.min(1.9, bilanW / 25 * 1.9) + (bilanW >= 6 ? clarityScore(f.bilanText) * 0.6 : 0);
+  scBilan = Math.max(0, Math.min(4, scBilan));
+  if ((overdue && bilanW < 5 && staleDays > 90) || staleDays > 365 || f.statut === 'Abandonnée') scBilan = Math.min(scBilan, 0.4);
+
+  var subEtapes = !isLongRunning(f) ? 0.95 : Math.min(1, f.nEtapes / 3);
+  var subSuivi = !isLongRunning(f) ? 0.95 : Math.min(1, suiviW / 15);
+  var subDiversite = Math.min(1, f.acteurs.length / 6);
+  var subVigilance = Math.min(1, wc(f.pointAttention) / 15);
+  var subMoyens = Math.min(1, (wc(f.ressources) + wc(f.moyens)) / 20);
+  var subMaj = f.statut === 'Terminée' ? 1 : (f.statut === 'Abandonnée' ? 0 : Math.max(0, 1 - (staleDays || 0) / 365));
+  var subBilanVide = wc(f.bilanText) < 5;
+  var subBilan = Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(f.bilanText) * 0.3 : 0);
+  if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
+  var subDescription = Math.min(1, descW / 60) * 0.5 + clarityScore(f.description) * 0.5;
+  var subProblematique = Math.min(1, probW / 40) * 0.5 + clarityScore(f.problematique) * 0.5;
+  var subCiblage = Math.max(0, 1 - unfocused);
+  var subResultats = Math.min(1, Math.min(1, resultW / 20) * 0.6 + (resultW >= 6 ? clarityScore(f.indicResultats) : 0) * 0.2 + (hasSmart(f.indicSuivi + ' ' + f.indicResultats) ? 0.2 : 0));
+  var subImpactUsager = userFacing ? 1 : 0;
+
+  return {
+    scCadrage: scCadrage, scImpact: scImpact, scBilan: scBilan,
+    subs: {
+      description: subDescription, problematique: subProblematique, etapes: subEtapes,
+      ciblage: subCiblage, suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager,
+      maj: subMaj, bilan: subBilan, valorisation: null, diversite_acteurs: subDiversite,
+      vigilance: subVigilance, moyens: subMoyens
+    },
+    userFacing: userFacing, overdue: overdue, staleDays: staleDays
+  };
+}
+
+/* ============================== Textes des pistes (mêmes formulations que le cockpit) ============================== */
+var AXE_LABELS = {
+  description: "Mieux décrire l'action (contexte, contenu)", problematique: 'Mieux formuler la problématique traitée',
+  etapes: 'Détailler davantage les étapes de mise en œuvre', ciblage: "Mieux cibler l'action",
+  suivi: 'Renseigner des indicateurs de suivi', resultats: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)',
+  impact_usager: "Mieux prendre en compte l'impact sur l'usager final", maj: 'Mettre à jour le suivi de l\'action plus régulièrement',
+  bilan: 'Renseigner le bilan et les enseignements', diversite_acteurs: 'Élargir la diversité des acteurs mobilisés',
+  vigilance: 'Anticiper les points de vigilance', moyens: 'Préciser les moyens mobilisés (ressources, budget, RH)'
+};
+var AXE_TEXTS = {
+  description: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques.",
+  problematique: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte.",
+  etapes: "Pour les actions qui se déroulent dans la durée, détaillez au moins 2 à 3 étapes de mise en œuvre avec leurs échéances : cela objective le déroulé de l'action.",
+  ciblage: "Limitez le nombre de publics cibles et de thématiques cochés à ce qui est réellement pertinent : cocher très large nuit à la lisibilité et donne l'impression d'une action mal ciblée.",
+  suivi: "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori.",
+  resultats: "Fixez des objectifs de résultat chiffrés et datés (ex. « 80 % des participants en emploi à 6 mois ») plutôt que des formulations vagues.",
+  impact_usager: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain.",
+  maj: "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche sans mise à jour depuis plusieurs mois perd en fiabilité.",
+  bilan: "Renseignez le bilan dès que l'échéance prévisionnelle est atteinte, même de façon synthétique : c'est surtout indispensable si la date de fin est dépassée et qu'aucun bilan n'a encore été saisi.",
+  diversite_acteurs: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint.",
+  vigilance: "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action.",
+  moyens: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti."
+};
+
+function fmt1(v) { return (Math.round(v * 10) / 10).toLocaleString('fr-FR'); }
+
+function renderResults(f, s) {
+  document.getElementById('ficheTitle').textContent = f.titre;
+  var metaBits = [];
+  if (f.statut) metaBits.push('Statut : ' + f.statut);
+  if (f.dCree) metaBits.push('Créée le ' + f.dCree.toLocaleDateString('fr-FR'));
+  if (f.dFin) metaBits.push('Fin prévue le ' + f.dFin.toLocaleDateString('fr-FR'));
+  document.getElementById('ficheMeta').textContent = metaBits.join(' \u00b7 ');
+
+  var warnMsgs = [];
+  if (!f.description && !f.problematique) warnMsgs.push("Le contenu du PDF n'a pas pu être reconnu comme une fiche action standard : les résultats peuvent être imprécis. Vérifiez qu'il s'agit bien d'un export du tableau de bord RPE.");
+  if (!s.userFacing) warnMsgs.push("Aucun public usager final (demandeurs d'emploi, jeunes...) détecté parmi les publics ciblés : le score d'impact usager est fortement réduit en conséquence, ce qui est normal pour une action institutionnelle ou de coordination interne.");
+  var warnBox = document.getElementById('warnBox');
+  if (warnMsgs.length) { warnBox.innerHTML = warnMsgs.join('<br>'); warnBox.style.display = 'block'; } else warnBox.style.display = 'none';
+
+  var globalAvg = (s.scCadrage + s.scImpact + s.scBilan) / 3;
+  document.getElementById('globalScore').innerHTML = fmt1(globalAvg) + '<span style="font-size:16px;font-weight:400"> / 4</span>';
+  document.getElementById('globalTxt').textContent = "Score moyen sur les 3 critères calculables pour une fiche isolée (qualité de la description, impact usager, bilan et valorisation). Le caractère innovant n'est pas inclus : il nécessite une comparaison avec l'ensemble des fiches du réseau.";
+
+  var cards = [
+    { l: 'Qualité de la description', v: s.scCadrage, c: 'var(--ft-indigo)' },
+    { l: 'Impact usager', v: s.scImpact, c: 'var(--ft-violet)' },
+    { l: 'Bilan et valorisation', v: s.scBilan, c: 'var(--ft-jaune-dark)' }
+  ];
+  document.getElementById('scoreGrid').innerHTML = cards.map(function (c) {
+    return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val">' + fmt1(c.v) + '<span class="unit"> / 4</span></div><div class="track"><div class="fill" style="width:' + (c.v / 4 * 100) + '%;background:' + c.c + '"></div></div></div>';
+  }).join('');
+
+  var subKeys = Object.keys(s.subs).filter(function (k) { return s.subs[k] != null; });
+  var sorted = subKeys.map(function (k) { return { key: k, v: s.subs[k] }; }).sort(function (a, b) { return a.v - b.v; });
+  var weakest = sorted.filter(function (x) { return x.v < 0.6; }).slice(0, 5);
+  var axesHtml = '';
+  if (!weakest.length) {
+    axesHtml = '<div class="ok-box">\uD83C\uDF89 Aucun axe de progrès majeur détecté : les éléments analysés dans cette fiche sont globalement bien renseignés.</div>';
+  } else {
+    weakest.forEach(function (x, i) {
+      axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">' + (i + 1) + '</span>' + AXE_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + AXE_TEXTS[x.key] + '</p></div>';
+    });
+  }
+  document.getElementById('axesList').innerHTML = axesHtml;
+
+  var extractRows = [
+    ['Description', f.description || '(non détectée)'],
+    ['Problématique', f.problematique || '(non détectée)'],
+    ['Porteurs', f.porteurs.join(', ') || '-'],
+    ['Thématiques', f.thematiques.join(', ') || '-'],
+    ['Publics ciblés', f.publics.join(', ') || '-'],
+    ['Acteurs associés', f.acteurs.join(', ') || '-'],
+    ['Points d\u2019attention', f.pointAttention || '(non renseigné)'],
+    ['Ressources / moyens', (f.ressources + ' ' + f.moyens).trim() || '(non renseigné)'],
+    ['Bénéficiaires', f.beneficiaires != null ? f.beneficiaires : '(non renseigné)'],
+    ['Indicateurs de suivi', f.indicSuivi || '(non renseigné)'],
+    ['Indicateurs de résultats', f.indicResultats || '(non renseigné)'],
+    ["Nombre d'étapes détectées", f.nEtapes],
+    ['Bilan', f.bilanVide ? 'Aucun bilan renseigné' : (f.bilanText ? 'Bilan détecté' : '(non détecté)')]
+  ];
+  document.getElementById('extractTable').innerHTML = extractRows.map(function (r) {
+    return '<tr><td>' + r[0] + '</td><td>' + String(r[1]).slice(0, 400) + '</td></tr>';
+  }).join('');
+
+  document.getElementById('results').style.display = 'block';
+}
+
+/* ============================== Interaction UI ============================== */
+var dropzone = document.getElementById('dropzone'), fileInput = document.getElementById('fileInput');
+dropzone.addEventListener('click', function () { fileInput.click(); });
+dropzone.addEventListener('dragover', function (e) { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('drag'); });
+dropzone.addEventListener('drop', function (e) { e.preventDefault(); dropzone.classList.remove('drag'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', function (e) { if (e.target.files.length) handleFile(e.target.files[0]); });
+document.getElementById('resetBtn').addEventListener('click', function () {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('dzLabel').textContent = 'Glissez le PDF de la fiche action ici, ou cliquez pour le choisir';
+  fileInput.value = '';
+});
+
+function handleFile(file) {
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('dzLabel').textContent = file.name;
+  document.getElementById('loader').style.display = 'block';
+  var reader = new FileReader();
+  reader.onload = async function (e) {
+    try {
+      var text = await extractPdfText(e.target.result);
+      var fiche = parseFiche(text);
+      var scores = scoreFiche(fiche);
+      renderResults(fiche, scores);
+    } catch (err) {
+      var box = document.getElementById('errorBox');
+      box.textContent = "Impossible d'analyser ce PDF : " + err.message + ". Vérifiez qu'il s'agit bien d'un export de fiche action du tableau de bord RPE.";
+      box.style.display = 'block';
+    }
+    document.getElementById('loader').style.display = 'none';
+    /* Le contenu du fichier n'est conservé dans aucune variable après cette étape. */
+    e.target.result = null;
+  };
+  reader.onerror = function () {
+    document.getElementById('loader').style.display = 'none';
+    var box = document.getElementById('errorBox');
+    box.textContent = 'La lecture du fichier a échoué.';
+    box.style.display = 'block';
+  };
+  reader.readAsArrayBuffer(file);
+}
+</script>
+</body>
+</html>
