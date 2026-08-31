@@ -72,6 +72,10 @@ input[type=file]{display:none}
 .axe-card .axe-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .axe-card p{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:var(--ft-fg-2)}
 .axe-card .axe-score{font-size:11px;color:var(--ft-fg-3);font-weight:400}
+.point-fort-card{background:#fff;border:1.5px solid var(--ft-vert);border-radius:8px;padding:12px 16px;margin-bottom:10px}
+.point-fort-card .point-fort-h{font-weight:700;font-size:13px;color:var(--ft-navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.point-fort-card p{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:var(--ft-fg-2)}
+.preco-empty{font-size:12.5px;color:var(--ft-fg-3);margin-bottom:10px}
 .ok-box{background:#E6F4EC;border:1px solid var(--ft-vert);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--ft-fg-1);margin-bottom:10px}
 .extract-details{margin-top:24px;font-size:12px}
 .extract-details summary{cursor:pointer;color:var(--ft-fg-3);font-weight:600}
@@ -105,11 +109,11 @@ input[type=file]{display:none}
     <p style="font-size:13px;margin-bottom:0"><b>Le fichier n'est jamais conservé</b> : tout le traitement se fait dans votre navigateur, rien n'est envoyé ni stocké sur un serveur.</p>
 
     <details class="method-details">
-      <summary>\uD83D\uDCD8 Note méthodologique - comment le score est calculé</summary>
+      <summary>📘 Note méthodologique - comment le score est calculé</summary>
       <div class="method-body">
         <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
         <table class="method-table">
-          <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions).</td></tr>
+          <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
           <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
           <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (message "Complétez le bilan"). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
           <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Uniquement disponible pour l'évaluation en lot (nécessite de comparer la fiche aux autres) : rareté du vocabulaire employé par rapport au reste du lot déposé, complétée par la détection de quelques leviers d'innovation courants (aller-vers, co-construction, gamification...).</td></tr>
@@ -143,8 +147,11 @@ input[type=file]{display:none}
 
     <div class="score-grid" id="scoreGrid"></div>
     <div class="guide">
-      <b>Guide de lecture :</b> <b>Qualité de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées.
+      <b>Guide de lecture :</b> <b>Qualité de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées. Les <b>points forts</b> et <b>pistes d'amélioration</b> ci-dessous détaillent, critère par critère, ce qui est déjà bien renseigné et ce qui gagnerait à l'être davantage.
     </div>
+
+    <div class="axes-title">Points forts</div>
+    <div id="pointsFortsList"></div>
 
     <div class="axes-title">Pistes d'amélioration prioritaires</div>
     <div id="axesList"></div>
@@ -189,7 +196,7 @@ input[type=file]{display:none}
         <div class="txt" id="bulkTxt"></div>
       </div>
       <div class="guide">
-        <b>Guide de lecture :</b> <b>Qualité de la description</b> - complétude, longueur et clarté du contenu. <b>Impact usager</b> - objectifs chiffrés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - noté seulement une fois rempli, et seulement après l'échéance de l'action (sinon "Pas encore d'échéance"). <b>Caractère innovant</b> - originalité du vocabulaire par rapport aux autres fiches du lot.
+        <b>Guide de lecture :</b> <b>Qualité de la description</b> - complétude, longueur et clarté du contenu. <b>Impact usager</b> - objectifs chiffrés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - noté seulement une fois rempli, et seulement après l'échéance de l'action (sinon "Pas encore d'échéance"). <b>Caractère innovant</b> - originalité du vocabulaire par rapport aux autres fiches du lot. Chaque ligne indique aussi jusqu'à 2 <b>points forts</b> et l'<b>axe de progrès</b> le plus prioritaire de la fiche.
       </div>
       <div class="reset-row" style="margin-top:14px">
         <button class="btn" id="downloadBulkBtn">Télécharger le fichier évalué</button>
@@ -329,7 +336,13 @@ function parseFiche(rawText) {
   var problematique = cleanProse(extractBetween(text, 'Problématique identifiée', ['PORTEURS DE L\'ACTION']));
   var porteurs = extractTags(extractBetween(text, 'PORTEURS DE L\'ACTION', ['THÉMATIQUES']));
   var thematiques = extractTags(extractBetween(text, 'THÉMATIQUES', ['PUBLICS CIBLÉS']));
-  var publics = extractTags(extractBetween(text, 'PUBLICS CIBLÉS', ['SOLUTIONS MOBILISÉES']));
+  /* "Cette action s'inscrit-elle dans le cadre de :" est une question ajoutée après les
+     publics ciblés : on la détecte si présente, sans rien changer pour les fiches plus
+     anciennes qui ne l'ont pas (extractBetween s'arrête alors directement à SOLUTIONS
+     MOBILISÉES comme avant). */
+  var rattachementMarker = "Cette action s'inscrit-elle dans le cadre de";
+  var publics = extractTags(extractBetween(text, 'PUBLICS CIBLÉS', [rattachementMarker, 'SOLUTIONS MOBILISÉES']));
+  var rattachement = extractTags(extractBetween(text, rattachementMarker, ['SOLUTIONS MOBILISÉES']));
   var solutions = extractTags(extractBetween(text, 'SOLUTIONS MOBILISÉES', ['ÉQUIPE & PARTENARIAT']));
   var equipeBlock = extractBetween(text, 'ÉQUIPE & PARTENARIAT', ['Rôles']);
   var acteurs = extractTags(equipeBlock);
@@ -362,7 +375,7 @@ function parseFiche(rawText) {
   return {
     titre: titre, statut: statut, dCree: dCree, dFin: dFin, dMaj: dMaj,
     description: description, problematique: problematique, porteurs: porteurs,
-    thematiques: thematiques, publics: publics, solutions: solutions, acteurs: acteurs,
+    thematiques: thematiques, publics: publics, solutions: solutions, acteurs: acteurs, rattachement: rattachement,
     roles: roles, pointAttention: pointAttention, ressources: ressources, moyens: moyens,
     beneficiaires: benefNum ? +benefNum : null, indicSuivi: indicSuivi, indicResultats: indicResultats,
     indicStrategiques: indicStrategiques, nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, bilanVide: bilanVide, bilanText: bilanText
@@ -505,6 +518,25 @@ function etapesScore(nf, weight) {
 function tokenize(text) {
   return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z]{4,}/g) || [];
 }
+function jaccardSimilarity(textA, textB) {
+  var setA = {}, setB = {}, sizeA = 0, sizeB = 0;
+  tokenize(textA).forEach(function (w) { if (!STOPWORDS_FR[w] && !setA[w]) { setA[w] = 1; sizeA++; } });
+  tokenize(textB).forEach(function (w) { if (!STOPWORDS_FR[w] && !setB[w]) { setB[w] = 1; sizeB++; } });
+  if (!sizeA || !sizeB) return 0;
+  var inter = 0;
+  Object.keys(setA).forEach(function (w) { if (setB[w]) inter++; });
+  var union = sizeA + sizeB - inter;
+  return union ? inter / union : 0;
+}
+function diagnosticScore(nf) {
+  /* Une problématique qui se contente de reformuler la description partage un vocabulaire
+     très proche d'elle ; une problématique qui pose un vrai diagnostic du territoire s'en
+     distingue davantage. Un recouvrement d'environ 50 % ou plus du vocabulaire significatif
+     est considéré comme une simple reformulation. */
+  if (wc(nf.description) < 10 || wc(nf.problematique) < 10) return 0;
+  var sim = jaccardSimilarity(nf.description, nf.problematique);
+  return Math.max(0, Math.min(1, 1 - sim / 0.5));
+}
 function hasLiensOuTemoignages(nf) {
   var t = (nf.valorisationTxt || '') + ' ' + (nf.bilanText || '');
   return /https?:\/\/|www\./i.test(t) || /«[^»]{10,}»|"[^"]{15,}"/.test(t) || /pièce jointe|document joint/i.test(t);
@@ -520,11 +552,15 @@ function evalDescription(nf) {
   var lisibilite = (clarityScore(nf.description) * 0.6 + clarityScore(nf.problematique) * 0.4) * 15;
   var verbes = Math.min(1, startsWithActionVerbRatio(nf.description) * 3) * 10;
   var jargonHits = countKeywordHits(nf.description + ' ' + nf.problematique, JARGON_FLOU);
-  var jargon = Math.max(0, 10 - jargonHits * 4);
+  var jargon = Math.max(0, 5 - jargonHits * 2);
   var titre = titleScore(nf.titre, 5);
   var ciblage = ciblageScore(nf, 10);
-  var total = completude + volDesc + volProb + lisibilite + verbes + jargon + titre + ciblage;
-  return { total: Math.max(0, Math.min(100, total)), detail: { completude: completude, volume: volDesc + volProb, lisibilite: lisibilite, verbes: verbes, jargon: jargon, titre: titre, ciblage: ciblage } };
+  /* Rattachement à un CLPE ("Cette action s'inscrit-elle dans le cadre de :") : renseigné,
+     il exprime un bon maillage entre les instances et une mobilisation optimale des
+     ressources - valorisé comme un plus sur la qualité de la description. */
+  var rattachement = (nf.rattachement && nf.rattachement.length) ? 5 : 0;
+  var total = completude + volDesc + volProb + lisibilite + verbes + jargon + titre + ciblage + rattachement;
+  return { total: Math.max(0, Math.min(100, total)), detail: { completude: completude, volume: volDesc + volProb, lisibilite: lisibilite, verbes: verbes, jargon: jargon, titre: titre, ciblage: ciblage, rattachement: rattachement } };
 }
 function evalImpact(nf) {
   var quantif = Math.min(1, countSmartHits(nf.indicSuivi + ' ' + nf.indicResultats) / 3) * 25;
@@ -604,7 +640,37 @@ var AXE_TEXTS = {
   diversite_acteurs: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint.",
   vigilance: "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action.",
   moyens: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti.",
-  titre: "Un titre concis (moins de 12 mots recommandé) est plus facilement lisible dans les tableaux de bord et les listes d'actions."
+  titre: "Un titre concis (moins de 12 mots recommandé) est plus facilement lisible dans les tableaux de bord et les listes d'actions.",
+  diagnostic: "Distinguez plus nettement la problématique de la description : une problématique qui reformule simplement l'action n'objective pas le diagnostic du territoire à son origine."
+};
+
+/* ---------- Points forts : symétrique des axes de progrès, pour les axes où la fiche est
+   au contraire particulièrement bien renseignée (score \u2265 0,75). ---------- */
+var POINT_FORT_LABELS = {
+  ciblage: 'Ciblage précis', etapes: 'Jalonnage régulier', titre: 'Titre court et clair',
+  resultats: 'Objectifs quantifiés et datés', vigilance: 'Anticipation des risques',
+  bilan: 'Bilan capitalisable', diagnostic: 'Diagnostic objectivé', rattachement: 'Bon maillage territorial',
+  description: 'Description claire et complète', problematique: 'Problématique bien posée',
+  suivi: 'Suivi bien outillé', impact_usager: 'Impact usager direct', maj: 'Suivi à jour',
+  diversite_acteurs: 'Diversité des acteurs', moyens: 'Moyens précisés', valorisation: 'Action valorisée'
+};
+var POINT_FORT_TEXTS = {
+  ciblage: "Le nombre de publics et de thématiques ciblés est limité, ce qui témoigne d'une action bien focalisée et à fort impact potentiel.",
+  etapes: "Les étapes de mise en œuvre sont détaillées, un gage de pilotage régulier de l'action.",
+  titre: "Un titre court et clair donne envie de lire la suite et facilite le repérage de l'action dans les tableaux de bord.",
+  resultats: "Les indicateurs de résultat comportent un objectif quantitatif et un horizon temporel défini, ce qui permettra d'évaluer précisément l'atteinte des objectifs.",
+  vigilance: "Les points d'attention identifiés montrent la prudence et le sérieux de l'étude du projet.",
+  bilan: "Un bilan riche permettra de capitaliser sur les actions futures et d'éclairer d'autres territoires susceptibles de mettre en place une action similaire.",
+  diagnostic: "La problématique posée se distingue clairement de la description : un diagnostic objectif du territoire a été posé plutôt qu'une simple reformulation de l'action.",
+  rattachement: "Le rattachement à un CLPE précis exprime un bon maillage entre les différentes instances et une mobilisation optimale des ressources.",
+  description: "La description est suffisamment détaillée et clairement rédigée pour comprendre concrètement l'action.",
+  problematique: "La problématique est bien formulée et étayée.",
+  suivi: "Des indicateurs de suivi sont renseignés dès la conception de l'action.",
+  impact_usager: "L'action a un effet direct et mesurable sur un usager final.",
+  maj: "Le suivi de la fiche est régulièrement mis à jour.",
+  diversite_acteurs: "Une diversité d'acteurs est mobilisée autour de l'action.",
+  moyens: "Les moyens mobilisés (ressources, budget, RH) sont précisés.",
+  valorisation: "L'action a été valorisée (reconduction, transposition ou partage d'expérience)."
 };
 
 function isLongRunning(nf) { return nf.dCreation && nf.dFin && (nf.dFin - nf.dCreation) / 86400000 > 60; }
@@ -666,6 +732,8 @@ function evaluateFiche(nf, refDate, corpus) {
     ? Math.min(1, Math.min(1, wc(nf.valorisationTxt) / 15) * 0.7 + (nf.reconduction === 'oui' ? 0.15 : 0) + (nf.transposition === 'oui' ? 0.15 : 0))
     : null;
   var subTitre = Math.min(1, wc(nf.titre) <= 12 ? 1 : Math.max(0, 1 - (wc(nf.titre) - 12) / 12));
+  var subDiagnostic = (wc(nf.description) >= 10 && wc(nf.problematique) >= 10) ? diagnosticScore(nf) : null;
+  var subRattachement = (nf.rattachement && nf.rattachement.length) ? 1 : 0;
 
   return {
     evalDescription: evalDesc, evalImpact: evalImp, evalBilan: evalBil, evalInnovation: evalInno,
@@ -674,7 +742,7 @@ function evaluateFiche(nf, refDate, corpus) {
       description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
       suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
       valorisation: subValorisation, diversite_acteurs: subDiversite, vigilance: subVigilance, moyens: subMoyens,
-      titre: subTitre
+      titre: subTitre, diagnostic: subDiagnostic, rattachement: subRattachement
     },
     userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide, bilanNotYetDue: bilanNotYetDue
   };
@@ -688,6 +756,7 @@ function normalizeFromPdf(f) {
     bilanText: f.bilanText, bilanVide: f.bilanVide, indicSuivi: f.indicSuivi, indicResultats: f.indicResultats,
     indicStrategiques: f.indicStrategiques, publics: f.publics, thematiques: f.thematiques,
     solutions: f.solutions, acteurs: f.acteurs, porteurs: f.porteurs, beneficiaires: f.beneficiaires,
+    rattachement: f.rattachement || [],
     nEtapes: f.nEtapes, etapeWordCounts: f.etapeWordCounts || [], dCreation: f.dCree, dFin: f.dFin, dMaj: f.dMaj,
     reconduction: null, transposition: null, valorisationTxt: '', efficacite: null
   };
@@ -739,6 +808,17 @@ function renderResults(f, res, rawText) {
   }
   document.getElementById('axesList').innerHTML = axesHtml;
 
+  var strongest = sorted.filter(function (x) { return x.v >= 0.75; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 4);
+  var pointsFortsHtml = '';
+  if (!strongest.length) {
+    pointsFortsHtml = '<div class="preco-empty">Aucun point fort majeur ne se détache particulièrement sur cette fiche.</div>';
+  } else {
+    strongest.forEach(function (x) {
+      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + POINT_FORT_TEXTS[x.key] + '</p></div>';
+    });
+  }
+  document.getElementById('pointsFortsList').innerHTML = pointsFortsHtml;
+
   var extractRows = [
     ['Titre', f.titre || '(non détecté)'],
     ['Statut', f.statut || '(non détecté)'],
@@ -747,6 +827,7 @@ function renderResults(f, res, rawText) {
     ['Porteurs', f.porteurs.join(', ') || '-'],
     ['Thématiques', f.thematiques.join(', ') || '-'],
     ['Publics ciblés', f.publics.join(', ') || '-'],
+    ['Rattachement (cadre)', f.rattachement && f.rattachement.length ? f.rattachement.join(', ') : '(non renseigné)'],
     ['Solutions mobilisées', f.solutions.join(', ') || '-'],
     ['Acteurs associés', f.acteurs.join(', ') || '-'],
     ['Rôles', f.roles || '(non renseigné)'],
@@ -831,6 +912,16 @@ var COLS = {
   clpe: 'C_LBLTERRITOIRE'
 };
 var ETAPE_COLS = ['Etape 1', 'Etape 2', 'Etape 3', 'Etape 4', 'Etape 5', 'Etape 6', 'Etape 7', 'Etape 8', 'Etape 9', 'Etape 10'];
+/* Le nom exact de la colonne "Cette action s'inscrit-elle dans le cadre de :" dans l'export
+   peut être tronqué différemment selon la version du formulaire ; on la retrouve par
+   préfixe plutôt que par nom exact, pour rester robuste. */
+function findColByPrefix(row, prefix) {
+  var p = prefix.toLowerCase();
+  var keys = Object.keys(row);
+  for (var i = 0; i < keys.length; i++) { if (keys[i].toLowerCase().indexOf(p) === 0) return row[keys[i]]; }
+  return null;
+}
+var RATTACHEMENT_PREFIX = "cette action s'inscrit-elle dans le cadre";
 
 function splitMulti(v) { return (v == null ? '' : String(v)).split(';').map(function (s) { return s.trim(); }).filter(Boolean); }
 function toDate(v) {
@@ -861,6 +952,7 @@ function normalizeFromXlsx(row, refDate) {
     indicStrategiques: get('strategiques') || '', publics: splitMulti(get('publicCible')),
     thematiques: splitMulti(get('thematique')), solutions: splitMulti(get('solutions')),
     acteurs: splitMulti(get('acteurs')), porteurs: [], beneficiaires: (function () { var v = get('beneficiaires'); var n = parseFloat(v); return isNaN(n) ? null : n; })(),
+    rattachement: splitMulti(findColByPrefix(row, RATTACHEMENT_PREFIX)),
     nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, dCreation: toDate(get('dateCreation')),
     dFin: toDate(get('dateFin')), dMaj: toDate(get('dateMaj')),
     reconduction: recond === 'oui' ? 'oui' : (recond || null), transposition: transp === 'oui' ? 'oui' : (transp || null),
@@ -915,6 +1007,8 @@ async function processBulkFile(file) {
     var s = allScores[idx];
     var best = null, bestPct = Infinity;
     AXE_KEYS.forEach(function (k) { if (allScores[idx].subs[k] == null) return; var p = percentiles[k][idx]; if (p < bestPct) { bestPct = p; best = k; } });
+    var strongKeys = Object.keys(s.subs).filter(function (k) { return s.subs[k] != null && s.subs[k] >= 0.75; })
+      .sort(function (a, b) { return s.subs[b] - s.subs[a]; }).slice(0, 2);
     var out = Object.assign({}, row);
     out['Éval - Qualité de la description (/100)'] = Math.round(s.evalDescription.total);
     out['Éval - Impact usager (/100)'] = Math.round(s.evalImpact.total);
@@ -922,6 +1016,7 @@ async function processBulkFile(file) {
     out["Éval - Caractère innovant (/100)"] = Math.round(s.evalInnovation);
     out['Éval - Score global (/100)'] = Math.round(s.globalScore);
     out['Éval - Critères non évalués (exclus du score global)'] = s.excludedCriteria.length ? s.excludedCriteria.map(function (x) { return x.label + ' (' + x.reason + ')'; }).join(' ; ') : '-';
+    out['Éval - Points forts'] = strongKeys.length ? strongKeys.map(function (k) { return POINT_FORT_LABELS[k]; }).join(' ; ') : '-';
     out['Éval - Axe de progrès prioritaire'] = best ? AXE_LABELS_FR[best] : '-';
     return out;
   });
@@ -950,7 +1045,7 @@ async function handleBulkFile(file) {
     lastBulkWorkbook = result.workbook;
     lastBulkFileName = file.name.replace(/\.xlsx$/i, '') + '_evalue.xlsx';
     document.getElementById('bulkCount').textContent = result.n;
-    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 7 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global (calculé sur les seuls critères évalués), les critères exclus le cas échéant, et l'axe de progrès prioritaire de chaque fiche.";
+    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 8 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global (calculé sur les seuls critères évalués), les critères exclus le cas échéant, les points forts et l'axe de progrès prioritaire de chaque fiche.";
     document.getElementById('bulkFileName').textContent = lastBulkFileName;
     document.getElementById('resultsBulk').style.display = 'block';
   } catch (err) {
@@ -970,9 +1065,11 @@ document.getElementById('downloadTemplateBtn').addEventListener('click', functio
      l'outil - pour que le modèle ne puisse jamais diverger de ce qui est réellement
      attendu à l'analyse. */
   var order = ['statut', 'titre', 'description', 'dateFin', 'problematique', 'thematique',
-    'publicCible', 'solutions', 'acteurs', 'roles', 'pointAttention', 'ressources', 'moyens',
+    'publicCible'];
+  var RATTACHEMENT_COL = "Cette action s'inscrit-elle dans le cadre de :";
+  var order2 = ['solutions', 'acteurs', 'roles', 'pointAttention', 'ressources', 'moyens',
     'beneficiaires', 'suivi', 'resultats', 'strategiques'];
-  var headers = order.map(function (k) { return COLS[k]; }).concat(ETAPE_COLS).concat(
+  var headers = order.map(function (k) { return COLS[k]; }).concat([RATTACHEMENT_COL]).concat(order2.map(function (k) { return COLS[k]; })).concat(ETAPE_COLS).concat(
     [COLS.bilanTexte, COLS.efficacite, COLS.reconduction, COLS.transposition, COLS.valorisationTxt, COLS.dateCreation, COLS.dateMaj, COLS.clpe]
   );
   var example = {};
@@ -983,6 +1080,7 @@ document.getElementById('downloadTemplateBtn').addEventListener('click', functio
   example[COLS.problematique] = 'Décrivez ici le constat ou le besoin du territoire à l\u2019origine de l\u2019action.';
   example[COLS.thematique] = 'Accès à la formation;Orientation';
   example[COLS.publicCible] = 'Demandeurs d\u2019emploi (tous)';
+  example[RATTACHEMENT_COL] = 'CLPE Nord Ardennes';
   example[COLS.solutions] = 'Communication;Formation;Partenariat';
   example[COLS.acteurs] = 'Cap emploi;Mission locale;France Travail';
   example[COLS.roles] = 'Précisez ici le rôle de chaque partenaire dans l\u2019action.';
@@ -1016,6 +1114,7 @@ document.getElementById('downloadTemplateBtn').addEventListener('click', functio
     ['- "Efficacité de l\u2019action" est une auto-évaluation chiffrée de 0 à 10.'],
     ['- "Cette action sera-t-elle recondu..." et "Cette action est-elle transposab..." attendent "Oui" ou "Non".'],
     ['- Une colonne absente ou vide n\u2019empêche pas l\u2019analyse : elle est simplement traitée comme non renseignée pour les critères concernés.'],
+    ['- "Cette action s\u2019inscrit-elle dans le cadre de :" : le CLPE de rattachement principal de l\u2019action ; si le maillage géographique ne correspond pas exactement à un CLPE, indiquez celui des acteurs ou celui où l\u2019action s\u2019est majoritairement déroulée.'],
     ['- Supprimez la ligne d\u2019exemple avant de déposer votre propre fichier.']
   ];
   var wsInstr = XLSX.utils.aoa_to_sheet(instructions);

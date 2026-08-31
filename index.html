@@ -156,7 +156,10 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .intro-step{background:var(--ft-sable);border-top:3px solid var(--ft-indigo);border-radius:6px;padding:12px 14px;font-size:12.5px}
 .intro-download{margin-top:14px}
 .intro-download a{display:inline-block;background:var(--ft-indigo);color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;transition:background .15s ease}
-.eval-fiche-link{display:inline-block;background:var(--ft-orange);color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;margin:10px 0 4px;transition:background .15s ease}
+.eval-fiche-link{display:inline-block;background:var(--ft-orange);color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;transition:background .15s ease}
+.fiches-links-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 4px}
+.btn-secondary-link{background:#fff;color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:8px 16px;font-family:var(--ft-font);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s ease}
+.btn-secondary-link:hover{background:var(--ft-indigo-light)}
 .eval-fiche-link:hover{background:#B85700}
 .intro-download a:hover{background:var(--ft-indigo-dark)}
 .intro-step-title{font-weight:700;color:var(--ft-navy);margin-bottom:6px;font-size:13px}
@@ -283,6 +286,13 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .preco-section{margin-bottom:18px}
 .preco-section h4{font-size:13px;font-weight:700;color:var(--ft-navy);margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--ft-indigo-light)}
 .preco-item{background:var(--ft-sable);border-left:4px solid var(--ft-indigo);border-radius:4px;padding:10px 14px;margin-bottom:10px}
+.method-table{width:100%;border-collapse:collapse;margin-top:8px}
+.method-table td{padding:8px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top;font-size:12px}
+.method-table .mw{width:52px;font-weight:700;color:var(--ft-indigo);white-space:nowrap;text-align:center}
+.method-table tr:first-child td{border-top:1px solid var(--ft-sable-dark)}
+.point-fort-item{border-left-color:var(--ft-vert)}
+.preco-sep{border:none;border-top:2px solid var(--ft-sable-dark);margin:22px 0}
+.preco-main-title{font-size:15px;font-weight:700;color:var(--ft-navy);margin:0 0 8px}
 .preco-q{font-size:12.5px;font-weight:700;color:var(--ft-fg-1)}
 .preco-score{font-weight:400;color:var(--ft-fg-3);margin-left:4px}
 .preco-suggestion{font-size:12px;color:var(--ft-fg-2);margin-top:5px;line-height:1.55}
@@ -583,8 +593,10 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
           <div class="guide"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et qualité moyenne sur 4 critères notés sur 4 (données réelles).</div>
-          <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
-          <div class="fiches-methodo"><b>Méthodologie de notation qualité :</b> <b>Caractère innovant</b> - les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant est jugée plus innovante. <b>Impact usager</b> - majoré si des objectifs chiffrés/datés sont identifiés, ramené vers 0 si l'action ne touche pas directement un public usager. <b>Qualité de la description</b> - basée sur la clarté et la précision du texte (pas seulement sa longueur), pénalisée si trop de publics cibles ou de thématiques sont cochés (manque de ciblage). <b>Bilan et valorisation</b> - pénalisé si l'échéance est dépassée sans bilan renseigné et sans mise à jour du statut, ou si la fiche n'a simplement pas été mise à jour depuis longtemps.</div>
+          <div class="fiches-links-row">
+            <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
+            <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
+          </div>
           <h3 id="fichesScopeTitle"></h3>
           <div class="fiches-grid">
             <div>
@@ -603,7 +615,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="part-title" style="margin-top:14px">Axes de progrès identifiés</div>
           <div class="guide" style="margin-top:0"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès, parmi 14 pistes concrètes. Le graphique montre la part des fiches du périmètre sélectionné concernées par chaque piste, triées de la plus fréquente à la moins fréquente.</div>
           <div id="fichesAxesChart"></div>
-          <div class="preco-pdf-row"><button class="btn-preco" id="fichesPrecoBtn">Préconisations</button></div>
+          <div class="preco-pdf-row"><button class="btn-preco" id="fichesPrecoBtn">Points forts et préconisations</button></div>
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
@@ -667,8 +679,25 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
 <div class="modal-overlay" id="fichesPrecoOverlay">
   <div class="modal-box preco-box">
-    <div class="modal-head"><h3>Préconisations - Fiches action</h3><button class="modal-close" id="fichesPrecoClose" aria-label="Fermer">✕</button></div>
+    <div class="modal-head"><h3>Points forts et préconisations - Fiches action</h3><button class="modal-close" id="fichesPrecoClose" aria-label="Fermer">✕</button></div>
     <div class="modal-body" id="fichesPrecoBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="methodoOverlay">
+  <div class="modal-box preco-box">
+    <div class="modal-head"><h3>📘 Méthodologie - comment le score est calculé</h3><button class="modal-close" id="methodoClose" aria-label="Fermer">✕</button></div>
+    <div class="modal-body">
+      <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
+      <table class="method-table">
+        <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
+        <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
+        <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (et non exigé tant que l'échéance de l'action n'est pas atteinte). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
+        <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant, ou dont le vocabulaire se distingue du reste du réseau, est jugée plus innovante.</td></tr>
+      </table>
+      <p style="margin-top:10px">Un critère non évalué (bilan non renseigné, notamment) n'entre pas dans le score global : les poids des autres critères sont alors reproportionnés pour totaliser 100&nbsp;%, plutôt que de compter comme 0.</p>
+      <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action. Vous pouvez évaluer une fiche isolée ou un lot complet avec le même niveau de détail via l'outil <a href="evaluation-fiche-action.html" target="_blank" rel="noopener">Évaluez une fiche action en pdf</a>.</p>
+    </div>
   </div>
 </div>
 
@@ -854,6 +883,8 @@ var HOMOG_RULE_TEXT = "Règle de calcul : à partir de 2 réponses, on calcule l
    uniquement, pourcentage coloré selon le niveau atteint (vert/bleu/rouge). */
 var RESPONDENTS_TOOLTIP = "Nombre de répondants à cette question";
 var HOMOG_TOOLTIP = "Indice d'homogénéité\nMesure le niveau d'alignement des réponses des acteurs au sein du CLPE.\nCode couleur :\n\uD83D\uDD34 Rouge (< 1/3) : perceptions différentes, sujet à aborder en collectif.\n\uD83D\uDD35 Bleu (1/3 à 2/3) : homogénéité intermédiaire.\n\uD83D\uDFE2 Vert (> 2/3) : vision partagée entre les acteurs.\n\nRègle de calcul : disponible à partir de 2 réponses. 100 % : toutes les réponses sont identiques. 0 % : les réponses sont totalement opposées (aux deux extrêmes de l'échelle). Plus les avis s'éloignent les uns des autres, plus l'indice diminue. Pour un groupe de questions, l'indice affiché est la moyenne des indices de chaque question.";
+var QUESTION_SCORE_TOOLTIP = "Score moyen obtenu à cette question, sur l'ensemble des réponses reçues sur ce périmètre.\nExemple : \u00ab 4,0 / 8 \u00bb signifie une moyenne de 4 points sur un barème maximal de 8 points pour cette question.\nCliquez sur le numéro de la question pour consulter le détail du barème.";
+var BLOCK_SCORE_TOOLTIP = "Somme des scores moyens obtenus aux questions de ce bloc.\nExemple : \u00ab 68 / 80 \u00bb signifie que la somme des moyennes de chaque question du bloc atteint 68 points, sur un maximum cumulé de 80 points.";
 function respondentsBadge(cnt) {
   if (cnt == null) return '';
   return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(RESPONDENTS_TOOLTIP) + '">\uD83D\uDC65</span>\u00A0<span title="' + esc(RESPONDENTS_TOOLTIP) + '" style="cursor:help">' + cnt + '</span></span>';
@@ -1541,7 +1572,7 @@ function questionRowsHTML(qGetter, scopeKey, records) {
     g.nums.forEach(function (n) { var r = qGetter(n); total += (r && r.v) || 0; totalMax += META.qMax[n] || 0; });
     var gh = groupHomogeneity(records, g.nums);
     html += '<div class="q-group-title" data-key="' + esc(key) + '" data-open="' + (open ? '1' : '0') + '" role="button" tabindex="0">' +
-      '<span class="qg-chev"></span><span class="qg-label">' + esc(g.label) + '</span><span class="qg-score">' + fmt(total) + ' / ' + totalMax + (gh == null ? '' : ' (' + homogBadge(gh) + ')') + '</span></div>';
+      '<span class="qg-chev"></span><span class="qg-label">' + esc(g.label) + '</span><span class="qg-score"><span title="' + esc(BLOCK_SCORE_TOOLTIP) + '" style="cursor:help">' + fmt(total) + ' / ' + totalMax + '</span>' + (gh == null ? '' : ' (' + homogBadge(gh) + ')') + '</span></div>';
     if (g.info) html += '<div class="q-group-info">' + esc(g.info) + '</div>';
     html += '<div class="q-group-body"' + (open ? '' : ' style="display:none"') + '>';
     g.nums.forEach(function (n) {
@@ -1551,7 +1582,7 @@ function questionRowsHTML(qGetter, scopeKey, records) {
       var metaBits = [];
       if (cnt != null) metaBits.push(respondentsBadge(cnt));
       if (h != null) metaBits.push(homogBadge(h));
-      var valTxt = m == null ? '-' : fmt(m) + ' / ' + mx + (metaBits.length ? ' (' + metaBits.join(', ') + ')' : '');
+      var valTxt = m == null ? '-' : '<span title="' + esc(QUESTION_SCORE_TOOLTIP) + '" style="cursor:help">' + fmt(m) + ' / ' + mx + '</span>' + (metaBits.length ? ' (' + metaBits.join(', ') + ')' : '');
       var qKey = key + '|q' + n;
       var qOpen = !!questionExpand[qKey];
       html += '<div class="q-bar-wrap"><div class="q-bar-row' + (qOpen ? ' q-bar-open' : '') + '" data-qkey="' + esc(qKey) + '" role="button" tabindex="0"><button class="qnum" data-qnum="' + n + '" type="button">Q' + n + '</button><div class="qtext">' + esc(q.text) + '</div>' +
@@ -1598,6 +1629,7 @@ function openQuestionModal(n) {
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
 function closeFichesPreco() { document.getElementById('fichesPrecoOverlay').classList.remove('show'); }
+function closeMethodo() { document.getElementById('methodoOverlay').classList.remove('show'); }
 
 var tableSort = { key: 'total', dir: -1 };
 function sortedTableRows() {
@@ -2496,6 +2528,49 @@ function percentileOf(sortedArr, p) {
   var idx = (sortedArr.length - 1) * p, lo = Math.floor(idx), hi = Math.min(lo + 1, sortedArr.length - 1);
   return sortedArr[lo] + (sortedArr[hi] - sortedArr[lo]) * (idx - lo);
 }
+/* Points forts "Fiches action" : pendant positif des préconisations ci-dessous, organisé
+   selon les mêmes 7 thèmes. Chaque item explique la valeur d'une bonne pratique une fois
+   acquise, sans jamais recouper le même point précis qu'une préconisation - une pratique
+   donnée n'apparaît que d'un seul côté : soit comme piste à travailler, soit comme point
+   fort à reconnaître quand elle est déjà là. */
+function buildFichesPointsFortsHTML() {
+  var groups = [
+    {
+      title: 'Décrire et cadrer l\u2019action', items: [
+        "Un nombre de publics cibles et de thématiques limité traduit une action bien focalisée, avec un impact potentiel plus fort qu'une action qui ratisse large. Un titre court et clair donne envie de lire la suite et facilite le repérage de l'action dans les tableaux de bord.",
+        "Une problématique clairement distincte de la description témoigne d'un diagnostic objectif du territoire, plutôt que d'une simple reformulation de l'action.",
+        "Un jalonnage régulier, avec des étapes de mise en œuvre détaillées, traduit un pilotage rigoureux de l'action dans la durée."
+      ]
+    },
+    {
+      title: 'Mesurer l\u2019impact', items: [
+        "Des indicateurs de résultat assortis d'un objectif quantitatif et d'un horizon temporel défini (ex. \u00ab 80 % à 6 mois \u00bb) permettent réellement de suivre l'atteinte des objectifs, bien au-delà d'une intention générale."
+      ]
+    },
+    {
+      title: 'Mobiliser et organiser les acteurs', items: [
+        "Le rattachement de l'action à un CLPE précis exprime un bon maillage entre les différentes instances et une mobilisation optimale des ressources."
+      ]
+    },
+    {
+      title: 'Suivre et valoriser dans la durée', items: [
+        "Un bilan riche, qui va au-delà des chiffres pour expliquer ce qui a fonctionné ou non, permet de capitaliser sur les actions futures et d'éclairer d'autres territoires susceptibles de mettre en place une action similaire."
+      ]
+    },
+    {
+      title: 'Piloter et sécuriser l\u2019action', items: [
+        "Des points d'attention qui anticipent clairement les risques (mobilisation du public, dépendance à un acteur, contraintes de calendrier...) montrent la prudence et le sérieux de l'étude du projet."
+      ]
+    }
+  ];
+  var html = '<div class="preco-summary">Ce que les fiches action les mieux renseignées ont en commun, à titre de repère.</div>';
+  groups.forEach(function (g) {
+    html += '<div class="preco-section"><h4>' + esc(g.title) + '</h4>';
+    g.items.forEach(function (it) { html += '<div class="preco-item point-fort-item">' + esc(it) + '</div>'; });
+    html += '</div>';
+  });
+  return html;
+}
 /* Préconisations "Fiches action" : liste méthodologique statique (bonnes pratiques de
    rédaction et de suivi), à la différence des préconisations Maturité qui sont calculées
    dynamiquement à partir des réponses filtrées. */
@@ -2504,6 +2579,7 @@ function buildFichesPreconisationsHTML() {
     {
       title: 'Décrire et cadrer l\u2019action', items: [
         "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques, qui ne permettent pas de comprendre concrètement ce qui est fait ni pourquoi.",
+        "Formulez une problématique qui objective un vrai diagnostic du territoire (constats, chiffres), nettement distincte de la description de l'action : une problématique qui se contente de reformuler ce qui est fait n'apporte pas d'éclairage supplémentaire.",
         "Pour les actions qui se déroulent dans la durée (plusieurs phases, écart important entre la date de création et la date de fin), détaillez au moins 2 à 3 étapes de mise en œuvre avec leurs échéances : cela objective le déroulé de l'action et facilite le suivi. Pour une action ponctuelle, ce n'est pas nécessaire.",
         "Limitez le nombre de publics cibles et de thématiques cochés à ce qui est réellement pertinent : cocher très large par défaut nuit à la lisibilité et donne l'impression d'une action mal ciblée."
       ]
@@ -2525,7 +2601,8 @@ function buildFichesPreconisationsHTML() {
     {
       title: 'Mobiliser et organiser les acteurs', items: [
         "Renseignez systématiquement la répartition des rôles entre partenaires (champ \u00ab Rôles \u00bb) : ce champ est souvent laissé vide ou trop sommaire, alors qu'il est clé pour comprendre qui fait quoi dans l'action.",
-        "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint et toujours identique d'un dispositif à l'autre."
+        "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint et toujours identique d'un dispositif à l'autre.",
+        "Renseignez le rattachement de l'action à un CLPE (champ \u00ab Cette action s'inscrit-elle dans le cadre de \u00bb) : si le maillage géographique de l'action ne correspond pas exactement à celui d'un CLPE, choisissez le principal CLPE de rattachement des acteurs ou celui dans lequel l'action s'est majoritairement déroulée."
       ]
     },
     {
@@ -2548,7 +2625,7 @@ function buildFichesPreconisationsHTML() {
       ]
     }
   ];
-  var html = '<div class="preco-summary">18 pistes concrètes pour améliorer la qualité de saisie et de suivi des fiches action, organisées en 7 thèmes.</div>';
+  var html = '<div class="preco-summary">20 pistes concrètes pour améliorer la qualité de saisie et de suivi des fiches action, organisées en 7 thèmes.</div>';
   groups.forEach(function (g) {
     html += '<div class="preco-section"><h4>' + esc(g.title) + '</h4>';
     g.items.forEach(function (it) { html += '<div class="preco-item">' + esc(it) + '</div>'; });
@@ -3087,18 +3164,26 @@ function bindEvents() {
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', function (e) { if (e.target.id === 'modalOverlay') closeModal(); });
   document.getElementById('fichesPrecoBtn').addEventListener('click', function () {
-    document.getElementById('fichesPrecoBody').innerHTML = buildFichesPreconisationsHTML();
+    document.getElementById('fichesPrecoBody').innerHTML =
+      '<h4 class="preco-main-title">\u2705 Points forts</h4>' + buildFichesPointsFortsHTML() +
+      '<hr class="preco-sep">' +
+      '<h4 class="preco-main-title">Préconisations</h4>' + buildFichesPreconisationsHTML();
     document.getElementById('fichesPrecoOverlay').classList.add('show');
   });
   document.getElementById('fichesPrecoClose').addEventListener('click', closeFichesPreco);
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
+  document.getElementById('methodoBtn').addEventListener('click', function () {
+    document.getElementById('methodoOverlay').classList.add('show');
+  });
+  document.getElementById('methodoClose').addEventListener('click', closeMethodo);
+  document.getElementById('methodoOverlay').addEventListener('click', function (e) { if (e.target.id === 'methodoOverlay') closeMethodo(); });
   document.addEventListener('click', function (e) {
     var icon = e.target.closest('.info-icon');
     if (icon) { e.stopPropagation(); openInfoPopup(icon, icon.getAttribute('data-info')); return; }
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
