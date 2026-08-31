@@ -147,8 +147,19 @@ async function extractPdfText(arrayBuffer) {
   for (var i = 1; i <= pdf.numPages; i++) {
     var page = await pdf.getPage(i);
     var content = await page.getTextContent();
+    /* L'ordre des éléments dans le flux du PDF ne correspond pas toujours à l'ordre de
+       lecture visuel (fréquent pour un PDF généré depuis une page web, notamment avec des
+       étiquettes qui passent à la ligne). On trie donc explicitement par position : de haut
+       en bas, puis de gauche à droite sur une même ligne, avant de reconstruire le texte. */
+    var items = content.items.filter(function (it) { return it.str && it.str.trim() !== ''; })
+      .slice()
+      .sort(function (a, b) {
+        var dy = b.transform[5] - a.transform[5];
+        if (Math.abs(dy) > 2) return dy;
+        return a.transform[4] - b.transform[4];
+      });
     var lastY = null, lastX2 = null, line = '';
-    content.items.forEach(function (item) {
+    items.forEach(function (item) {
       var x1 = item.transform[4], x2 = x1 + (item.width || 0);
       var sameLine = lastY !== null && Math.abs(item.transform[5] - lastY) <= 2;
       if (!sameLine) {
