@@ -6,6 +6,7 @@
 <title>Évaluer une fiche action - Cockpit CLPE</title>
 <link rel="icon" type="image/svg+xml" href="assets/tdb-rpe-icon.svg">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @font-face{font-family:'Marianne';src:url('fonts/Marianne-Light.woff2') format('woff2');font-weight:300;font-display:swap}
 @font-face{font-family:'Marianne';src:url('fonts/Marianne-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
@@ -134,7 +135,44 @@ input[type=file]{display:none}
   <div class="note">
     L'analyse porte sur la clarté et la complétude de la saisie (description, indicateurs, bilan, acteurs...), pas sur la pertinence de l'action elle-même. Le critère "caractère innovant", calculé au niveau national par comparaison avec l'ensemble des fiches du réseau, n'est pas disponible pour une fiche isolée.
   </div>
+
+  <hr class="section-sep">
+
+  <div class="card">
+    <h2>Évaluer un lot de fiches action (export Excel complet)</h2>
+    <p style="font-size:13px">Déposez l'export Excel complet des fiches action (toutes les fiches, une par ligne). L'outil calcule les mêmes critères que ci-dessus pour chaque ligne, et vous renvoie un fichier Excel identique en entrée, complété des colonnes d'évaluation - prêt à servir de ressource pour votre site.</p>
+    <p style="font-size:13px;margin-bottom:0"><b>Le fichier n'est jamais conservé</b>, comme pour le PDF ci-dessus.</p>
+  </div>
+
+  <div class="card">
+    <div class="dropzone" id="dropzoneBulk">
+      <div class="lbl" id="dzLabelBulk">Glissez l'export Excel des fiches action ici, ou cliquez pour le choisir</div>
+      <div class="hint">Fichier .xlsx contenant toutes les fiches action, une ligne par fiche</div>
+      <input type="file" id="fileInputBulk" accept=".xlsx">
+    </div>
+    <div class="loader" id="loaderBulk">Analyse en cours…</div>
+    <div class="error-box" id="errorBoxBulk"></div>
+
+    <div id="resultsBulk" style="display:none">
+      <div class="global-box" style="margin-top:18px">
+        <div class="val" id="bulkCount">-</div>
+        <div class="txt" id="bulkTxt"></div>
+      </div>
+      <div class="reset-row" style="margin-top:14px">
+        <button class="btn" id="downloadBulkBtn">Télécharger le fichier évalué</button>
+      </div>
+      <div class="filename" id="bulkFileName" style="text-align:center;margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    Le critère "caractère innovant" n'est pas calculé ici non plus : il repose sur un regroupement des fiches par similarité (thématique, solutions, contenu textuel), une opération de type apprentissage automatique difficilement fiable à reproduire dans un navigateur. Les autres critères et les 13 axes de progrès sont en revanche calculés pour chaque ligne, exactement comme pour une fiche isolée - à la différence que l'axe de progrès de chaque fiche est ici comparé à l'ensemble du lot déposé, ce qui le rend plus pertinent qu'une évaluation isolée.
+  </div>
 </main>
+
+<style>
+.section-sep{border:none;border-top:1px solid var(--ft-sable-dark);margin:36px 0}
+</style>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -323,7 +361,7 @@ function scoreFiche(f) {
   var scCadrage = Math.max(0, Math.min(4, cadrageBase + cadrageClar * 0.8 - unfocused));
 
   var suiviW = wc(f.indicSuivi), resultW = wc(f.indicResultats);
-  var impactBase = Math.min(1.0, suiviW / 15) + Math.min(1.1, resultW / 20 * 1.1) + (f.indicStrategiques ? 0.5 : 0) + (f.beneficiaires ? 0.3 : 0);
+  var impactBase = Math.min(1.0, suiviW / 15) + Math.min(1.1, resultW / 20 * 1.1) + (f.beneficiaires ? 0.3 : 0);
   var impactClar = resultW >= 6 ? clarityScore(f.indicResultats) : 0;
   var scImpact = impactBase + impactClar * 0.5 + (hasSmart(f.indicSuivi + ' ' + f.indicResultats) ? 0.6 : 0);
   scImpact = Math.max(0, Math.min(4, scImpact));
@@ -335,7 +373,7 @@ function scoreFiche(f) {
   var overdue = f.dFin && f.dFin < today;
   var scBilan = Math.min(1.9, bilanW / 25 * 1.9) + (bilanW >= 6 ? clarityScore(f.bilanText) * 0.6 : 0);
   scBilan = Math.max(0, Math.min(4, scBilan));
-  if ((overdue && bilanW < 5 && staleDays > 90) || staleDays > 365 || f.statut === 'Abandonnée') scBilan = Math.min(scBilan, 0.4);
+  if ((overdue && bilanW < 5 && staleDays > 90) || staleDays > 365) scBilan = Math.min(scBilan, 0.4);
 
   var subEtapes = !isLongRunning(f) ? 0.95 : Math.min(1, f.nEtapes / 3);
   var subSuivi = !isLongRunning(f) ? 0.95 : Math.min(1, suiviW / 15);
@@ -500,6 +538,195 @@ function handleFile(file) {
   };
   reader.readAsArrayBuffer(file);
 }
+
+/* ============================================================================
+   Évaluation en lot (export Excel complet des fiches action)
+   Reprend les mêmes règles que scoreFiche(), mais lues directement depuis les
+   colonnes structurées du fichier plutôt qu'extraites d'un PDF - donc plus
+   fiables. Les noms de colonnes ci-dessous sont ceux de l'export réel (certains
+   sont tronqués à ~32 caractères par Excel, reproduits tels quels).
+   ============================================================================ */
+var COLS = {
+  statut: 'Statut', titre: "Titre de l'action", description: "Description de l'action",
+  dateFin: 'Date de fin prévisionnelle', problematique: 'Problématique identifiée',
+  thematique: 'Thématique', publicCible: 'Public cible', solutions: 'Solutions mobilisées',
+  acteurs: "Acteurs associés à l'action", roles: 'Rôles', pointAttention: "Points d'attention",
+  ressources: 'Ressources mobilisables', moyens: 'Moyens humains et financiers',
+  beneficiaires: "Nombre de bénéficiaires de l'act", suivi: 'Indicateurs de suivi',
+  resultats: "Indicateurs de résultats / d'imp", strategiques: 'Indicateurs stratégiques impacté',
+  bilanTexte: 'Principaux résultats et enseigne', efficacite: "Efficacité de l'action",
+  reconduction: 'Cette action sera-t-elle recondu', transposition: 'Cette action est-elle transposab',
+  valorisationTxt: 'Comment avez-vous valorisé votre', dateCreation: 'Creation date', dateMaj: 'Last update',
+  clpe: 'C_LBLTERRITOIRE'
+};
+var ETAPE_COLS = ['Etape 1', 'Etape 2', 'Etape 3', 'Etape 4', 'Etape 5', 'Etape 6', 'Etape 7', 'Etape 8', 'Etape 9', 'Etape 10'];
+
+function splitMulti(v) { return (v == null ? '' : String(v)).split(';').map(function (s) { return s.trim(); }).filter(Boolean); }
+function toDate(v) {
+  if (v == null || v === '') return null;
+  if (v instanceof Date) return v;
+  if (typeof v === 'number') return new Date(Math.round((v - 25569) * 86400 * 1000)); // date série Excel
+  var d = new Date(v);
+  return isNaN(d) ? null : d;
+}
+function isFilled(v, minWords) { return wc(v) >= (minWords == null ? 3 : minWords); }
+
+function scoreRow(row, refDate) {
+  var get = function (key) { return row[COLS[key]]; };
+  var description = get('description'), problematique = get('problematique');
+  var descW = wc(description), probW = wc(problematique);
+  var nEtapes = ETAPE_COLS.reduce(function (s, c) { return s + (isFilled(row[c]) ? 1 : 0); }, 0);
+  var publics = splitMulti(get('publicCible')), thematiques = splitMulti(get('thematique'));
+  var acteurs = splitMulti(get('acteurs'));
+  var dCreation = toDate(get('dateCreation')), dFin = toDate(get('dateFin')), dMaj = toDate(get('dateMaj'));
+  var statut = (get('statut') || '').trim();
+
+  var cadrageBase = Math.min(1.1, descW / 60 * 1.1) + Math.min(0.8, probW / 40 * 0.8) + Math.min(1.3, nEtapes / 3 * 1.3);
+  var cadrageClar = 0.55 * clarityScore(description) + 0.45 * clarityScore(problematique);
+  var unfocused = Math.max(0, (publics.length - 3) / 7) * 0.4 + Math.max(0, (thematiques.length - 4) / 6) * 0.4;
+  var scCadrage = Math.max(0, Math.min(4, cadrageBase + cadrageClar * 0.8 - unfocused));
+
+  var suivi = get('suivi') || '', resultats = get('resultats') || '';
+  var suiviW = wc(suivi), resultW = wc(resultats);
+  var beneficiaires = get('beneficiaires');
+  var hasBenefNum = /\d/.test(String(beneficiaires || ''));
+  var impactBase = Math.min(1.0, suiviW / 15) + Math.min(1.1, resultW / 20 * 1.1) + (hasBenefNum ? 0.3 : 0);
+  var impactClar = resultW >= 6 ? clarityScore(resultats) : 0;
+  var scImpact = impactBase + impactClar * 0.5 + (hasSmart(suivi + ' ' + resultats) ? 0.6 : 0);
+  scImpact = Math.max(0, Math.min(4, scImpact));
+  var userFacing = isUserFacing(publics);
+  if (!userFacing) scImpact = scImpact * 0.15;
+
+  var bilanTxt = get('bilanTexte') || '', bilanW = wc(bilanTxt);
+  var staleDays = dMaj ? (refDate - dMaj) / 86400000 : 9999;
+  var overdue = dFin && dFin < refDate;
+  var recond = (get('reconduction') || '').toLowerCase(), transp = (get('transposition') || '').toLowerCase();
+  var valTxt = get('valorisationTxt') || '', valW = wc(valTxt);
+  var scBilan = Math.min(1.9, bilanW / 25 * 1.9) + Math.min(1.0, valW / 15 * 1.0);
+  scBilan += bilanW >= 6 ? clarityScore(bilanTxt) * 0.6 : 0;
+  scBilan += recond === 'oui' ? 0.3 : (recond.indexOf('peut') >= 0 ? 0.15 : 0);
+  scBilan += transp === 'oui' ? 0.3 : 0;
+  scBilan = Math.max(0, Math.min(4, scBilan));
+  if ((overdue && bilanW < 5 && staleDays > 90) || staleDays > 365) scBilan = Math.min(scBilan, 0.4);
+
+  var isLongRunning = dCreation && dFin && (dFin - dCreation) / 86400000 > 60;
+  var subEtapes = !isLongRunning ? 0.95 : Math.min(1, nEtapes / 3);
+  var subSuivi = !isLongRunning ? 0.95 : Math.min(1, suiviW / 15);
+  var subDiversite = Math.min(1, acteurs.length / 6);
+  var subVigilance = Math.min(1, wc(get('pointAttention')) / 15);
+  var subMoyens = Math.min(1, (wc(get('ressources')) + wc(get('moyens'))) / 20);
+  var subMaj = statut === 'Terminée' ? 1 : (statut === 'Abandonnée' ? 0 : Math.max(0, 1 - staleDays / 365));
+  var subBilanVide = bilanW < 5;
+  var subBilan = Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(bilanTxt) * 0.3 : 0);
+  if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
+  var subDescription = Math.min(1, descW / 60) * 0.5 + clarityScore(description) * 0.5;
+  var subProblematique = Math.min(1, probW / 40) * 0.5 + clarityScore(problematique) * 0.5;
+  var subCiblage = Math.max(0, 1 - unfocused);
+  var subResultats = Math.min(1, Math.min(1, resultW / 20) * 0.6 + (resultW >= 6 ? clarityScore(resultats) : 0) * 0.2 + (hasSmart(suivi + ' ' + resultats) ? 0.2 : 0));
+  var subImpactUsager = userFacing ? 1 : 0;
+  var subValorisation = Math.min(1, Math.min(1, valW / 15) * 0.7 + (recond === 'oui' ? 0.15 : 0) + (transp === 'oui' ? 0.15 : 0));
+  var effVal = get('efficacite');
+  var subEfficacite = (effVal == null || effVal === '' || isNaN(+effVal)) ? 0 : Math.max(0, Math.min(1, +effVal / 10));
+
+  return {
+    scCadrage: scCadrage, scImpact: scImpact, scBilan: scBilan,
+    subs: {
+      description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
+      suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
+      valorisation: subValorisation, diversite_acteurs: subDiversite, efficacite: subEfficacite, vigilance: subVigilance, moyens: subMoyens
+    }
+  };
+}
+var AXE_LABELS_FR = {
+  description: "Mieux décrire l'action", problematique: 'Mieux formuler la problématique', etapes: 'Détailler les étapes',
+  ciblage: "Mieux cibler l'action", suivi: 'Renseigner des indicateurs de suivi', resultats: 'Objectifs chiffrés (SMART)',
+  impact_usager: "Impact sur l'usager final", maj: 'Mise à jour plus régulière', bilan: 'Renseigner le bilan',
+  valorisation: "Valoriser l'action", diversite_acteurs: 'Diversité des acteurs mobilisés',
+  efficacite: 'Auto-évaluer l\u2019efficacité', vigilance: 'Points de vigilance', moyens: 'Préciser les moyens mobilisés'
+};
+
+function rankPercentile(values) {
+  /* Rang percentile (0 à 1) de chaque valeur au sein du tableau, valeurs égales
+     recevant le même rang moyen - même principe que le classement utilisé au
+     niveau national pour comparer chaque fiche au reste du corpus déposé. */
+  var n = values.length;
+  var sorted = values.map(function (v, i) { return { v: v, i: i }; }).sort(function (a, b) { return a.v - b.v; });
+  var ranks = new Array(n);
+  var i = 0;
+  while (i < n) {
+    var j = i;
+    while (j + 1 < n && sorted[j + 1].v === sorted[i].v) j++;
+    var avgRank = (i + j) / 2;
+    for (var k = i; k <= j; k++) ranks[sorted[k].i] = n > 1 ? avgRank / (n - 1) : 0.5;
+    i = j + 1;
+  }
+  return ranks;
+}
+
+async function processBulkFile(file) {
+  var buf = await file.arrayBuffer();
+  var wb = XLSX.read(buf, { type: 'array', cellDates: true });
+  var ws = wb.Sheets[wb.SheetNames[0]];
+  var rows = XLSX.utils.sheet_to_json(ws, { defval: null });
+  if (!rows.length) throw new Error('Aucune ligne trouvée dans ce fichier.');
+
+  var refDate = new Date();
+  var allScores = rows.map(function (r) { return scoreRow(r, refDate); });
+  var AXE_KEYS = Object.keys(AXE_LABELS_FR);
+  var percentiles = {};
+  AXE_KEYS.forEach(function (k) { percentiles[k] = rankPercentile(allScores.map(function (s) { return s.subs[k]; })); });
+
+  var outRows = rows.map(function (row, idx) {
+    var s = allScores[idx];
+    var best = null, bestPct = Infinity;
+    AXE_KEYS.forEach(function (k) { var p = percentiles[k][idx]; if (p < bestPct) { bestPct = p; best = k; } });
+    var out = Object.assign({}, row);
+    out['Éval - Qualité de la description (/4)'] = Math.round(s.scCadrage * 100) / 100;
+    out['Éval - Impact usager (/4)'] = Math.round(s.scImpact * 100) / 100;
+    out['Éval - Bilan et valorisation (/4)'] = Math.round(s.scBilan * 100) / 100;
+    out['Éval - Score global (/4)'] = Math.round((s.scCadrage + s.scImpact + s.scBilan) / 3 * 100) / 100;
+    out['Éval - Axe de progrès prioritaire'] = AXE_LABELS_FR[best];
+    return out;
+  });
+
+  var outWs = XLSX.utils.json_to_sheet(outRows);
+  var outWb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(outWb, outWs, 'Fiches action évaluées');
+  return { workbook: outWb, n: outRows.length };
+}
+
+var dropzoneBulk = document.getElementById('dropzoneBulk'), fileInputBulk = document.getElementById('fileInputBulk');
+var lastBulkWorkbook = null, lastBulkFileName = '';
+dropzoneBulk.addEventListener('click', function () { fileInputBulk.click(); });
+dropzoneBulk.addEventListener('dragover', function (e) { e.preventDefault(); dropzoneBulk.classList.add('drag'); });
+dropzoneBulk.addEventListener('dragleave', function () { dropzoneBulk.classList.remove('drag'); });
+dropzoneBulk.addEventListener('drop', function (e) { e.preventDefault(); dropzoneBulk.classList.remove('drag'); if (e.dataTransfer.files.length) handleBulkFile(e.dataTransfer.files[0]); });
+fileInputBulk.addEventListener('change', function (e) { if (e.target.files.length) handleBulkFile(e.target.files[0]); });
+
+async function handleBulkFile(file) {
+  document.getElementById('errorBoxBulk').style.display = 'none';
+  document.getElementById('resultsBulk').style.display = 'none';
+  document.getElementById('dzLabelBulk').textContent = file.name;
+  document.getElementById('loaderBulk').style.display = 'block';
+  try {
+    var result = await processBulkFile(file);
+    lastBulkWorkbook = result.workbook;
+    lastBulkFileName = file.name.replace(/\.xlsx$/i, '') + '_evalue.xlsx';
+    document.getElementById('bulkCount').textContent = result.n;
+    document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées des scores et de l'axe de progrès prioritaire de chaque fiche.";
+    document.getElementById('bulkFileName').textContent = lastBulkFileName;
+    document.getElementById('resultsBulk').style.display = 'block';
+  } catch (err) {
+    var box = document.getElementById('errorBoxBulk');
+    box.textContent = "Impossible de traiter ce fichier : " + err.message + '. Vérifiez qu\u2019il s\u2019agit bien de l\u2019export complet des fiches action.';
+    box.style.display = 'block';
+  }
+  document.getElementById('loaderBulk').style.display = 'none';
+}
+document.getElementById('downloadBulkBtn').addEventListener('click', function () {
+  if (!lastBulkWorkbook) return;
+  XLSX.writeFile(lastBulkWorkbook, lastBulkFileName);
+});
 </script>
 </body>
 </html>
