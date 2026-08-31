@@ -123,6 +123,10 @@ input[type=file]{display:none}
       <summary>Voir le détail des champs détectés dans le PDF</summary>
       <table class="extract-table" id="extractTable"></table>
     </details>
+    <details class="extract-details">
+      <summary>Voir le texte brut extrait du PDF (diagnostic)</summary>
+      <pre id="rawTextView" style="white-space:pre-wrap;background:var(--ft-sable);border-radius:6px;padding:10px 12px;margin-top:10px;max-height:300px;overflow:auto;font-size:11px;line-height:1.5"></pre>
+    </details>
 
     <div class="reset-row"><button class="btn-secondary" id="resetBtn">Évaluer une autre fiche</button></div>
   </div>
@@ -201,12 +205,13 @@ function parseFrenchDate(s) {
   return new Date(+m[3], mois, +m[1]);
 }
 function extractTags(sectionText) {
-  return sectionText.split(/\n|\u241F/).map(function (l) { return l.trim(); }).filter(function (l) { return l && wc(l) <= 10; });
+  return sectionText.split(/\n|\u241F/).map(function (l) { return l.trim(); })
+    .filter(function (l) { return l && wc(l) <= 10 && /[a-zà-öø-ÿ]/i.test(l); });
 }
 function cleanProse(s) { return (s || '').replace(/\u241F/g, ' '); }
 
 function parseFiche(rawText) {
-  var text = normApo(rawText);
+  var text = normApo(rawText).replace(/[\uE000-\uF8FF\uFFFD]/g, '');
   var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
   var titre = lines[0] || 'Fiche action';
   var STATUTS = ['En attente', 'En cours', 'Terminée', 'Abandonnée', 'À venir'];
@@ -350,7 +355,7 @@ var AXE_TEXTS = {
 
 function fmt1(v) { return (Math.round(v * 10) / 10).toLocaleString('fr-FR'); }
 
-function renderResults(f, s) {
+function renderResults(f, s, rawText) {
   document.getElementById('ficheTitle').textContent = f.titre;
   var metaBits = [];
   if (f.statut) metaBits.push('Statut : ' + f.statut);
@@ -396,6 +401,7 @@ function renderResults(f, s) {
     ['Porteurs', f.porteurs.join(', ') || '-'],
     ['Thématiques', f.thematiques.join(', ') || '-'],
     ['Publics ciblés', f.publics.join(', ') || '-'],
+    ['Solutions mobilisées', f.solutions.join(', ') || '-'],
     ['Acteurs associés', f.acteurs.join(', ') || '-'],
     ['Points d\u2019attention', f.pointAttention || '(non renseigné)'],
     ['Ressources / moyens', (f.ressources + ' ' + f.moyens).trim() || '(non renseigné)'],
@@ -409,6 +415,7 @@ function renderResults(f, s) {
     return '<tr><td>' + r[0] + '</td><td>' + String(r[1]).slice(0, 400) + '</td></tr>';
   }).join('');
 
+  document.getElementById('rawTextView').textContent = rawText || '(indisponible)';
   document.getElementById('results').style.display = 'block';
 }
 
@@ -436,7 +443,7 @@ function handleFile(file) {
       var text = await extractPdfText(e.target.result);
       var fiche = parseFiche(text);
       var scores = scoreFiche(fiche);
-      renderResults(fiche, scores);
+      renderResults(fiche, scores, text.replace(/\u241F/g, ' | '));
     } catch (err) {
       var box = document.getElementById('errorBox');
       box.textContent = "Impossible d'analyser ce PDF : " + err.message + ". Vérifiez qu'il s'agit bien d'un export de fiche action du tableau de bord RPE.";
