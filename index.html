@@ -619,16 +619,25 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
           </div>
           <div class="part-title" style="margin-top:14px">Axes de progrès identifiés</div>
-          <div class="guide" style="margin-top:0"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès, parmi 14 pistes concrètes. Le graphique montre la part des fiches du périmètre sélectionné concernées par chaque piste, triées de la plus fréquente à la moins fréquente.</div>
-          <div id="fichesAxesChart"></div>
+          <div class="guide" style="margin-top:0"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort - parmi 14 pistes concrètes de part et d'autre. Les graphiques montrent, pour chaque piste, la part des fiches du périmètre sélectionné qui l'ont comme point fort (à gauche) ou comme axe de progrès (à droite).</div>
+          <div class="fiches-pf-preco-grid">
+            <div>
+              <div class="pf-preco-col-title">✅ Points forts (graphique)</div>
+              <div id="fichesAxesChartForts"></div>
+            </div>
+            <div>
+              <div class="pf-preco-col-title">🎯 Axes de progrès (graphique)</div>
+              <div id="fichesAxesChart"></div>
+            </div>
+          </div>
           <div class="part-title" style="margin-top:18px">Pour ce périmètre précisément</div>
           <div class="fiches-pf-preco-grid">
             <div>
-              <div class="pf-preco-col-title">\u2705 Points forts</div>
+              <div class="pf-preco-col-title">✅ Points forts</div>
               <div id="fichesPointsFortsPerso"></div>
             </div>
             <div>
-              <div class="pf-preco-col-title">\uD83C\uDFAF Préconisations prioritaires</div>
+              <div class="pf-preco-col-title">🎯 Préconisations prioritaires</div>
               <div id="fichesPrecoPerso"></div>
             </div>
           </div>
@@ -2132,6 +2141,10 @@ function combineFichesYearRows(rowsForClpe) {
   Object.keys(rowsForClpe[0].axePct).forEach(function (k) {
     axePct[k] = totalFiches ? rowsForClpe.reduce(function (s, r) { return s + (r.axePct[k] / 100) * r.nbFiches; }, 0) / totalFiches * 100 : 0;
   });
+  var axePctFort = {};
+  Object.keys(rowsForClpe[0].axePctFort).forEach(function (k) {
+    axePctFort[k] = totalFiches ? rowsForClpe.reduce(function (s, r) { return s + (r.axePctFort[k] / 100) * r.nbFiches; }, 0) / totalFiches * 100 : 0;
+  });
   return {
     region: rowsForClpe[0].region, departement: rowsForClpe[0].departement, clpe: rowsForClpe[0].clpe, annee: '',
     nbFiches: totalFiches,
@@ -2139,7 +2152,7 @@ function combineFichesYearRows(rowsForClpe) {
     nbBeneficiaires: rowsForClpe.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0),
     nbFichesAvecBeneficiaires: rowsForClpe.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0),
     innovant: wavg('innovant'), impact: wavg('impact'), qualite: wavg('qualite'), bilan: wavg('bilan'),
-    axePct: axePct
+    axePct: axePct, axePctFort: axePctFort
   };
 }
 function fichesRows() {
@@ -2336,7 +2349,12 @@ var FICHES_AXE_FORT_TEXT = {
 };
 function renderFichesAxes(rows, nFiches) {
   var host = document.getElementById('fichesAxesChart');
-  if (!nFiches) { host.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>'; return; }
+  var hostForts = document.getElementById('fichesAxesChartForts');
+  if (!nFiches) {
+    host.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
+    hostForts.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
+    return;
+  }
   /* Chaque piste de progrès précise de quel critère elle relève (couleur), pour garder le
      lien avec les 4 notes affichées par ailleurs, tout en restant actionnable concrètement. */
   var defs = [
@@ -2362,7 +2380,17 @@ function renderFichesAxes(rows, nFiches) {
   host.innerHTML = withPct.map(function (d) {
     return '<div class="axe-row"><div class="lbl">' + esc(d.label) + '</div><div class="track"><div class="fill" style="width:' + d.pct + '%;background:' + d.color + '"></div></div><div class="val">' + fmt(d.pct, 0) + '\u00A0%</div></div>';
   }).join('');
-  renderFichesPointsFortsPreco(withPct, nFiches);
+  /* Points forts : fréquence RÉELLE à laquelle chaque axe est le meilleur critère d'une
+     fiche (et non l'inverse du taux de faiblesse) - calculée une fois pour toutes depuis le
+     fichier source et fournie par axePctFort, sur le même principe que axePct. */
+  var withPctFort = defs.map(function (d) {
+    var nConcerned = rows.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
+    return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: nFiches ? nConcerned / nFiches * 100 : 0 };
+  }).sort(function (a, b) { return b.pct - a.pct; });
+  hostForts.innerHTML = withPctFort.map(function (d) {
+    return '<div class="axe-row"><div class="lbl">' + esc(d.label) + '</div><div class="track"><div class="fill" style="width:' + d.pct + '%;background:' + cssVar('--ft-vert') + '"></div></div><div class="val">' + fmt(d.pct, 0) + '\u00A0%</div></div>';
+  }).join('');
+  renderFichesPointsFortsPreco(withPct, withPctFort, nFiches);
 }
 /* Points forts et préconisations PERSONNALISÉS au périmètre sélectionné (CLPE, département,
    région ou national selon les filtres actifs) : à la différence du référentiel complet
@@ -2377,7 +2405,7 @@ var FICHES_AXE_FORT_LABEL = {
   diversite_acteurs: 'Diversité des acteurs', efficacite: 'Efficacité auto-évaluée',
   vigilance: 'Anticipation des risques', moyens: 'Moyens précisés'
 };
-function renderFichesPointsFortsPreco(withPct, nFiches) {
+function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
   var hostPF = document.getElementById('fichesPointsFortsPerso');
   var hostPreco = document.getElementById('fichesPrecoPerso');
   if (!nFiches) {
@@ -2385,13 +2413,13 @@ function renderFichesPointsFortsPreco(withPct, nFiches) {
     hostPreco.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
     return;
   }
-  /* Les axes les moins fréquemment en difficulté (bas du classement) sont les points forts ;
-     les plus fréquemment en difficulté (haut du classement) sont les préconisations. */
-  var sortedAsc = withPct.slice().sort(function (a, b) { return a.pct - b.pct; });
-  var pointsForts = sortedAsc.slice(0, 3);
+  /* Points forts : fréquence RÉELLE à laquelle chaque axe est le meilleur critère d'une
+     fiche sur ce périmètre (withPctFort, déjà triée par ordre décroissant). Préconisations :
+     axes les plus fréquemment en difficulté (withPct, déjà triée décroissante aussi). */
+  var pointsForts = withPctFort.slice(0, 3);
   var preco = withPct.slice(0, 3);
   hostPF.innerHTML = pointsForts.map(function (d) {
-    return '<div class="preco-item point-fort-item"><b>' + esc(FICHES_AXE_FORT_LABEL[d.key]) + '</b><span class="axe-score">(seulement ' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)</span><p>' + esc(FICHES_AXE_FORT_TEXT[d.key]) + '</p></div>';
+    return '<div class="preco-item point-fort-item"><b>' + esc(d.label) + '</b><span class="axe-score">(point fort de ' + fmt(d.pct, 0) + '\u00A0% des fiches)</span><p>' + esc(FICHES_AXE_FORT_TEXT[d.key]) + '</p></div>';
   }).join('');
   hostPreco.innerHTML = preco.map(function (d) {
     return '<div class="preco-item"><b>' + esc(d.label) + '</b><span class="axe-score">(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)</span><p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p></div>';
@@ -3392,6 +3420,14 @@ function init() {
             maj: +r.axe_pct_maj, bilan: +r.axe_pct_bilan, valorisation: +r.axe_pct_valorisation,
             diversite_acteurs: +r.axe_pct_diversite_acteurs, efficacite: +r.axe_pct_efficacite,
             vigilance: +r.axe_pct_vigilance, moyens: +r.axe_pct_moyens
+          },
+          axePctFort: {
+            description: +r.axe_pct_fort_description, problematique: +r.axe_pct_fort_problematique,
+            etapes: +r.axe_pct_fort_etapes, ciblage: +r.axe_pct_fort_ciblage, suivi: +r.axe_pct_fort_suivi,
+            resultats: +r.axe_pct_fort_resultats, impact_usager: +r.axe_pct_fort_impact_usager,
+            maj: +r.axe_pct_fort_maj, bilan: +r.axe_pct_fort_bilan, valorisation: +r.axe_pct_fort_valorisation,
+            diversite_acteurs: +r.axe_pct_fort_diversite_acteurs, efficacite: +r.axe_pct_fort_efficacite,
+            vigilance: +r.axe_pct_fort_vigilance, moyens: +r.axe_pct_fort_moyens
           },
           months: months
         };
