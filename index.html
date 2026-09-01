@@ -41,7 +41,12 @@ header.site{background:var(--ft-white);border-bottom:1px solid var(--ft-border);
 .site-inner{max-width:80vw;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .hero-band{background:linear-gradient(135deg,var(--ft-navy),var(--ft-indigo));color:#fff}
 .hero-band-inner{max-width:80vw;margin:0 auto;padding:22px 24px}
+.hero-band-flex{display:flex;justify-content:space-between;align-items:flex-start;gap:28px;flex-wrap:wrap}
+.hero-band-text{flex:1;min-width:280px}
 .hero-accroche{margin:0;font-size:14.5px;line-height:1.6;color:#fff;max-width:980px}
+.hero-cta{flex:none;display:inline-block;background:var(--ft-jaune);color:var(--ft-navy);font-weight:700;text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14.5px;border:none;cursor:pointer;font-family:var(--ft-font);white-space:nowrap;margin-top:2px}
+.hero-cta:hover{background:var(--ft-jaune-dark)}
+@media(max-width:640px){.hero-band-flex{flex-direction:column}.hero-cta{align-self:flex-start}}
 .hero-toggle-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:#B9C0E8;font-weight:600;font-size:12.5px;padding:10px 0 0;cursor:pointer;font-family:inherit}
 .hero-toggle-btn:hover{color:#fff;text-decoration:underline}
 .hero-toggle-btn[aria-expanded="true"] .hero-chev{transform:rotate(180deg)}
@@ -72,8 +77,6 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .fgroup select,.fgroup input[type="text"]{font-family:var(--ft-font);font-size:13px;padding:7px 10px;border:1px solid var(--ft-gray-400);border-radius:4px;background:#fff;color:var(--ft-fg-1);min-width:170px}
 .fgroup select:focus{outline:2px solid var(--ft-bleu);outline-offset:2px}
 .btn-reset{font-family:var(--ft-font);font-size:13px;font-weight:500;padding:8px 16px;border:1px solid var(--ft-indigo);border-radius:4px;background:#fff;color:var(--ft-indigo);cursor:pointer}
-.cockpit-desc{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--ft-fg-2);line-height:1.6}
-.cockpit-desc p{margin:6px 0}
 .ctx-filter{display:none}
 .ctx-filter.ctx-active{display:flex}
 .cockpit-map{height:640px;border:1px solid var(--ft-border);border-radius:8px;background:var(--ft-sable)}
@@ -151,9 +154,9 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ecart-neg{color:var(--ft-rouge)}
 .btn-preco:hover{background:var(--ft-jaune-dark);color:#fff}
 .btn-pdf-top{margin-left:auto;font-weight:700;background:var(--ft-indigo);color:#fff;border-color:var(--ft-indigo)}
-.btn-pdf-float{position:fixed;right:24px;bottom:24px;z-index:1200;font-weight:700;background:var(--ft-indigo);color:#fff;border-color:var(--ft-indigo);border-radius:999px;padding:13px 22px;box-shadow:var(--sh-md);font-size:13.5px}
-.btn-pdf-float:hover{background:var(--ft-indigo-dark);box-shadow:0 6px 16px rgba(0,0,0,.18)}
-@media(max-width:640px){.btn-pdf-float{right:14px;bottom:14px;padding:12px 16px;font-size:12px}}
+.btn-pdf-sidebar{width:100%;margin-top:4px;border-top:1px solid var(--ft-border);font-weight:700;background:var(--ft-indigo);color:#fff;border-radius:8px;padding:11px 14px;font-size:12.5px;text-align:center}
+.btn-pdf-sidebar:hover{background:var(--ft-indigo-dark)}
+@media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}}
 .btn-pdf-top:hover{background:var(--ft-indigo-dark)}
 .btn-reset:hover{background:var(--ft-indigo-light)}
 .f-summary{font-size:12px;color:var(--ft-fg-3);margin-left:auto}
@@ -464,21 +467,35 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
 <div class="hero-band">
   <div class="hero-band-inner">
-    <p class="hero-accroche">Ce cockpit propose une lecture des données à la maille des Comités Locaux pour l'Emploi (CLPE) afin de mesurer l'avancée de l'installation du Réseau pour l'emploi. Il vise à formuler des recommandations et préconisations, tout en intégrant les limites d'une analyse quantitative qui ne peut refléter l'ensemble des spécificités locales.</p>
-    <button class="hero-toggle-btn" id="heroToggleBtn" aria-expanded="false"><span class="hero-chev">▾</span> En savoir plus</button>
-    <div class="hero-detail" id="heroDetail" style="display:none">
-      <h4>Rappel de périmètre</h4>
-      <ul>
-        <li>Il ne s'agit pas d'un outil de pilotage opérationnel, mais d'un outil d'observation permettant de mesurer la dynamique d'installation du Réseau pour l'emploi.</li>
-        <li>Sa mise à jour est moins régulière que celle du Tableau de bord RPE, qui reste l'outil de pilotage stratégique de référence pour l'ensemble des acteurs du RPE.</li>
-      </ul>
-      <h4>Présentation des 4 onglets du cockpit</h4>
-      <ul>
-        <li><b>Baromètre</b> : analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE.</li>
-        <li><b>Fréquentation</b> : objective la fréquence d'utilisation du tableau de bord RPE.</li>
-        <li><b>Pilotage des actions</b> : reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés.</li>
-        <li><b>Performance relative</b> : relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche.</li>
-      </ul>
+    <div class="hero-band-flex">
+      <div class="hero-band-text">
+        <p class="hero-accroche">Ce cockpit propose une lecture des données à la maille des Comités Locaux pour l'Emploi (CLPE) afin de mesurer l'avancée de l'installation du Réseau pour l'emploi. Il vise à formuler des recommandations et préconisations, tout en intégrant les limites d'une analyse quantitative qui ne peut refléter l'ensemble des spécificités locales.</p>
+        <button class="hero-toggle-btn" id="heroToggleBtn" aria-expanded="false"><span class="hero-chev">▾</span> En savoir plus</button>
+        <div class="hero-detail" id="heroDetail" style="display:none">
+          <h4>Rappel de périmètre</h4>
+          <ul>
+            <li>Il ne s'agit pas d'un outil de pilotage opérationnel, mais d'un outil d'observation permettant de mesurer la dynamique d'installation du Réseau pour l'emploi.</li>
+            <li>Sa mise à jour est moins régulière que celle du Tableau de bord RPE, qui reste l'outil de pilotage stratégique de référence pour l'ensemble des acteurs du RPE.</li>
+          </ul>
+          <h4>Présentation des 4 onglets du cockpit</h4>
+          <ul>
+            <li><b>Baromètre</b> : analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE.</li>
+            <li><b>Fréquentation</b> : objective la fréquence d'utilisation du tableau de bord RPE.</li>
+            <li><b>Pilotage des actions</b> : reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés.</li>
+            <li><b>Performance relative</b> : relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche.</li>
+          </ul>
+        </div>
+      </div>
+      <button class="hero-cta" id="commentNaviguerBtn">Comment naviguer ?</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="commentNaviguerOverlay">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Comment naviguer</h3><button class="modal-close" id="commentNaviguerClose" aria-label="Fermer">✕</button></div>
+    <div class="modal-body">
+      <p>Choisissez un territoire via les filtres à droite de la carte, ou en cliquant directement sur la carte (une seule carte, commune à tout le cockpit). Cliquez sur l'un des 4 onglets dans la marge de gauche pour changer de brique : la carte et le détail en dessous se mettent à jour.</p>
     </div>
   </div>
 </div>
@@ -488,10 +505,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
   <div id="loadError"></div>
 
   <div id="app" style="display:none">
-
-    <div class="cockpit-desc">
-      <p><b>Comment naviguer :</b> choisissez un territoire via les filtres à droite de la carte, ou en cliquant directement sur la carte (une seule carte, commune à tout le cockpit). Cliquez sur l'un des 4 onglets ci-dessous pour changer de brique : la carte et le détail en dessous se mettent à jour.</p>
-    </div>
 
     <div class="cockpit-context-bar" id="cockpitTabsRow">
       <div class="cockpit-territory-bar" id="cockpitTerritoryBar">Territoire sélectionné : <b id="territoryLabel">France entière</b></div>
@@ -523,6 +536,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="ct-val" id="ctValPerf">-</div>
           <div class="ct-sub" id="ctSubPerf"></div>
         </button>
+        <button class="btn-reset btn-pdf-sidebar" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
       </div>
       <div class="cockpit-main-col">
 
@@ -810,8 +824,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 <div class="hover-popup" id="tagsPopup"></div>
 
 <div id="printReport"></div>
-
-<button class="btn-reset btn-pdf-float" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
 
 <div class="modal-overlay" id="fichesPrecoOverlay">
   <div class="modal-box preco-box">
@@ -3404,6 +3416,13 @@ function bindEvents() {
     heroToggleBtn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     heroToggleBtn.innerHTML = '<span class="hero-chev">\u25BE</span> ' + (expanded ? 'En savoir plus' : 'Masquer');
   });
+  document.getElementById('commentNaviguerBtn').addEventListener('click', function () {
+    document.getElementById('commentNaviguerOverlay').classList.add('show');
+  });
+  document.getElementById('commentNaviguerClose').addEventListener('click', function () {
+    document.getElementById('commentNaviguerOverlay').classList.remove('show');
+  });
+  document.getElementById('commentNaviguerOverlay').addEventListener('click', function (e) { if (e.target.id === 'commentNaviguerOverlay') document.getElementById('commentNaviguerOverlay').classList.remove('show'); });
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
   document.getElementById('methodoBtn').addEventListener('click', function () {
     document.getElementById('methodoOverlay').classList.add('show');
@@ -3416,7 +3435,7 @@ function bindEvents() {
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('commentNaviguerOverlay').classList.remove('show'); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
