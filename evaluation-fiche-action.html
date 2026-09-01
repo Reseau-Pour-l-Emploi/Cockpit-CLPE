@@ -67,12 +67,17 @@ input[type=file]{display:none}
 .global-box .val{font-size:32px;font-weight:700;color:var(--ft-navy)}
 .global-box .txt{font-size:13px;color:var(--ft-fg-1);line-height:1.5}
 .axes-title{font-size:15px;font-weight:700;color:var(--ft-navy);margin:22px 0 12px}
+.pf-preco-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.pf-preco-col-title{font-size:13px;font-weight:700;color:var(--ft-navy);margin-bottom:8px}
+@media(max-width:820px){.pf-preco-grid{grid-template-columns:1fr}}
 .preco-sep{border:none;border-top:2px solid var(--ft-sable-dark);margin:22px 0}
 .axe-card{background:#fff;border:1.5px solid var(--ft-jaune-dark);border-radius:8px;padding:12px 16px;margin-bottom:10px}
 .axe-card .axe-h{font-weight:700;font-size:13px;color:var(--ft-navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .axe-card .axe-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .axe-card p{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:var(--ft-fg-2)}
 .axe-card .axe-score{font-size:11px;color:var(--ft-fg-3);font-weight:400}
+.preco-item .axe-score{display:block;font-size:11px;font-weight:400;color:var(--ft-fg-3);margin-top:2px}
+.preco-item p{margin:4px 0 0;font-size:12px;line-height:1.45;color:var(--ft-fg-2)}
 .point-fort-card{background:#fff;border:1.5px solid var(--ft-vert);border-radius:8px;padding:12px 16px;margin-bottom:10px}
 .point-fort-card .point-fort-h{font-weight:700;font-size:13px;color:var(--ft-navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .point-fort-card p{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:var(--ft-fg-2)}
@@ -151,13 +156,16 @@ input[type=file]{display:none}
       <b>Guide de lecture :</b> <b>Qualité de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées. Les <b>points forts</b> et <b>pistes d'amélioration</b> ci-dessous détaillent, critère par critère, ce qui est déjà bien renseigné et ce qui gagnerait à l'être davantage.
     </div>
 
-    <div class="axes-title">\u2705 Points forts</div>
-    <div id="pointsFortsList"></div>
-
-    <hr class="preco-sep">
-
-    <div class="axes-title">\uD83C\uDFAF Pistes d'amélioration prioritaires</div>
-    <div id="axesList"></div>
+    <div class="pf-preco-grid">
+      <div>
+        <div class="axes-title">\u2705 Points forts</div>
+        <div id="pointsFortsList"></div>
+      </div>
+      <div>
+        <div class="axes-title">\uD83C\uDFAF Pistes d'amélioration prioritaires</div>
+        <div id="axesList"></div>
+      </div>
+    </div>
 
     <details class="extract-details">
       <summary>Voir le détail des champs détectés dans le PDF</summary>
@@ -201,6 +209,19 @@ input[type=file]{display:none}
       <div class="guide">
         <b>Guide de lecture :</b> <b>Qualité de la description</b> - complétude, longueur et clarté du contenu. <b>Impact usager</b> - objectifs chiffrés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - noté seulement une fois rempli, et seulement après l'échéance de l'action (sinon "Pas encore d'échéance"). <b>Caractère innovant</b> - originalité du vocabulaire par rapport aux autres fiches du lot. Chaque ligne indique aussi jusqu'à 2 <b>points forts</b> et l'<b>axe de progrès</b> le plus prioritaire de la fiche.
       </div>
+
+      <div class="axes-title" style="margin-top:22px">Pour l'ensemble du lot déposé</div>
+      <div class="pf-preco-grid">
+        <div>
+          <div class="pf-preco-col-title">\u2705 Points forts du lot</div>
+          <div id="bulkPointsForts"></div>
+        </div>
+        <div>
+          <div class="pf-preco-col-title">\uD83C\uDFAF Préconisations prioritaires du lot</div>
+          <div id="bulkPreco"></div>
+        </div>
+      </div>
+
       <div class="reset-row" style="margin-top:14px">
         <button class="btn" id="downloadBulkBtn">Télécharger le fichier évalué</button>
       </div>
@@ -1045,7 +1066,20 @@ async function processBulkFile(file) {
   var outWs = XLSX.utils.json_to_sheet(outRows);
   var outWb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(outWb, outWs, 'Fiches action évaluées');
-  return { workbook: outWb, n: outRows.length };
+
+  /* Synthèse du lot : part des fiches où chaque axe est identifié comme axe de progrès
+     (le moins bien classé), pour proposer une vue "points forts / préconisations" au niveau
+     du lot déposé, sur le même principe que la vue par territoire du tableau de bord. */
+  var axeConcernedCount = {};
+  AXE_KEYS.forEach(function (k) { axeConcernedCount[k] = 0; });
+  allScores.forEach(function (s, idx) {
+    var best2 = null, bestPct2 = Infinity;
+    AXE_KEYS.forEach(function (k) { if (s.subs[k] == null) return; var p = percentiles[k][idx]; if (p < bestPct2) { bestPct2 = p; best2 = k; } });
+    if (best2) axeConcernedCount[best2]++;
+  });
+  var batchSummary = AXE_KEYS.map(function (k) { return { key: k, label: AXE_LABELS_FR[k], pct: allScores.length ? axeConcernedCount[k] / allScores.length * 100 : 0 }; });
+
+  return { workbook: outWb, n: outRows.length, batchSummary: batchSummary };
 }
 
 var dropzoneBulk = document.getElementById('dropzoneBulk'), fileInputBulk = document.getElementById('fileInputBulk');
@@ -1056,6 +1090,18 @@ dropzoneBulk.addEventListener('dragleave', function () { dropzoneBulk.classList.
 dropzoneBulk.addEventListener('drop', function (e) { e.preventDefault(); dropzoneBulk.classList.remove('drag'); if (e.dataTransfer.files.length) handleBulkFile(e.dataTransfer.files[0]); });
 fileInputBulk.addEventListener('change', function (e) { if (e.target.files.length) handleBulkFile(e.target.files[0]); });
 
+function renderBulkBatchSummary(batchSummary) {
+  var sortedDesc = batchSummary.slice().sort(function (a, b) { return b.pct - a.pct; });
+  var sortedAsc = batchSummary.slice().sort(function (a, b) { return a.pct - b.pct; });
+  var preco = sortedDesc.slice(0, 3);
+  var pointsForts = sortedAsc.slice(0, 3);
+  document.getElementById('bulkPointsForts').innerHTML = pointsForts.map(function (d) {
+    return '<div class="preco-item point-fort-item"><b>' + (POINT_FORT_LABELS[d.key] || AXE_LABELS_FR[d.key]) + '</b><span class="axe-score">(seulement ' + Math.round(d.pct) + '\u00A0% des fiches concernées)</span><p>' + (POINT_FORT_TEXTS[d.key] || '') + '</p></div>';
+  }).join('');
+  document.getElementById('bulkPreco').innerHTML = preco.map(function (d) {
+    return '<div class="preco-item"><b>' + d.label + '</b><span class="axe-score">(' + Math.round(d.pct) + '\u00A0% des fiches concernées)</span><p>' + (AXE_TEXTS[d.key] || '') + '</p></div>';
+  }).join('');
+}
 async function handleBulkFile(file) {
   document.getElementById('errorBoxBulk').style.display = 'none';
   document.getElementById('resultsBulk').style.display = 'none';
@@ -1068,6 +1114,7 @@ async function handleBulkFile(file) {
     document.getElementById('bulkCount').textContent = result.n;
     document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 8 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global (calculé sur les seuls critères évalués), les critères exclus le cas échéant, les points forts et l'axe de progrès prioritaire de chaque fiche.";
     document.getElementById('bulkFileName').textContent = lastBulkFileName;
+    renderBulkBatchSummary(result.batchSummary);
     document.getElementById('resultsBulk').style.display = 'block';
   } catch (err) {
     var box = document.getElementById('errorBoxBulk');
