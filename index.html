@@ -39,7 +39,7 @@ a{color:var(--ft-indigo)}
 
 header.site{background:var(--ft-white);border-bottom:1px solid var(--ft-border);position:sticky;top:0;z-index:1100}
 .site-inner{max-width:80vw;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.hero-band{background:#0A192F;color:#fff}
+.hero-band{background:linear-gradient(135deg,var(--ft-navy),var(--ft-indigo));color:#fff}
 .hero-band-inner{max-width:80vw;margin:0 auto;padding:22px 24px}
 .hero-accroche{margin:0;font-size:14.5px;line-height:1.6;color:#fff;max-width:980px}
 .hero-toggle-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:#B9C0E8;font-weight:600;font-size:12.5px;padding:10px 0 0;cursor:pointer;font-family:inherit}
@@ -88,17 +88,34 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .cockpit-meta-bar{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ft-fg-3);padding:0 2px}
 .cockpit-meta-bar b{color:var(--ft-fg-2);font-weight:600}
 .cockpit-tabs-row.condensed .cockpit-meta-bar{display:none}
-.cockpit-tabs-inner{display:flex;align-items:stretch;gap:12px}
-.cockpit-tabs-row .btn-pdf-top{flex:none;align-self:center;margin-left:0}
-.cockpit-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:1}
-.cockpit-tabs-row.condensed .cockpit-tab{padding:6px 10px}
+.cockpit-tabs-inner{display:flex;align-items:stretch;width:100%}
+.cockpit-tabs-2row{display:flex;flex-direction:column;gap:10px;width:100%}
+.cockpit-tabs-secondary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cockpit-tabs-row.condensed .cockpit-tabs-secondary{gap:6px}
+.cockpit-tabs-row.condensed .cockpit-tab{padding:8px 12px}
+.cockpit-tabs-row.condensed .cockpit-tab-main{padding:10px 16px}
 .cockpit-tabs-row.condensed .ct-sub{display:none}
 .cockpit-tabs-row.condensed .ct-val{font-size:15px;margin-top:1px}
+.cockpit-tabs-row.condensed .cockpit-tab-main .ct-val{font-size:19px}
 .cockpit-tabs-row.condensed .ct-label{font-size:11px}
-.cockpit-tabs-row.condensed .btn-pdf-top{padding:8px 14px;font-size:12px}
+/* Chaque onglet porte sa propre couleur (border du haut), pour les distinguer d'un coup
+   d'œil ; l'onglet actif se distingue par le fond blanc et une ombre plus marquée, sans
+   changer sa couleur de repère. */
 .cockpit-tab{background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-top:4px solid var(--ft-indigo);border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease}
 .cockpit-tab:hover{box-shadow:var(--sh-md)}
-.cockpit-tab.active{border-top-color:var(--ft-jaune-dark);background:var(--ft-white);box-shadow:var(--sh-sm)}
+.cockpit-tab.active{background:var(--ft-white);box-shadow:var(--sh-md)}
+.cockpit-tab[data-color="indigo"]{border-top-color:var(--ft-indigo)}
+.cockpit-tab[data-color="bleu"]{border-top-color:var(--ft-bleu)}
+.cockpit-tab[data-color="violet"]{border-top-color:var(--ft-violet)}
+.cockpit-tab[data-color="orange"]{border-top-color:var(--ft-orange)}
+/* L'onglet Maturité, instrument central de la démarche, occupe seul sa ligne en plus
+   grand ; les 3 autres onglets se partagent la ligne suivante, en plus petit. */
+.cockpit-tab-main{width:100%;border-top-width:6px;padding:16px 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.cockpit-tab-main .ct-label{font-size:15px;font-weight:700;color:var(--ft-navy)}
+.cockpit-tab-main .ct-val{font-size:28px;margin-top:0}
+.cockpit-tab-main .ct-sub{margin-top:0}
+.cockpit-tab-sub{padding:10px 12px}
+.cockpit-tab-sub .ct-label{font-size:11.5px}
 .tab-content{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:18px;margin-top:16px}
 .tab-panel .guide{margin-top:0}
 .ct-label{font-size:12.5px;font-weight:600;color:var(--ft-fg-2)}
@@ -141,6 +158,9 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ecart-neg{color:var(--ft-rouge)}
 .btn-preco:hover{background:var(--ft-jaune-dark);color:#fff}
 .btn-pdf-top{margin-left:auto;font-weight:700;background:var(--ft-indigo);color:#fff;border-color:var(--ft-indigo)}
+.btn-pdf-float{position:fixed;right:24px;bottom:24px;z-index:1200;font-weight:700;background:var(--ft-indigo);color:#fff;border-color:var(--ft-indigo);border-radius:999px;padding:13px 22px;box-shadow:var(--sh-md);font-size:13.5px}
+.btn-pdf-float:hover{background:var(--ft-indigo-dark);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+@media(max-width:640px){.btn-pdf-float{right:14px;bottom:14px;padding:12px 16px;font-size:12px}}
 .btn-pdf-top:hover{background:var(--ft-indigo-dark)}
 .btn-reset:hover{background:var(--ft-indigo-light)}
 .f-summary{font-size:12px;color:var(--ft-fg-3);margin-left:auto}
@@ -483,29 +503,30 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <span id="lastPeriodWrap">Dernière période disponible (<span id="lastPeriodBrick"></span>) : <b id="lastPeriodLabel"></b></span>
       </div>
       <div class="cockpit-tabs-inner">
-      <div class="cockpit-tabs" id="cockpitTabs">
-        <button class="cockpit-tab active" data-brick="maturite">
-          <div class="ct-label">Niveau de maturité</div>
+      <div class="cockpit-tabs-2row" id="cockpitTabs">
+        <button class="cockpit-tab cockpit-tab-main active" data-brick="maturite" data-color="indigo">
+          <div class="ct-label" title="Le Baromètre analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE.">Niveau de maturité</div>
           <div class="ct-val" id="ctValMaturite">-</div>
           <div class="ct-sub" id="ctSubMaturite"></div>
         </button>
-        <button class="cockpit-tab" data-brick="freq">
-          <div class="ct-label">Fréquentation TDB RPE</div>
-          <div class="ct-val" id="ctValFreq">-</div>
-          <div class="ct-sub" id="ctSubFreq"></div>
-        </button>
-        <button class="cockpit-tab" data-brick="fiches">
-          <div class="ct-label">Pilotage des actions</div>
-          <div class="ct-val" id="ctValFiches">-</div>
-          <div class="ct-sub" id="ctSubFiches"></div>
-        </button>
-        <button class="cockpit-tab" data-brick="perf">
-          <div class="ct-label">Performance relative</div>
-          <div class="ct-val" id="ctValPerf">-</div>
-          <div class="ct-sub" id="ctSubPerf"></div>
-        </button>
+        <div class="cockpit-tabs-secondary">
+          <button class="cockpit-tab cockpit-tab-sub" data-brick="freq" data-color="bleu">
+            <div class="ct-label" title="La Fréquentation objective la fréquence d'utilisation du tableau de bord RPE.">Fréquentation TDB RPE</div>
+            <div class="ct-val" id="ctValFreq">-</div>
+            <div class="ct-sub" id="ctSubFreq"></div>
+          </button>
+          <button class="cockpit-tab cockpit-tab-sub" data-brick="fiches" data-color="violet">
+            <div class="ct-label" title="Le Pilotage des actions reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés.">Pilotage des actions</div>
+            <div class="ct-val" id="ctValFiches">-</div>
+            <div class="ct-sub" id="ctSubFiches"></div>
+          </button>
+          <button class="cockpit-tab cockpit-tab-sub" data-brick="perf" data-color="orange">
+            <div class="ct-label" title="La Performance relative relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche.">Performance relative</div>
+            <div class="ct-val" id="ctValPerf">-</div>
+            <div class="ct-sub" id="ctSubPerf"></div>
+          </button>
+        </div>
       </div>
-      <button class="btn-reset btn-pdf-top" id="reportPdfBtn">Télécharger le rapport (PDF)</button>
       </div>
     </div>
 
@@ -621,6 +642,21 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
         </div>
         <div class="tab-panel" data-brick="freq" id="panelFreq" style="display:none">
+          <details class="section intro-section">
+            <summary><span class="chev"></span><h2>📶 Fréquentation du Tableau de bord RPE</h2><span class="hint">Source et enjeux</span></summary>
+            <div class="section-body intro-body">
+              <p>Ces données proviennent des connexions au tableau de bord du Réseau pour l'emploi, l'outil de pilotage stratégique de référence pour l'ensemble des acteurs du RPE. Elles ne mesurent pas le contenu consulté, seulement le fait de s'y connecter.</p>
+              <p class="intro-goal">🎯 <b>L'objectif principal :</b> objectiver le niveau d'appropriation du tableau de bord RPE par les membres des CLPE, condition nécessaire à un pilotage partagé et outillé du réseau.</p>
+              <h3>📈 Ce que révèle la fréquentation</h3>
+              <p>Ce suivi permet de :</p>
+              <ul>
+                <li>📏 Mesurer si le tableau de bord RPE est effectivement consulté par les acteurs du territoire.</li>
+                <li>📅 Repérer les périodes de forte ou de faible activité (rythme des instances locales, temps forts du réseau).</li>
+                <li>🕒 Suivre l'évolution de cette appropriation dans le temps, territoire par territoire.</li>
+              </ul>
+              <p>Une fréquentation faible n'est pas nécessairement le signe d'un désintérêt : elle peut aussi refléter un accès mutualisé (une seule connexion pour plusieurs personnes) ou un pilotage organisé autrement. Elle reste néanmoins un indicateur utile à croiser avec les autres briques du cockpit.</p>
+            </div>
+          </details>
           <div class="guide"><b>Guide de lecture :</b> nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
           <h3 id="freqScopeTitle"></h3>
           <div class="part-title">Consultations par mois</div>
@@ -631,6 +667,21 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
+          <details class="section intro-section">
+            <summary><span class="chev"></span><h2>🎯 Pilotage des actions du Réseau pour l'emploi</h2><span class="hint">Source et enjeux</span></summary>
+            <div class="section-body intro-body">
+              <p>Ces données proviennent des fiches action saisies par les CLPE pour documenter les initiatives conduites sur leur territoire. Leur qualité de rédaction en dit long sur la structuration et la capacité de pilotage du réseau local.</p>
+              <p class="intro-goal">🎯 <b>L'objectif principal :</b> objectiver le dynamisme des territoires, la prise en compte de l'impact usager dans les actions engagées, et la capacité du réseau à capitaliser sur ses réalisations.</p>
+              <h3>📈 Ce que mesurent les fiches action</h3>
+              <p>Cette analyse a été conçue pour :</p>
+              <ul>
+                <li>📏 Mesurer la qualité de rédaction et de suivi des fiches action saisies par les CLPE.</li>
+                <li>💡 Distinguer les actions qui ont un effet direct et mesurable sur l'usager final de celles à portée plus institutionnelle.</li>
+                <li>🕒 Identifier les territoires qui capitalisent sur leurs actions (bilans renseignés, enseignements partagés) pour éclairer les autres.</li>
+              </ul>
+              <p>Un outil dédié permet d'ailleurs d'évaluer et d'améliorer la saisie d'une fiche action, isolée ou en lot : voir le lien "Évaluez une fiche action en pdf" ci-dessous.</p>
+            </div>
+          </details>
           <div class="guide"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et qualité moyenne sur 4 critères notés sur 4 (données réelles).</div>
           <div class="fiches-links-row">
             <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
@@ -678,6 +729,21 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
+          <details class="section intro-section">
+            <summary><span class="chev"></span><h2>📊 Performance relative des CLPE</h2><span class="hint">Source et enjeux</span></summary>
+            <div class="section-body intro-body">
+              <p>Ces données proviennent des indicateurs officiels de taux d'accès à l'emploi (TAE) et de taux de présence en emploi (TPE), rapportés à un groupe de territoires socio-économiquement comparables plutôt qu'à une moyenne nationale uniforme.</p>
+              <p class="intro-goal">🎯 <b>L'objectif principal :</b> relativiser la performance d'un CLPE en la comparant à des territoires confrontés à des réalités socio-économiques proches, plutôt qu'à des voisins géographiques aux contextes parfois très différents.</p>
+              <h3>📈 Ce que permet cette comparaison</h3>
+              <p>Cette lecture a été conçue pour :</p>
+              <ul>
+                <li>📏 Situer un territoire par rapport à des pairs pertinents, et non par rapport à une moyenne qui gommerait les disparités de contexte.</li>
+                <li>💡 Distinguer ce qui relève d'un contexte socio-économique difficile de ce qui relève de marges de progrès propres au pilotage local.</li>
+                <li>🕒 Suivre l'évolution du TAE et du TPE sur un an, pour objectiver une dynamique plutôt qu'une photographie isolée.</li>
+              </ul>
+              <p>Cette comparaison n'a pas vocation à classer les territoires entre eux, mais à donner un point de repère réaliste pour interpréter des résultats qui, seuls, seraient difficiles à situer.</p>
+            </div>
+          </details>
           <div class="guide"><b>Guide de lecture :</b> pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
           <h3 id="perfScopeTitle"></h3>
           <div class="hero-row" id="perfHero"></div>
@@ -735,6 +801,8 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 <div class="hover-popup" id="tagsPopup"></div>
 
 <div id="printReport"></div>
+
+<button class="btn-reset btn-pdf-float" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
 
 <div class="modal-overlay" id="fichesPrecoOverlay">
   <div class="modal-box preco-box">
