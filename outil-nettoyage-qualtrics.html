@@ -133,6 +133,11 @@ function parseSimpleCSV(text) {
   });
 }
 
+/* Uniformise le style d'apostrophe (typographique ' vs droite ') dans les valeurs stockées,
+   pas seulement pour la correspondance : sans cela, un même CLPE ("Centre Val-d'Oise" vs
+   "Centre Val-d'Oise") peut ressortir sous deux libellés différents après nettoyage, et se
+   scinder en deux lignes distinctes dans les regroupements en aval. */
+function normApostrophes(s) { return (s == null ? '' : String(s)).replace(/[\u2018\u2019\u02BC\u00B4`]/g, "'"); }
 /* Normalise une clé de territoire (apostrophes, tirets, espaces, accents) pour ne pas
    manquer une correspondance à cause d'une variante typographique (ex. "Val-d'Oise" vs
    "Val-dOise"). */
@@ -244,6 +249,9 @@ function process(arrayBuffer, fileName) {
       if (col['CLPE'] !== undefined) row[col['CLPE']] = fix.clpe;
       nCorrected++;
     }
+    if (col['Région'] !== undefined) row[col['Région']] = normApostrophes(row[col['Région']]);
+    if (col['Département'] !== undefined) row[col['Département']] = normApostrophes(row[col['Département']]);
+    if (col['CLPE'] !== undefined) row[col['CLPE']] = normApostrophes(row[col['CLPE']]);
 
     // 2. Filtre : réponse à toutes les 10 premières questions
     var answeredAllFond = fondQNums.length > 0 && fondQNums.every(function (n) { return hasVal(row[qCols[n]]); });
