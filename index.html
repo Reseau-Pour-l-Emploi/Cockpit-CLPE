@@ -361,10 +361,15 @@ table.clpe th{background:var(--ft-sable);text-align:left;padding:9px 10px;font-s
 table.clpe th.sort-active{color:var(--ft-indigo)}
 table.clpe td{padding:9px 10px;border-bottom:1px solid var(--ft-sable);vertical-align:middle;text-align:left}
 table.clpe th:nth-child(n+4),table.clpe td:nth-child(n+4){text-align:right}
+table.clpe.clpe-level-region .col-region,table.clpe.clpe-level-region .col-dept{display:none}
+table.clpe.clpe-level-departement .col-dept{display:none}
 table.clpe tbody tr.main{cursor:pointer}
 table.clpe tbody tr.main.drillable:hover{background:var(--ft-indigo-light)}
 .drill-chev{display:inline-block;margin-left:6px;color:var(--ft-indigo);font-weight:700}
 .clpe-drill-breadcrumb{font-size:12.5px;color:var(--ft-fg-3);margin:8px 0}
+.table-view-switch{display:inline-flex;background:var(--ft-sable);border-radius:8px;padding:3px;gap:2px;margin:10px 0}
+.tvs-btn{background:none;border:none;font-family:var(--ft-font);font-size:12.5px;font-weight:600;color:var(--ft-fg-2);padding:7px 14px;border-radius:6px;cursor:pointer}
+.tvs-btn.active{background:var(--ft-white);color:var(--ft-indigo);box-shadow:var(--sh-sm)}
 .clpe-drill-breadcrumb a{color:var(--ft-indigo);text-decoration:none;font-weight:600}
 .clpe-drill-breadcrumb a:hover{text-decoration:underline}
 .clpe-drill-breadcrumb b{color:var(--ft-navy)}
@@ -709,14 +714,18 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
             <div class="mat-detail-panel" data-tab="table" style="display:none">
               <div class="guide"><b>Guide de lecture :</b> les lignes sont regroupées par région puis par département tant qu'un CLPE précis n'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.</div>
+              <div class="table-view-switch" id="tableViewSwitch">
+                <button class="tvs-btn active" data-mode="hierarchique" type="button">Vue hiérarchique</button>
+                <button class="tvs-btn" data-mode="clpe" type="button">Vue CLPE</button>
+              </div>
               <div class="clpe-drill-breadcrumb" id="clpeDrillBreadcrumb" style="display:none"></div>
               <button class="btn-reset btn-export" id="exportTableBtn">Exporter en Excel</button>
               <div class="table-scroll">
               <table class="clpe" id="clpeTable">
                 <thead><tr>
                   <th data-sort="clpe">CLPE</th>
-                  <th data-sort="region">Région</th>
-                  <th data-sort="departement">Département</th>
+                  <th data-sort="region" class="col-region">Région</th>
+                  <th data-sort="departement" class="col-dept">Département</th>
                   <th data-sort="n">Réponses</th>
                   <th data-sort="nStruct" title="Nombre distincts de structures ayant répondu">Structures</th>
                   <th data-sort="total" class="sort-active">Score total / 120</th>
@@ -1838,14 +1847,16 @@ var tableSort = { key: 'total', dir: -1 };
    intérêt à re-regrouper par région si on est déjà filtré sur une région donnée). tableDrill
    ne se réinitialise que lorsque ce périmètre change réellement (scopeKey), pas à chaque
    re-rendu, pour ne pas perdre la position de navigation en cours. */
+var tableViewMode = 'hierarchique'; /* 'hierarchique' (par défaut) ou 'clpe' (liste plate) */
 var tableDrill = { level: null, region: null, departement: null, scopeKey: null };
 function naturalDrillLevel() {
+  if (tableViewMode === 'clpe') return 'clpe';
   if (state.clpe || state.dept) return 'clpe';
   if (state.region) return 'departement';
   return 'region';
 }
 function ensureTableDrillScope() {
-  var scopeKey = (state.region || '') + '|' + (state.dept || '') + '|' + (state.clpe || '');
+  var scopeKey = tableViewMode + '|' + (state.region || '') + '|' + (state.dept || '') + '|' + (state.clpe || '');
   if (tableDrill.scopeKey !== scopeKey) {
     tableDrill.scopeKey = scopeKey;
     tableDrill.level = naturalDrillLevel();
@@ -1881,8 +1892,11 @@ function renderTable() {
   var tbody = document.getElementById('clpeTbody');
   var breadcrumb = document.getElementById('clpeDrillBreadcrumb');
   var thFirst = document.querySelector('#clpeTable th[data-sort="clpe"]');
+  var clpeTableEl = document.getElementById('clpeTable');
   tbody.innerHTML = '';
   var level = tableDrill.level, natural = naturalDrillLevel();
+  clpeTableEl.className = 'clpe clpe-level-' + level;
+  var colSpan = level === 'region' ? 7 : level === 'departement' ? 8 : 9;
   thFirst.textContent = level === 'region' ? 'Région' : level === 'departement' ? 'Département' : 'CLPE';
   var crumbs = [];
   if (natural === 'region') {
@@ -1914,8 +1928,8 @@ function renderTable() {
     var deptCell = level === 'clpe' ? esc(g.departement) : '';
     tr.innerHTML =
       '<td><b>' + esc(firstLabel) + '</b>' + (drillable ? '<span class="drill-chev">›</span>' : '') + '</td>' +
-      '<td>' + regionCell + '</td>' +
-      '<td>' + deptCell + '</td>' +
+      '<td class="col-region">' + regionCell + '</td>' +
+      '<td class="col-dept">' + deptCell + '</td>' +
       '<td><span class="n-badge">' + g.n + '</span></td>' +
       '<td>' + g.nStruct + '</td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.total / META.totalMax * 100) + '%;background:var(--ft-navy)"></span></span>' + fmt(g.total) + '</div></td>' +
@@ -1933,7 +1947,7 @@ function renderTable() {
     if (level === 'clpe' && state.expanded === key) {
       var dtr = document.createElement('tr');
       var td = document.createElement('td');
-      td.colSpan = 9; td.className = 'detail-cell';
+      td.colSpan = colSpan; td.className = 'detail-cell';
       td.innerHTML = '<div style="font-size:12px;color:var(--ft-fg-3);margin-bottom:6px">Moyenne sur ' + g.n + ' réponse' + (g.n > 1 ? 's' : '') + ' pour <b>' + esc(g.clpe) + '</b></div>' +
         '<div class="qd-toolbar-mini"><button class="btn-reset row-unfold-all" type="button" data-key="' + esc(key) + '">Tout déplier</button><button class="btn-reset row-fold-all" type="button" data-key="' + esc(key) + '">Tout replier</button></div>' +
         '<div class="qhost"></div>';
@@ -3517,6 +3531,13 @@ function bindEvents() {
     var btn = e.target.closest('.qnum'); if (btn) { openQuestionModal(+btn.dataset.qnum); return; }
     var qrow = e.target.closest('.q-bar-row'); if (qrow) { questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderQuestionDetail(); return; }
     var grp = e.target.closest('.q-group-title'); if (grp) { toggleBlock(grp.dataset.key); renderQuestionDetail(); }
+  });
+  document.getElementById('tableViewSwitch').addEventListener('click', function (e) {
+    var btn = e.target.closest('.tvs-btn'); if (!btn) return;
+    if (btn.dataset.mode === tableViewMode) return;
+    tableViewMode = btn.dataset.mode;
+    document.querySelectorAll('.tvs-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    renderTable();
   });
   document.getElementById('clpeDrillBreadcrumb').addEventListener('click', function (e) {
     var link = e.target.closest('a'); if (!link) return;
