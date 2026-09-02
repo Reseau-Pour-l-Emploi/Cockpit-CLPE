@@ -3362,6 +3362,7 @@ function bindEvents() {
       document.querySelectorAll('.tab-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       document.querySelectorAll('.intro-blocks-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       activateBrick(tab.dataset.brick);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
   document.getElementById('mapLevel').addEventListener('click', function (e) {
