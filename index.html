@@ -85,10 +85,10 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .filterbar-col{display:flex;flex-direction:column;gap:14px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:16px}
 .filterbar-col .fgroup{display:flex;flex-direction:column;gap:5px}
 .filterbar-col select,.filterbar-col input{width:100%;box-sizing:border-box}
-.cockpit-context-bar{display:flex;flex-direction:column;gap:4px;margin-top:14px;position:sticky;top:var(--header-h, 68px);z-index:850;background:var(--ft-white);padding:8px 14px;border-radius:8px;border:1px solid var(--ft-border);transition:padding .15s ease,box-shadow .15s ease}
-.cockpit-context-bar.condensed{box-shadow:var(--sh-md)}
-.cockpit-territory-bar{font-size:13px;font-weight:700;color:var(--ft-navy)}
-.cockpit-context-bar.condensed .cockpit-territory-bar{font-size:12px}
+.cockpit-context-bar{display:flex;flex-direction:column;gap:8px;margin-top:14px;position:sticky;top:var(--header-h, 68px);z-index:850;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);transition:padding .15s ease,box-shadow .15s ease}
+.cockpit-context-bar.condensed{box-shadow:var(--sh-md);padding:8px 18px}
+.cockpit-territory-bar{display:inline-block;font-size:16px;font-weight:700;color:var(--ft-navy);background:var(--ft-indigo-light);padding:7px 16px;border-radius:6px}
+.cockpit-context-bar.condensed .cockpit-territory-bar{font-size:13px;padding:5px 12px}
 .cockpit-meta-bar{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ft-fg-3)}
 .cockpit-meta-bar b{color:var(--ft-fg-2);font-weight:600}
 .cockpit-context-bar.condensed .cockpit-meta-bar{display:none}
@@ -101,17 +101,19 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px)}
 @media(max-width:900px){.cockpit-tabs-sidebar{position:static;flex-direction:row;flex-wrap:wrap}}
 .cockpit-main-col{min-width:0}
-.cockpit-tab{border:1.5px solid transparent;border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease,border-color .12s ease}
+.cockpit-tab{border:1.5px solid transparent;border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease,border-color .12s ease;position:relative}
 .cockpit-tab:hover{box-shadow:var(--sh-sm)}
-.cockpit-tab.active{box-shadow:var(--sh-md)}
-.cockpit-tab[data-color="indigo"]{background:var(--ft-indigo-light)}
+.cockpit-tab.active{box-shadow:var(--sh-md);border-width:2.5px}
+.cockpit-tab.active::after{content:'';position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:9px solid var(--tab-color)}
+.cockpit-tab[data-color="indigo"]{background:var(--ft-indigo-light);--tab-color:var(--ft-indigo)}
 .cockpit-tab[data-color="indigo"].active{border-color:var(--ft-indigo)}
-.cockpit-tab[data-color="bleu"]{background:var(--ft-bleu-light)}
+.cockpit-tab[data-color="bleu"]{background:var(--ft-bleu-light);--tab-color:var(--ft-bleu)}
 .cockpit-tab[data-color="bleu"].active{border-color:var(--ft-bleu)}
-.cockpit-tab[data-color="violet"]{background:var(--ft-violet-light)}
+.cockpit-tab[data-color="violet"]{background:var(--ft-violet-light);--tab-color:var(--ft-violet)}
 .cockpit-tab[data-color="violet"].active{border-color:var(--ft-violet)}
-.cockpit-tab[data-color="orange"]{background:var(--ft-orange-light)}
+.cockpit-tab[data-color="orange"]{background:var(--ft-orange-light);--tab-color:var(--ft-orange)}
 .cockpit-tab[data-color="orange"].active{border-color:var(--ft-orange)}
+@media(max-width:900px){.cockpit-tab.active::after{display:none}}
 .tab-content{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:18px;margin-top:16px}
 .tab-panel .guide{margin-top:0}
 .ct-label{font-size:12.5px;font-weight:700;color:var(--ft-navy)}
@@ -166,10 +168,11 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .responses-bar .btn-pdf-top{margin-left:0;flex:none}
 
 details.section{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);margin-bottom:16px}
-.intro-blocks-panel[data-color="indigo"] details.section{border-left:5px solid var(--ft-indigo)}
-.intro-blocks-panel[data-color="bleu"] details.section{border-left:5px solid var(--ft-bleu)}
-.intro-blocks-panel[data-color="violet"] details.section{border-left:5px solid var(--ft-violet)}
-.intro-blocks-panel[data-color="orange"] details.section{border-left:5px solid var(--ft-orange)}
+.intro-blocks-panel[data-color="indigo"] details.section{border-left:5px solid var(--ft-indigo);background:var(--ft-indigo-light)}
+.intro-blocks-panel[data-color="bleu"] details.section{border-left:5px solid var(--ft-bleu);background:var(--ft-bleu-light)}
+.intro-blocks-panel[data-color="violet"] details.section{border-left:5px solid var(--ft-violet);background:var(--ft-violet-light)}
+.intro-blocks-panel[data-color="orange"] details.section{border-left:5px solid var(--ft-orange);background:var(--ft-orange-light)}
+.intro-blocks-panel details.section .section-body{background:var(--ft-white);border-radius:0 0 6px 6px}
 details.section>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 20px;user-select:none}
 details.section>summary::-webkit-details-marker{display:none}
 details.section>summary .chev{width:10px;height:10px;border-right:2px solid var(--ft-indigo);border-bottom:2px solid var(--ft-indigo);transform:rotate(-45deg);transition:transform .18s ease;flex:none}
@@ -245,6 +248,8 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .hero-card .auto-score{font-size:12px;margin:2px 0 0;white-space:nowrap}
 .hero-card .homog-line{font-size:11px;color:var(--ft-fg-3);margin-top:6px}
 .part-title{font-size:12.5px;font-weight:700;color:var(--ft-fg-2);margin:14px 0 6px}
+.struct-title-row{display:flex;align-items:center;gap:8px}
+.struct-title-row .meta-badge{background:var(--ft-indigo);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 9px;cursor:help}
 .part-title-center{text-align:center;text-decoration:underline}
 .bar-row{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12.5px}
 .bar-row .lbl{width:145px;font-weight:500}
@@ -263,6 +268,11 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .hover-popup .tag{display:inline-block;background:var(--ft-indigo-light);color:var(--ft-indigo);font-size:11.5px;font-weight:500;border-radius:999px;padding:3px 10px;line-height:1.4}
 .structures-trigger{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
 .tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tag-list-wrap{margin-top:4px}
+.tag-list-wrap .tag-list{max-height:26px;overflow:hidden;margin-top:0}
+.tag-list-wrap.expanded .tag-list{max-height:none}
+.tag-list-more{background:none;border:none;color:var(--ft-indigo);font-size:11.5px;font-weight:600;font-family:var(--ft-font);cursor:pointer;padding:4px 0 0;text-decoration:underline}
+.tag-list-more:hover{color:var(--ft-indigo-dark)}
 .tag{display:inline-flex;align-items:baseline;gap:6px;background:var(--ft-indigo-light);color:var(--ft-indigo);font-size:11.5px;font-weight:500;border-radius:999px;padding:3px 10px;line-height:1.4}
 .tag-count{font-size:10px;font-weight:400;color:var(--ft-indigo);opacity:.75;white-space:nowrap}
 .panel .empty{color:var(--ft-fg-3);font-size:13px}
@@ -661,8 +671,11 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
               <div class="f-summary" id="fRateSummary"></div>
               <div class="f-summary" id="fSummary"></div>
               <div class="geo" id="globalCopresLine"></div>
-              <div class="part-title" style="margin-top:8px">Structures ayant répondu</div>
-              <div class="tag-list" id="globalStructTags"></div>
+              <div class="part-title struct-title-row" style="margin-top:8px">Structures ayant répondu<span class="meta-badge" id="globalStructCount"></span></div>
+              <div class="tag-list-wrap" id="globalStructTagsWrap">
+                <div class="tag-list" id="globalStructTags"></div>
+                <button class="tag-list-more" id="globalStructMoreBtn" type="button" style="display:none">Voir plus</button>
+              </div>
             </div>
             <div class="panel" id="mapSide" style="height:auto"></div>
 
@@ -697,6 +710,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
                   <th data-sort="region">Région</th>
                   <th data-sort="departement">Département</th>
                   <th data-sort="n">Réponses</th>
+                  <th data-sort="nStruct" title="Nombre distincts de structures ayant répondu">Structures</th>
                   <th data-sort="total" class="sort-active">Score total / 120</th>
                   <th data-sort="fond">Fondamentaux / 80</th>
                   <th data-sort="mat">Maturité / 40</th>
@@ -1392,6 +1406,7 @@ function getFiltered() {
 
 function baseAgg(items) {
   var g = { n: items.length };
+  g.nStruct = unique(items.map(function (r) { return r.structure; }).filter(Boolean)).length;
   g.total = avg(items.map(function (r) { return r.total; }));
   g.fond = avg(items.map(function (r) { return r.fond; }));
   g.mat = avg(items.map(function (r) { return r.mat; }));
@@ -1806,6 +1821,7 @@ function renderTable() {
       '<td>' + esc(g.region) + '</td>' +
       '<td>' + esc(g.departement) + '</td>' +
       '<td><span class="n-badge">' + g.n + '</span></td>' +
+      '<td>' + g.nStruct + '</td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.total / META.totalMax * 100) + '%;background:var(--ft-navy)"></span></span>' + fmt(g.total) + '</div></td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.fond / META.fondMaxTotal * 100) + '%;background:var(--ft-indigo)"></span></span>' + fmt(g.fond) + '</div></td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.mat / META.matMaxTotal * 100) + '%;background:var(--ft-violet)"></span></span>' + fmt(g.mat) + '</div></td>' +
@@ -1815,7 +1831,7 @@ function renderTable() {
     if (state.expanded === key) {
       var dtr = document.createElement('tr');
       var td = document.createElement('td');
-      td.colSpan = 8; td.className = 'detail-cell';
+      td.colSpan = 9; td.className = 'detail-cell';
       td.innerHTML = '<div style="font-size:12px;color:var(--ft-fg-3);margin-bottom:6px">Moyenne sur ' + g.n + ' réponse' + (g.n > 1 ? 's' : '') + ' pour <b>' + esc(g.clpe) + '</b></div>' +
         '<div class="qd-toolbar-mini"><button class="btn-reset row-unfold-all" type="button" data-key="' + esc(key) + '">Tout déplier</button><button class="btn-reset row-fold-all" type="button" data-key="' + esc(key) + '">Tout replier</button></div>' +
         '<div class="qhost"></div>';
@@ -2086,6 +2102,8 @@ function renderResponsesBar(g) {
     if (r.clpe) byStruct[r.structure].clpes[r.clpe] = true;
   });
   var structures = Object.keys(byStruct).sort();
+  document.getElementById('globalStructCount').innerHTML = structures.length
+    ? '<span title="Nombre distincts de structures ayant répondu">' + structures.length + '</span>' : '';
   document.getElementById('globalStructTags').innerHTML = structures.map(function (s) {
     var d = byStruct[s], nClpe = Object.keys(d.clpes).length;
     var repTxt = d.n + ' réponse' + (d.n > 1 ? 's' : '');
@@ -2095,6 +2113,15 @@ function renderResponsesBar(g) {
     var clpeSpan = state.clpe ? '' : (' \u00b7 <span title="Nombre de CLPE distincts pour lesquels cette structure a répondu au moins une fois.">' + nClpe + ' CLPE</span>');
     return '<span class="tag">' + esc(s) + '<span class="tag-count">' + repSpan + clpeSpan + '</span></span>';
   }).join('') || '<span class="ct-sub">Aucune structure identifiée</span>';
+  var structTagsWrap = document.getElementById('globalStructTagsWrap'), structMoreBtn = document.getElementById('globalStructMoreBtn');
+  structTagsWrap.classList.remove('expanded');
+  structMoreBtn.textContent = 'Voir plus';
+  /* N'affiche le bouton "Voir plus" que si la liste dépasse effectivement une ligne
+     (comparaison de la hauteur réelle du contenu avec la hauteur visible limitée à 1 ligne). */
+  setTimeout(function () {
+    var tagsEl = document.getElementById('globalStructTags');
+    structMoreBtn.style.display = tagsEl.scrollHeight > tagsEl.clientHeight + 2 ? 'inline-block' : 'none';
+  });
   var nCopres = g.n ? g.items.filter(function (r) { return r.copresident; }).length : 0;
   document.getElementById('globalCopresLine').textContent = g.n === 0 ? '' : (nCopres > 0 ? 'Un co-président a répondu (' + nCopres + ')' : 'Aucun co-président n\u2019a répondu');
 }
@@ -2705,7 +2732,7 @@ function exportTableToExcel() {
   var rows = sortedTableRows().map(function (g) {
     var auto = g.auto == null ? '' : (CONFIG.autoLabels[Math.round(g.auto)] || '') + ' (' + fmt(g.auto) + ' / ' + CONFIG.autoMax + ')';
     return {
-      'CLPE': g.clpe, 'Région': g.region, 'Département': g.departement, 'Réponses': g.n,
+      'CLPE': g.clpe, 'Région': g.region, 'Département': g.departement, 'Réponses': g.n, 'Structures': g.nStruct,
       'Score total': fmt(g.total), 'Score total (max)': META.totalMax,
       'Fondamentaux': fmt(g.fond), 'Fondamentaux (max)': META.fondMaxTotal,
       'Pratiques': fmt(g.mat), 'Maturité (max)': META.matMaxTotal,
@@ -3421,6 +3448,11 @@ function bindEvents() {
   });
   document.getElementById('commentNaviguerClose').addEventListener('click', function () {
     document.getElementById('commentNaviguerOverlay').classList.remove('show');
+  });
+  document.getElementById('globalStructMoreBtn').addEventListener('click', function () {
+    var wrap = document.getElementById('globalStructTagsWrap');
+    var expanded = wrap.classList.toggle('expanded');
+    this.textContent = expanded ? 'Voir moins' : 'Voir plus';
   });
   document.getElementById('commentNaviguerOverlay').addEventListener('click', function (e) { if (e.target.id === 'commentNaviguerOverlay') document.getElementById('commentNaviguerOverlay').classList.remove('show'); });
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
