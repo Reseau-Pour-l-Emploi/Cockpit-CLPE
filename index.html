@@ -363,6 +363,7 @@ table.clpe td{padding:9px 10px;border-bottom:1px solid var(--ft-sable);vertical-
 table.clpe th:nth-child(n+4),table.clpe td:nth-child(n+4){text-align:right}
 table.clpe.clpe-level-region .col-region,table.clpe.clpe-level-region .col-dept{display:none}
 table.clpe.clpe-level-departement .col-dept{display:none}
+table.clpe.clpe-level-clpe .col-nclpe,table.clpe.clpe-level-clpe .col-tauxclpe{display:none}
 table.clpe tbody tr.main{cursor:pointer}
 table.clpe tbody tr.main.drillable:hover{background:var(--ft-indigo-light)}
 .drill-chev{display:inline-block;margin-left:6px;color:var(--ft-indigo);font-weight:700}
@@ -728,6 +729,8 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
                   <th data-sort="departement" class="col-dept">Département</th>
                   <th data-sort="n">Réponses</th>
                   <th data-sort="nStruct" title="Nombre distincts de structures ayant répondu">Structures</th>
+                  <th data-sort="nClpe" class="col-nclpe" title="Nombre de CLPE ayant au moins une réponse">CLPE répondants</th>
+                  <th data-sort="tauxClpe" class="col-tauxclpe" title="Taux de CLPE ayant au moins une réponse, rapporté au nombre total de CLPE du référentiel sur ce périmètre">Taux de CLPE répondants</th>
                   <th data-sort="total" class="sort-active">Score total / 120</th>
                   <th data-sort="fond">Fondamentaux / 80</th>
                   <th data-sort="mat">Maturité / 40</th>
@@ -1085,6 +1088,11 @@ var QUARTERS = [];
 var currentSessionLabel = '';
 var META = {};
 var ALL = [];
+var sourceLastModified = { maturite: null, freq: null, fiches: null, perf: null };
+function updateDataUpdatedLabel(brick) {
+  var d = sourceLastModified[brick];
+  document.getElementById('dataUpdatedLabel').textContent = d ? d.toLocaleDateString('fr-FR') : CONFIG.dataUpdatedAt;
+}
 var state = { region: '', dept: '', clpe: '', qview: 'part', expanded: null, trimestre: '' };
 var MAPS = [], mapsReady = false;
 var geoData = { clpe: null, region: null, departement: null };
@@ -1365,6 +1373,15 @@ function totalClpeInScope() {
     return (!state.region || e.region === state.region) && (!state.dept || e.departement === state.dept);
   }).length;
 }
+/* Même principe que totalClpeInScope(), mais pour une région/département donnés plutôt que
+   le périmètre global sélectionné - utilisé pour les colonnes "Nombre de CLPE avec au moins
+   une réponse" / "Taux de CLPE avec au moins une réponse" du tableau par région/département. */
+function totalClpeFor(region, departement) {
+  if (!REFERENTIAL.length) return null;
+  return REFERENTIAL.filter(function (e) {
+    return e.region === region && (!departement || e.departement === departement);
+  }).length;
+}
 /* Le fond de carte ne fournit qu'un seul polygone "Rhône" (code 69). Le référentiel CLPE
    indique quel CLPE appartient à la Métropole de Lyon et lequel appartient au Nouveau Rhône ;
    on reconstitue chacun des deux contours en fusionnant (union géométrique) les polygones
@@ -1491,6 +1508,8 @@ function aggregateByRegion(records) {
     var items = mp[k], g = baseAgg(items);
     g.region = k; g.departement = ''; g.clpe = '';
     g.nClpe = unique(items.map(function (r) { return r.clpe; })).length;
+    var totalClpe = totalClpeFor(k, null);
+    g.nClpeTotal = totalClpe; g.tauxClpe = totalClpe ? g.nClpe / totalClpe * 100 : null;
     return g;
   });
 }
@@ -1505,6 +1524,8 @@ function aggregateByDepartement(records) {
     var items = mp[k], g = baseAgg(items);
     g.region = items[0].region; g.departement = items[0].departement; g.clpe = '';
     g.nClpe = unique(items.map(function (r) { return r.clpe; })).length;
+    var totalClpe = totalClpeFor(g.region, g.departement);
+    g.nClpeTotal = totalClpe; g.tauxClpe = totalClpe ? g.nClpe / totalClpe * 100 : null;
     return g;
   });
 }
@@ -1896,7 +1917,7 @@ function renderTable() {
   tbody.innerHTML = '';
   var level = tableDrill.level, natural = naturalDrillLevel();
   clpeTableEl.className = 'clpe clpe-level-' + level;
-  var colSpan = level === 'region' ? 7 : level === 'departement' ? 8 : 9;
+  var colSpan = level === 'region' ? 9 : level === 'departement' ? 10 : 9;
   thFirst.textContent = level === 'region' ? 'Région' : level === 'departement' ? 'Département' : 'CLPE';
   var crumbs = [];
   if (natural === 'region') {
@@ -1932,6 +1953,8 @@ function renderTable() {
       '<td class="col-dept">' + deptCell + '</td>' +
       '<td><span class="n-badge">' + g.n + '</span></td>' +
       '<td>' + g.nStruct + '</td>' +
+      '<td class="col-nclpe">' + (level === 'clpe' ? '' : (g.nClpe + (g.nClpeTotal != null ? ' / ' + g.nClpeTotal : ''))) + '</td>' +
+      '<td class="col-tauxclpe">' + (level === 'clpe' || g.tauxClpe == null ? '' : fmt(g.tauxClpe, 0) + '\u00A0%') + '</td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.total / META.totalMax * 100) + '%;background:var(--ft-navy)"></span></span>' + fmt(g.total) + '</div></td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.fond / META.fondMaxTotal * 100) + '%;background:var(--ft-indigo)"></span></span>' + fmt(g.fond) + '</div></td>' +
       '<td><div class="pct-cell"><span class="mini-track"><span class="mini-fill" style="width:' + (g.mat / META.matMaxTotal * 100) + '%;background:var(--ft-violet)"></span></span>' + fmt(g.mat) + '</div></td>' +
@@ -3478,6 +3501,7 @@ function bindEvents() {
       document.querySelectorAll('.tab-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       document.querySelectorAll('.intro-blocks-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       activateBrick(tab.dataset.brick);
+      updateDataUpdatedLabel(tab.dataset.brick);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
@@ -3665,12 +3689,12 @@ function selectTrimestre(id) {
 function init() {
   document.getElementById('loader').style.display = 'block';
   document.getElementById('loader').textContent = 'Chargement des réponses…';
-  var sourceFileLastModified = null;
+  function withLastModified(brick) {
+    return function (r) { var lm = r.headers.get('last-modified'); if (lm) { var d = new Date(lm); if (!isNaN(d)) sourceLastModified[brick] = d; } return r; };
+  }
   Promise.all([
-    fetchFresh(CONFIG.answersFile).then(function (r) {
+    fetchFresh(CONFIG.answersFile).then(withLastModified('maturite')).then(function (r) {
       if (!r.ok) throw new Error(CONFIG.answersFile + ' : HTTP ' + r.status);
-      var lm = r.headers.get('last-modified');
-      if (lm) { var d = new Date(lm); if (!isNaN(d)) sourceFileLastModified = d; }
       return r.arrayBuffer();
     }),
     fetchFresh(CONFIG.geo.clpe).then(function (r) { return r.json(); }),
@@ -3678,9 +3702,9 @@ function init() {
     fetchFresh(CONFIG.geo.departement).then(function (r) { return r.json(); }),
     fetchFresh(CONFIG.referentialFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.referentielCorrectifFile).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.frequentationFile).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.fichesFile).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.perfFile).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.frequentationFile).then(withLastModified('freq')).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.fichesFile).then(withLastModified('fiches')).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.perfFile).then(withLastModified('perf')).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.popFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.recommandationsFile).then(function (r) { return r.ok ? r.text() : ''; })
   ])
@@ -3773,7 +3797,7 @@ function init() {
       bindEvents();
       populateTrimestreSelect();
       populateFichesYearSelect();
-      document.getElementById('dataUpdatedLabel').textContent = sourceFileLastModified ? sourceFileLastModified.toLocaleDateString('fr-FR') : CONFIG.dataUpdatedAt;
+      document.getElementById('dataUpdatedLabel').textContent = sourceLastModified.maturite ? sourceLastModified.maturite.toLocaleDateString('fr-FR') : CONFIG.dataUpdatedAt;
       document.getElementById('loader').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       refreshFilters();
