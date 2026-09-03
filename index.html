@@ -452,6 +452,15 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-mat-radar{display:flex;align-items:center;justify-content:center}
 #printReport .pr-mat-radar svg{width:100%;max-width:520px;height:auto}
 #printReport .pr-q-cols{column-count:2;column-gap:18px;flex:1}
+#printReport .pr-axes-forts-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;flex:none}
+#printReport .pr-af-col{border:1px solid var(--ft-sable-dark);border-radius:5px;padding:6px 9px}
+#printReport .pr-af-title{font-size:8.5pt;font-weight:700;color:var(--ft-navy);margin-bottom:4px}
+#printReport .pr-af-item{font-size:7pt;padding:3px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
+#printReport .pr-af-item:last-child{border-bottom:none}
+#printReport .pr-af-item b{display:block;color:var(--ft-fg-1)}
+#printReport .pr-af-item-fort b{color:var(--ft-vert)}
+#printReport .pr-af-score{color:var(--ft-fg-3);font-size:6.5pt}
+#printReport .pr-af-empty{font-size:7pt;color:var(--ft-fg-3);font-style:italic}
 #printReport .pr-q-legend{font-size:7.5pt;color:var(--ft-fg-2);margin-bottom:6px;flex:none}
 #printReport .pr-q-legend span{margin-right:14px;white-space:nowrap}
 #printReport .pr-q-grouptitle{font-size:9.5pt;font-weight:700;color:var(--ft-navy);background:var(--ft-sable);padding:3px 7px;border-radius:3px;margin:5px 0 3px;break-after:avoid;break-inside:avoid}
@@ -484,9 +493,11 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-fiches-heroes-row .pr-hero{flex:1}
 #printReport .pr-fiches-radar-lg{display:flex;justify-content:center}
 #printReport .pr-fiches-radar-lg svg{width:100%;max-width:420px;height:auto}
-#printReport .pr-axes-compact.pr-axes-compact-1col{grid-template-columns:1fr;margin-top:6px}
-#printReport .pr-axes-compact{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;flex:none}
-#printReport .pr-axe-line{display:flex;justify-content:space-between;gap:8px;font-size:9pt;padding:3px 0;border-bottom:0.5px solid var(--ft-sable-dark)}
+#printReport .pr-axes-forts-2col-sm{grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+#printReport .pr-axes-forts-2col-sm .pr-af-col{padding:4px 6px}
+#printReport .pr-axes-forts-2col-sm .pr-af-title{font-size:7.5pt;margin-bottom:2px}
+#printReport .pr-axes-forts-2col-sm .pr-af-item{font-size:6.5pt;padding:2px 0}
+#printReport .pr-axes-forts-2col-sm .pr-af-score{font-size:6pt}
 /* Page Performance relative */
 #printReport .pr-perf-top{display:grid;grid-template-columns:1.3fr 0.9fr;gap:16px;align-items:center;flex:none;margin-bottom:10px}
 #printReport .pr-perf-heroes{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:none}
@@ -1781,8 +1792,8 @@ function buildAxesEtPointsFortsHTML(records, g) {
   }).join('') : '<p class="preco-empty">Aucun point fort majeur ne se détache sur ce périmètre.</p>';
 
   return '<div class="priorites-2col">' +
-    '<div class="priorites-box priorites-box-axes"><div class="priorites-title">\uD83C\uDFAF Les axes de progrès du CLPE</div><div class="priorites-list">' + axesHtml + '</div></div>' +
     '<div class="priorites-box priorites-box-forts"><div class="priorites-title">\u2705 Les points forts du CLPE</div><div class="priorites-list">' + fortsHtml + '</div></div>' +
+    '<div class="priorites-box priorites-box-axes"><div class="priorites-title">\uD83C\uDFAF Les axes de progrès du CLPE</div><div class="priorites-list">' + axesHtml + '</div></div>' +
     '</div>';
 }
 function renderIndicatorPanel(hostId, g, title, geoLine) {
@@ -3264,15 +3275,8 @@ function pageHeader(label, brickName, suffix) {
    appliqué à TOUTES les questions pour les taguer individuellement dans le rapport. */
 function computeQuestionTags(stats) {
   var tags = {};
-  var sortedPcts = stats.map(function (s) { return s.pct; }).sort(function (a, b) { return a - b; });
-  var p75 = percentileOf(sortedPcts, 0.75), p25 = percentileOf(sortedPcts, 0.25);
-  THEME_KEYS.forEach(function (t) {
-    var qs = stats.filter(function (s) { return s.theme === t; });
-    var forts = qs.filter(function (s) { return s.pct > 50 && s.pct >= p75; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 2);
-    var axes = qs.filter(function (s) { return s.pct < 50 && s.pct <= p25; }).sort(function (a, b) { return a.pct - b.pct; }).slice(0, 2);
-    forts.forEach(function (q) { tags[q.n] = 'fort'; });
-    axes.forEach(function (q) { tags[q.n] = 'axe'; });
-  });
+  selectAxesProgres(stats).forEach(function (s) { tags[s.n] = 'axe'; });
+  selectPointsForts(stats).forEach(function (s) { tags[s.n] = 'fort'; });
   var globalHetero = stats.filter(function (s) { return !tags[s.n] && s.h != null && s.h < 40; }).sort(function (a, b) { return a.h - b.h; }).slice(0, 3);
   globalHetero.forEach(function (q) { tags[q.n] = 'partage'; });
   return tags;
@@ -3325,6 +3329,22 @@ function buildReportPageMaturite() {
     });
   });
   html += '</div>';
+
+  var axesRep = selectAxesProgres(stats), fortsRep = selectPointsForts(stats);
+  if (axesRep.length || fortsRep.length) {
+    html += '<div class="pr-axes-forts-2col">';
+    html += '<div class="pr-af-col"><div class="pr-af-title">\u2705 Points forts du CLPE</div>' +
+      (fortsRep.length ? fortsRep.map(function (s) {
+        var niv = pointFortNiveau(s);
+        var txt = (TEXTES_POINTS_FORTS[s.n] && TEXTES_POINTS_FORTS[s.n][niv]) || null;
+        return '<div class="pr-af-item pr-af-item-fort"><b>' + (txt ? esc(txt.titre) : 'Q' + s.n + ' \u00b7 ' + esc(s.text.slice(0, 58))) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span></div>';
+      }).join('') : '<div class="pr-af-empty">Aucun point fort majeur détecté.</div>') + '</div>';
+    html += '<div class="pr-af-col"><div class="pr-af-title">\uD83C\uDFAF Axes de progrès du CLPE</div>' +
+      (axesRep.length ? axesRep.map(function (s) {
+        return '<div class="pr-af-item"><b>Q' + s.n + ' \u00b7 ' + esc(s.text.length > 60 ? s.text.slice(0, 58) + '\u2026' : s.text) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span></div>';
+      }).join('') : '<div class="pr-af-empty">Aucun axe de progrès majeur détecté.</div>') + '</div>';
+    html += '</div>';
+  }
   return html;
 }
 function buildReportPageFreqFiches() {
@@ -3395,19 +3415,40 @@ function buildReportPageFreqFiches() {
   var axes = FICHES_CRITERIA.map(function (c, i) { return { label: c.label, value: frows.length ? avg(frows.map(function (r) { return r[c.id]; })) : 0, max: 4, color: colors[i] }; });
   html += '<div class="pr-fiches-radar pr-fiches-radar-lg">' + buildGenericRadarSVG(axes) + '</div>';
   if (nFiches) {
-    var AXE_LABELS = {
-      description: "Mieux décrire l'action", problematique: 'Mieux formuler la problématique', etapes: 'Détailler les étapes',
-      ciblage: "Mieux cibler l'action", suivi: 'Renseigner des indicateurs de suivi', resultats: 'Objectifs chiffrés (SMART)',
-      impact_usager: "Impact sur l'usager final", maj: 'Mise à jour plus régulière', bilan: 'Renseigner le bilan', valorisation: "Valoriser l'action",
-      diversite_acteurs: 'Diversité des acteurs mobilisés', efficacite: 'Auto-évaluer l\u2019efficacité', vigilance: 'Points de vigilance', moyens: 'Préciser les moyens mobilisés'
-    };
-    var axeTotals = Object.keys(AXE_LABELS).map(function (k) {
-      var n = frows.reduce(function (s, r) { return s + (r.axePct[k] / 100) * r.nbFiches; }, 0);
-      return { label: AXE_LABELS[k], pct: n / nFiches * 100 };
-    }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
-    html += '<div class="pr-axes-compact pr-axes-compact-1col">' + axeTotals.map(function (a) {
-      return '<div class="pr-axe-line"><span>' + esc(a.label) + '</span><b>' + fmt(a.pct, 0) + '\u00A0%</b></div>';
-    }).join('') + '</div>';
+    var defs = [
+      { key: 'description', label: "Mieux décrire l'action (contexte, contenu)" },
+      { key: 'problematique', label: 'Mieux formuler la problématique traitée' },
+      { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre' },
+      { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)' },
+      { key: 'suivi', label: 'Renseigner des indicateurs de suivi' },
+      { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)' },
+      { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final' },
+      { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement' },
+      { key: 'bilan', label: 'Renseigner le bilan et les enseignements' },
+      { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)' },
+      { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
+      { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
+      { key: 'vigilance', label: 'Anticiper les points de vigilance' },
+      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' }
+    ];
+    var withPctPdf = defs.map(function (d) {
+      var n = frows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
+      return { key: d.key, label: d.label, pct: n / nFiches * 100 };
+    }).filter(function (d) { return d.pct > 0; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
+    var withPctFortPdf = defs.map(function (d) {
+      var n = frows.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
+      return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: n / nFiches * 100 };
+    }).filter(function (d) { return d.pct > 0 && !withPctPdf.some(function (p) { return p.key === d.key; }); }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
+    html += '<div class="pr-axes-forts-2col pr-axes-forts-2col-sm">';
+    html += '<div class="pr-af-col"><div class="pr-af-title">\u2705 Points forts</div>' +
+      (withPctFortPdf.length ? withPctFortPdf.map(function (a) {
+        return '<div class="pr-af-item pr-af-item-fort"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span></div>';
+      }).join('') : '<div class="pr-af-empty">Aucun point fort identifiable.</div>') + '</div>';
+    html += '<div class="pr-af-col"><div class="pr-af-title">\uD83C\uDFAF Axes de progrès</div>' +
+      (withPctPdf.length ? withPctPdf.map(function (a) {
+        return '<div class="pr-af-item"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span></div>';
+      }).join('') : '<div class="pr-af-empty">Aucun axe de progrès identifiable.</div>') + '</div>';
+    html += '</div>';
   }
   html += '</div></div>';
   return html;
