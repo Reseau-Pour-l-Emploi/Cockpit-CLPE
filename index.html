@@ -198,6 +198,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .eval-fiche-link{display:inline-block;background:var(--ft-orange);color:#fff;text-decoration:none;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;transition:background .15s ease}
 .fiches-clpe-link{display:inline-block;background:var(--ft-indigo);color:#fff;text-decoration:none;font-weight:600;font-size:12.5px;padding:9px 16px;border-radius:8px;margin-top:10px;transition:background .15s ease}
 .fiches-clpe-link:hover{background:var(--ft-indigo-dark)}
+.fiabilite-alerte{font-size:11px;color:#8a5a00;background:#fff4d9;border-radius:4px;padding:5px 8px;margin-top:6px;line-height:1.4}
 .ref-territoire-line{font-size:11.5px;color:var(--ft-fg-2);margin-top:6px}
 .ref-territoire-box{background:var(--ft-sable);border-radius:6px;padding:10px 12px;margin-top:10px}
 .fiches-ref-link{color:var(--ft-indigo);font-weight:600;text-decoration:underline;margin-left:4px}
@@ -242,6 +243,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .axe-reco-toggle{background:none;border:none;color:var(--ft-indigo);font-size:11.5px;font-weight:600;font-family:var(--ft-font);cursor:pointer;padding:4px 0 0;text-decoration:underline}
 .axe-reco-toggle:hover{color:var(--ft-indigo-dark)}
 .point-fort-text{margin-top:8px;background:var(--ft-vert-light);border-left:3px solid var(--ft-vert);border-radius:4px;padding:8px 10px}
+.point-fort-text .axe-reco-toggle{display:block}
 .point-fort-text p{margin:4px 0 0;font-size:12px;line-height:1.5}
 .priorite-item{display:flex;gap:10px;align-items:flex-start}
 .priorite-rank{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ft-jaune-dark);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
@@ -307,27 +309,30 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-group-title .qg-label{flex:1}
 .q-group-title .qg-score{font-weight:700;color:var(--ft-indigo)}
 .q-bar-wrap{border-bottom:1px solid var(--ft-sable)}
-.q-bar-row{display:grid;grid-template-columns:40px 1fr 160px 230px 16px;gap:10px;align-items:center;padding:7px 0;cursor:pointer;border-radius:4px}
+.q-bar-row{display:grid;grid-template-columns:40px 1fr 160px 74px 230px 16px;gap:8px;align-items:center;padding:7px 0;cursor:pointer;border-radius:4px}
 .q-bar-row:hover{background:var(--ft-sable)}
 .q-chev{width:8px;height:8px;border-right:2px solid var(--ft-fg-3);border-bottom:2px solid var(--ft-fg-3);transform:rotate(-45deg);transition:transform .15s ease;justify-self:center}
 .q-bar-open .q-chev{transform:rotate(45deg)}
 .q-reco-body{padding:4px 0 14px 50px;font-size:12.5px;color:var(--ft-fg-2)}
 .q-reco-item,.q-reco-cap{background:var(--ft-sable);border-left:3px solid var(--ft-indigo);border-radius:4px;padding:8px 12px;margin-bottom:8px}
 .q-reco-cap{border-left-color:var(--ft-jaune-dark)}
+.guide-btn-row{margin:10px 0}
+.guide-btn{display:inline-flex;align-items:center;gap:5px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);color:var(--ft-fg-2);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 13px;cursor:pointer}
+.guide-btn:hover{background:var(--ft-indigo-light);color:var(--ft-indigo);border-color:var(--ft-indigo)}
 .priorite-cap{border-left-color:var(--ft-jaune-dark)}
 .q-reco-item b,.q-reco-cap b{display:block;font-size:11px;color:var(--ft-indigo);margin-bottom:3px;text-transform:uppercase;letter-spacing:.02em}
 .q-reco-cap b{color:var(--ft-jaune-dark)}
 .q-reco-item p,.q-reco-cap p{margin:0;line-height:1.5}
 .q-reco-empty,.q-reco-max{font-size:12.5px;color:var(--ft-fg-3);padding:4px 0}
 .q-reco-max{color:#1c7a4d;font-weight:600}
-@media(max-width:760px){.q-bar-row{grid-template-columns:34px 1fr 90px 150px 14px}.q-reco-body{padding-left:8px}}
+@media(max-width:760px){.q-bar-row{grid-template-columns:34px 1fr 70px 54px 130px 14px}.q-reco-body{padding-left:8px}}
 .q-bar-row .qnum{font-weight:700;font-size:13px;color:#fff;background:var(--ft-indigo);border-radius:4px;text-align:center;padding:3px 0;cursor:pointer;border:none;font-family:var(--ft-font)}
 .q-bar-row .qnum:hover{background:var(--ft-indigo-dark)}
 .q-bar-row .qtext{font-size:12.5px;color:var(--ft-fg-2)}
-.q-bar-row .q-track{height:12px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:6px;overflow:hidden;grid-column:3}
-.pf-tag{grid-column:3;justify-self:end;align-self:center;transform:translateX(60%);z-index:2;background:var(--ft-vert);color:#fff;border:none;border-radius:999px;font-size:9.5px;font-weight:700;padding:2px 8px;cursor:pointer;white-space:nowrap;font-family:var(--ft-font);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.q-bar-row .q-track{height:12px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:6px;overflow:hidden}
+.pf-tag{background:var(--ft-vert);color:#fff;border:none;border-radius:999px;font-size:9.5px;font-weight:700;padding:4px 8px;cursor:pointer;white-space:nowrap;font-family:var(--ft-font);box-shadow:0 1px 3px rgba(0,0,0,.2);justify-self:start}
 .pf-tag:hover{background:var(--ft-vert-dark, #145c3a)}
-@media(max-width:760px){.pf-tag{display:none}}
+@media(max-width:760px){.pf-tag{font-size:8.5px;padding:3px 5px}}
 .q-bar-row .q-fill{height:100%;border-radius:6px}
 .q-bar-row .qval{font-weight:700;font-size:12.5px;text-align:right}
 .meta-badge{display:inline-block;white-space:nowrap}
@@ -543,6 +548,13 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
   </div>
 </div>
 
+<div class="modal-overlay" id="guidePopupOverlay">
+  <div class="modal-box">
+    <div class="modal-head"><h3>ℹ️ Guide de lecture</h3><button class="modal-close" id="guidePopupClose" aria-label="Fermer">✕</button></div>
+    <div class="modal-body" id="guidePopupBody"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="pfTagOverlay">
   <div class="modal-box">
     <div class="modal-head"><h3 id="pfTagTitle">Point fort</h3><button class="modal-close" id="pfTagClose" aria-label="Fermer">✕</button></div>
@@ -705,7 +717,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="tab-panel" data-brick="maturite" id="panelMaturite">
 
 
-            <div class="guide"><b>Guide de lecture :</b> les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
+            <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent1">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent1" style="display:none"><b>Guide de lecture :</b> les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
             <div class="responses-inline">
               <div class="part-title">Réponses</div>
               <div class="f-summary" id="fRateSummary"></div>
@@ -731,7 +743,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="questions">
-              <div class="guide"><b>Guide de lecture :</b> score moyen par question, en points, avec le nombre de répondants 👥 et l'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.</div>
+              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent2">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent2" style="display:none"><b>Guide de lecture :</b> score moyen par question, en points, avec le nombre de répondants 👥 et l'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.</div>
               <div class="qd-toolbar">
                 <button class="btn-reset btn-export" id="exportQuestionsBtn">Exporter en Excel</button>
                 <button class="btn-reset" id="unfoldAllBtn">Tout déplier</button>
@@ -741,7 +753,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="table" style="display:none">
-              <div class="guide"><b>Guide de lecture :</b> les lignes sont regroupées par région puis par département tant qu'un CLPE précis n'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.</div>
+              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent3">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent3" style="display:none"><b>Guide de lecture :</b> les lignes sont regroupées par région puis par département tant qu'un CLPE précis n'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.</div>
               <div class="table-view-switch" id="tableViewSwitch">
                 <button class="tvs-btn active" data-mode="hierarchique" type="button">Vue hiérarchique</button>
                 <button class="tvs-btn" data-mode="clpe" type="button">Vue CLPE</button>
@@ -769,7 +781,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
         </div>
         <div class="tab-panel" data-brick="freq" id="panelFreq" style="display:none">
-          <div class="guide"><b>Guide de lecture :</b> nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent4">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent4" style="display:none"><b>Guide de lecture :</b> nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
           <h3 id="freqScopeTitle"></h3>
           <div class="part-title">Consultations par mois</div>
           <div id="freqChart"></div>
@@ -779,7 +791,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
-          <div class="guide"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et qualité moyenne sur 4 critères notés sur 4 (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et qualité moyenne sur 4 critères notés sur 4 (données réelles).</div>
           <div class="fiches-links-row">
             <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
             <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
@@ -796,11 +808,11 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
               <div class="part-title part-title-center">Planification des actions dans l'année</div>
               <div id="fichesMonthChart"></div>
               <div class="fiches-month-legend" id="fichesMonthLegend"></div>
-              <div class="guide" style="margin-top:8px"><b>Guide de lecture :</b> chaque action est positionnée au mois de fin de sa première étape (et non à sa date de création), pour refléter le rythme réel de mise en œuvre plutôt que celui de la saisie administrative. Une répartition étalée sur l'année traduit une planification qui lisse la charge de travail ; une concentration marquée sur quelques mois peut signaler un pilotage réactif ou une saisie tardive regroupée en fin de période plutôt qu'une programmation anticipée.</div>
+              <div class="guide-btn-row" style="margin-top:8px"><button class="guide-btn" type="button" data-guide-src="guideContent6">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent6" style="display:none"><b>Guide de lecture :</b> chaque action est positionnée au mois de fin de sa première étape (et non à sa date de création), pour refléter le rythme réel de mise en œuvre plutôt que celui de la saisie administrative. Une répartition étalée sur l'année traduit une planification qui lisse la charge de travail ; une concentration marquée sur quelques mois peut signaler un pilotage réactif ou une saisie tardive regroupée en fin de période plutôt qu'une programmation anticipée.</div>
             </div>
           </div>
           <div class="part-title" style="margin-top:14px">Points forts et axes de progrès du territoire</div>
-          <div class="guide" style="margin-top:0"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Seuls les éléments concernant au moins 30&nbsp;% des fiches action du territoire sont retenus, dans la limite de 3 de chaque côté.</div>
+          <div class="guide-btn-row" style="margin-top:0"><button class="guide-btn" type="button" data-guide-src="guideContent7">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent7" style="display:none"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Jusqu'à 3 éléments de chaque côté, avec une alerte ⚠️ dès que l'observation repose sur moins de 30&nbsp;% des fiches du territoire.</div>
           <div class="fiches-pf-preco-grid">
             <div>
               <div class="pf-preco-col-title">✅ Points forts</div>
@@ -815,7 +827,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
-          <div class="guide"><b>Guide de lecture :</b> pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent8">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent8" style="display:none"><b>Guide de lecture :</b> pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
           <h3 id="perfScopeTitle"></h3>
           <div class="hero-row" id="perfHero"></div>
           <div class="part-title" id="perfTableTitle" style="display:none">Territoires les plus proches</div>
@@ -1905,7 +1917,7 @@ function questionRowsHTML(qGetter, scopeKey, records) {
       var qOpen = !!questionExpand[qKey];
       var pf = pointsFortsSet[n];
       var pfNiveau = pf ? pointFortNiveau(pf) : null;
-      var pfTag = pf ? '<button class="pf-tag" type="button" data-pf-q="' + n + '" data-pf-niveau="' + pfNiveau + '" title="Point fort - cliquer pour en savoir plus">\u2705 Point fort</button>' : '';
+      var pfTag = '<span class="pf-tag-slot">' + (pf ? '<button class="pf-tag" type="button" data-pf-q="' + n + '" data-pf-niveau="' + pfNiveau + '" title="Point fort - cliquer pour en savoir plus">\u2705 Point fort</button>' : '') + '</span>';
       html += '<div class="q-bar-wrap"><div class="q-bar-row' + (qOpen ? ' q-bar-open' : '') + '" data-qkey="' + esc(qKey) + '" role="button" tabindex="0"><button class="qnum" data-qnum="' + n + '" type="button">Q' + n + '</button><div class="qtext">' + esc(q.text) + '</div>' +
         '<div class="q-track"><div class="q-fill" style="width:' + pct + '%;background:' + themeColor(q.theme) + '"></div></div>' + pfTag +
         '<div class="qval">' + valTxt + '</div><span class="q-chev"></span></div>' +
@@ -2826,37 +2838,40 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
     hostPreco.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
     return;
   }
-  /* Seuil de 30 % (recalibré sur la distribution réelle : médiane observée à 25 % de
-     concernement, contre un seuil précédent de 50 % qui ne captait que les 16 % de valeurs
-     les plus extrêmes et laissait 62 % des CLPE sans aucun point fort). Un axe n'est retenu
-     (points forts comme axes de progrès) que s'il concerne au moins 30 % des fiches action
-     du périmètre - un niveau de concentration nettement supérieur à une répartition uniforme
-     entre les 14 axes possibles (~7 % chacun en moyenne). Exclusion mutuelle : un même
+  /* Toujours proposer jusqu'à 3 axes de progrès et 3 points forts dès qu'un critère concerne
+     au moins une fiche (pct > 0), plutôt qu'un seuil strict qui laissait encore trop de
+     périmètres sans aucune observation. En contrepartie, une alerte de fiabilité s'affiche
+     dès que l'observation repose sur moins de 30 % des fiches du territoire, pour ne jamais
+     présenter un signal faible comme une tendance établie. Exclusion mutuelle : un même
      critère ne peut pas apparaître des deux côtés - priorité à l'axe de progrès, qui est
      l'information la plus actionnable. */
-  var preco = withPct.filter(function (d) { return d.pct >= 30; }).slice(0, 3);
+  var SEUIL_FIABLE = 30;
+  var preco = withPct.filter(function (d) { return d.pct > 0; }).slice(0, 3);
   var precoKeys = {}; preco.forEach(function (d) { precoKeys[d.key] = 1; });
-  var pointsForts = withPctFort.filter(function (d) { return d.pct >= 30 && !precoKeys[d.key]; }).slice(0, 3);
+  var pointsForts = withPctFort.filter(function (d) { return d.pct > 0 && !precoKeys[d.key]; }).slice(0, 3);
+  function fiabiliteAlerte(pct) {
+    return pct < SEUIL_FIABLE ? '<div class="fiabilite-alerte">\u26A0\uFE0F Cette observation ne concerne que ' + fmt(pct, 0) + '\u00A0% des fiches action du territoire - à considérer avec prudence.</div>' : '';
+  }
 
   var currentClpe = state.clpe || null;
   hostPreco.innerHTML = preco.length ? preco.map(function (d) {
     var ref = findClpeWithPointFort(d.key, currentClpe);
     var refLink = ref && ref.codeClpe && ref.clpe !== currentClpe
-      ? '<div class="ref-territoire-line">\uD83D\uDCA1 Point fort de <b>' + esc(ref.clpe) + '</b> (' + fmt(ref.pct, 0) + '\u00A0% de ses fiches)' + fichesClpeLinkHTML(ref.codeClpe, 'Consulter ses fiches action') + '</div>'
+      ? '<div class="ref-territoire-line">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> Point fort de <b>' + esc(ref.clpe) + '</b> (' + fmt(ref.pct, 0) + '\u00A0% de ses fiches)' + fichesClpeLinkHTML(ref.codeClpe, 'Consulter ses fiches action') + '</div>'
       : '';
-    return '<div class="preco-item"><b>' + esc(d.label) + '</b><span class="axe-score">(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)</span><p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p>' + refLink + '</div>';
-  }).join('') : '<p class="preco-empty">Aucun axe de progrès ne concerne au moins 30&nbsp;% des fiches de ce périmètre.</p>';
+    return '<div class="preco-item"><b>' + esc(d.label) + '</b><span class="axe-score">(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)</span>' + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p>' + refLink + '</div>';
+  }).join('') : '<p class="preco-empty">Aucun axe de progrès identifiable sur ce périmètre (aucune fiche exploitable).</p>';
 
   if (pointsForts.length) {
     hostPF.innerHTML = pointsForts.map(function (d) {
-      return '<div class="preco-item point-fort-item"><b>' + esc(d.label) + '</b><span class="axe-score">(point fort de ' + fmt(d.pct, 0) + '\u00A0% des fiches)</span><p>' + esc(FICHES_AXE_FORT_TEXT[d.key]) + '</p></div>';
+      return '<div class="preco-item point-fort-item"><b>' + esc(d.label) + '</b><span class="axe-score">(point fort de ' + fmt(d.pct, 0) + '\u00A0% des fiches)</span>' + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_FORT_TEXT[d.key]) + '</p></div>';
     }).join('');
   } else {
     /* Aucun point fort net (ou moins de 3) sur ce périmètre : renvoie vers un territoire de
        référence, à la fois bien noté et riche en points forts, qui peut servir d'inspiration. */
     var inspi = findInspiringTerritory(currentClpe);
-    hostPF.innerHTML = '<p class="preco-empty">Aucun point fort ne se détache nettement sur ce périmètre (aucun critère ne concerne au moins 30&nbsp;% des fiches).</p>' +
-      (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>' + esc(inspi.clpe) + '</b> affiche une qualité globale élevée (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
+    hostPF.innerHTML = '<p class="preco-empty">Aucun point fort identifiable sur ce périmètre (aucune fiche exploitable).</p>' +
+      (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> <b>' + esc(inspi.clpe) + '</b> affiche une qualité globale élevée (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
   }
 }
 
@@ -3777,6 +3792,15 @@ function bindEvents() {
     document.getElementById('pfTagOverlay').classList.add('show');
   });
   document.getElementById('pfTagClose').addEventListener('click', function () { document.getElementById('pfTagOverlay').classList.remove('show'); });
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.guide-btn'); if (!btn) return;
+    var src = document.getElementById(btn.dataset.guideSrc);
+    if (!src) return;
+    document.getElementById('guidePopupBody').innerHTML = src.innerHTML;
+    document.getElementById('guidePopupOverlay').classList.add('show');
+  });
+  document.getElementById('guidePopupClose').addEventListener('click', function () { document.getElementById('guidePopupOverlay').classList.remove('show'); });
+  document.getElementById('guidePopupOverlay').addEventListener('click', function (e) { if (e.target.id === 'guidePopupOverlay') document.getElementById('guidePopupOverlay').classList.remove('show'); });
   document.getElementById('pfTagOverlay').addEventListener('click', function (e) { if (e.target.id === 'pfTagOverlay') document.getElementById('pfTagOverlay').classList.remove('show'); });
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
   document.getElementById('methodoBtn').addEventListener('click', function () {
@@ -3790,7 +3814,7 @@ function bindEvents() {
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('commentNaviguerOverlay').classList.remove('show'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('commentNaviguerOverlay').classList.remove('show'); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
