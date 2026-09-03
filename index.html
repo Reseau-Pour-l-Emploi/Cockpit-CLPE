@@ -485,6 +485,15 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
    ligne verticale, chacune avec son propre sous-titre. */
 #printReport .pr-split2{display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;min-height:0}
 #printReport .pr-split-col{padding-right:16px;display:flex;flex-direction:column;justify-content:flex-start;min-height:0}
+#printReport .pr-detail-2col{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0;overflow:hidden}
+#printReport .pr-detail-col{padding-right:6px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+#printReport .pr-detail-sub{font-size:9.5pt;font-weight:700;color:var(--ft-navy);margin:8px 0 4px;break-after:avoid}
+#printReport .pr-detail-item{font-size:7.5pt;padding:4px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
+#printReport .pr-detail-item:last-child{border-bottom:none}
+#printReport .pr-detail-item b{display:block;color:var(--ft-fg-1);font-size:8pt}
+#printReport .pr-detail-item-fort b{color:var(--ft-vert)}
+#printReport .pr-detail-item p{margin:2px 0 0;color:var(--ft-fg-2);line-height:1.35}
+#printReport .pr-detail-empty{font-size:7.5pt;color:var(--ft-fg-3);font-style:italic}
 #printReport .pr-split-col-r{padding-left:16px;border-left:1.5px solid var(--ft-indigo-light)}
 #printReport .pr-split-title{font-size:12pt;font-weight:700;color:var(--ft-navy);margin-bottom:4px}
 #printReport .pr-freq-bars-sm{height:46mm;padding:6px 4px 0;flex:none}
@@ -3504,8 +3513,90 @@ function buildReportPagePerf() {
   html += '</tbody></table>';
   return html;
 }
+/* Page dédiée au détail des axes de progrès et points forts (maturité + fiches action) :
+   contrairement aux blocs compacts des pages 1 et 2 (titre + score, pour tenir dans l'espace
+   disponible à côté du reste du contenu), cette page donne le texte complet - cap à
+   atteindre pour chaque axe de progrès de maturité, "ce que cela signifie"/"ce que cela
+   apporte au territoire" pour chaque point fort de maturité, et le texte explicatif complet
+   pour chaque axe/point fort de fiches action. */
+function buildReportPageDetail() {
+  var label = scopeLabel();
+  var html = pageHeader(label, 'Détail des axes de progrès et points forts');
+  html += '<div class="pr-detail-2col">';
+
+  // ---------- Colonne gauche : Maturité ----------
+  html += '<div class="pr-detail-col"><div class="pr-split-title">Niveau de maturité</div>';
+  var records = getFiltered();
+  var gMat = equalWeightAgg(records);
+  if (!gMat.n) {
+    html += '<p class="pr-empty">Aucune réponse enregistrée sur ce périmètre.</p>';
+  } else {
+    var stats = questionStats(records, gMat);
+    var axesRep = selectAxesProgres(stats), fortsRep = selectPointsForts(stats);
+    html += '<div class="pr-detail-sub">\u2705 Points forts</div>';
+    html += fortsRep.length ? fortsRep.map(function (s) {
+      var niv = pointFortNiveau(s);
+      var txt = (TEXTES_POINTS_FORTS[s.n] && TEXTES_POINTS_FORTS[s.n][niv]) || null;
+      var titre = txt ? txt.titre : ('Q' + s.n + ' \u00b7 ' + s.text);
+      return '<div class="pr-detail-item pr-detail-item-fort"><b>' + esc(titre) + '</b><span class="pr-af-score">Q' + s.n + ' \u00b7 ' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
+        (txt ? '<p><b>Ce que cela signifie :</b> ' + esc(txt.signification) + '</p><p><b>Ce que cela apporte au territoire :</b> ' + esc(txt.apport) + '</p>' : '') + '</div>';
+    }).join('') : '<p class="pr-detail-empty">Aucun point fort majeur détecté.</p>';
+    html += '<div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
+    html += axesRep.length ? axesRep.map(function (s) {
+      var rec = getQuestionRecommendation(s.n, s.v, s.mx);
+      return '<div class="pr-detail-item"><b>Q' + s.n + ' \u00b7 ' + esc(s.text) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
+        (rec && rec.cap ? '<p><b>Cap à atteindre :</b> ' + esc(rec.cap).replace(/~~n~~/g, ' ') + '</p>' : '') + '</div>';
+    }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès majeur détecté.</p>';
+  }
+  html += '</div>';
+
+  // ---------- Colonne droite : Fiches action ----------
+  html += '<div class="pr-detail-col"><div class="pr-split-title">Fiches action</div>';
+  var frows2 = fichesRows().filter(inScope);
+  var nFiches2 = frows2.reduce(function (s, r) { return s + r.nbFiches; }, 0);
+  if (!nFiches2) {
+    html += '<p class="pr-empty">Aucune fiche action sur ce périmètre.</p>';
+  } else {
+    var defs2 = [
+      { key: 'description', label: "Mieux décrire l'action (contexte, contenu)" },
+      { key: 'problematique', label: 'Mieux formuler la problématique traitée' },
+      { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre' },
+      { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)' },
+      { key: 'suivi', label: 'Renseigner des indicateurs de suivi' },
+      { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)' },
+      { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final' },
+      { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement' },
+      { key: 'bilan', label: 'Renseigner le bilan et les enseignements' },
+      { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)' },
+      { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
+      { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
+      { key: 'vigilance', label: 'Anticiper les points de vigilance' },
+      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' }
+    ];
+    var withPctD = defs2.map(function (d) {
+      var n = frows2.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
+      return { key: d.key, label: d.label, pct: n / nFiches2 * 100 };
+    }).filter(function (d) { return d.pct > 0; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
+    var withPctFortD = defs2.map(function (d) {
+      var n = frows2.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
+      return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: n / nFiches2 * 100 };
+    }).filter(function (d) { return d.pct > 0 && !withPctD.some(function (p) { return p.key === d.key; }); }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
+    html += '<div class="pr-detail-sub">\u2705 Points forts</div>';
+    html += withPctFortD.length ? withPctFortD.map(function (a) {
+      return '<div class="pr-detail-item pr-detail-item-fort"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_FORT_TEXT[a.key] || '') + '</p></div>';
+    }).join('') : '<p class="pr-detail-empty">Aucun point fort identifiable.</p>';
+    html += '<div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
+    html += withPctD.length ? withPctD.map(function (a) {
+      return '<div class="pr-detail-item"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_PRECO_TEXT[a.key] || '') + '</p></div>';
+    }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès identifiable.</p>';
+  }
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
 function buildPrintReportHTML() {
-  var pages = [buildReportPageMaturite(), buildReportPageFreqFiches(), buildReportPagePerf()];
+  var pages = [buildReportPageMaturite(), buildReportPageFreqFiches(), buildReportPageDetail(), buildReportPagePerf()];
   document.getElementById('printReport').innerHTML = pages.map(function (p) { return '<div class="pr-page">' + p + '</div>'; }).join('');
 }
 function downloadPdfReport() {
