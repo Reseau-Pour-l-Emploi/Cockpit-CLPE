@@ -115,6 +115,13 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .cockpit-tab[data-color="orange"].active{border-color:var(--ft-orange)}
 @media(max-width:900px){.cockpit-tab.active::after{display:none}}
 .tab-content{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:18px;margin-top:16px}
+.tab-content-indigo{border-color:var(--ft-indigo);border-width:2px}
+.tab-content-bleu{border-color:var(--ft-bleu);border-width:2px}
+.tab-content-violet{border-color:var(--ft-violet);border-width:2px}
+.tab-content-orange{border-color:var(--ft-orange);border-width:2px}
+.tab-content-bleu{border-color:var(--ft-bleu);border-width:2px}
+.tab-content-violet{border-color:var(--ft-violet);border-width:2px}
+.tab-content-orange{border-color:var(--ft-orange);border-width:2px}
 .tab-panel .guide{margin-top:0}
 .ct-label{font-size:12.5px;font-weight:700;color:var(--ft-navy)}
 .ct-val{font-size:22px;font-weight:700;color:var(--ft-navy);margin-top:4px;line-height:1.1}
@@ -161,6 +168,10 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .btn-pdf-sidebar{width:100%;margin-top:4px;border-top:1px solid var(--ft-border);font-weight:700;background:var(--ft-indigo);color:#fff;border-radius:8px;padding:11px 14px;font-size:12.5px;text-align:center}
 .btn-pdf-sidebar:hover{background:var(--ft-indigo-dark)}
 @media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}}
+.sidebar-sep{border:none;border-top:1px solid var(--ft-border);margin:10px 0 8px}
+.btn-sidebar-link{display:block;width:100%;box-sizing:border-box;text-align:center;background:var(--ft-white);color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:9px 12px;font-size:11.5px;font-weight:600;text-decoration:none;margin-top:8px;line-height:1.3}
+.btn-sidebar-link:hover{background:var(--ft-indigo-light)}
+@media(max-width:900px){.sidebar-sep{display:none}.btn-sidebar-link{width:auto;display:inline-block}}
 .btn-pdf-top:hover{background:var(--ft-indigo-dark)}
 .btn-reset:hover{background:var(--ft-indigo-light)}
 .f-summary{font-size:12px;color:var(--ft-fg-3);margin-left:auto}
@@ -415,6 +426,8 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 .footer-title{font-weight:700;color:var(--ft-fg-1);font-size:13px;white-space:nowrap}
 .footer-ft-logo{height:34px;width:auto;flex:none}
 .footer-copy{margin-top:0}
+.footer-legal-link{background:none;border:none;color:var(--ft-fg-3);font-size:11.5px;text-decoration:underline;cursor:pointer;font-family:var(--ft-font);padding:0;margin-left:8px}
+.footer-legal-link:hover{color:var(--ft-indigo)}
 #backToTopBtn{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;border:none;background:var(--ft-indigo);color:#fff;font-size:16px;cursor:pointer;box-shadow:var(--sh-md);z-index:900;display:flex;align-items:center;justify-content:center;transition:background .12s ease,opacity .15s ease,visibility .15s ease;opacity:0;visibility:hidden}
 #backToTopBtn.show{opacity:1;visibility:visible}
 #backToTopBtn:hover{background:var(--ft-indigo-dark)}
@@ -447,24 +460,15 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-track{height:5px;background:var(--ft-sable-dark);border-radius:3px;overflow:hidden;margin-top:4px}
 #printReport .pr-fill{height:100%;border-radius:3px}
 /* Page Maturité : indicateurs + araignée en haut, liste des 20 questions sur 2 colonnes en dessous */
-#printReport .pr-mat-top{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:none;margin-bottom:8px}
-#printReport .pr-mat-indics{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+#printReport .pr-mat-top{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:none;margin-bottom:14px}
+#printReport .pr-mat-indics{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
 #printReport .pr-mat-radar{display:flex;align-items:center;justify-content:center}
 #printReport .pr-mat-radar svg{width:100%;max-width:520px;height:auto}
-#printReport .pr-q-cols{column-count:2;column-gap:18px;flex:1}
-#printReport .pr-axes-forts-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;flex:none}
-#printReport .pr-af-col{border:1px solid var(--ft-sable-dark);border-radius:5px;padding:6px 9px}
-#printReport .pr-af-title{font-size:8.5pt;font-weight:700;color:var(--ft-navy);margin-bottom:4px}
-#printReport .pr-af-item{font-size:7pt;padding:3px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
-#printReport .pr-af-item:last-child{border-bottom:none}
-#printReport .pr-af-item b{display:block;color:var(--ft-fg-1)}
-#printReport .pr-af-item-fort b{color:var(--ft-vert)}
-#printReport .pr-af-score{color:var(--ft-fg-3);font-size:6.5pt}
-#printReport .pr-af-empty{font-size:7pt;color:var(--ft-fg-3);font-style:italic}
-#printReport .pr-q-legend{font-size:7.5pt;color:var(--ft-fg-2);margin-bottom:6px;flex:none}
+#printReport .pr-q-cols{column-count:2;column-gap:30px;flex:1}
+#printReport .pr-q-legend{font-size:7.5pt;color:var(--ft-fg-2);margin-bottom:10px;flex:none}
 #printReport .pr-q-legend span{margin-right:14px;white-space:nowrap}
-#printReport .pr-q-grouptitle{font-size:9.5pt;font-weight:700;color:var(--ft-navy);background:var(--ft-sable);padding:3px 7px;border-radius:3px;margin:5px 0 3px;break-after:avoid;break-inside:avoid}
-#printReport .pr-q-line{display:grid;grid-template-columns:22px 1fr 60px 82px 16px;gap:5px;align-items:center;font-size:7.5pt;padding:2px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
+#printReport .pr-q-grouptitle{font-size:10pt;font-weight:700;color:var(--ft-navy);background:var(--ft-sable);padding:4px 8px;border-radius:3px;margin:8px 0 5px;break-after:avoid;break-inside:avoid}
+#printReport .pr-q-line{display:grid;grid-template-columns:22px 1fr 60px 82px 16px;gap:6px;align-items:center;font-size:8pt;padding:6px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
 #printReport .pr-q-num{font-weight:700;color:var(--ft-indigo)}
 #printReport .pr-q-val{font-weight:600;text-align:right;white-space:nowrap}
 #printReport .pr-q-meta2{font-size:6.5pt;color:var(--ft-fg-3);text-align:right;white-space:nowrap}
@@ -489,6 +493,8 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-detail-col{padding-right:6px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
 #printReport .pr-detail-sub{font-size:9.5pt;font-weight:700;color:var(--ft-navy);margin:8px 0 4px;break-after:avoid}
 #printReport .pr-detail-item{font-size:7.5pt;padding:4px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
+#printReport .pr-detail-item-sm{font-size:6.5pt;padding:3px 0}
+#printReport .pr-detail-item-sm b{font-size:7pt}
 #printReport .pr-detail-item:last-child{border-bottom:none}
 #printReport .pr-detail-item b{display:block;color:var(--ft-fg-1);font-size:8pt}
 #printReport .pr-detail-item-fort b{color:var(--ft-vert)}
@@ -619,6 +625,9 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="ct-sub" id="ctSubPerf"></div>
         </button>
         <button class="btn-reset btn-pdf-sidebar" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
+        <hr class="sidebar-sep">
+        <a class="btn-reset btn-sidebar-link" href="http://pilotage-rpe.francetravail.org/rpe" target="_blank" rel="noopener">🔗 Tableau de Bord du Réseau Pour l'Emploi</a>
+        <a class="btn-reset btn-sidebar-link" href="https://reseau-pour-l-emploi.github.io/Ressources-Tableau-de-bord-RPE/" target="_blank" rel="noopener">🔗 Ressources du Tableau de Bord du RPE</a>
       </div>
       <div class="cockpit-main-col">
 
@@ -732,7 +741,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
     </div>
 
-    <div class="tab-content" id="tabContent">
+    <div class="tab-content tab-content-indigo" id="tabContent">
 
         <div class="tab-panel" data-brick="maturite" id="panelMaturite">
 
@@ -811,7 +820,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et qualité moyenne sur 4 critères notés sur 4 (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et score moyen sur 4 critères notés sur 4 (données réelles).</div>
           <div class="fiches-links-row">
             <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
             <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
@@ -821,7 +830,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div id="fichesClpeLink"></div>
           <div class="fiches-grid">
             <div>
-              <div class="part-title part-title-center">Qualité par critère</div>
+              <div class="part-title part-title-center">Score par critère</div>
               <div class="radar-wrap" id="fichesRadar"></div>
             </div>
             <div>
@@ -889,8 +898,25 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
     <div class="footer-title">Cockpit de pilotage des CLPE</div>
     <img src="assets/logo-france-travail.svg" alt="France Travail" class="footer-ft-logo">
     <div class="footer-copy">© 2026 France Travail dans le cadre de sa mission d’appui au Réseau Pour l’Emploi</div>
+    <button class="footer-legal-link" id="legalMentionsBtn" type="button">Mentions légales</button>
   </div>
 </footer>
+
+<div class="modal-overlay" id="legalMentionsOverlay">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Mentions légales et avertissement</h3><button class="modal-close" id="legalMentionsClose" aria-label="Fermer">✕</button></div>
+    <div class="modal-body">
+      <p><b>1. Éditeur du site et responsable de la publication</b><br>Ce site est une initiative personnelle, indépendante et à titre individuel développée et maintenue par Denis GORCE. Ce site ne constitue en aucun cas un canal officiel de communication ou un service d'État officiel.</p>
+      <p><b>2. Hébergement</b><br>Ce site est hébergé par GitHub Pages (GitHub Inc.) : GitHub Inc. – 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis.</p>
+      <p><b>3. Origine des données</b><br>L'intégralité des données, cartes, indicateurs et ressources présentés sur ce site provient exclusivement de sources publiques officielles et de jeux de données en accès libre (Open Data). Les dénominations, logos ou marques éventuellement cités (notamment France Travail ou Réseau pour l'emploi) le sont à titre strictement informatif et d'illustration, et demeurent la propriété exclusive de leurs déposants respectifs.</p>
+      <p><b>4. Indépendance et exonération de responsabilité</b></p>
+      <ul>
+        <li><b>Absence de lien officiel :</b> Ce site est édité à l'initiative exclusive de son auteur. Il n'est ni commandité, ni approuvé, ni géré par France Travail.</li>
+        <li><b>Exclusion de responsabilité :</b> France Travail ne saurait en aucun cas être tenu responsable du contenu, de l'exactitude, de l'actualisation ou de l'utilisation des données et outils mis à disposition sur cette plateforme. L'utilisateur exploite les contenus présentés sous sa seule et entière responsabilité.</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
@@ -1145,6 +1171,28 @@ var sourceLastModified = { maturite: null, freq: null, fiches: null, perf: null 
 function updateDataUpdatedLabel(brick) {
   var d = sourceLastModified[brick];
   document.getElementById('dataUpdatedLabel').textContent = d ? d.toLocaleDateString('fr-FR') : CONFIG.dataUpdatedAt;
+}
+/* Date de mise à jour = date du dernier commit GitHub ayant touché le fichier source
+   concerné (via l'API GitHub), et non l'en-tête HTTP Last-Modified renvoyé par GitHub Pages
+   qui ne reflète pas fiablement la date réelle de mise à jour du contenu. */
+var GITHUB_REPO = 'Reseau-Pour-l-Emploi/Cockpit-CLPE';
+var GITHUB_SOURCE_PATH = { maturite: 'data/answers_global.xlsx', fiches: 'data/fiches_action.csv', freq: 'data/tdb_rpe_frequentation.csv', perf: 'data/clpe_tae_tpe.csv' };
+function fetchGithubLastCommitDates() {
+  Object.keys(GITHUB_SOURCE_PATH).forEach(function (brick) {
+    var url = 'https://api.github.com/repos/' + GITHUB_REPO + '/commits?path=' + encodeURIComponent(GITHUB_SOURCE_PATH[brick]) + '&page=1&per_page=1';
+    fetch(url, { headers: { Accept: 'application/vnd.github+json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || !data.length) return;
+        var iso = data[0].commit && data[0].commit.committer && data[0].commit.committer.date;
+        if (!iso) return;
+        var d = new Date(iso);
+        if (isNaN(d)) return;
+        sourceLastModified[brick] = d;
+        if (activeBrick === brick) updateDataUpdatedLabel(brick);
+      })
+      .catch(function () { /* API GitHub indisponible ou limite de requêtes atteinte : on garde le repli CONFIG.dataUpdatedAt déjà affiché. */ });
+  });
 }
 var state = { region: '', dept: '', clpe: '', qview: 'part', expanded: null, trimestre: '' };
 var MAPS = [], mapsReady = false;
@@ -2604,14 +2652,14 @@ function fichesAggFor(level) {
 var FICHES_CRITERIA = [
   { id: 'innovant', label: 'Caractère innovant' },
   { id: 'impact', label: 'Impact usager' },
-  { id: 'qualite', label: 'Qualité de la description (cadrage)' },
+  { id: 'qualite', label: 'Score de la description (cadrage)' },
   { id: 'bilan', label: 'Bilan et valorisation' }
 ];
 var FICHES_INDICATORS = [
   { id: 'nbFiches', label: 'Nombre de fiches action', get: function (g) { return g.nbFiches; }, dec: 0 },
   { id: 'nbBeneficiaires', label: 'Nombre de bénéficiaires', get: function (g) { return g.moyBeneficiairesParAction != null ? g.nbBeneficiaires : null; }, dec: 0 },
   { id: 'moyBeneficiairesParAction', label: 'Bénéficiaires en moyenne par action', get: function (g) { return g.moyBeneficiairesParAction; }, dec: 1 },
-  { id: 'global', label: 'Qualité globale (/4)', get: function (g) { return g.global; }, dec: 2 }
+  { id: 'global', label: 'Score global (/4)', get: function (g) { return g.global; }, dec: 2 }
 ].concat(FICHES_CRITERIA.map(function (c) {
   return { id: c.id, label: 'Qualité : ' + c.label + ' (/4)', get: function (g) { return g[c.id]; }, dec: 2 };
 }));
@@ -2656,7 +2704,7 @@ function buildGenericRadarSVG(axes) {
     var extra = (lines.length - 1) * lineH;
     svg += '<text x="' + lx + '" y="' + (cy + pp.y2 + extra) + '" text-anchor="' + pp.anchor + '" font-size="13.5" font-weight="700" fill="' + cssVar('--ft-indigo') + '">' + esc(fmt(a.value, 2) + ' / ' + a.max) + '</text>';
   });
-  return '<svg width="440" height="310" viewBox="0 0 440 310" role="img" aria-label="Radar qualité des fiches action">' + svg + '</svg>';
+  return '<svg width="440" height="310" viewBox="0 0 440 310" role="img" aria-label="Radar des scores des fiches action">' + svg + '</svg>';
 }
 /* Planification des actions par mois, avec une courbe par année (valeurs mensuelles brutes,
    non cumulées) - positionnées au mois de fin de la première étape de chaque action (proxy
@@ -2717,7 +2765,7 @@ function renderFiches() {
   document.getElementById('fichesHero').innerHTML =
     '<div class="hero-card"><div class="lbl">Fiches action saisies</div><div class="val">' + nFiches + '</div></div>' +
     '<div class="hero-card"><div class="lbl">Nombre de bénéficiaires</div><div class="val">' + (nFichesAvecBenef ? nBeneficiaires : '<span style="color:var(--ft-fg-3)">-</span>') + '</div>' + (moyBeneficiaires == null ? (nFichesAvecBenef ? '' : '<div class="ct-sub" style="margin-top:4px">Champ non renseigné sur ce périmètre</div>') : '<div class="ct-sub" style="margin-top:4px">Soit ' + fmt(moyBeneficiaires, 1) + ' en moyenne, sur les ' + nFichesAvecBenef + ' fiche' + (nFichesAvecBenef > 1 ? 's' : '') + ' renseignant ce champ</div>') + '</div>' +
-    '<div class="hero-card"><div class="lbl">Qualité globale</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>';
+    '<div class="hero-card"><div class="lbl">Score global</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>';
   var codeClpe = state.clpe ? (rows.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || null) : null;
   var linkHost = document.getElementById('fichesClpeLink');
   if (linkHost) {
@@ -2799,7 +2847,7 @@ function renderFichesAxes(rows, nFiches) {
 }
 /* Territoire "inspirant" vers lequel renvoyer quand le périmètre sélectionné n'a pas assez
    de points forts marqués (moins de 3 axes concernant au moins 30 % de ses fiches) :
-   le CLPE ayant la meilleure qualité globale, parmi ceux avec un nombre de fiches suffisant
+   le CLPE ayant le meilleur score global, parmi ceux avec un nombre de fiches suffisant
    pour que ce score soit représentatif. */
 function findInspiringTerritory(excludeClpe) {
   var groups = groupRowsByGeo(fichesRows(), 'clpe');
@@ -2808,7 +2856,7 @@ function findInspiringTerritory(excludeClpe) {
     if (clpeName === excludeClpe) return;
     var rows = groups[clpeName];
     var nb = rows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
-    if (nb < 3) return;
+    if (nb < 2) return;
     var global = avg(rows.map(function (r) { return (r.innovant + r.impact + r.qualite + r.bilan) / 4; }));
     if (global != null && global > bestScore) {
       bestScore = global;
@@ -3038,7 +3086,7 @@ function renderCockpitGrid(gMaturite) {
   document.getElementById('ctValFreq').textContent = freqVal == null ? '-' : fmt(freqVal, 0);
   document.getElementById('ctSubFreq').textContent = lastMois ? 'consultations \u00b7 ' + lastMois : '';
   document.getElementById('ctValFiches').textContent = nFiches;
-  document.getElementById('ctSubFiches').textContent = qMoy == null ? '' : 'Qualité moyenne : ' + fmt(qMoy, 1) + ' / 4';
+  document.getElementById('ctSubFiches').textContent = qMoy == null ? '' : 'Score moyen : ' + fmt(qMoy, 1) + ' / 4';
   var ctPerf = document.getElementById('ctValPerf');
   ctPerf.innerHTML = perfRow == null ? '-' : ((perfRow.deltaTae >= 0 ? '+' : '') + fmt(perfRow.deltaTae, 2) + ' <span class="unit">pp</span>');
   ctPerf.className = 'ct-val' + (perfRow == null ? '' : (perfRow.deltaTae >= 0 ? ' ecart-pos' : ' ecart-neg'));
@@ -3333,27 +3381,11 @@ function buildReportPageMaturite() {
       var meta = fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)';
       html += '<div class="pr-q-line"><span class="pr-q-num">Q' + n + '</span><span title="' + esc(META.questions[n].text) + '">' + esc(META.questions[n].text.length > 70 ? META.questions[n].text.slice(0, 68) + '\u2026' : META.questions[n].text) + '</span>' +
         '<span class="pr-q-val">' + meta + '</span>' +
-        '<span class="pr-q-meta2">' + s.count + '\u00A0rép. \u00b7 ' + (s.h == null ? 'h. n/d' : 'h. ' + fmt(s.h, 0) + '\u00A0%') + '</span>' +
+        '<span class="pr-q-meta2">\uD83D\uDC65\u00A0' + s.count + ' \u00b7 \u2696\uFE0F\u00A0' + (s.h == null ? 'n/d' : fmt(s.h, 0) + '\u00A0%') + '</span>' +
         '<span class="pr-q-tag-emoji">' + (tag ? PR_TAG_EMOJI[tag] : '') + '</span></div>';
     });
   });
   html += '</div>';
-
-  var axesRep = selectAxesProgres(stats), fortsRep = selectPointsForts(stats);
-  if (axesRep.length || fortsRep.length) {
-    html += '<div class="pr-axes-forts-2col">';
-    html += '<div class="pr-af-col"><div class="pr-af-title">\u2705 Points forts du CLPE</div>' +
-      (fortsRep.length ? fortsRep.map(function (s) {
-        var niv = pointFortNiveau(s);
-        var txt = (TEXTES_POINTS_FORTS[s.n] && TEXTES_POINTS_FORTS[s.n][niv]) || null;
-        return '<div class="pr-af-item pr-af-item-fort"><b>' + (txt ? esc(txt.titre) : 'Q' + s.n + ' \u00b7 ' + esc(s.text.slice(0, 58))) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span></div>';
-      }).join('') : '<div class="pr-af-empty">Aucun point fort majeur détecté.</div>') + '</div>';
-    html += '<div class="pr-af-col"><div class="pr-af-title">\uD83C\uDFAF Axes de progrès du CLPE</div>' +
-      (axesRep.length ? axesRep.map(function (s) {
-        return '<div class="pr-af-item"><b>Q' + s.n + ' \u00b7 ' + esc(s.text.length > 60 ? s.text.slice(0, 58) + '\u2026' : s.text) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span></div>';
-      }).join('') : '<div class="pr-af-empty">Aucun axe de progrès majeur détecté.</div>') + '</div>';
-    html += '</div>';
-  }
   return html;
 }
 function buildReportPageFreqFiches() {
@@ -3408,7 +3440,7 @@ function buildReportPageFreqFiches() {
   // ---------- Colonne droite : Fiches action ----------
   html += '<div class="pr-split-col pr-split-col-r"><div class="pr-split-title">Fiches action</div>';
   var fy = fichesYearSelected();
-  html += '<div class="pr-q-legend">Nombre de fiches, bénéficiaires impactés et qualité moyenne sur 4 critères (' + esc(fy ? 'année ' + fy : 'toutes années confondues') + ').</div>';
+  html += '<div class="pr-q-legend">Nombre de fiches, bénéficiaires impactés et score moyen sur 4 critères (' + esc(fy ? 'année ' + fy : 'toutes années confondues') + ').</div>';
   var frows = fichesRows().filter(inScope);
   var nFiches = frows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
   var nBenef = frows.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0);
@@ -3418,7 +3450,7 @@ function buildReportPageFreqFiches() {
   html += '<div class="pr-fiches-heroes pr-fiches-heroes-row">' +
     '<div class="pr-hero"><div class="lbl">Fiches saisies</div><div class="val">' + nFiches + '</div></div>' +
     '<div class="pr-hero"><div class="lbl">Bénéficiaires</div><div class="val">' + nBenef + '</div>' + (moyBenef == null ? '' : '<div class="pr-auto-lbl">' + fmt(moyBenef, 1) + '/action</div>') + '</div>' +
-    '<div class="pr-hero"><div class="lbl">Qualité globale</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>' +
+    '<div class="pr-hero"><div class="lbl">Score global</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>' +
     '</div>';
   var colors = [cssVar('--ft-indigo'), cssVar('--ft-violet'), cssVar('--ft-bleu'), cssVar('--ft-jaune-dark')];
   var axes = FICHES_CRITERIA.map(function (c, i) { return { label: c.label, value: frows.length ? avg(frows.map(function (r) { return r[c.id]; })) : 0, max: 4, color: colors[i] }; });
@@ -3448,16 +3480,14 @@ function buildReportPageFreqFiches() {
       var n = frows.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
       return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: n / nFiches * 100 };
     }).filter(function (d) { return d.pct > 0 && !withPctPdf.some(function (p) { return p.key === d.key; }); }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
-    html += '<div class="pr-axes-forts-2col pr-axes-forts-2col-sm">';
-    html += '<div class="pr-af-col"><div class="pr-af-title">\u2705 Points forts</div>' +
-      (withPctFortPdf.length ? withPctFortPdf.map(function (a) {
-        return '<div class="pr-af-item pr-af-item-fort"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span></div>';
-      }).join('') : '<div class="pr-af-empty">Aucun point fort identifiable.</div>') + '</div>';
-    html += '<div class="pr-af-col"><div class="pr-af-title">\uD83C\uDFAF Axes de progrès</div>' +
-      (withPctPdf.length ? withPctPdf.map(function (a) {
-        return '<div class="pr-af-item"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span></div>';
-      }).join('') : '<div class="pr-af-empty">Aucun axe de progrès identifiable.</div>') + '</div>';
-    html += '</div>';
+    html += '<div class="pr-detail-sub">\u2705 Points forts</div>';
+    html += withPctFortPdf.length ? withPctFortPdf.map(function (a) {
+      return '<div class="pr-detail-item pr-detail-item-fort pr-detail-item-sm"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_FORT_TEXT[a.key] || '') + '</p></div>';
+    }).join('') : '<p class="pr-detail-empty">Aucun point fort identifiable.</p>';
+    html += '<div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
+    html += withPctPdf.length ? withPctPdf.map(function (a) {
+      return '<div class="pr-detail-item pr-detail-item-sm"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_PRECO_TEXT[a.key] || '') + '</p></div>';
+    }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès identifiable.</p>';
   }
   html += '</div></div>';
   return html;
@@ -3513,90 +3543,42 @@ function buildReportPagePerf() {
   html += '</tbody></table>';
   return html;
 }
-/* Page dédiée au détail des axes de progrès et points forts (maturité + fiches action) :
-   contrairement aux blocs compacts des pages 1 et 2 (titre + score, pour tenir dans l'espace
-   disponible à côté du reste du contenu), cette page donne le texte complet - cap à
-   atteindre pour chaque axe de progrès de maturité, "ce que cela signifie"/"ce que cela
-   apporte au territoire" pour chaque point fort de maturité, et le texte explicatif complet
-   pour chaque axe/point fort de fiches action. */
-function buildReportPageDetail() {
+/* Page dédiée au détail des axes de progrès et points forts de la maturité : contrairement
+   au bloc compact de la page 1 (retiré pour garder une structure de page stable quel que
+   soit le territoire), cette page donne le texte complet - "ce que cela signifie"/"ce que
+   cela apporte au territoire" pour chaque point fort, cap à atteindre pour chaque axe de
+   progrès. */
+function buildReportPageMaturiteDetail() {
   var label = scopeLabel();
-  var html = pageHeader(label, 'Détail des axes de progrès et points forts');
-  html += '<div class="pr-detail-2col">';
-
-  // ---------- Colonne gauche : Maturité ----------
-  html += '<div class="pr-detail-col"><div class="pr-split-title">Niveau de maturité</div>';
+  var html = pageHeader(label, 'Niveau de maturité - Détail des points forts et axes de progrès');
   var records = getFiltered();
   var gMat = equalWeightAgg(records);
-  if (!gMat.n) {
-    html += '<p class="pr-empty">Aucune réponse enregistrée sur ce périmètre.</p>';
-  } else {
-    var stats = questionStats(records, gMat);
-    var axesRep = selectAxesProgres(stats), fortsRep = selectPointsForts(stats);
-    html += '<div class="pr-detail-sub">\u2705 Points forts</div>';
-    html += fortsRep.length ? fortsRep.map(function (s) {
-      var niv = pointFortNiveau(s);
-      var txt = (TEXTES_POINTS_FORTS[s.n] && TEXTES_POINTS_FORTS[s.n][niv]) || null;
-      var titre = txt ? txt.titre : ('Q' + s.n + ' \u00b7 ' + s.text);
-      return '<div class="pr-detail-item pr-detail-item-fort"><b>' + esc(titre) + '</b><span class="pr-af-score">Q' + s.n + ' \u00b7 ' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
-        (txt ? '<p><b>Ce que cela signifie :</b> ' + esc(txt.signification) + '</p><p><b>Ce que cela apporte au territoire :</b> ' + esc(txt.apport) + '</p>' : '') + '</div>';
-    }).join('') : '<p class="pr-detail-empty">Aucun point fort majeur détecté.</p>';
-    html += '<div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
-    html += axesRep.length ? axesRep.map(function (s) {
-      var rec = getQuestionRecommendation(s.n, s.v, s.mx);
-      return '<div class="pr-detail-item"><b>Q' + s.n + ' \u00b7 ' + esc(s.text) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
-        (rec && rec.cap ? '<p><b>Cap à atteindre :</b> ' + esc(rec.cap).replace(/~~n~~/g, ' ') + '</p>' : '') + '</div>';
-    }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès majeur détecté.</p>';
-  }
-  html += '</div>';
+  if (!gMat.n) return html + '<p class="pr-empty">Aucune réponse enregistrée sur ce périmètre pour ce trimestre.</p>';
 
-  // ---------- Colonne droite : Fiches action ----------
-  html += '<div class="pr-detail-col"><div class="pr-split-title">Fiches action</div>';
-  var frows2 = fichesRows().filter(inScope);
-  var nFiches2 = frows2.reduce(function (s, r) { return s + r.nbFiches; }, 0);
-  if (!nFiches2) {
-    html += '<p class="pr-empty">Aucune fiche action sur ce périmètre.</p>';
-  } else {
-    var defs2 = [
-      { key: 'description', label: "Mieux décrire l'action (contexte, contenu)" },
-      { key: 'problematique', label: 'Mieux formuler la problématique traitée' },
-      { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre' },
-      { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)' },
-      { key: 'suivi', label: 'Renseigner des indicateurs de suivi' },
-      { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)' },
-      { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final' },
-      { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement' },
-      { key: 'bilan', label: 'Renseigner le bilan et les enseignements' },
-      { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)' },
-      { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
-      { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
-      { key: 'vigilance', label: 'Anticiper les points de vigilance' },
-      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' }
-    ];
-    var withPctD = defs2.map(function (d) {
-      var n = frows2.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
-      return { key: d.key, label: d.label, pct: n / nFiches2 * 100 };
-    }).filter(function (d) { return d.pct > 0; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
-    var withPctFortD = defs2.map(function (d) {
-      var n = frows2.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
-      return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: n / nFiches2 * 100 };
-    }).filter(function (d) { return d.pct > 0 && !withPctD.some(function (p) { return p.key === d.key; }); }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
-    html += '<div class="pr-detail-sub">\u2705 Points forts</div>';
-    html += withPctFortD.length ? withPctFortD.map(function (a) {
-      return '<div class="pr-detail-item pr-detail-item-fort"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_FORT_TEXT[a.key] || '') + '</p></div>';
-    }).join('') : '<p class="pr-detail-empty">Aucun point fort identifiable.</p>';
-    html += '<div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
-    html += withPctD.length ? withPctD.map(function (a) {
-      return '<div class="pr-detail-item"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_PRECO_TEXT[a.key] || '') + '</p></div>';
-    }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès identifiable.</p>';
-  }
+  var stats = questionStats(records, gMat);
+  var axesRep = selectAxesProgres(stats), fortsRep = selectPointsForts(stats);
+  html += '<div class="pr-detail-2col">';
+  html += '<div class="pr-detail-col"><div class="pr-split-title">\u2705 Points forts</div>';
+  html += fortsRep.length ? fortsRep.map(function (s) {
+    var niv = pointFortNiveau(s);
+    var txt = (TEXTES_POINTS_FORTS[s.n] && TEXTES_POINTS_FORTS[s.n][niv]) || null;
+    var titre = txt ? txt.titre : ('Q' + s.n + ' \u00b7 ' + s.text);
+    return '<div class="pr-detail-item pr-detail-item-fort"><b>' + esc(titre) + '</b><span class="pr-af-score">Q' + s.n + ' \u00b7 ' + esc(s.text) + ' \u00b7 ' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
+      (txt ? '<p><b>Ce que cela signifie :</b> ' + esc(txt.signification) + '</p><p><b>Ce que cela apporte au territoire :</b> ' + esc(txt.apport) + '</p>' : '') + '</div>';
+  }).join('') : '<p class="pr-detail-empty">Aucun point fort majeur détecté.</p>';
   html += '</div>';
-
-  html += '</div>';
+  html += '<div class="pr-detail-col"><div class="pr-split-title">\uD83C\uDFAF Axes de progrès</div>';
+  html += axesRep.length ? axesRep.map(function (s) {
+    var rec = getQuestionRecommendation(s.n, s.v, s.mx);
+    return '<div class="pr-detail-item"><b>Q' + s.n + ' \u00b7 ' + esc(s.text) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
+      (rec && rec.cap ? '<p><b>Cap à atteindre :</b> ' + esc(rec.cap).replace(/~~n~~/g, ' ') + '</p>' : '') +
+      (rec && rec.rec1 ? '<p><b>Recommandation :</b> ' + esc(rec.rec1).replace(/~~n~~/g, ' ') + '</p>' : '') + '</div>';
+  }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès majeur détecté.</p>';
+  html += '</div></div>';
   return html;
 }
 function buildPrintReportHTML() {
-  var pages = [buildReportPageMaturite(), buildReportPageFreqFiches(), buildReportPageDetail(), buildReportPagePerf()];
+  var pages = [buildReportPageMaturite(), buildReportPageMaturiteDetail(), buildReportPageFreqFiches(), buildReportPagePerf()];
   document.getElementById('printReport').innerHTML = pages.map(function (p) { return '<div class="pr-page">' + p + '</div>'; }).join('');
 }
 function downloadPdfReport() {
@@ -3793,7 +3775,9 @@ function bindEvents() {
       tab.classList.add('active');
       document.querySelectorAll('.tab-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       document.querySelectorAll('.intro-blocks-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
+      document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       activateBrick(tab.dataset.brick);
+      document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       updateDataUpdatedLabel(tab.dataset.brick);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -3932,6 +3916,9 @@ function bindEvents() {
     document.getElementById('guidePopupOverlay').classList.add('show');
   });
   document.getElementById('guidePopupClose').addEventListener('click', function () { document.getElementById('guidePopupOverlay').classList.remove('show'); });
+  document.getElementById('legalMentionsBtn').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.add('show'); });
+  document.getElementById('legalMentionsClose').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.remove('show'); });
+  document.getElementById('legalMentionsOverlay').addEventListener('click', function (e) { if (e.target.id === 'legalMentionsOverlay') document.getElementById('legalMentionsOverlay').classList.remove('show'); });
   document.getElementById('guidePopupOverlay').addEventListener('click', function (e) { if (e.target.id === 'guidePopupOverlay') document.getElementById('guidePopupOverlay').classList.remove('show'); });
   document.getElementById('pfTagOverlay').addEventListener('click', function (e) { if (e.target.id === 'pfTagOverlay') document.getElementById('pfTagOverlay').classList.remove('show'); });
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
@@ -3946,7 +3933,7 @@ function bindEvents() {
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('commentNaviguerOverlay').classList.remove('show'); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('commentNaviguerOverlay').classList.remove('show'); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); document.getElementById('legalMentionsOverlay').classList.remove('show'); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
@@ -4014,11 +4001,9 @@ function selectTrimestre(id) {
 function init() {
   document.getElementById('loader').style.display = 'block';
   document.getElementById('loader').textContent = 'Chargement des réponses…';
-  function withLastModified(brick) {
-    return function (r) { var lm = r.headers.get('last-modified'); if (lm) { var d = new Date(lm); if (!isNaN(d)) sourceLastModified[brick] = d; } return r; };
-  }
+  fetchGithubLastCommitDates();
   Promise.all([
-    fetchFresh(CONFIG.answersFile).then(withLastModified('maturite')).then(function (r) {
+    fetchFresh(CONFIG.answersFile).then(function (r) {
       if (!r.ok) throw new Error(CONFIG.answersFile + ' : HTTP ' + r.status);
       return r.arrayBuffer();
     }),
@@ -4027,9 +4012,9 @@ function init() {
     fetchFresh(CONFIG.geo.departement).then(function (r) { return r.json(); }),
     fetchFresh(CONFIG.referentialFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.referentielCorrectifFile).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.frequentationFile).then(withLastModified('freq')).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.fichesFile).then(withLastModified('fiches')).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.perfFile).then(withLastModified('perf')).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.frequentationFile).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.fichesFile).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.perfFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.popFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.recommandationsFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.textesPointsFortsFile).then(function (r) { return r.ok ? r.text() : ''; })
@@ -4130,7 +4115,7 @@ function init() {
       bindEvents();
       populateTrimestreSelect();
       populateFichesYearSelect();
-      document.getElementById('dataUpdatedLabel').textContent = sourceLastModified.maturite ? sourceLastModified.maturite.toLocaleDateString('fr-FR') : CONFIG.dataUpdatedAt;
+      updateDataUpdatedLabel('maturite');
       document.getElementById('loader').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       refreshFilters();
