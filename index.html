@@ -312,6 +312,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-reco-body{padding:4px 0 14px 50px;font-size:12.5px;color:var(--ft-fg-2)}
 .q-reco-item,.q-reco-cap{background:var(--ft-sable);border-left:3px solid var(--ft-indigo);border-radius:4px;padding:8px 12px;margin-bottom:8px}
 .q-reco-cap{border-left-color:var(--ft-jaune-dark)}
+.priorite-cap{border-left-color:var(--ft-jaune-dark)}
 .q-reco-item b,.q-reco-cap b{display:block;font-size:11px;color:var(--ft-indigo);margin-bottom:3px;text-transform:uppercase;letter-spacing:.02em}
 .q-reco-cap b{color:var(--ft-jaune-dark)}
 .q-reco-item p,.q-reco-cap p{margin:0;line-height:1.5}
@@ -789,7 +790,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
           </div>
           <div class="part-title" style="margin-top:14px">Points forts et axes de progrès du territoire</div>
-          <div class="guide" style="margin-top:0"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Seuls les éléments concernant au moins la moitié des fiches action du territoire sont retenus, dans la limite de 3 de chaque côté.</div>
+          <div class="guide" style="margin-top:0"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Seuls les éléments concernant au moins 30&nbsp;% des fiches action du territoire sont retenus, dans la limite de 3 de chaque côté.</div>
           <div class="fiches-pf-preco-grid">
             <div>
               <div class="pf-preco-col-title">✅ Points forts</div>
@@ -1684,10 +1685,19 @@ var NIVEAU_DESCRIPTIONS = {
 };
 /* Sélection des axes de progrès et points forts du CLPE, sur le référentiel des 20
    questions (Fondamentaux Q1-10 puis Pratiques Q11-20), avec priorité aux Fondamentaux dans
-   les deux cas et complément par les Pratiques si besoin. */
+   les deux cas et complément par les Pratiques si besoin.
+   Seuils recalibrés sur la distribution réelle des scores/homogénéités (2644 couples
+   question x CLPE analysés) : avec les seuils d'origine (score < 50 % pour les axes ;
+   homogénéité > 65 % ET score > 65 % pour les points forts), 62 % des CLPE n'affichaient
+   AUCUN point fort et 17 % AUCUN axe de progrès - principalement parce que l'homogénéité est
+   indéfinie dès qu'un seul répondant a renseigné la question (60 % des cas), ce qui excluait
+   mécaniquement ces CLPE de tout point fort. Nouveaux seuils : axe de progrès si score
+   < 55 % (légèrement au-dessus du seuil précédent, cohérent avec la médiane observée à 58 %) ;
+   point fort si score > 60 % ET (homogénéité > 50 % OU un seul répondant, l'homogénéité
+   n'ayant alors pas de sens à exiger). */
 function selectAxesProgres(stats) {
   var isFond = function (s) { return s.n <= CONFIG.fondRange[1]; };
-  var seuil = function (s) { return s.v < s.mx * 0.5; };
+  var seuil = function (s) { return s.v < s.mx * 0.55; };
   var fond = stats.filter(function (s) { return isFond(s) && seuil(s); }).sort(function (a, b) { return a.v - b.v; });
   var list = fond;
   if (list.length < 5) {
@@ -1698,7 +1708,7 @@ function selectAxesProgres(stats) {
 }
 function selectPointsForts(stats) {
   var isFond = function (s) { return s.n <= CONFIG.fondRange[1]; };
-  var qualifie = function (s) { return s.h != null && s.h > 65 && s.pct > 65; };
+  var qualifie = function (s) { return (s.h == null || s.h > 50) && s.pct > 60; };
   var fond = stats.filter(function (s) { return isFond(s) && qualifie(s); }).sort(function (a, b) { return b.v - a.v; });
   var list = fond.slice(0, 3);
   if (list.length < 3) {
@@ -1721,10 +1731,11 @@ function buildAxesEtPointsFortsHTML(records, g) {
       '<span class="priorite-score">' + fmt(q.v) + ' / ' + q.mx + ' (' + fmt(q.pct, 0) + '\u00A0%)' +
       ' \u00b7 ' + q.count + ' répondant' + (q.count > 1 ? 's' : '') +
       (q.h != null ? ' \u00b7 homogénéité ' + fmt(q.h, 0) + '\u00A0%' : '') + '</span></div>';
-    if (rec && !rec.isMax && (rec.rec1 || rec.rec2)) {
+    if (rec && !rec.isMax && (rec.rec1 || rec.rec2 || rec.cap)) {
       h += '<button class="btn-reset axe-reco-toggle" type="button">Voir les recommandations</button><div class="priorite-recos" style="display:none">';
       if (rec.rec1) h += '<div class="priorite-reco"><b>Recommandation 1</b><p>' + esc(rec.rec1).replace(/~~n~~/g, '<br>') + '</p></div>';
       if (rec.rec2) h += '<div class="priorite-reco"><b>Recommandation 2</b><p>' + esc(rec.rec2).replace(/~~n~~/g, '<br>') + '</p></div>';
+      if (rec.cap) h += '<div class="priorite-reco priorite-cap"><b>Cap à atteindre</b><p>' + esc(rec.cap).replace(/~~n~~/g, '<br>') + '</p></div>';
       h += '</div>';
     }
     return h + '</div></div>';
@@ -2542,7 +2553,7 @@ var FICHES_CRITERIA = [
 ];
 var FICHES_INDICATORS = [
   { id: 'nbFiches', label: 'Nombre de fiches action', get: function (g) { return g.nbFiches; }, dec: 0 },
-  { id: 'nbBeneficiaires', label: 'Nombre de bénéficiaires', get: function (g) { return g.nbBeneficiaires; }, dec: 0 },
+  { id: 'nbBeneficiaires', label: 'Nombre de bénéficiaires', get: function (g) { return g.moyBeneficiairesParAction != null ? g.nbBeneficiaires : null; }, dec: 0 },
   { id: 'moyBeneficiairesParAction', label: 'Bénéficiaires en moyenne par action', get: function (g) { return g.moyBeneficiairesParAction; }, dec: 1 },
   { id: 'global', label: 'Qualité globale (/4)', get: function (g) { return g.global; }, dec: 2 }
 ].concat(FICHES_CRITERIA.map(function (c) {
@@ -2649,7 +2660,7 @@ function renderFiches() {
   var globalQ = rows.length ? avg(rows.map(function (r) { return (r.innovant + r.impact + r.qualite + r.bilan) / 4; })) : null;
   document.getElementById('fichesHero').innerHTML =
     '<div class="hero-card"><div class="lbl">Fiches action saisies</div><div class="val">' + nFiches + '</div></div>' +
-    '<div class="hero-card"><div class="lbl">Nombre de bénéficiaires</div><div class="val">' + nBeneficiaires + '</div>' + (moyBeneficiaires == null ? '' : '<div class="ct-sub" style="margin-top:4px">Soit ' + fmt(moyBeneficiaires, 1) + ' en moyenne, sur les ' + nFichesAvecBenef + ' fiche' + (nFichesAvecBenef > 1 ? 's' : '') + ' renseignant ce champ</div>') + '</div>' +
+    '<div class="hero-card"><div class="lbl">Nombre de bénéficiaires</div><div class="val">' + (nFichesAvecBenef ? nBeneficiaires : '<span style="color:var(--ft-fg-3)">-</span>') + '</div>' + (moyBeneficiaires == null ? (nFichesAvecBenef ? '' : '<div class="ct-sub" style="margin-top:4px">Champ non renseigné sur ce périmètre</div>') : '<div class="ct-sub" style="margin-top:4px">Soit ' + fmt(moyBeneficiaires, 1) + ' en moyenne, sur les ' + nFichesAvecBenef + ' fiche' + (nFichesAvecBenef > 1 ? 's' : '') + ' renseignant ce champ</div>') + '</div>' +
     '<div class="hero-card"><div class="lbl">Qualité globale</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>';
   var codeClpe = state.clpe ? (rows.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || null) : null;
   var linkHost = document.getElementById('fichesClpeLink');
@@ -2731,7 +2742,7 @@ function renderFichesAxes(rows, nFiches) {
   renderFichesPointsFortsPreco(withPct, withPctFort, nFiches);
 }
 /* Territoire "inspirant" vers lequel renvoyer quand le périmètre sélectionné n'a pas assez
-   de points forts marqués (moins de 3 axes concernant au moins la moitié de ses fiches) :
+   de points forts marqués (moins de 3 axes concernant au moins 30 % de ses fiches) :
    le CLPE ayant la meilleure qualité globale, parmi ceux avec un nombre de fiches suffisant
    pour que ce score soit représentatif. */
 function findInspiringTerritory(excludeClpe) {
@@ -2791,13 +2802,17 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
     hostPreco.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
     return;
   }
-  /* Seuil de 50 % : un axe n'est retenu (points forts comme axes de progrès) que s'il
-     concerne au moins la moitié des fiches action du périmètre. Exclusion mutuelle : un même
+  /* Seuil de 30 % (recalibré sur la distribution réelle : médiane observée à 25 % de
+     concernement, contre un seuil précédent de 50 % qui ne captait que les 16 % de valeurs
+     les plus extrêmes et laissait 62 % des CLPE sans aucun point fort). Un axe n'est retenu
+     (points forts comme axes de progrès) que s'il concerne au moins 30 % des fiches action
+     du périmètre - un niveau de concentration nettement supérieur à une répartition uniforme
+     entre les 14 axes possibles (~7 % chacun en moyenne). Exclusion mutuelle : un même
      critère ne peut pas apparaître des deux côtés - priorité à l'axe de progrès, qui est
      l'information la plus actionnable. */
-  var preco = withPct.filter(function (d) { return d.pct >= 50; }).slice(0, 3);
+  var preco = withPct.filter(function (d) { return d.pct >= 30; }).slice(0, 3);
   var precoKeys = {}; preco.forEach(function (d) { precoKeys[d.key] = 1; });
-  var pointsForts = withPctFort.filter(function (d) { return d.pct >= 50 && !precoKeys[d.key]; }).slice(0, 3);
+  var pointsForts = withPctFort.filter(function (d) { return d.pct >= 30 && !precoKeys[d.key]; }).slice(0, 3);
 
   var currentClpe = state.clpe || null;
   hostPreco.innerHTML = preco.length ? preco.map(function (d) {
@@ -2806,7 +2821,7 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
       ? '<div class="ref-territoire-line">\uD83D\uDCA1 Point fort de <b>' + esc(ref.clpe) + '</b> (' + fmt(ref.pct, 0) + '\u00A0% de ses fiches)' + fichesClpeLinkHTML(ref.codeClpe, 'Consulter ses fiches action') + '</div>'
       : '';
     return '<div class="preco-item"><b>' + esc(d.label) + '</b><span class="axe-score">(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)</span><p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p>' + refLink + '</div>';
-  }).join('') : '<p class="preco-empty">Aucun axe de progrès ne concerne au moins la moitié des fiches de ce périmètre.</p>';
+  }).join('') : '<p class="preco-empty">Aucun axe de progrès ne concerne au moins 30&nbsp;% des fiches de ce périmètre.</p>';
 
   if (pointsForts.length) {
     hostPF.innerHTML = pointsForts.map(function (d) {
@@ -2816,7 +2831,7 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
     /* Aucun point fort net (ou moins de 3) sur ce périmètre : renvoie vers un territoire de
        référence, à la fois bien noté et riche en points forts, qui peut servir d'inspiration. */
     var inspi = findInspiringTerritory(currentClpe);
-    hostPF.innerHTML = '<p class="preco-empty">Aucun point fort ne se détache nettement sur ce périmètre (aucun critère ne concerne au moins la moitié des fiches).</p>' +
+    hostPF.innerHTML = '<p class="preco-empty">Aucun point fort ne se détache nettement sur ce périmètre (aucun critère ne concerne au moins 30&nbsp;% des fiches).</p>' +
       (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>' + esc(inspi.clpe) + '</b> affiche une qualité globale élevée (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
   }
 }

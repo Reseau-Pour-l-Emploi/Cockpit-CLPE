@@ -94,6 +94,9 @@ input[type=file]{display:none}
 .method-details summary{cursor:pointer;color:var(--ft-indigo);font-weight:600}
 .method-body{margin-top:12px;font-size:12.5px;color:var(--ft-fg-2);line-height:1.55}
 .method-table{width:100%;border-collapse:collapse;margin-top:8px}
+.method-toggle{display:inline-flex;background:var(--ft-sable);border-radius:8px;padding:3px;gap:2px;margin-bottom:12px}
+.mt-btn{background:none;border:none;font-family:var(--ft-font);font-size:12.5px;font-weight:600;color:var(--ft-fg-2);padding:6px 13px;border-radius:6px;cursor:pointer}
+.mt-btn.active{background:#fff;color:var(--ft-indigo);box-shadow:var(--sh-sm)}
 .method-table td{padding:8px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top;font-size:12px}
 .method-table .mw{width:52px;font-weight:700;color:var(--ft-indigo);white-space:nowrap;text-align:center}
 .method-table tr:first-child td{border-top:1px solid var(--ft-sable-dark)}
@@ -118,15 +121,38 @@ input[type=file]{display:none}
     <details class="method-details">
       <summary>📘 Note méthodologique - comment le score est calculé</summary>
       <div class="method-body">
-        <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
-        <table class="method-table">
-          <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
-          <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
-          <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (message "Complétez le bilan"). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
-          <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Uniquement disponible pour l'évaluation en lot (nécessite de comparer la fiche aux autres) : rareté du vocabulaire employé par rapport au reste du lot déposé, complétée par la détection de quelques leviers d'innovation courants (aller-vers, co-construction, gamification...).</td></tr>
-        </table>
-        <p style="margin-top:10px">En évaluation d'une fiche isolée (PDF), le critère "caractère innovant" n'est pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100&nbsp;%.</p>
-        <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action.</p>
+        <div class="method-toggle" id="methodToggle">
+          <button class="mt-btn active" data-mode="simple" type="button">Version simplifiée</button>
+          <button class="mt-btn" data-mode="detail" type="button">Version détaillée</button>
+        </div>
+
+        <div id="methodSimple">
+          <p>Chaque fiche est notée sur <b>100 points</b>, à partir de 4 grands critères : la <b>qualité de la description</b> (25&nbsp;%), l'<b>impact usager</b> (30&nbsp;%), le <b>bilan et la valorisation</b> (25&nbsp;%, une fois renseigné) et le <b>caractère innovant</b> (20&nbsp;%, en évaluation de lot uniquement).</p>
+          <p>À partir de ces mêmes éléments, l'outil identifie aussi jusqu'à <b>3 axes de progrès</b> (les points les plus faibles) et <b>3 points forts</b> (les points les plus solides) de chaque fiche. Certains critères comptent plus que d'autres dans ce classement : par exemple, des objectifs non chiffrés pèsent davantage qu'un titre mal formulé, parce que l'absence d'objectifs a un impact plus concret sur le pilotage de l'action.</p>
+          <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils), pas sur un modèle d'intelligence artificielle : c'est une aide à la relecture, pas un jugement définitif sur la valeur de l'action.</p>
+        </div>
+
+        <div id="methodDetail" style="display:none">
+          <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
+          <table class="method-table">
+            <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
+            <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
+            <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (message "Complétez le bilan"). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
+            <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Uniquement disponible pour l'évaluation en lot (nécessite de comparer la fiche aux autres) : rareté du vocabulaire employé par rapport au reste du lot déposé, complétée par la détection de quelques leviers d'innovation courants (aller-vers, co-construction, gamification...).</td></tr>
+          </table>
+          <p style="margin-top:10px">En évaluation d'une fiche isolée (PDF), le critère "caractère innovant" n'est pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100&nbsp;%.</p>
+
+          <p style="margin-top:16px"><b>Axes de progrès et points forts (jusqu'à 3 de chaque)</b></p>
+          <p>Chaque fiche est décomposée en 16 sous-critères notés individuellement de 0 à 1 (ex. clarté de la description, présence d'objectifs chiffrés, diversité des acteurs...). Les <b>axes de progrès</b> et les <b>points forts</b> reposent sur le même classement, à l'opposé l'un de l'autre :</p>
+          <ul style="margin:6px 0 10px;padding-left:20px">
+            <li><b>Priorité d'un axe de progrès</b> = (1 − score du critère) × poids de criticité du critère. Les 3 valeurs les plus hautes deviennent les 3 axes de progrès affichés.</li>
+            <li><b>Priorité d'un point fort</b> = score du critère × poids de criticité du critère. Les 3 valeurs les plus hautes deviennent les 3 points forts affichés.</li>
+          </ul>
+          <p>Le <b>poids de criticité</b> reflète l'impact réel de chaque critère sur le pilotage de l'action, de 0,5 (peu impactant, ex. longueur du titre) à 2,0 (très impactant, ex. objectifs chiffrés ou impact usager absent) :</p>
+          <table class="method-table" id="methodWeightsTable"></table>
+          <p style="margin-top:10px">En évaluation de lot, la synthèse par territoire (points forts/axes de progrès du périmètre) compte, pour chaque fiche, uniquement son critère n°1 dans chaque classement, puis calcule la fréquence de chaque critère sur l'ensemble du lot.</p>
+          <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action.</p>
+        </div>
       </div>
     </details>
   </div>
@@ -700,6 +726,33 @@ var POINT_FORT_TEXTS = {
 
 function isLongRunning(nf) { return nf.dCreation && nf.dFin && (nf.dFin - nf.dCreation) / 86400000 > 60; }
 
+/* ---------- Pondération de criticité ----------
+   Les axes de progrès et points forts reposent sur le même algorithme (classement pondéré
+   des sous-scores), seule la formulation change selon le sens (score faible = axe de
+   progrès, score élevé = point fort). La pondération reflète l'impact réel de chaque critère
+   sur la qualité d'une fiche action : un titre mal formulé (0,5) est nettement moins
+   impactant que des objectifs non chiffrés (2,0) ou un impact usager absent (2,0). */
+var CRITICITE_WEIGHTS = {
+  description: 1.3, problematique: 1.3, etapes: 1.0, ciblage: 1.0, suivi: 1.3,
+  resultats: 2.0, impact_usager: 2.0, maj: 0.8, bilan: 1.5, valorisation: 1.0,
+  diversite_acteurs: 0.8, vigilance: 0.6, moyens: 0.9, titre: 0.5, diagnostic: 1.3, rattachement: 0.6
+};
+/* Classe les sous-scores renseignés d'une fiche par priorité pondérée : prioriteAxe élevée =
+   score faible sur un critère important (axe de progrès prioritaire) ; prioriteFort élevée =
+   score élevé sur un critère important (point fort marquant). */
+function weightedRanking(subs) {
+  return Object.keys(subs).filter(function (k) { return subs[k] != null; }).map(function (k) {
+    var w = CRITICITE_WEIGHTS[k] || 1;
+    return { key: k, v: subs[k], weight: w, prioriteAxe: (1 - subs[k]) * w, prioriteFort: subs[k] * w };
+  });
+}
+function selectAxesProgres(subs, n) {
+  return weightedRanking(subs).sort(function (a, b) { return b.prioriteAxe - a.prioriteAxe; }).slice(0, n || 3);
+}
+function selectPointsForts(subs, n) {
+  return weightedRanking(subs).sort(function (a, b) { return b.prioriteFort - a.prioriteFort; }).slice(0, n || 3);
+}
+
 function evaluateFiche(nf, refDate, corpus) {
   var today = refDate || new Date();
   var staleDays = daysSince(nf.dMaj, today);
@@ -820,35 +873,24 @@ function renderResults(f, res, rawText) {
     return '<div class="score-card"><div class="lbl">' + c.l + '</div><div class="val">' + fmt0(c.v) + '<span class="unit"> / 100</span></div><div class="track"><div class="fill" style="width:' + c.v + '%;background:' + c.c + '"></div></div></div>';
   }).join('');
 
-  var subKeys = Object.keys(res.subs).filter(function (k) { return res.subs[k] != null; });
-  var sorted = subKeys.map(function (k) { return { key: k, v: res.subs[k] }; }).sort(function (a, b) { return a.v - b.v; });
-  var weakest = sorted.filter(function (x) { return x.v < 0.6; }).slice(0, 5);
+  var axes = selectAxesProgres(res.subs, 3);
   var axesHtml = '';
-  if (!weakest.length) {
+  if (!axes.length) {
     axesHtml = '<div class="ok-box">\uD83C\uDF89 Aucun axe de progrès majeur détecté : les éléments analysés dans cette fiche sont globalement bien renseignés.</div>';
   } else {
-    weakest.forEach(function (x, i) {
+    axes.forEach(function (x, i) {
       axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">' + (i + 1) + '</span>' + AXE_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + AXE_TEXTS[x.key] + '</p></div>';
     });
   }
   document.getElementById('axesList').innerHTML = axesHtml;
 
-  var strongest = sorted.filter(function (x) { return x.v >= 0.75; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 4);
-  var fallbackBest = false;
-  if (!strongest.length && sorted.length) {
-    /* Aucun critère n'atteint le seuil habituel : on met tout de même en avant le critère
-       relativement le mieux renseigné de cette fiche, pour toujours proposer un point de
-       départ positif plutôt que de ne rien montrer. */
-    strongest = [sorted[sorted.length - 1]];
-    fallbackBest = true;
-  }
+  var forts = selectPointsForts(res.subs, 3);
   var pointsFortsHtml = '';
-  if (!strongest.length) {
+  if (!forts.length) {
     pointsFortsHtml = '<div class="preco-empty">Aucun élément exploitable pour identifier un point fort sur cette fiche.</div>';
   } else {
-    strongest.forEach(function (x) {
-      var note = fallbackBest ? ' <i>(élément le plus abouti de cette fiche, à consolider)</i>' : '';
-      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + POINT_FORT_TEXTS[x.key] + note + '</p></div>';
+    forts.forEach(function (x) {
+      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + POINT_FORT_TEXTS[x.key] + '</p></div>';
     });
   }
   document.getElementById('pointsFortsList').innerHTML = pointsFortsHtml;
@@ -1033,25 +1075,11 @@ async function processBulkFile(file) {
   var corpus = buildCorpusFreq(corpusTexts);
 
   var allScores = normalized.map(function (nf) { return evaluateFiche(nf, refDate, corpus); });
-  var AXE_KEYS = Object.keys(AXE_LABELS_FR);
-  var percentiles = {};
-  AXE_KEYS.forEach(function (k) { percentiles[k] = rankPercentile(allScores.map(function (s) { return s.subs[k] == null ? 0.5 : s.subs[k]; })); });
-  /* Points forts : même principe que l'axe de progrès (classement relatif au reste du lot),
-     mais à l'autre extrémité - l'axe le mieux classé plutôt que le moins bien classé. Cela
-     garantit un point fort pour chaque fiche dès qu'au moins un critère est renseigné,
-     plutôt qu'un seuil absolu qui laissait beaucoup de fiches sans aucun point fort. */
-  var STRONG_KEYS = Object.keys(POINT_FORT_LABELS);
-  var percentilesStrong = {};
-  STRONG_KEYS.forEach(function (k) { percentilesStrong[k] = rankPercentile(allScores.map(function (s) { return s.subs[k] == null ? 0.5 : s.subs[k]; })); });
 
   var outRows = rows.map(function (row, idx) {
     var s = allScores[idx];
-    var best = null, bestPct = Infinity;
-    AXE_KEYS.forEach(function (k) { if (allScores[idx].subs[k] == null) return; var p = percentiles[k][idx]; if (p < bestPct) { bestPct = p; best = k; } });
-    var strongCandidates = STRONG_KEYS.filter(function (k) { return s.subs[k] != null; })
-      .map(function (k) { return { key: k, p: percentilesStrong[k][idx], v: s.subs[k] }; })
-      .sort(function (a, b) { return b.p - a.p; });
-    var strongKeys = strongCandidates.slice(0, 2).map(function (x) { return x.key; });
+    var axes = selectAxesProgres(s.subs, 1);
+    var forts = selectPointsForts(s.subs, 2);
     var out = Object.assign({}, row);
     out['Éval - Qualité de la description (/100)'] = Math.round(s.evalDescription.total);
     out['Éval - Impact usager (/100)'] = Math.round(s.evalImpact.total);
@@ -1059,8 +1087,8 @@ async function processBulkFile(file) {
     out["Éval - Caractère innovant (/100)"] = Math.round(s.evalInnovation);
     out['Éval - Score global (/100)'] = Math.round(s.globalScore);
     out['Éval - Critères non évalués (exclus du score global)'] = s.excludedCriteria.length ? s.excludedCriteria.map(function (x) { return x.label + ' (' + x.reason + ')'; }).join(' ; ') : '-';
-    out['Éval - Points forts'] = strongKeys.length ? strongKeys.map(function (k) { return POINT_FORT_LABELS[k]; }).join(' ; ') : '-';
-    out['Éval - Axe de progrès prioritaire'] = best ? AXE_LABELS_FR[best] : '-';
+    out['Éval - Points forts'] = forts.length ? forts.map(function (x) { return POINT_FORT_LABELS[x.key]; }).join(' ; ') : '-';
+    out['Éval - Axe de progrès prioritaire'] = axes.length ? AXE_LABELS_FR[axes[0].key] : '-';
     return out;
   });
 
@@ -1068,29 +1096,20 @@ async function processBulkFile(file) {
   var outWb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(outWb, outWs, 'Fiches action évaluées');
 
-  /* Synthèse du lot :
-     - Préconisations : part des fiches où chaque axe est leur axe de progrès (le moins bien
-       classé de leurs critères renseignés) - classement par ordre décroissant de fréquence.
-     - Points forts : part des fiches où chaque axe est au contraire leur meilleur critère
-       (le mieux classé) - la fréquence réelle à laquelle cet axe ressort comme point fort,
-       et non l'inverse du taux de faiblesse (une fiche peut être globalement peu remplie et
-       n'avoir "aucune vraie faiblesse" sans pour autant avoir de point fort marquant). */
-  var axeConcernedCount = {};
-  AXE_KEYS.forEach(function (k) { axeConcernedCount[k] = 0; });
-  allScores.forEach(function (s, idx) {
-    var best2 = null, bestPct2 = Infinity;
-    AXE_KEYS.forEach(function (k) { if (s.subs[k] == null) return; var p = percentiles[k][idx]; if (p < bestPct2) { bestPct2 = p; best2 = k; } });
-    if (best2) axeConcernedCount[best2]++;
+  /* Synthèse du lot : pour chaque fiche, l'axe de progrès n°1 et le point fort n°1 selon le
+     classement pondéré par criticité (même algorithme que par fiche) - puis fréquence de
+     chaque axe sur l'ensemble du lot. */
+  var AXE_KEYS = Object.keys(AXE_LABELS_FR);
+  var STRONG_KEYS = Object.keys(POINT_FORT_LABELS);
+  var axeConcernedCount = {}; AXE_KEYS.forEach(function (k) { axeConcernedCount[k] = 0; });
+  var axeStrongCount = {}; STRONG_KEYS.forEach(function (k) { axeStrongCount[k] = 0; });
+  allScores.forEach(function (s) {
+    var topAxe = selectAxesProgres(s.subs, 1)[0];
+    if (topAxe && axeConcernedCount[topAxe.key] != null) axeConcernedCount[topAxe.key]++;
+    var topFort = selectPointsForts(s.subs, 1)[0];
+    if (topFort && axeStrongCount[topFort.key] != null) axeStrongCount[topFort.key]++;
   });
   var batchSummary = AXE_KEYS.map(function (k) { return { key: k, label: AXE_LABELS_FR[k], pct: allScores.length ? axeConcernedCount[k] / allScores.length * 100 : 0 }; });
-
-  var axeStrongCount = {};
-  STRONG_KEYS.forEach(function (k) { axeStrongCount[k] = 0; });
-  allScores.forEach(function (s, idx) {
-    var top = null, topPct = -Infinity;
-    STRONG_KEYS.forEach(function (k) { if (s.subs[k] == null) return; var p = percentilesStrong[k][idx]; if (p > topPct) { topPct = p; top = k; } });
-    if (top) axeStrongCount[top]++;
-  });
   var batchSummaryForts = STRONG_KEYS.map(function (k) { return { key: k, label: POINT_FORT_LABELS[k] || AXE_LABELS_FR[k], pct: allScores.length ? axeStrongCount[k] / allScores.length * 100 : 0 }; });
 
   return { workbook: outWb, n: outRows.length, batchSummary: batchSummary, batchSummaryForts: batchSummaryForts };
@@ -1135,6 +1154,18 @@ async function handleBulkFile(file) {
   }
   document.getElementById('loaderBulk').style.display = 'none';
 }
+document.getElementById('methodToggle').addEventListener('click', function (e) {
+  var btn = e.target.closest('.mt-btn'); if (!btn) return;
+  document.querySelectorAll('.mt-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+  document.getElementById('methodSimple').style.display = btn.dataset.mode === 'simple' ? 'block' : 'none';
+  document.getElementById('methodDetail').style.display = btn.dataset.mode === 'detail' ? 'block' : 'none';
+});
+(function () {
+  var keys = Object.keys(CRITICITE_WEIGHTS).sort(function (a, b) { return CRITICITE_WEIGHTS[b] - CRITICITE_WEIGHTS[a]; });
+  document.getElementById('methodWeightsTable').innerHTML = keys.map(function (k) {
+    return '<tr><td class="mw">' + CRITICITE_WEIGHTS[k].toFixed(1) + '</td><td>' + (AXE_LABELS[k] || k) + '</td></tr>';
+  }).join('');
+})();
 document.getElementById('downloadBulkBtn').addEventListener('click', function () {
   if (!lastBulkWorkbook) return;
   /* Export en CSV (point-virgule, UTF-8 sans BOM) plutôt qu'en xlsx : c'est le format
