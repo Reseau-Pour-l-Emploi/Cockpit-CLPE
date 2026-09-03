@@ -2920,6 +2920,9 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
   function fiabiliteAlerte(pct) {
     return pct < SEUIL_FIABLE ? '<div class="fiabilite-alerte">\u26A0\uFE0F Cette observation ne concerne que ' + fmt(pct, 0) + '\u00A0% des fiches action du territoire - à considérer avec prudence.</div>' : '';
   }
+  function scoreOuVide(pct, txt) {
+    return pct < SEUIL_FIABLE ? '' : '<span class="axe-score">' + txt + '</span>';
+  }
 
   var currentClpe = state.clpe || null;
   hostPreco.innerHTML = preco.length ? preco.map(function (d) {
@@ -2927,12 +2930,12 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
     var refLink = ref && ref.codeClpe && ref.clpe !== currentClpe
       ? '<div class="ref-territoire-line">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> Point fort de <b>' + esc(ref.clpe) + '</b> (' + fmt(ref.pct, 0) + '\u00A0% de ses fiches)' + fichesClpeLinkHTML(ref.codeClpe, 'Consulter ses fiches action') + '</div>'
       : '';
-    return '<div class="preco-item"><b>' + esc(d.label) + '</b><span class="axe-score">(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)</span>' + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p>' + refLink + '</div>';
+    return '<div class="preco-item"><b>' + esc(d.label) + '</b>' + scoreOuVide(d.pct, '(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)') + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p>' + refLink + '</div>';
   }).join('') : '<p class="preco-empty">Aucun axe de progrès identifiable sur ce périmètre (aucune fiche exploitable).</p>';
 
   if (pointsForts.length) {
     hostPF.innerHTML = pointsForts.map(function (d) {
-      return '<div class="preco-item point-fort-item"><b>' + esc(d.label) + '</b><span class="axe-score">(point fort de ' + fmt(d.pct, 0) + '\u00A0% des fiches)</span>' + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_FORT_TEXT[d.key]) + '</p></div>';
+      return '<div class="preco-item point-fort-item"><b>' + esc(d.label) + '</b>' + scoreOuVide(d.pct, '(point fort de ' + fmt(d.pct, 0) + '\u00A0% des fiches)') + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_FORT_TEXT[d.key]) + '</p></div>';
     }).join('');
   } else {
     /* Aucun point fort net (ou moins de 3) sur ce périmètre : renvoie vers un territoire de
