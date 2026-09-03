@@ -128,7 +128,9 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .preco-pdf-row .btn-preco{width:auto;flex:1;margin-top:0}
 .btn-preco{border-color:var(--ft-jaune-dark);color:var(--ft-navy);font-weight:600}
 .mat-tabs-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:18px 0 4px}
-.fiches-grid{display:grid;grid-template-columns:0.8fr 1fr 1fr;gap:20px;align-items:stretch;margin-top:10px}
+.fiches-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch;margin-top:16px}
+.hero-row-horiz{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.hero-row-horiz .hero-card{flex:1;min-width:180px}
 .fiches-grid>div:nth-child(2),.fiches-grid>div:nth-child(3){display:flex;flex-direction:column;justify-content:center}
 .fiches-grid .radar-wrap{flex:1;justify-content:center}
 .fiches-month-legend{display:flex;justify-content:center;gap:14px;margin-top:6px;font-size:11.5px;color:var(--ft-fg-2)}
@@ -322,7 +324,10 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-bar-row .qnum{font-weight:700;font-size:13px;color:#fff;background:var(--ft-indigo);border-radius:4px;text-align:center;padding:3px 0;cursor:pointer;border:none;font-family:var(--ft-font)}
 .q-bar-row .qnum:hover{background:var(--ft-indigo-dark)}
 .q-bar-row .qtext{font-size:12.5px;color:var(--ft-fg-2)}
-.q-bar-row .q-track{height:12px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:6px;overflow:hidden}
+.q-bar-row .q-track{height:12px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:6px;overflow:hidden;grid-column:3}
+.pf-tag{grid-column:3;justify-self:end;align-self:center;transform:translateX(60%);z-index:2;background:var(--ft-vert);color:#fff;border:none;border-radius:999px;font-size:9.5px;font-weight:700;padding:2px 8px;cursor:pointer;white-space:nowrap;font-family:var(--ft-font);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.pf-tag:hover{background:var(--ft-vert-dark, #145c3a)}
+@media(max-width:760px){.pf-tag{display:none}}
 .q-bar-row .q-fill{height:100%;border-radius:6px}
 .q-bar-row .qval{font-weight:700;font-size:12.5px;text-align:right}
 .meta-badge{display:inline-block;white-space:nowrap}
@@ -535,6 +540,13 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
     <div class="modal-body">
       <p>Choisissez un territoire via les filtres à droite de la carte, ou en cliquant directement sur la carte (une seule carte, commune à tout le cockpit). Cliquez sur l'un des 4 onglets dans la marge de gauche pour changer de brique : la carte et le détail en dessous se mettent à jour.</p>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pfTagOverlay">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="pfTagTitle">Point fort</h3><button class="modal-close" id="pfTagClose" aria-label="Fermer">✕</button></div>
+    <div class="modal-body" id="pfTagBody"></div>
   </div>
 </div>
 
@@ -773,11 +785,9 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
           </div>
           <h3 id="fichesScopeTitle"></h3>
+          <div class="hero-row-horiz" id="fichesHero"></div>
+          <div id="fichesClpeLink"></div>
           <div class="fiches-grid">
-            <div>
-              <div class="hero-row-vert" id="fichesHero"></div>
-              <div id="fichesClpeLink"></div>
-            </div>
             <div>
               <div class="part-title part-title-center">Qualité par critère</div>
               <div class="radar-wrap" id="fichesRadar"></div>
@@ -1750,8 +1760,10 @@ function buildAxesEtPointsFortsHTML(records, g) {
       ' \u00b7 homogénéité ' + fmt(q.h, 0) + '\u00A0%</span></div>';
     if (txt) {
       h += '<div class="point-fort-text"><b>' + esc(txt.titre) + '</b>' +
+        '<button class="btn-reset axe-reco-toggle" type="button" data-label-open="Voir plus" data-label-close="Voir moins">Voir plus</button>' +
+        '<div class="priorite-recos" style="display:none">' +
         '<p><b>Ce que cela signifie :</b> ' + esc(txt.signification) + '</p>' +
-        '<p><b>Ce que cela apporte au territoire :</b> ' + esc(txt.apport) + '</p></div>';
+        '<p><b>Ce que cela apporte au territoire :</b> ' + esc(txt.apport) + '</p></div></div>';
     }
     return h + '</div></div>';
   }).join('') : '<p class="preco-empty">Aucun point fort majeur ne se détache sur ce périmètre.</p>';
@@ -1862,6 +1874,15 @@ function groupHomogeneity(records, nums) {
 }
 function questionRowsHTML(qGetter, scopeKey, records) {
   var html = '';
+  var qAvgForStats = {};
+  Object.keys(META.questions).forEach(function (nStr) {
+    var n = +nStr; if (n === CONFIG.autoQ) return;
+    var r = qGetter(n); if (r && r.v != null) qAvgForStats[n] = r.v;
+  });
+  var pointsFortsSet = {};
+  if (records && records.length) {
+    selectPointsForts(questionStats(records, { qAvg: qAvgForStats })).forEach(function (x) { pointsFortsSet[x.n] = x; });
+  }
   questionOrder().forEach(function (g, idx) {
     var key = scopeKey + '|' + state.qview + '|' + idx;
     var open = isBlockOpen(key);
@@ -1882,8 +1903,11 @@ function questionRowsHTML(qGetter, scopeKey, records) {
       var valTxt = m == null ? '-' : '<span title="' + esc(QUESTION_SCORE_TOOLTIP) + '" style="cursor:help">' + fmt(m) + ' / ' + mx + '</span>' + (metaBits.length ? ' (' + metaBits.join(', ') + ')' : '');
       var qKey = key + '|q' + n;
       var qOpen = !!questionExpand[qKey];
+      var pf = pointsFortsSet[n];
+      var pfNiveau = pf ? pointFortNiveau(pf) : null;
+      var pfTag = pf ? '<button class="pf-tag" type="button" data-pf-q="' + n + '" data-pf-niveau="' + pfNiveau + '" title="Point fort - cliquer pour en savoir plus">\u2705 Point fort</button>' : '';
       html += '<div class="q-bar-wrap"><div class="q-bar-row' + (qOpen ? ' q-bar-open' : '') + '" data-qkey="' + esc(qKey) + '" role="button" tabindex="0"><button class="qnum" data-qnum="' + n + '" type="button">Q' + n + '</button><div class="qtext">' + esc(q.text) + '</div>' +
-        '<div class="q-track"><div class="q-fill" style="width:' + pct + '%;background:' + themeColor(q.theme) + '"></div></div>' +
+        '<div class="q-track"><div class="q-fill" style="width:' + pct + '%;background:' + themeColor(q.theme) + '"></div></div>' + pfTag +
         '<div class="qval">' + valTxt + '</div><span class="q-chev"></span></div>' +
         '<div class="q-reco-body"' + (qOpen ? '' : ' style="display:none"') + '>' + (qOpen ? questionRecoHTML(n, m, mx) : '') + '</div></div>';
     });
@@ -3675,7 +3699,7 @@ function bindEvents() {
   document.getElementById('questionDetail').addEventListener('click', function (e) {
     if (e.target.closest('.info-icon')) return;
     var btn = e.target.closest('.qnum'); if (btn) { openQuestionModal(+btn.dataset.qnum); return; }
-    var qrow = e.target.closest('.q-bar-row'); if (qrow) { questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderQuestionDetail(); return; }
+    var qrow = e.target.closest('.q-bar-row'); if (qrow && !e.target.closest('.pf-tag')) { questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderQuestionDetail(); return; }
     var grp = e.target.closest('.q-group-title'); if (grp) { toggleBlock(grp.dataset.key); renderQuestionDetail(); }
   });
   document.getElementById('tableViewSwitch').addEventListener('click', function (e) {
@@ -3698,7 +3722,7 @@ function bindEvents() {
     var foldBtn = e.target.closest('.row-fold-all');
     if (foldBtn) { e.stopPropagation(); setAllBlocks(foldBtn.dataset.key, true); renderTable(); return; }
     var btn = e.target.closest('.qnum'); if (btn) { e.stopPropagation(); openQuestionModal(+btn.dataset.qnum); return; }
-    var qrow = e.target.closest('.q-bar-row'); if (qrow) { e.stopPropagation(); questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderTable(); return; }
+    var qrow = e.target.closest('.q-bar-row'); if (qrow && !e.target.closest('.pf-tag')) { e.stopPropagation(); questionExpand[qrow.dataset.qkey] = !questionExpand[qrow.dataset.qkey]; renderTable(); return; }
     var grp = e.target.closest('.q-group-title'); if (grp) { e.stopPropagation(); toggleBlock(grp.dataset.key); renderTable(); }
   });
   document.getElementById('modalClose').addEventListener('click', closeModal);
@@ -3717,7 +3741,9 @@ function bindEvents() {
     if (!recos) return;
     var open = recos.style.display !== 'none';
     recos.style.display = open ? 'none' : 'block';
-    btn.textContent = open ? 'Voir les recommandations' : 'Masquer les recommandations';
+    var labelOpen = btn.dataset.labelOpen || 'Voir les recommandations';
+    var labelClose = btn.dataset.labelClose || 'Masquer les recommandations';
+    btn.textContent = open ? labelOpen : labelClose;
   });
   var heroToggleBtn = document.getElementById('heroToggleBtn');
   heroToggleBtn.addEventListener('click', function () {
@@ -3739,6 +3765,19 @@ function bindEvents() {
     this.textContent = expanded ? 'Voir moins' : 'Voir plus';
   });
   document.getElementById('commentNaviguerOverlay').addEventListener('click', function (e) { if (e.target.id === 'commentNaviguerOverlay') document.getElementById('commentNaviguerOverlay').classList.remove('show'); });
+  document.addEventListener('click', function (e) {
+    var tag = e.target.closest('.pf-tag'); if (!tag) return;
+    e.stopPropagation();
+    var q = +tag.dataset.pfQ, niv = +tag.dataset.pfNiveau;
+    var txt = (TEXTES_POINTS_FORTS[q] && TEXTES_POINTS_FORTS[q][niv]) || null;
+    document.getElementById('pfTagTitle').textContent = txt ? txt.titre : 'Point fort - Q' + q;
+    document.getElementById('pfTagBody').innerHTML = txt
+      ? '<p><b>Ce que cela signifie :</b> ' + esc(txt.signification) + '</p><p><b>Ce que cela apporte au territoire :</b> ' + esc(txt.apport) + '</p>'
+      : '<p>Aucun texte disponible pour cette question.</p>';
+    document.getElementById('pfTagOverlay').classList.add('show');
+  });
+  document.getElementById('pfTagClose').addEventListener('click', function () { document.getElementById('pfTagOverlay').classList.remove('show'); });
+  document.getElementById('pfTagOverlay').addEventListener('click', function (e) { if (e.target.id === 'pfTagOverlay') document.getElementById('pfTagOverlay').classList.remove('show'); });
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
   document.getElementById('methodoBtn').addEventListener('click', function () {
     document.getElementById('methodoOverlay').classList.add('show');
