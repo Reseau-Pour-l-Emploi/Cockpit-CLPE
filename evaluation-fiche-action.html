@@ -129,7 +129,7 @@ input[type=file]{display:none}
         </div>
 
         <div id="methodSimple">
-          <p>Chaque fiche est notée sur <b>100 points</b>, à partir de 4 grands critères : la <b>qualité de la description</b> (25&nbsp;%), l'<b>impact usager</b> (30&nbsp;%), le <b>bilan et la valorisation</b> (25&nbsp;%, une fois renseigné) et le <b>caractère innovant</b> (20&nbsp;%, en évaluation de lot uniquement).</p>
+          <p>Chaque fiche est notée sur <b>100 points</b>, à partir de 4 grands critères : le <b>score de la description</b> (25&nbsp;%), l'<b>impact usager</b> (30&nbsp;%), le <b>bilan et la valorisation</b> (25&nbsp;%, une fois renseigné) et le <b>caractère innovant</b> (20&nbsp;%, en évaluation de lot uniquement).</p>
           <p>À partir de ces mêmes éléments, l'outil identifie aussi jusqu'à <b>3 axes de progrès</b> (les points les plus faibles) et <b>3 points forts</b> (les points les plus solides) de chaque fiche. Certains critères comptent plus que d'autres dans ce classement : par exemple, des objectifs non chiffrés pèsent davantage qu'un titre mal formulé, parce que l'absence d'objectifs a un impact plus concret sur le pilotage de l'action.</p>
           <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils), pas sur un modèle d'intelligence artificielle : c'est une aide à la relecture, pas un jugement définitif sur la valeur de l'action.</p>
         </div>
@@ -137,7 +137,7 @@ input[type=file]{display:none}
         <div id="methodDetail" style="display:none">
           <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
           <table class="method-table">
-            <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
+            <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
             <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
             <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (message "Complétez le bilan"). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
             <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Uniquement disponible pour l'évaluation en lot (nécessite de comparer la fiche aux autres) : rareté du vocabulaire employé par rapport au reste du lot déposé, complétée par la détection de quelques leviers d'innovation courants (aller-vers, co-construction, gamification...).</td></tr>
@@ -182,7 +182,7 @@ input[type=file]{display:none}
 
     <div class="score-grid" id="scoreGrid"></div>
     <div class="guide">
-      <b>Guide de lecture :</b> <b>Qualité de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées. Les <b>points forts</b> et <b>pistes d'amélioration</b> ci-dessous détaillent, critère par critère, ce qui est déjà bien renseigné et ce qui gagnerait à l'être davantage.
+      <b>Guide de lecture :</b> <b>Score de la description</b> - à quel point le contenu de l'action est complet, suffisamment détaillé et clairement écrit. <b>Impact usager</b> - présence d'objectifs chiffrés et datés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - n'est noté qu'une fois rempli, et seulement après l'échéance de l'action ; il mesure alors les résultats obtenus et les enseignements tirés. <b>Caractère innovant</b> (lot uniquement) - originalité du vocabulaire employé par rapport aux autres fiches déposées. Les <b>points forts</b> et <b>pistes d'amélioration</b> ci-dessous détaillent, critère par critère, ce qui est déjà bien renseigné et ce qui gagnerait à l'être davantage.
     </div>
 
     <div class="pf-preco-grid">
@@ -236,7 +236,7 @@ input[type=file]{display:none}
         <div class="txt" id="bulkTxt"></div>
       </div>
       <div class="guide">
-        <b>Guide de lecture :</b> <b>Qualité de la description</b> - complétude, longueur et clarté du contenu. <b>Impact usager</b> - objectifs chiffrés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - noté seulement une fois rempli, et seulement après l'échéance de l'action (sinon "Pas encore d'échéance"). <b>Caractère innovant</b> - originalité du vocabulaire par rapport aux autres fiches du lot. Chaque ligne indique aussi jusqu'à 2 <b>points forts</b> et l'<b>axe de progrès</b> le plus prioritaire de la fiche.
+        <b>Guide de lecture :</b> <b>Score de la description</b> - complétude, longueur et clarté du contenu. <b>Impact usager</b> - objectifs chiffrés, ciblage de publics prioritaires, effet direct sur un usager final. <b>Bilan et valorisation</b> - noté seulement une fois rempli, et seulement après l'échéance de l'action (sinon "Pas encore d'échéance"). <b>Caractère innovant</b> - originalité du vocabulaire par rapport aux autres fiches du lot. Chaque ligne indique aussi jusqu'à 2 <b>points forts</b> et l'<b>axe de progrès</b> le plus prioritaire de la fiche.
       </div>
 
       <div class="axes-title" style="margin-top:22px">Pour l'ensemble du lot déposé</div>
@@ -868,7 +868,7 @@ function renderResults(f, res, rawText) {
   document.getElementById('globalTxt').textContent = globalTxtParts.join(' ');
 
   var cards = [
-    { l: 'Qualité de la description', v: res.evalDescription.total, c: 'var(--ft-indigo)' },
+    { l: 'Score de la description', v: res.evalDescription.total, c: 'var(--ft-indigo)' },
     { l: 'Impact usager', v: res.evalImpact.total, c: 'var(--ft-violet)' },
     { l: 'Bilan et valorisation', v: res.evalBilan, c: 'var(--ft-jaune-dark)', empty: res.evalBilan == null, emptyMsg: res.bilanNotYetDue ? "Pas encore d'échéance" : 'Complétez le bilan' }
   ];
@@ -1172,7 +1172,7 @@ async function processBulkFile(file) {
     var axes = selectAxesProgres(s.subs, 1);
     var forts = selectPointsForts(s.subs, 2);
     var out = Object.assign({}, row);
-    out['Éval - Qualité de la description (/100)'] = Math.round(s.evalDescription.total);
+    out['Éval - Score de la description (/100)'] = Math.round(s.evalDescription.total);
     out['Éval - Impact usager (/100)'] = Math.round(s.evalImpact.total);
     out['Éval - Bilan et valorisation (/100)'] = s.evalBilan == null ? (s.bilanNotYetDue ? "Pas encore d'échéance" : 'Complétez le bilan') : Math.round(s.evalBilan);
     out["Éval - Caractère innovant (/100)"] = Math.round(s.evalInnovation);

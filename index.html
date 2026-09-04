@@ -946,7 +946,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
     <div class="modal-body">
       <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
       <table class="method-table">
-        <tr><td class="mw">25&nbsp;%</td><td><b>Qualité de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
+        <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
         <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
         <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (et non exigé tant que l'échéance de l'action n'est pas atteinte). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
         <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant, ou dont le vocabulaire se distingue du reste du réseau, est jugée plus innovante.</td></tr>
@@ -2661,7 +2661,7 @@ var FICHES_INDICATORS = [
   { id: 'moyBeneficiairesParAction', label: 'Bénéficiaires en moyenne par action', get: function (g) { return g.moyBeneficiairesParAction; }, dec: 1 },
   { id: 'global', label: 'Score global (/4)', get: function (g) { return g.global; }, dec: 2 }
 ].concat(FICHES_CRITERIA.map(function (c) {
-  return { id: c.id, label: 'Qualité : ' + c.label + ' (/4)', get: function (g) { return g[c.id]; }, dec: 2 };
+  return { id: c.id, label: 'Critère : ' + c.label + ' (/4)', get: function (g) { return g[c.id]; }, dec: 2 };
 }));
 /* Araignée générique à 4 axes (label/valeur/max/couleur libres), même géométrie que
    buildRadarSVG mais sans dépendance au système de thématiques de la maturité. */
@@ -2942,7 +2942,7 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
        référence, à la fois bien noté et riche en points forts, qui peut servir d'inspiration. */
     var inspi = findInspiringTerritory(currentClpe);
     hostPF.innerHTML = '<p class="preco-empty">Aucun point fort identifiable sur ce périmètre (aucune fiche exploitable).</p>' +
-      (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> <b>' + esc(inspi.clpe) + '</b> affiche une qualité globale élevée (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
+      (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> <b>' + esc(inspi.clpe) + '</b> affiche un score global élevé (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
   }
 }
 
