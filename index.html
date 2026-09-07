@@ -170,6 +170,11 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 @media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}}
 .sidebar-sep{border:none;border-top:1px solid var(--ft-border);margin:10px 0 8px}
 .btn-sidebar-link{display:block;width:100%;box-sizing:border-box;text-align:center;background:var(--ft-white);color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:9px 12px;font-size:11.5px;font-weight:600;text-decoration:none;margin-top:8px;line-height:1.3}
+.btn-academie-link{display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;background:var(--ft-white);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:8px 10px;text-decoration:none;margin-top:8px;overflow:hidden}
+.btn-academie-link img{width:30px;height:auto;flex:none}
+.btn-academie-link span{color:var(--ft-indigo);font-size:11px;font-weight:600;line-height:1.25;min-width:0}
+.btn-academie-link:hover{background:var(--ft-indigo-light)}
+@media(max-width:900px){.btn-academie-link{width:auto;display:inline-flex}}
 .btn-sidebar-link:hover{background:var(--ft-indigo-light)}
 @media(max-width:900px){.sidebar-sep{display:none}.btn-sidebar-link{width:auto;display:inline-block}}
 .btn-pdf-top:hover{background:var(--ft-indigo-dark)}
@@ -466,6 +471,18 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-mat-radar svg{width:100%;max-width:520px;height:auto}
 #printReport .pr-q-cols{column-count:2;column-gap:30px;flex:1}
 #printReport .pr-q-legend{font-size:7.5pt;color:var(--ft-fg-2);margin-bottom:10px;flex:none}
+#printReport .pr-intro-gen{font-size:8.5pt;color:var(--ft-fg-2);line-height:1.5;background:var(--ft-sable);border-radius:6px;padding:9px 12px;margin:8px 0 12px;flex:none}
+#printReport .pr-sect-intro{font-size:8pt;color:var(--ft-fg-2);line-height:1.45;margin:6px 0 10px;flex:none}
+#printReport .pr-precaution{font-size:7.8pt;color:#8a5a00;background:#fff4d9;border-radius:6px;padding:8px 11px;margin:8px 0;line-height:1.4;flex:none}
+#printReport .pr-conclusion{font-size:8pt;color:var(--ft-fg-2);line-height:1.5;background:var(--ft-sable);border-radius:6px;padding:9px 12px;margin-top:12px;flex:none}
+#printReport .pr-italic-note{font-size:7.5pt;color:var(--ft-fg-3);font-style:italic;margin-top:6px;flex:none}
+#printReport .pr-col-legend{font-size:7.3pt;color:var(--ft-fg-2);line-height:1.4;margin-bottom:8px}
+#printReport .pr-q-legend-def{margin-top:2px;line-height:1.45}
+#printReport .pr-dim-defs{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-top:10px;flex:none}
+#printReport .pr-dim-defs-2{grid-template-columns:1fr 1fr}
+#printReport .pr-dim-def{font-size:7.5pt;line-height:1.4}
+#printReport .pr-dim-def b{display:block;color:var(--ft-navy);font-size:8pt;margin-bottom:2px}
+#printReport .pr-dim-def p{margin:0;color:var(--ft-fg-2)}
 #printReport .pr-q-legend span{margin-right:14px;white-space:nowrap}
 #printReport .pr-q-grouptitle{font-size:10pt;font-weight:700;color:var(--ft-navy);background:var(--ft-sable);padding:4px 8px;border-radius:3px;margin:8px 0 5px;break-after:avoid;break-inside:avoid}
 #printReport .pr-q-line{display:grid;grid-template-columns:22px 1fr 60px 82px 16px;gap:6px;align-items:center;font-size:8pt;padding:6px 0;border-bottom:0.5px solid var(--ft-sable-dark);break-inside:avoid}
@@ -482,7 +499,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-freq-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;flex:none}
 /* Page Fiches action */
 #printReport .pr-fiches-top{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;flex:none}
-#printReport .pr-fiches-heroes{display:flex;flex-direction:column;gap:10px}
+#printReport .pr-fiches-heroes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0}
 #printReport .pr-fiches-radar{display:flex;align-items:center;justify-content:center}
 #printReport .pr-fiches-radar svg{width:100%;max-width:280px;height:auto}
 /* Page combinée Fréquentation + Fiches action : deux colonnes nettement séparées par une
@@ -628,6 +645,10 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <hr class="sidebar-sep">
         <a class="btn-reset btn-sidebar-link" href="http://pilotage-rpe.francetravail.org/rpe" target="_blank" rel="noopener">🔗 Tableau de Bord du Réseau Pour l'Emploi</a>
         <a class="btn-reset btn-sidebar-link" href="https://reseau-pour-l-emploi.github.io/Ressources-Tableau-de-bord-RPE/" target="_blank" rel="noopener">🔗 Ressources du Tableau de Bord du RPE</a>
+        <a class="btn-reset btn-academie-link" href="https://www.academiefrancetravail.org/" target="_blank" rel="noopener" title="Développez vos pratiques au sein du RPE&#10;L'Académie France Travail accompagne les acteurs du Réseau pour l'emploi en mettant à leur disposition des ressources pour enrichir leurs pratiques, valoriser leur complémentarité et mieux agir au service des publics.&#10;Connectez-vous pour accéder aux vidéos, modules e-learning et formations disponibles : https://www.academiefrancetravail.org/">
+          <img src="assets/academie-logo.png" alt="Académie France Travail">
+          <span>Pour vous accompagner</span>
+        </a>
       </div>
       <div class="cockpit-main-col">
 
@@ -3337,11 +3358,14 @@ function computeQuestionTags(stats) {
   var tags = {};
   selectAxesProgres(stats).forEach(function (s) { tags[s.n] = 'axe'; });
   selectPointsForts(stats).forEach(function (s) { tags[s.n] = 'fort'; });
-  var globalHetero = stats.filter(function (s) { return !tags[s.n] && s.h != null && s.h < 40; }).sort(function (a, b) { return a.h - b.h; }).slice(0, 3);
+  /* Seuil recalibré sur la distribution réelle de l'homogénéité (p10 \u2248 54 %, p25 \u2248 62 %) :
+     un seuil à 40 % (sous le 10e percentile) ne se déclenchait quasiment jamais. 55 % est
+     nettement en dessous de la médiane observée (75 %) sans être un cas d'école introuvable. */
+  var globalHetero = stats.filter(function (s) { return !tags[s.n] && s.h != null && s.h < 55; }).sort(function (a, b) { return a.h - b.h; }).slice(0, 3);
   globalHetero.forEach(function (q) { tags[q.n] = 'partage'; });
   return tags;
 }
-var PR_TAG_LABEL = { fort: 'Point fort', axe: 'Axe de progression', partage: 'Partage de points de vue' };
+var PR_TAG_LABEL = { fort: 'Point fort', axe: 'Axe de progression', partage: 'Niveau de convergence des réponses' };
 var PR_TAG_CLASS = { fort: 'pr-tag-fort', axe: 'pr-tag-axe', partage: 'pr-tag-partage' };
 var PR_TAG_EMOJI = { fort: '\u2705', axe: '\ud83d\udd3a', partage: '\ud83d\udcac' };
 function buildReportPageMaturite() {
@@ -3350,6 +3374,7 @@ function buildReportPageMaturite() {
   var label = scopeLabel(), geoLine = scopeGeoLine();
   var structures = unique(records.map(function (r) { return r.structure; }).filter(Boolean));
   var html = pageHeader(label, 'Niveau de maturité', currentSessionLabel);
+  html += '<div class="pr-intro-gen">Ce rapport est un outil de dialogue et de progression. Les résultats doivent être analysés collectivement : ils permettent de valoriser les acquis et de choisir quelques priorités d\u2019action adaptées au territoire. Il propose une lecture synthétique du fonctionnement, de l\u2019activité et des résultats du CLPE, en croisant les perceptions exprimées par ses membres, les données du tableau de bord RPE et plusieurs indicateurs territoriaux, afin d\u2019identifier les acquis sur lesquels s\u2019appuyer, les domaines à renforcer et les actions prioritaires à engager collectivement.</div>';
   if (!g.n) return html + '<p class="pr-empty">Aucune réponse enregistrée sur ce périmètre pour ce trimestre.</p>';
 
   var autoTxt = g.auto == null ? 'Non renseignée' : (CONFIG.autoLabels[Math.round(g.auto)] || '-');
@@ -3357,9 +3382,10 @@ function buildReportPageMaturite() {
   html += '<div class="pr-resp-row"><b>' + (geoLine ? esc(geoLine) + ' \u00b7 ' : '') + g.n + ' répondant' + (g.n > 1 ? 's' : '') + ' \u00b7 ' + structures.length + ' structure' + (structures.length > 1 ? 's' : '') + ' distincte' + (structures.length > 1 ? 's' : '') + ' \u00b7 ' + (nCopres > 0 ? 'un co-président a répondu (' + nCopres + ')' : 'aucun co-président n\u2019a répondu') + '</b>' +
     '<div class="pr-structs">' + structures.map(function (s) { return '<span class="pr-tag">' + esc(s) + '</span>'; }).join('') + '</div></div>';
 
+  html += '<div class="pr-sect-intro">Le niveau de maturité permet d\u2019apprécier la capacité du CLPE à fonctionner collectivement, à coordonner les acteurs et à produire des résultats utiles pour le territoire. Il repose sur deux dimensions complémentaires : les <b>fondamentaux</b> nécessaires au bon fonctionnement du comité et les <b>pratiques</b> qui traduisent son niveau de coopération, de pilotage et d\u2019impact.</div>';
   html += '<div class="pr-mat-top"><div class="pr-mat-indics">';
-  html += '<div class="pr-hero"><div class="lbl">Niveau de maturité</div><div class="val">' + fmt(niveauValue(g.total, META.totalMax), 1) + '<span class="unit"> / 4</span></div></div>';
-  html += '<div class="pr-hero"><div class="lbl">Auto-évaluation</div><div class="val">' + (g.auto == null ? '-' : fmt(g.auto, 1)) + '<span class="unit"> / 4</span></div><div class="pr-auto-lbl">' + esc(autoTxt) + '</div></div>';
+  html += '<div class="pr-hero"><div class="lbl">Niveau de maturité</div><div class="val">' + fmt(niveauValue(g.total, META.totalMax), 1) + '<span class="unit"> / 4</span></div><div class="pr-auto-lbl">Résultat issu des réponses des membres : vision collective du fonctionnement actuel et de sa progression dans le temps.</div></div>';
+  html += '<div class="pr-hero"><div class="lbl">Auto-évaluation</div><div class="val">' + (g.auto == null ? '-' : fmt(g.auto, 1)) + '<span class="unit"> / 4</span></div><div class="pr-auto-lbl">' + esc(autoTxt) + ' \u00b7 la comparaison avec le niveau calculé repère un éventuel écart de perception.</div></div>';
   [{ l: 'Fondamentaux', v: g.fond, mx: META.fondMaxTotal, c: cssVar('--ft-indigo') }, { l: 'Pratiques', v: g.mat, mx: META.matMaxTotal, c: cssVar('--ft-violet') }].forEach(function (p) {
     var pct = p.v / p.mx * 100;
     html += '<div class="pr-hero"><div class="lbl">' + p.l + '</div><div class="val">' + niveauText(p.v, p.mx) + '</div><div class="pr-track"><div class="pr-fill" style="width:' + pct + '%;background:' + p.c + '"></div></div></div>';
@@ -3368,12 +3394,30 @@ function buildReportPageMaturite() {
   var themePts = THEME_KEYS.map(function (t) { return { t: t, v: g.themes[t], mx: META.themeMax[t] || 1, pct: g.themes[t] / (META.themeMax[t] || 1) * 100 }; });
   html += '<div class="pr-mat-radar">' + buildRadarSVG(themePts, false) + '</div></div>';
 
+  html += '<div class="pr-sect-intro">Le graphique présente le niveau atteint dans quatre dimensions complémentaires. Plus le résultat se rapproche de 4, plus les pratiques correspondantes sont installées, partagées et mobilisées dans la durée.</div>';
+  html += '<div class="pr-dim-defs">' +
+    '<div class="pr-dim-def"><b>Dynamique de fonctionnement</b><p>Qualité de l\u2019organisation collective : portage par la coprésidence, mobilisation des membres, régularité des travaux, capacité à faire vivre une feuille de route commune.</p></div>' +
+    '<div class="pr-dim-def"><b>Socle commun</b><p>Capacité des membres à partager un diagnostic, des priorités, des méthodes et des outils communs pour agir de manière coordonnée.</p></div>' +
+    '<div class="pr-dim-def"><b>Pilotage et impact</b><p>Capacité à suivre ses actions, analyser leurs effets et ajuster ses décisions en fonction des résultats obtenus pour les usagers et le territoire.</p></div>' +
+    '<div class="pr-dim-def"><b>Mutualisation des offres de services</b><p>Niveau de coordination entre acteurs, lisibilité des offres de services et capacité à proposer des réponses complémentaires aux besoins du territoire.</p></div>' +
+    '</div>';
+  return html;
+}
+function buildReportPageMaturiteQuestions() {
+  var records = getFiltered();
+  var g = equalWeightAgg(records);
+  var label = scopeLabel();
+  var html = pageHeader(label, 'Niveau de maturité - détail par question', currentSessionLabel);
+  if (!g.n) return html + '<p class="pr-empty">Aucune réponse enregistrée sur ce périmètre pour ce trimestre.</p>';
+  html += '<div class="pr-sect-intro">Cette partie présente le résultat obtenu pour chaque question. Elle permet d\u2019aller au-delà du score global et d\u2019identifier précisément les pratiques déjà solides, celles qui restent à consolider et les sujets sur lesquels les perceptions des répondants peuvent différer.</div>';
+
   var stats = questionStats(records, g);
   var tags = computeQuestionTags(stats);
   html += '<div class="pr-q-legend"><b>Légende :</b> ' +
     '<span>' + PR_TAG_EMOJI.fort + ' Point fort</span>' +
     '<span>' + PR_TAG_EMOJI.axe + ' Axe de progression</span>' +
-    '<span>' + PR_TAG_EMOJI.partage + ' Partage de points de vue</span></div>';
+    '<span>' + PR_TAG_EMOJI.partage + ' Niveau de convergence des réponses</span></div>';
+  html += '<div class="pr-q-legend pr-q-legend-def">Un <b>point fort</b> est une pratique déjà bien installée. Un <b>axe de progression</b> désigne un domaine où une évolution collective pourrait améliorer le fonctionnement ou l\u2019impact du CLPE. Le <b>niveau de convergence des réponses</b> indique le degré d\u2019accord entre répondants : une forte convergence traduit une perception commune, une plus grande dispersion invite à échanger sur les pratiques réellement mises en œuvre.</div>';
   html += '<div class="pr-q-cols">';
   THEME_KEYS.forEach(function (t) {
     var qs = stats.filter(function (s) { return s.theme === t; });
@@ -3391,107 +3435,123 @@ function buildReportPageMaturite() {
   html += '</div>';
   return html;
 }
-function buildReportPageFreqFiches() {
+function buildReportPageFreq() {
   var label = scopeLabel();
-  var html = pageHeader(label, 'Fréquentation TDB RPE & Fiches action');
-  html += '<div class="pr-split2">';
-
-  // ---------- Colonne gauche : Fréquentation ----------
-  html += '<div class="pr-split-col"><div class="pr-split-title">Fréquentation TDB RPE</div>';
-  html += '<div class="pr-q-legend">Nombre de consultations trimestrielles du tableau de bord par les membres du CLPE (données réelles).</div>';
+  var html = pageHeader(label, 'Fréquentation TDB RPE');
+  html += '<div class="pr-sect-intro">La fréquentation renseigne sur l\u2019utilisation du tableau de bord RPE par les membres du CLPE. Elle permet d\u2019observer si cet outil est régulièrement consulté et mobilisé pour préparer les échanges, suivre la feuille de route et piloter les actions.</div>';
   var rows = TDB_DATA.filter(inScope);
   var months = unique(rows.map(function (r) { return r.mois; })).sort();
   var trims = unique(months.map(moisToTrimestre)).sort();
   if (!trims.length) {
     html += '<p class="pr-empty">Aucune donnée sur ce périmètre.</p>';
-  } else {
-    var byTrim = {};
-    trims.forEach(function (t) {
-      var tMonths = trimestreMonths(t);
-      byTrim[t] = rows.filter(function (r) { return tMonths.indexOf(r.mois) >= 0; }).reduce(function (s, r) { return s + r.nb; }, 0);
-    });
-    var maxV = Math.max.apply(null, trims.map(function (t) { return byTrim[t]; }).concat([1]));
-    html += '<div class="pr-freq-bars pr-freq-bars-sm">';
-    trims.forEach(function (t) {
-      var v = byTrim[t], h = Math.max(2, v / maxV * 42);
-      html += '<div class="pr-freq-col"><div class="pr-freq-val">' + fmt(v, 0) + '</div><div class="pr-freq-bar" style="height:' + h + 'mm"></div><div class="pr-freq-lbl">' + esc(t) + '</div></div>';
-    });
-    html += '</div>';
-    var globalMonths = unique(TDB_DATA.map(function (r) { return r.mois; })).sort();
-    function isCompleteRep(t) { return trimestreMonths(t).every(function (m) { return globalMonths.indexOf(m) >= 0; }); }
-    var lastTrim = trims[trims.length - 1];
-    var currentYear = lastTrim.slice(0, 4);
-    var cumulYTD = months.filter(function (m) { return m.slice(0, 4) === currentYear; })
-      .reduce(function (s, m) { return s + rows.filter(function (r) { return r.mois === m; }).reduce(function (s2, r) { return s2 + r.nb; }, 0); }, 0);
-    var pop = POP_DATA.filter(inScope).reduce(function (s, r) { return s + r.population; }, 0);
-    var completeTrims = trims.filter(isCompleteRep);
-    var lastComplete = completeTrims[completeTrims.length - 1];
-    var evoTxt = '-';
-    if (lastComplete) {
-      var idx = trims.indexOf(lastComplete), prevTrim = idx > 0 ? trims[idx - 1] : null;
-      if (prevTrim && byTrim[prevTrim]) evoTxt = ((byTrim[lastComplete] - byTrim[prevTrim]) / byTrim[prevTrim] * 100 >= 0 ? '+' : '') + fmt((byTrim[lastComplete] - byTrim[prevTrim]) / byTrim[prevTrim] * 100, 0) + '\u00A0%';
-    }
-    html += '<div class="pr-freq-kpis pr-freq-kpis-sm">' +
-      '<div class="pr-hero"><div class="lbl">Dernier trimestre</div><div class="val">' + fmt(byTrim[lastTrim], 0) + '</div></div>' +
-      '<div class="pr-hero"><div class="lbl">Cumul depuis janvier</div><div class="val">' + cumulYTD.toLocaleString('fr-FR') + '</div></div>' +
-      '<div class="pr-hero"><div class="lbl">Évolution (dernier trim. complet)</div><div class="val">' + evoTxt + '</div></div>' +
-      (pop ? '<div class="pr-hero"><div class="lbl">Cumul / 1000 hab. (année)</div><div class="val">' + fmt(cumulYTD / pop * 1000, 2) + '</div></div>' : '<div></div>') +
-      '</div>';
+    return html;
   }
+  var byTrim = {};
+  trims.forEach(function (t) {
+    var tMonths = trimestreMonths(t);
+    byTrim[t] = rows.filter(function (r) { return tMonths.indexOf(r.mois) >= 0; }).reduce(function (s, r) { return s + r.nb; }, 0);
+  });
+  var maxV = Math.max.apply(null, trims.map(function (t) { return byTrim[t]; }).concat([1]));
+  html += '<div class="pr-freq-bars">';
+  trims.forEach(function (t) {
+    var v = byTrim[t], h = Math.max(2, v / maxV * 70);
+    html += '<div class="pr-freq-col"><div class="pr-freq-val">' + fmt(v, 0) + '</div><div class="pr-freq-bar" style="height:' + h + 'mm"></div><div class="pr-freq-lbl">' + esc(t) + '</div></div>';
+  });
   html += '</div>';
-
-  // ---------- Colonne droite : Fiches action ----------
-  html += '<div class="pr-split-col pr-split-col-r"><div class="pr-split-title">Fiches action</div>';
+  html += '<div class="pr-sect-intro">Le graphique présente l\u2019évolution du nombre de consultations au fil des trimestres. Il permet de repérer les périodes de forte utilisation, les éventuelles baisses de fréquentation et l\u2019installation progressive de l\u2019outil dans les pratiques du CLPE.</div>';
+  var globalMonths = unique(TDB_DATA.map(function (r) { return r.mois; })).sort();
+  function isCompleteRep(t) { return trimestreMonths(t).every(function (m) { return globalMonths.indexOf(m) >= 0; }); }
+  var lastTrim = trims[trims.length - 1];
+  var currentYear = lastTrim.slice(0, 4);
+  var cumulYTD = months.filter(function (m) { return m.slice(0, 4) === currentYear; })
+    .reduce(function (s, m) { return s + rows.filter(function (r) { return r.mois === m; }).reduce(function (s2, r) { return s2 + r.nb; }, 0); }, 0);
+  var pop = POP_DATA.filter(inScope).reduce(function (s, r) { return s + r.population; }, 0);
+  var completeTrims = trims.filter(isCompleteRep);
+  var lastComplete = completeTrims[completeTrims.length - 1];
+  var evoTxt = '-';
+  if (lastComplete) {
+    var idx = trims.indexOf(lastComplete), prevTrim = idx > 0 ? trims[idx - 1] : null;
+    if (prevTrim && byTrim[prevTrim]) evoTxt = ((byTrim[lastComplete] - byTrim[prevTrim]) / byTrim[prevTrim] * 100 >= 0 ? '+' : '') + fmt((byTrim[lastComplete] - byTrim[prevTrim]) / byTrim[prevTrim] * 100, 0) + '\u00A0%';
+  }
+  html += '<div class="pr-freq-kpis">' +
+    '<div class="pr-hero"><div class="lbl">Dernier trimestre</div><div class="val">' + fmt(byTrim[lastTrim], 0) + '</div><div class="pr-auto-lbl">Consultations enregistrées au cours du dernier trimestre complet.</div></div>' +
+    '<div class="pr-hero"><div class="lbl">Cumul depuis janvier</div><div class="val">' + cumulYTD.toLocaleString('fr-FR') + '</div><div class="pr-auto-lbl">Total des consultations depuis le début de l\u2019année.</div></div>' +
+    '<div class="pr-hero"><div class="lbl">Évolution</div><div class="val">' + evoTxt + '</div><div class="pr-auto-lbl">Comparaison avec le trimestre précédent.</div></div>' +
+    (pop ? '<div class="pr-hero"><div class="lbl">Cumul / 1000 hab. (année)</div><div class="val">' + fmt(cumulYTD / pop * 1000, 2) + '</div><div class="pr-auto-lbl">Compare l\u2019intensité d\u2019utilisation entre territoires de tailles différentes.</div></div>' : '<div></div>') +
+    '</div>';
+  html += '<div class="pr-precaution"><b>Précaution d\u2019interprétation :</b> le nombre de consultations est un indicateur d\u2019usage. Il ne suffit pas, à lui seul, à mesurer la qualité du pilotage. Il doit être mis en regard de la régularité de mise à jour des actions et de l\u2019utilisation effective du tableau de bord lors des réunions du CLPE.</div>';
+  return html;
+}
+function buildReportPageFichesOverview() {
+  var label = scopeLabel();
+  var html = pageHeader(label, 'Fiches action - vue d\u2019ensemble');
+  html += '<div class="pr-sect-intro">Les fiches action traduisent la feuille de route du CLPE en actions opérationnelles. Leur analyse permet d\u2019apprécier la qualité du cadrage, le suivi des bénéficiaires, la mesure des résultats et la capacité à capitaliser ou à valoriser les actions conduites.</div>';
   var fy = fichesYearSelected();
-  html += '<div class="pr-q-legend">Nombre de fiches, bénéficiaires impactés et score moyen sur 4 critères (' + esc(fy ? 'année ' + fy : 'toutes années confondues') + ').</div>';
+  html += '<div class="pr-q-legend"><b>' + esc(fy ? 'Année ' + fy : 'Toutes années confondues') + ' :</b> Fiches saisies - nombre total d\u2019actions enregistrées. Bénéficiaires - nombre de bénéficiaires des actions saisies. Bénéficiaires par action - moyenne du nombre de bénéficiaires par action saisie. Score global - appréciation synthétique de la qualité de renseignement et de suivi des fiches.</div>';
   var frows = fichesRows().filter(inScope);
   var nFiches = frows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
   var nBenef = frows.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0);
   var nFichesAvecBenef = frows.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0);
   var moyBenef = nFichesAvecBenef ? nBenef / nFichesAvecBenef : null;
   var globalQ = frows.length ? avg(frows.map(function (r) { return (r.innovant + r.impact + r.qualite + r.bilan) / 4; })) : null;
-  html += '<div class="pr-fiches-heroes pr-fiches-heroes-row">' +
+  html += '<div class="pr-fiches-heroes">' +
     '<div class="pr-hero"><div class="lbl">Fiches saisies</div><div class="val">' + nFiches + '</div></div>' +
-    '<div class="pr-hero"><div class="lbl">Bénéficiaires</div><div class="val">' + nBenef + '</div>' + (moyBenef == null ? '' : '<div class="pr-auto-lbl">' + fmt(moyBenef, 1) + '/action</div>') + '</div>' +
+    '<div class="pr-hero"><div class="lbl">Bénéficiaires</div><div class="val">' + nBenef + '</div></div>' +
+    '<div class="pr-hero"><div class="lbl">Bénéficiaires par action</div><div class="val">' + (moyBenef == null ? '-' : fmt(moyBenef, 1)) + '</div></div>' +
     '<div class="pr-hero"><div class="lbl">Score global</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>' +
     '</div>';
+  html += '<div class="pr-sect-intro">Le graphique analyse, via un algorithme, les fiches action selon quatre critères. Il permet d\u2019identifier les dimensions les mieux renseignées et celles qui nécessitent une attention particulière.</div>';
   var colors = [cssVar('--ft-indigo'), cssVar('--ft-violet'), cssVar('--ft-bleu'), cssVar('--ft-jaune-dark')];
   var axes = FICHES_CRITERIA.map(function (c, i) { return { label: c.label, value: frows.length ? avg(frows.map(function (r) { return r[c.id]; })) : 0, max: 4, color: colors[i] }; });
   html += '<div class="pr-fiches-radar pr-fiches-radar-lg">' + buildGenericRadarSVG(axes) + '</div>';
-  if (nFiches) {
-    var defs = [
-      { key: 'description', label: "Mieux décrire l'action (contexte, contenu)" },
-      { key: 'problematique', label: 'Mieux formuler la problématique traitée' },
-      { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre' },
-      { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)' },
-      { key: 'suivi', label: 'Renseigner des indicateurs de suivi' },
-      { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)' },
-      { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final' },
-      { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement' },
-      { key: 'bilan', label: 'Renseigner le bilan et les enseignements' },
-      { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)' },
-      { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
-      { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
-      { key: 'vigilance', label: 'Anticiper les points de vigilance' },
-      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' }
-    ];
-    var withPctPdf = defs.map(function (d) {
-      var n = frows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
-      return { key: d.key, label: d.label, pct: n / nFiches * 100 };
-    }).filter(function (d) { return d.pct > 0; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
-    var withPctFortPdf = defs.map(function (d) {
-      var n = frows.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
-      return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: n / nFiches * 100 };
-    }).filter(function (d) { return d.pct > 0 && !withPctPdf.some(function (p) { return p.key === d.key; }); }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
-    html += '<div class="pr-detail-sub">\u2705 Points forts</div>';
-    html += withPctFortPdf.length ? withPctFortPdf.map(function (a) {
-      return '<div class="pr-detail-item pr-detail-item-fort pr-detail-item-sm"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_FORT_TEXT[a.key] || '') + '</p></div>';
-    }).join('') : '<p class="pr-detail-empty">Aucun point fort identifiable.</p>';
-    html += '<div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
-    html += withPctPdf.length ? withPctPdf.map(function (a) {
-      return '<div class="pr-detail-item pr-detail-item-sm"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_PRECO_TEXT[a.key] || '') + '</p></div>';
-    }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès identifiable.</p>';
-  }
+  html += '<div class="pr-dim-defs">' +
+    '<div class="pr-dim-def"><b>Description et cadrage</b><p>Précision du besoin identifié, des objectifs, des publics concernés et des modalités de mise en œuvre de l\u2019action.</p></div>' +
+    '<div class="pr-dim-def"><b>Impact pour les usagers</b><p>Capacité de la fiche à présenter les changements recherchés ou obtenus pour les bénéficiaires et le territoire.</p></div>' +
+    '<div class="pr-dim-def"><b>Bilan et valorisation</b><p>Niveau de formalisation des résultats, des enseignements tirés et des possibilités de reconduction ou de diffusion de l\u2019action.</p></div>' +
+    '<div class="pr-dim-def"><b>Caractère innovant</b><p>Capacité de l\u2019action à proposer une réponse nouvelle, une coopération différente ou une méthode adaptée à un besoin insuffisamment couvert.</p></div>' +
+    '</div>';
+  return html;
+}
+function buildReportPageFichesDetail() {
+  var label = scopeLabel();
+  var html = pageHeader(label, 'Fiches action - points forts et axes de progrès');
+  html += '<div class="pr-sect-intro">Les points forts mettent en évidence les caractéristiques les mieux renseignées dans les fiches action. Les axes de progrès identifient les améliorations prioritaires pour renforcer la qualité du pilotage et mieux rendre compte des effets produits.</div>';
+  var frows = fichesRows().filter(inScope);
+  var nFiches = frows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
+  if (!nFiches) { html += '<p class="pr-empty">Aucune fiche action sur ce périmètre.</p>'; return html; }
+  var defs = [
+    { key: 'description', label: "Mieux décrire l'action (contexte, contenu)" },
+    { key: 'problematique', label: 'Mieux formuler la problématique traitée' },
+    { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre' },
+    { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)' },
+    { key: 'suivi', label: 'Renseigner des indicateurs de suivi' },
+    { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)' },
+    { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final' },
+    { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement' },
+    { key: 'bilan', label: 'Renseigner le bilan et les enseignements' },
+    { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)' },
+    { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
+    { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
+    { key: 'vigilance', label: 'Anticiper les points de vigilance' },
+    { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' }
+  ];
+  var withPctPdf = defs.map(function (d) {
+    var n = frows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
+    return { key: d.key, label: d.label, pct: n / nFiches * 100 };
+  }).filter(function (d) { return d.pct > 0; }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
+  var withPctFortPdf = defs.map(function (d) {
+    var n = frows.reduce(function (s, r) { return s + (r.axePctFort[d.key] / 100) * r.nbFiches; }, 0);
+    return { key: d.key, label: FICHES_AXE_FORT_LABEL[d.key] || d.label, pct: n / nFiches * 100 };
+  }).filter(function (d) { return d.pct > 0 && !withPctPdf.some(function (p) { return p.key === d.key; }); }).sort(function (a, b) { return b.pct - a.pct; }).slice(0, 3);
+  html += '<div class="pr-detail-2col">';
+  html += '<div class="pr-detail-col"><div class="pr-detail-sub">\u2705 Points forts</div>';
+  html += withPctFortPdf.length ? withPctFortPdf.map(function (a) {
+    return '<div class="pr-detail-item pr-detail-item-fort"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_FORT_TEXT[a.key] || '') + '</p></div>';
+  }).join('') : '<p class="pr-detail-empty">Aucun point fort identifiable.</p>';
+  html += '</div><div class="pr-detail-col"><div class="pr-detail-sub">\uD83C\uDFAF Axes de progrès</div>';
+  html += withPctPdf.length ? withPctPdf.map(function (a) {
+    return '<div class="pr-detail-item"><b>' + esc(a.label) + '</b><span class="pr-af-score">' + fmt(a.pct, 0) + '\u00A0% des fiches</span><p>' + esc(FICHES_AXE_PRECO_TEXT[a.key] || '') + '</p></div>';
+  }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès identifiable.</p>';
   html += '</div></div>';
   return html;
 }
@@ -3511,13 +3571,20 @@ function buildPerfPeersMapSVG(selfFeat, peerFeats) {
 function buildReportPagePerf() {
   var label = scopeLabel();
   var html = pageHeader(label, 'Performance relative');
-  html += '<div class="pr-q-legend"><b>Légende :</b> écart du taux d\u2019accès à l\u2019emploi (TAE) et du taux de présence en emploi (TPE) par rapport à la moyenne des 10 territoires les plus proches socio-économiquement (données réelles).</div>';
+  html += '<div class="pr-sect-intro">Cette partie situe les résultats du territoire du CLPE par rapport aux territoires présentant des caractéristiques socio-économiques proches. Cette comparaison permet de disposer de repères plus pertinents qu\u2019une moyenne nationale ou régionale.</div>';
+  html += '<div class="pr-precaution"><b>Précaution indispensable :</b> ces données apportent un éclairage sur la situation du territoire. Elles ne permettent pas d\u2019attribuer directement les résultats observés à l\u2019action du CLPE. Elles doivent être analysées avec les acteurs locaux, au regard du contexte économique, social et démographique du territoire.</div>';
+  html += '<div class="pr-dim-defs pr-dim-defs-2">' +
+    '<div class="pr-dim-def"><b>Taux d\u2019accès à l\u2019emploi (TAE)</b><p>Mesure la part des personnes concernées ayant accédé à un emploi au cours de la période observée.</p></div>' +
+    '<div class="pr-dim-def"><b>Taux de présence en emploi (TPE)</b><p>Mesure la part des personnes qui occupent un emploi à la fin de la période de référence. Pour plus d\u2019informations sur les règles de calcul, consultez le glossaire du tableau de bord RPE.</p></div>' +
+    '</div>';
   perfSyncSelection();
   var row = perfSelectedId ? PERF_ID_TO_ROW[perfSelectedId] : null;
   if (!row) {
     html += '<p class="pr-empty">' + ((state.dept || state.region) ? 'Cette brique ne montre des résultats que pour un CLPE précis : aucun n\u2019est sélectionné sur ce périmètre région/département.' : 'Aucun CLPE sélectionné : pas de résultat de performance relative à afficher.') + '</p>';
+    html += '<div class="pr-conclusion">Les résultats donnent au CLPE une base commune pour analyser son fonctionnement et définir ses prochaines priorités. Ils ont vocation à être mis en discussion entre les membres du comité, en tenant compte du contexte territorial et de la diversité des perceptions exprimées. À l\u2019issue de cet échange, le CLPE pourra retenir deux ou trois priorités de progression, les traduire dans sa feuille de route et suivre leur évolution lors de la prochaine mesure.</div>';
     return html;
   }
+  html += '<div class="pr-q-legend">L\u2019<b>écart</b> indique la différence entre le résultat du CLPE et la moyenne des territoires comparables (positif : résultat supérieur à cette moyenne ; négatif : inférieur). L\u2019<b>évolution sur un an</b> observe la dynamique du territoire, indépendamment de sa position actuelle.</div>';
   function heroDelta(labelTxt, key, refKey) {
     var v = row[key];
     return '<div class="pr-hero"><div class="lbl">' + labelTxt + '</div><div class="val ' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 2) + '<span class="unit"> pp</span></div><div class="pr-auto-lbl">Territoire : ' + fmt(row[refKey.self], 2) + '\u00A0% \u00b7 Proches : ' + fmt(row[refKey.peer], 2) + '\u00A0%</div></div>';
@@ -3544,6 +3611,8 @@ function buildReportPagePerf() {
       '<td>' + (r.deltaTae >= 0 ? '+' : '') + fmt(r.deltaTae, 2) + '</td><td>' + (r.deltaTpe >= 0 ? '+' : '') + fmt(r.deltaTpe, 2) + '</td></tr>';
   });
   html += '</tbody></table>';
+  html += '<div class="pr-italic-note">Les écarts sont exprimés en points de pourcentage (pp) : un écart de +0,22 correspond à un résultat supérieur de 0,22 point à la valeur de comparaison.</div>';
+  html += '<div class="pr-conclusion">Les résultats donnent au CLPE une base commune pour analyser son fonctionnement et définir ses prochaines priorités. Ils ont vocation à être mis en discussion entre les membres du comité, en tenant compte du contexte territorial et de la diversité des perceptions exprimées. À l\u2019issue de cet échange, le CLPE pourra retenir deux ou trois priorités de progression, les traduire dans sa feuille de route et suivre leur évolution lors de la prochaine mesure.</div>';
   return html;
 }
 /* Page dédiée au détail des axes de progrès et points forts de la maturité : contrairement
@@ -3553,15 +3622,17 @@ function buildReportPagePerf() {
    progrès. */
 function buildReportPageMaturiteDetail() {
   var label = scopeLabel();
-  var html = pageHeader(label, 'Niveau de maturité - Détail des points forts et axes de progrès');
+  var html = pageHeader(label, 'Niveau de maturité - Points forts et axes de progrès');
   var records = getFiltered();
   var gMat = equalWeightAgg(records);
   if (!gMat.n) return html + '<p class="pr-empty">Aucune réponse enregistrée sur ce périmètre pour ce trimestre.</p>';
+  html += '<div class="pr-sect-intro">Cette synthèse met en évidence les principaux enseignements du questionnaire. Elle ne reprend pas l\u2019ensemble des résultats : elle sélectionne les acquis les plus significatifs et les domaines dans lesquels une progression collective apparaît prioritaire.</div>';
 
   var stats = questionStats(records, gMat);
   var axesRep = selectAxesProgres(stats), fortsRep = selectPointsForts(stats);
   html += '<div class="pr-detail-2col">';
   html += '<div class="pr-detail-col"><div class="pr-split-title">\u2705 Points forts</div>';
+  html += '<div class="pr-col-legend">Les pratiques les mieux installées au sein du CLPE : des ressources pour poursuivre la dynamique engagée, pouvant servir de points d\u2019appui pour progresser dans d\u2019autres domaines.</div>';
   html += fortsRep.length ? fortsRep.map(function (s) {
     var niv = pointFortNiveau(s);
     var txt = (TEXTES_POINTS_FORTS[s.n] && TEXTES_POINTS_FORTS[s.n][niv]) || null;
@@ -3571,6 +3642,7 @@ function buildReportPageMaturiteDetail() {
   }).join('') : '<p class="pr-detail-empty">Aucun point fort majeur détecté.</p>';
   html += '</div>';
   html += '<div class="pr-detail-col"><div class="pr-split-title">\uD83C\uDFAF Axes de progrès</div>';
+  html += '<div class="pr-col-legend">Les pratiques qui apparaissent aujourd\u2019hui les moins développées ou les moins partagées, pour cibler les évolutions susceptibles d\u2019améliorer le fonctionnement et les résultats du CLPE. Le <b>cap à atteindre</b> décrit la situation vers laquelle progresser ; la <b>recommandation</b> propose une première action concrète, à discuter et adapter au contexte local.</div>';
   html += axesRep.length ? axesRep.map(function (s) {
     var rec = getQuestionRecommendation(s.n, s.v, s.mx);
     return '<div class="pr-detail-item"><b>Q' + s.n + ' \u00b7 ' + esc(s.text) + '</b><span class="pr-af-score">' + fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)</span>' +
@@ -3578,10 +3650,11 @@ function buildReportPageMaturiteDetail() {
       (rec && rec.rec1 ? '<p><b>Recommandation :</b> ' + esc(rec.rec1).replace(/~~n~~/g, ' ') + '</p>' : '') + '</div>';
   }).join('') : '<p class="pr-detail-empty">Aucun axe de progrès majeur détecté.</p>';
   html += '</div></div>';
+  html += '<div class="pr-conclusion">Ces enseignements ont vocation à être partagés entre les membres du CLPE. Ils peuvent servir de support à un temps d\u2019échange collectif afin de retenir quelques priorités réalistes, de définir les actions à engager et d\u2019en suivre l\u2019avancement.</div>';
   return html;
 }
 function buildPrintReportHTML() {
-  var pages = [buildReportPageMaturite(), buildReportPageMaturiteDetail(), buildReportPageFreqFiches(), buildReportPagePerf()];
+  var pages = [buildReportPageMaturite(), buildReportPageMaturiteQuestions(), buildReportPageMaturiteDetail(), buildReportPageFreq(), buildReportPageFichesOverview(), buildReportPageFichesDetail(), buildReportPagePerf()];
   document.getElementById('printReport').innerHTML = pages.map(function (p) { return '<div class="pr-page">' + p + '</div>'; }).join('');
 }
 function downloadPdfReport() {
