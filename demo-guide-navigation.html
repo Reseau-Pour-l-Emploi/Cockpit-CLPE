@@ -333,8 +333,9 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-reco-body{padding:4px 0 14px 50px;font-size:12.5px;color:var(--ft-fg-2)}
 .q-reco-item,.q-reco-cap{background:var(--ft-sable);border-left:3px solid var(--ft-indigo);border-radius:4px;padding:8px 12px;margin-bottom:8px}
 .q-reco-cap{border-left-color:var(--ft-jaune-dark)}
-.guide-btn-row{margin:10px 0}
+.guide-btn-row{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap}
 .guide-btn{display:inline-flex;align-items:center;gap:5px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);color:var(--ft-fg-2);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 13px;cursor:pointer}
+.tab-tour-btn{background:var(--ft-jaune-light);border-color:var(--ft-jaune-dark);color:#7a5a00}
 .guide-btn:hover{background:var(--ft-indigo-light);color:var(--ft-indigo);border-color:var(--ft-indigo)}
 .priorite-cap{border-left-color:var(--ft-jaune-dark)}
 .q-reco-item b,.q-reco-cap b{display:block;font-size:11px;color:var(--ft-indigo);margin-bottom:3px;text-transform:uppercase;letter-spacing:.02em}
@@ -798,7 +799,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="tab-panel" data-brick="maturite" id="panelMaturite">
 
 
-            <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent1">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent1" style="display:none"><b>Guide de lecture :</b> les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
+            <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="maturite">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent1">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent1" style="display:none"><b>Guide de lecture :</b> les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
             <div class="responses-inline">
               <div class="part-title">Réponses</div>
               <div class="f-summary" id="fRateSummary"></div>
@@ -862,7 +863,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
         </div>
         <div class="tab-panel" data-brick="freq" id="panelFreq" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent4">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent4" style="display:none"><b>Guide de lecture :</b> nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="freq">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent4">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent4" style="display:none"><b>Guide de lecture :</b> nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
           <h3 id="freqScopeTitle"></h3>
           <div class="part-title">Consultations par mois</div>
           <div id="freqChart"></div>
@@ -872,7 +873,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et score moyen sur 4 critères notés sur 4 (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="fiches">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et score moyen sur 4 critères notés sur 4 (données réelles).</div>
           <div class="fiches-links-row">
             <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
             <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
@@ -908,7 +909,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent8">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent8" style="display:none"><b>Guide de lecture :</b> pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
+          <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="perf">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent8">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent8" style="display:none"><b>Guide de lecture :</b> pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
           <h3 id="perfScopeTitle"></h3>
           <div class="hero-row" id="perfHero"></div>
           <div class="part-title" id="perfTableTitle" style="display:none">Territoires les plus proches</div>
@@ -4257,123 +4258,287 @@ init();
     var tab = document.querySelector('.cockpit-tab[data-brick="' + key + '"]');
     if (tab) tab.click();
   }
-  function startTour() {
-    if (typeof driver === 'undefined') { alert('driver.js ne s\u2019est pas chargé (bloqué par un bloqueur de script ?)'); return; }
-    clickBrick('maturite');
-    var tour = window.driver.js.driver({
-      showProgress: true,
-      nextBtnText: 'Suivant \u2192',
-      prevBtnText: '\u2190 Précédent',
-      doneBtnText: 'Terminer',
-      progressText: '{{current}} / {{total}}',
-      steps: [
+
+  var driverConfig = {
+    showProgress: true,
+    smoothScroll: true,
+    stagePadding: 6,
+    nextBtnText: 'Suivant \u2192',
+    prevBtnText: '\u2190 Précédent',
+    doneBtnText: 'Terminer',
+    progressText: '{{current}} / {{total}}'
+  };
+
+  /* ---------- Parcours global : navigation générale du site ---------- */
+  function globalSteps() {
+    return [
+      {
+        popover: {
+          title: '\uD83D\uDC4B Bienvenue sur le Cockpit CLPE',
+          description: 'Cette visite explique la navigation générale du site. Chaque onglet propose ensuite son propre bouton "🧭 Comprendre cet onglet" pour le détail de ses indicateurs. Fermez à tout moment avec la croix ou Échap.'
+        }
+      },
+      {
+        element: '#cockpitTerritoryBar',
+        popover: {
+          title: 'Le territoire sélectionné',
+          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi.',
+          side: 'bottom'
+        }
+      },
+      {
+        element: '.map-filter-row',
+        popover: {
+          title: 'Choisir un territoire',
+          description: 'Filtrez par région, département ou CLPE à gauche - ou cliquez directement sur la carte à droite : les deux sont toujours synchronisés. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active.',
+          side: 'top'
+        }
+      },
+      {
+        element: '#cockpitTabs',
+        popover: {
+          title: 'Les 4 briques du cockpit',
+          description: 'Maturité, Pilotage des actions, Performance relative, Fréquentation : chaque onglet a sa couleur, ses propres indicateurs, et le cadre de la page reprend cette couleur pour s\u2019y repérer.',
+          side: 'right'
+        }
+      },
+      {
+        element: '.guide-btn-row',
+        popover: {
+          title: 'Deux types de guides',
+          description: 'Le bouton jaune "🧭 Comprendre cet onglet" explique en détail les indicateurs et leur interprétation pour l\u2019onglet en cours. Le bouton "ℹ️ Guide de lecture" (présent à plusieurs endroits du site) donne une explication rapide de ce qui est affiché juste au-dessus.',
+          side: 'bottom'
+        }
+      },
+      {
+        element: '#reportPdfBtn',
+        popover: {
+          title: 'Le rapport PDF',
+          description: 'Génère un rapport complet et imprimable du territoire sélectionné : idéal pour préparer une réunion de CLPE ou partager les résultats hors ligne.',
+          side: 'right'
+        }
+      },
+      {
+        popover: {
+          title: 'C\u2019est à vous !',
+          description: 'Cliquez sur un onglet puis sur son bouton "🧭 Comprendre cet onglet" pour en savoir plus sur ses indicateurs. Vous pouvez relancer cette visite générale à tout moment.'
+        }
+      }
+    ];
+  }
+
+  /* ---------- Parcours par onglet : indicateurs, navigation, interprétation ---------- */
+  var tabSteps = {
+    maturite: function () {
+      return [
         {
           popover: {
-            title: '\uD83D\uDC4B Bienvenue sur le Cockpit CLPE',
-            description: 'Cette courte visite vous montre comment naviguer et lire les résultats. Vous pouvez la fermer à tout moment avec la croix ou la touche Échap.'
-          }
-        },
-        {
-          element: '#cockpitTerritoryBar',
-          popover: {
-            title: 'Le territoire sélectionné',
-            description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi.',
-            side: 'bottom'
-          }
-        },
-        {
-          element: '.map-filter-row',
-          popover: {
-            title: 'Choisir un territoire',
-            description: 'Filtrez par région, département ou CLPE - ou cliquez directement sur la carte à droite. Les deux sont toujours synchronisés.',
-            side: 'bottom'
-          }
-        },
-        {
-          element: '#mapSide',
-          popover: {
-            title: 'La carte',
-            description: 'Une seule carte, commune à tous les onglets : elle change de fond de couleur selon l\u2019indicateur affiché dans la brique active.',
-            side: 'left'
-          }
-        },
-        {
-          element: '#cockpitTabs',
-          popover: {
-            title: 'Les 4 briques du cockpit',
-            description: 'Maturité, Pilotage des actions, Performance relative, Fréquentation : chaque onglet a sa couleur, ses propres indicateurs, et le cadre de la page reprend cette couleur pour s\u2019y repérer.',
-            side: 'right'
+            title: '\uD83D\uDCCA Niveau de maturité',
+            description: 'Cet onglet mesure comment les membres du CLPE perçoivent son fonctionnement collectif, à partir de 20 questions réparties en Fondamentaux et Pratiques.'
           }
         },
         {
           element: '.responses-inline',
           popover: {
             title: 'Qui a répondu',
-            description: 'Nombre de répondants, taux de réponse et structures représentées sur le territoire sélectionné.',
+            description: 'Nombre de répondants, taux de réponse et structures représentées. Un faible nombre de répondants invite à lire les résultats avec prudence.',
             side: 'right'
+          }
+        },
+        {
+          element: '.mat-indic-stack',
+          popover: {
+            title: 'Les indicateurs clés',
+            description: 'Niveau de maturité et Auto-évaluation sont ramenés sur une échelle de 4 pour une lecture directe. Un écart entre les deux signale une différence entre la perception générale et les réponses détaillées. Fondamentaux et Pratiques détaillent les deux dimensions qui composent ce niveau.',
+            side: 'right'
+          }
+        },
+        {
+          element: '#mapSideRadar',
+          popover: {
+            title: 'Le radar par thématique',
+            description: 'Répartit le niveau de maturité en 4 dimensions (dynamique de fonctionnement, socle commun, pilotage et impact, mutualisation) : plus la forme se rapproche du bord, plus les pratiques sont installées.',
+            side: 'left'
+          }
+        },
+        {
+          element: '.priorites-2col',
+          popover: {
+            title: 'Points forts et axes de progrès',
+            description: 'Sélection automatique des pratiques les mieux installées et de celles à prioriser, avec pour chaque axe de progrès un cap à atteindre et une recommandation concrète.',
+            side: 'top'
           }
         },
         {
           element: '#questionDetail',
           popover: {
-            title: 'Détail des questions',
-            description: 'Chaque question affiche son score, le nombre de répondants 👥 et l\u2019homogénéité des réponses ⚖️. Les questions marquées ✅ ou 🔺 sont respectivement des points forts et des axes de progrès du territoire - cliquez sur le tag pour en savoir plus.',
+            title: 'Le détail des questions',
+            description: 'Score, nombre de répondants 👥 et homogénéité des réponses ⚖️ pour chaque question. Les tags ✅ / 🔺 / 💬 signalent respectivement un point fort, un axe de progrès ou une question sur laquelle les avis divergent - cliquez sur le tag pour en savoir plus, ou sur la question pour voir les recommandations associées.',
             side: 'top'
           }
         },
         {
-          element: '.guide-btn',
+          element: '#matTabTableBtn',
           popover: {
-            title: 'Les guides de lecture',
-            description: 'Ce bouton "ℹ️ Guide de lecture" revient à plusieurs endroits du site : il explique toujours, en une popup, comment interpréter ce qui est affiché juste au-dessus.',
-            side: 'top'
+            title: 'Vue par CLPE',
+            description: 'Bascule vers un tableau détaillé, région par région puis département par département, pour comparer les CLPE entre eux et descendre jusqu\u2019au détail d\u2019un territoire précis.',
+            side: 'bottom'
+          }
+        }
+      ];
+    },
+    fiches: function () {
+      return [
+        {
+          popover: {
+            title: '\uD83D\uDCCA Pilotage des actions',
+            description: 'Cet onglet analyse la qualité des fiches action saisies dans le tableau de bord RPE : cadrage, impact usager, bilan et caractère innovant.'
           }
         },
         {
+          element: '#fichesHero',
           popover: {
-            title: 'Passons au Pilotage des actions',
-            description: 'La suite de la visite continue sur un autre onglet.'
-          },
-          onNextClick: function () { clickBrick('fiches'); setTimeout(function () { tour.moveNext(); }, 200); }
-        },
-        {
-          element: '#fichesPointsFortsPerso',
-          popover: {
-            title: 'Points forts des fiches action',
-            description: 'Jusqu\u2019à 3 points forts identifiés automatiquement à partir des fiches action saisies sur ce territoire, avec le pourcentage de fiches concernées.',
-            side: 'top'
-          },
-          onNextClick: function () { clickBrick('perf'); setTimeout(function () { tour.moveNext(); }, 200); }
-        },
-        {
-          element: '#panelPerf',
-          popover: {
-            title: 'Performance relative',
-            description: 'Ce territoire est comparé aux 10 territoires les plus proches socio-économiquement, pas à une moyenne nationale - un repère plus juste pour situer les résultats.',
-            side: 'top'
+            title: 'Les indicateurs clés',
+            description: 'Nombre de fiches saisies, bénéficiaires concernés (moyenne calculée uniquement sur les fiches renseignant ce champ) et score global sur 4, moyenne des 4 critères de qualité.',
+            side: 'bottom'
           }
         },
         {
-          element: '#reportPdfBtn',
+          element: '#fichesRadar',
           popover: {
-            title: 'Le rapport PDF',
-            description: 'Génère un rapport complet et imprimable du territoire sélectionné : idéal pour préparer une réunion de CLPE ou partager les résultats hors ligne.',
+            title: 'Le radar qualité',
+            description: 'Situe les fiches du territoire sur 4 critères : description et cadrage, impact usager, bilan et valorisation, caractère innovant - calculé automatiquement à partir du contenu texte des fiches.',
             side: 'right'
           }
         },
         {
+          element: '#fichesMonthChart',
           popover: {
-            title: 'C\u2019est à vous !',
-            description: 'Explorez librement le cockpit. Vous pouvez relancer cette visite à tout moment depuis le bouton "🧭 Visite guidée".'
+            title: 'Planification dans l\u2019année',
+            description: 'Positionne chaque action au mois de fin de sa première étape plutôt qu\u2019à sa date de création, pour refléter le rythme réel de mise en œuvre. Une répartition étalée traduit une planification qui lisse la charge de travail.',
+            side: 'top'
+          }
+        },
+        {
+          element: '#fichesPointsFortsPerso',
+          popover: {
+            title: 'Points forts et axes de progrès',
+            description: 'Jusqu\u2019à 3 de chaque, avec le pourcentage de fiches concernées - une alerte apparaît si ce pourcentage est faible, pour ne jamais présenter un signal isolé comme une tendance établie. Un renvoi "💡 Inspiration" propose parfois un autre territoire ou CLPE de référence.',
+            side: 'top'
+          }
+        },
+        {
+          element: '#fichesClpeLink',
+          popover: {
+            title: 'Consulter les fiches en détail',
+            description: 'Accède directement aux fiches action en cours du territoire sélectionné sur le tableau de bord RPE.',
+            side: 'bottom'
           }
         }
-      ]
-    });
+      ];
+    },
+    perf: function () {
+      return [
+        {
+          popover: {
+            title: '\uD83D\uDCCA Performance relative',
+            description: 'Compare les résultats emploi du CLPE à ceux de ses 10 territoires les plus proches socio-économiquement - un repère plus pertinent qu\u2019une moyenne nationale ou régionale.'
+          }
+        },
+        {
+          element: '#perfHero',
+          popover: {
+            title: 'Les indicateurs clés',
+            description: 'Écart du taux d\u2019accès à l\u2019emploi (TAE) et du taux de présence en emploi (TPE) par rapport à la moyenne des 10 territoires proches, exprimé en points de pourcentage (pp) - à ne pas confondre avec une évolution en %. L\u2019évolution sur un an est indiquée séparément.',
+            side: 'bottom'
+          }
+        },
+        {
+          element: '#perfTable',
+          popover: {
+            title: 'Le tableau des territoires proches',
+            description: 'Liste les 10 CLPE retenus pour la comparaison et leurs résultats. La proximité socio-économique n\u2019est pas réciproque : un territoire peut apparaître comme proche d\u2019un autre sans que l\u2019inverse soit vrai.',
+            side: 'top'
+          }
+        },
+        {
+          popover: {
+            title: '\u26A0\uFE0F À lire avec prudence',
+            description: 'Ces données ne permettent pas d\u2019attribuer directement les résultats à l\u2019action du CLPE. Cet onglet n\u2019affiche de résultat que pour un CLPE précisément sélectionné - filtrer par région ou département seul ne suffit pas.'
+          }
+        }
+      ];
+    },
+    freq: function () {
+      return [
+        {
+          popover: {
+            title: '\uD83D\uDCCA Fréquentation du tableau de bord RPE',
+            description: 'Cet onglet objective l\u2019usage réel du tableau de bord RPE par les membres du CLPE - un indicateur d\u2019appropriation de l\u2019outil, pas de qualité du pilotage en tant que tel.'
+          }
+        },
+        {
+          element: '#freqChart',
+          popover: {
+            title: 'Consultations par mois',
+            description: 'Permet de repérer les périodes de forte utilisation, les baisses de fréquentation et l\u2019installation progressive de l\u2019outil dans les pratiques du CLPE.',
+            side: 'bottom'
+          }
+        },
+        {
+          element: '#freqKpis',
+          popover: {
+            title: 'Les indicateurs clés',
+            description: 'Dernier trimestre, cumul depuis janvier, évolution par rapport au trimestre précédent et cumul rapporté à 1000 habitants - ce dernier permet de comparer des territoires de tailles différentes.',
+            side: 'top'
+          }
+        },
+        {
+          element: '#freqWeekChart',
+          popover: {
+            title: 'Sessions par semaine',
+            description: 'Vue plus fine, semaine par semaine, du même indicateur d\u2019usage.',
+            side: 'top'
+          }
+        },
+        {
+          popover: {
+            title: '\u26A0\uFE0F À mettre en regard d\u2019autre chose',
+            description: 'Un nombre élevé de consultations ne suffit pas à mesurer la qualité du pilotage : croisez-le avec la régularité de mise à jour des fiches action et l\u2019utilisation effective du tableau de bord en réunion de CLPE.'
+          }
+        }
+      ];
+    }
+  };
+
+  function runTour(steps) {
+    if (typeof driver === 'undefined') { alert('driver.js ne s\u2019est pas chargé (bloqué par un bloqueur de script ?)'); return; }
+    var cfg = Object.assign({}, driverConfig, { steps: steps });
+    var tour = window.driver.js.driver(cfg);
     tour.drive();
+    return tour;
   }
+
+  function startGlobalTour() {
+    clickBrick('maturite');
+    runTour(globalSteps());
+  }
+
+  function startTabTour(brick) {
+    var stepsFn = tabSteps[brick];
+    if (!stepsFn) return;
+    clickBrick(brick);
+    setTimeout(function () { runTour(stepsFn()); }, 150);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
-    var btn = document.getElementById('visiteGuideeBtn');
-    if (btn) btn.addEventListener('click', startTour);
+    var globalBtn = document.getElementById('visiteGuideeBtn');
+    if (globalBtn) globalBtn.addEventListener('click', startGlobalTour);
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.tab-tour-btn');
+      if (!btn) return;
+      startTabTour(btn.dataset.tourBrick);
+    });
   });
 })();
 </script>
