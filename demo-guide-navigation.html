@@ -333,9 +333,10 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-reco-body{padding:4px 0 14px 50px;font-size:12.5px;color:var(--ft-fg-2)}
 .q-reco-item,.q-reco-cap{background:var(--ft-sable);border-left:3px solid var(--ft-indigo);border-radius:4px;padding:8px 12px;margin-bottom:8px}
 .q-reco-cap{border-left-color:var(--ft-jaune-dark)}
-.guide-btn-row{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap}
+.guide-btn-row{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;max-width:calc(100% - 40px)}
 .guide-btn{display:inline-flex;align-items:center;gap:5px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);color:var(--ft-fg-2);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 13px;cursor:pointer}
 .tab-tour-btn{background:var(--ft-jaune-light);border-color:var(--ft-jaune-dark);color:#7a5a00}
+.tab-tour-btn-icon{padding:6px 10px;font-size:14px;flex:none;margin-left:auto}
 .guide-btn:hover{background:var(--ft-indigo-light);color:var(--ft-indigo);border-color:var(--ft-indigo)}
 .priorite-cap{border-left-color:var(--ft-jaune-dark)}
 .q-reco-item b,.q-reco-cap b{display:block;font-size:11px;color:var(--ft-indigo);margin-bottom:3px;text-transform:uppercase;letter-spacing:.02em}
@@ -799,7 +800,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="tab-panel" data-brick="maturite" id="panelMaturite">
 
 
-            <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="maturite">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent1">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent1" style="display:none"><b>Guide de lecture :</b> les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
+            <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent1">ℹ️ Guide de lecture</button><button class="guide-btn tab-tour-btn tab-tour-btn-icon" type="button" data-tour-brick="maturite" title="Visite guidée de l’onglet">🧭</button></div><div class="guide" id="guideContent1" style="display:none">Les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
             <div class="responses-inline">
               <div class="part-title">Réponses</div>
               <div class="f-summary" id="fRateSummary"></div>
@@ -825,7 +826,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="questions">
-              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent2">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent2" style="display:none"><b>Guide de lecture :</b> score moyen par question, en points, avec le nombre de répondants 👥 et l'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.</div>
+              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent2">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent2" style="display:none">Score moyen par question, en points, avec le nombre de répondants 👥 et l'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.</div>
               <div class="qd-toolbar">
                 <button class="btn-reset btn-export" id="exportQuestionsBtn">Exporter en Excel</button>
                 <button class="btn-reset" id="unfoldAllBtn">Tout déplier</button>
@@ -835,7 +836,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="table" style="display:none">
-              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent3">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent3" style="display:none"><b>Guide de lecture :</b> les lignes sont regroupées par région puis par département tant qu'un CLPE précis n'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.</div>
+              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent3">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent3" style="display:none">Les lignes sont regroupées par région puis par département tant qu'un CLPE précis n'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.</div>
               <div class="table-view-switch" id="tableViewSwitch">
                 <button class="tvs-btn active" data-mode="hierarchique" type="button">Vue hiérarchique</button>
                 <button class="tvs-btn" data-mode="clpe" type="button">Vue CLPE</button>
@@ -863,7 +864,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
         </div>
         <div class="tab-panel" data-brick="freq" id="panelFreq" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="freq">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent4">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent4" style="display:none"><b>Guide de lecture :</b> nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent4">ℹ️ Guide de lecture</button><button class="guide-btn tab-tour-btn tab-tour-btn-icon" type="button" data-tour-brick="freq" title="Visite guidée de l’onglet">🧭</button></div><div class="guide" id="guideContent4" style="display:none">Nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
           <h3 id="freqScopeTitle"></h3>
           <div class="part-title">Consultations par mois</div>
           <div id="freqChart"></div>
@@ -873,7 +874,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="fiches">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none"><b>Guide de lecture :</b> nombre de fiches action saisies, nombre de bénéficiaires impactés et score moyen sur 4 critères notés sur 4 (données réelles).</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button><button class="guide-btn tab-tour-btn tab-tour-btn-icon" type="button" data-tour-brick="fiches" title="Visite guidée de l’onglet">🧭</button></div><div class="guide" id="guideContent5" style="display:none">Nombre de fiches action saisies, nombre de bénéficiaires impactés et score moyen sur 4 critères notés sur 4 (données réelles).</div>
           <div class="fiches-links-row">
             <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
             <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
@@ -890,11 +891,11 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
               <div class="part-title part-title-center">Planification des actions dans l'année</div>
               <div id="fichesMonthChart"></div>
               <div class="fiches-month-legend" id="fichesMonthLegend"></div>
-              <div class="guide-btn-row" style="margin-top:8px"><button class="guide-btn" type="button" data-guide-src="guideContent6">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent6" style="display:none"><b>Guide de lecture :</b> chaque action est positionnée au mois de fin de sa première étape (et non à sa date de création), pour refléter le rythme réel de mise en œuvre plutôt que celui de la saisie administrative. Une répartition étalée sur l'année traduit une planification qui lisse la charge de travail ; une concentration marquée sur quelques mois peut signaler un pilotage réactif ou une saisie tardive regroupée en fin de période plutôt qu'une programmation anticipée.</div>
+              <div class="guide-btn-row" style="margin-top:8px"><button class="guide-btn" type="button" data-guide-src="guideContent6">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent6" style="display:none">Chaque action est positionnée au mois de fin de sa première étape (et non à sa date de création), pour refléter le rythme réel de mise en œuvre plutôt que celui de la saisie administrative. Une répartition étalée sur l'année traduit une planification qui lisse la charge de travail ; une concentration marquée sur quelques mois peut signaler un pilotage réactif ou une saisie tardive regroupée en fin de période plutôt qu'une programmation anticipée.</div>
             </div>
           </div>
           <div class="part-title" style="margin-top:14px">Points forts et axes de progrès du territoire</div>
-          <div class="guide-btn-row" style="margin-top:0"><button class="guide-btn" type="button" data-guide-src="guideContent7">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent7" style="display:none"><b>Guide de lecture :</b> pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Jusqu'à 3 éléments de chaque côté, avec une alerte ⚠️ dès que l'observation repose sur moins de 30&nbsp;% des fiches du territoire.</div>
+          <div class="guide-btn-row" style="margin-top:0"><button class="guide-btn" type="button" data-guide-src="guideContent7">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent7" style="display:none">Pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Jusqu'à 3 éléments de chaque côté, avec une alerte ⚠️ dès que l'observation repose sur moins de 30&nbsp;% des fiches du territoire.</div>
           <div class="fiches-pf-preco-grid">
             <div>
               <div class="pf-preco-col-title">✅ Points forts</div>
@@ -909,7 +910,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn tab-tour-btn" type="button" data-tour-brick="perf">🧭 Comprendre cet onglet</button><button class="guide-btn" type="button" data-guide-src="guideContent8">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent8" style="display:none"><b>Guide de lecture :</b> pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
+          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent8">ℹ️ Guide de lecture</button><button class="guide-btn tab-tour-btn tab-tour-btn-icon" type="button" data-tour-brick="perf" title="Visite guidée de l’onglet">🧭</button></div><div class="guide" id="guideContent8" style="display:none">Pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
           <h3 id="perfScopeTitle"></h3>
           <div class="hero-row" id="perfHero"></div>
           <div class="part-title" id="perfTableTitle" style="display:none">Territoires les plus proches</div>
@@ -4319,6 +4320,22 @@ init();
         }
       },
       {
+        element: '.btn-sidebar-link',
+        popover: {
+          title: 'Les liens utiles',
+          description: 'Sous le rapport PDF : un accès direct au Tableau de Bord du Réseau Pour l\u2019Emploi, à ses Ressources associées (notamment le glossaire, pour les définitions précises des indicateurs) et à l\u2019Académie France Travail, qui propose des vidéos, modules e-learning et formations pour développer vos pratiques au sein du RPE.',
+          side: 'right'
+        }
+      },
+      {
+        element: '#cockpitMetaBar',
+        popover: {
+          title: 'La date de mise à jour',
+          description: 'Chaque onglet a sa propre date de mise à jour, affichée ici et propre à sa source de données. Les données sont chargées manuellement dans le cockpit : pensez à vérifier cette date en changeant d\u2019onglet pour savoir si une actualisation a eu lieu récemment.',
+          side: 'bottom'
+        }
+      },
+      {
         popover: {
           title: 'C\u2019est à vous !',
           description: 'Cliquez sur un onglet puis sur son bouton "🧭 Comprendre cet onglet" pour en savoir plus sur ses indicateurs. Vous pouvez relancer cette visite générale à tout moment.'
@@ -4335,6 +4352,14 @@ init();
           popover: {
             title: '\uD83D\uDCCA Niveau de maturité',
             description: 'Cet onglet mesure comment les membres du CLPE perçoivent son fonctionnement collectif, à partir de 20 questions réparties en Fondamentaux et Pratiques.'
+          }
+        },
+        {
+          element: '#mapIndicWrap',
+          popover: {
+            title: 'Changer l\u2019indicateur de la carte',
+            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (niveau de maturité, fondamentaux, pratiques...).',
+            side: 'bottom'
           }
         },
         {
@@ -4396,6 +4421,14 @@ init();
           }
         },
         {
+          element: '#mapIndicWrap',
+          popover: {
+            title: 'Changer l\u2019indicateur de la carte',
+            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (nombre de fiches, bénéficiaires, score global ou l\u2019un des 4 critères).',
+            side: 'bottom'
+          }
+        },
+        {
           element: '#fichesHero',
           popover: {
             title: 'Les indicateurs clés',
@@ -4431,7 +4464,15 @@ init();
           element: '#fichesClpeLink',
           popover: {
             title: 'Consulter les fiches en détail',
-            description: 'Accède directement aux fiches action en cours du territoire sélectionné sur le tableau de bord RPE.',
+            description: 'Accède directement aux fiches action en cours du territoire sélectionné sur le tableau de bord RPE. Uniquement disponible quand un CLPE précis est sélectionné.',
+            side: 'bottom'
+          }
+        },
+        {
+          element: '.eval-fiche-link',
+          popover: {
+            title: 'Évaluer une fiche action',
+            description: 'Un outil séparé permet d\u2019évaluer une fiche action à partir de son export PDF (ou en lot, plusieurs fiches à la fois) : score sur 4 critères, points forts et axes de progrès identifiés automatiquement.',
             side: 'bottom'
           }
         }
@@ -4443,6 +4484,14 @@ init();
           popover: {
             title: '\uD83D\uDCCA Performance relative',
             description: 'Compare les résultats emploi du CLPE à ceux de ses 10 territoires les plus proches socio-économiquement - un repère plus pertinent qu\u2019une moyenne nationale ou régionale.'
+          }
+        },
+        {
+          element: '#mapIndicWrap',
+          popover: {
+            title: 'Changer l\u2019indicateur de la carte',
+            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (écart TAE, écart TPE, évolution...).',
+            side: 'bottom'
           }
         },
         {
@@ -4475,6 +4524,14 @@ init();
           popover: {
             title: '\uD83D\uDCCA Fréquentation du tableau de bord RPE',
             description: 'Cet onglet objective l\u2019usage réel du tableau de bord RPE par les membres du CLPE - un indicateur d\u2019appropriation de l\u2019outil, pas de qualité du pilotage en tant que tel.'
+          }
+        },
+        {
+          element: '#mapIndicWrap',
+          popover: {
+            title: 'Changer l\u2019indicateur de la carte',
+            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (cumul de consultations, évolution...).',
+            side: 'bottom'
           }
         },
         {
