@@ -336,6 +336,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .guide-btn-row{margin:10px 0}
 .guide-btn{display:inline-flex;align-items:center;gap:5px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);color:var(--ft-fg-2);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 13px;cursor:pointer}
 .cockpit-tab-wrap{position:relative}
+.cockpit-tab-wrap .cockpit-tab{display:block;width:100%;box-sizing:border-box}
 .tab-tour-icon-embed{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);border:1.5px solid rgba(0,0,0,.15);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2}
 .tab-tour-icon-embed:hover{background:#fff;border-color:var(--ft-jaune-dark)}
 .guide-btn:hover{background:var(--ft-indigo-light);color:var(--ft-indigo);border-color:var(--ft-indigo)}
@@ -688,12 +689,14 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
         <button class="btn-reset btn-pdf-sidebar" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
         <hr class="sidebar-sep">
+        <div class="sidebar-links-group">
         <a class="btn-reset btn-sidebar-link" href="http://pilotage-rpe.francetravail.org/rpe" target="_blank" rel="noopener">🔗 Tableau de Bord du Réseau Pour l'Emploi</a>
         <a class="btn-reset btn-sidebar-link" href="https://reseau-pour-l-emploi.github.io/Ressources-Tableau-de-bord-RPE/" target="_blank" rel="noopener">🔗 Ressources du Tableau de Bord du RPE</a>
         <a class="btn-reset btn-academie-link" href="https://www.academiefrancetravail.org/" target="_blank" rel="noopener" title="Développez vos pratiques au sein du RPE&#10;L'Académie France Travail accompagne les acteurs du Réseau pour l'emploi en mettant à leur disposition des ressources pour enrichir leurs pratiques, valoriser leur complémentarité et mieux agir au service des publics.&#10;Connectez-vous pour accéder aux vidéos, modules e-learning et formations disponibles : https://www.academiefrancetravail.org/">
           <img src="assets/academie-logo.png" alt="Académie France Travail">
           <span>Pour vous accompagner</span>
         </a>
+        </div>
       </div>
       <div class="cockpit-main-col">
 
@@ -4333,7 +4336,7 @@ init();
         }
       },
       {
-        element: '.btn-sidebar-link',
+        element: '.sidebar-links-group',
         popover: {
           title: 'Les liens utiles',
           description: 'Sous le rapport PDF : un accès direct au Tableau de Bord du Réseau Pour l\u2019Emploi, à ses Ressources associées (notamment le glossaire, pour les définitions précises des indicateurs) et à l\u2019Académie France Travail, qui propose des vidéos, modules e-learning et formations pour développer vos pratiques au sein du RPE.',
@@ -4361,7 +4364,7 @@ init();
   /* ---------- Parcours par onglet : indicateurs, navigation, interprétation ---------- */
   var tabSteps = {
     maturite: function () {
-      return [
+      var steps = [
         {
           popover: {
             title: '\uD83D\uDCCA Niveau de maturité',
@@ -4412,22 +4415,27 @@ init();
           element: '#questionDetail',
           popover: {
             title: 'Le détail des questions',
-            description: 'Score, nombre de répondants 👥 et homogénéité des réponses ⚖️ pour chaque question. Les tags ✅ / 🔺 / 💬 signalent respectivement un point fort, un axe de progrès ou une question sur laquelle les avis divergent - cliquez sur le tag pour en savoir plus, ou sur la question pour voir les recommandations associées.',
+            description: 'Score, nombre de répondants 👥 et homogénéité des réponses ⚖️ pour chaque question. Cliquez sur une partie ou une thématique pour afficher l\u2019ensemble de ses questions, sur le numéro d\u2019une question pour voir le score de chaque modalité de réponse, ou sur la question elle-même pour voir les recommandations associées. Les tags ✅ / 🔺 / 💬 (point fort, axe de progrès, avis divergents) se cliquent aussi pour en savoir plus.',
             side: 'top'
           }
-        },
-        {
+        }
+      ];
+      /* Le tableau "Vue par CLPE" sert à descendre jusqu'à un CLPE précis : sans intérêt si
+         un CLPE est déjà sélectionné, l'étape est alors omise. */
+      if (!state.clpe) {
+        steps.push({
           element: '#matTabTableBtn',
           popover: {
             title: 'Vue par CLPE',
             description: 'Bascule vers un tableau détaillé, région par région puis département par département, pour comparer les CLPE entre eux et descendre jusqu\u2019au détail d\u2019un territoire précis.',
             side: 'bottom'
           }
-        }
-      ];
+        });
+      }
+      return steps;
     },
     fiches: function () {
-      return [
+      var steps = [
         {
           popover: {
             title: '\uD83D\uDCCA Pilotage des actions',
@@ -4471,28 +4479,51 @@ init();
           popover: {
             title: 'Points forts et axes de progrès',
             description: 'Jusqu\u2019à 3 de chaque, avec le pourcentage de fiches concernées - une alerte apparaît si ce pourcentage est faible, pour ne jamais présenter un signal isolé comme une tendance établie. Un renvoi "💡 Inspiration" propose parfois un autre territoire ou CLPE de référence.',
-            side: 'top'
-          }
-        },
-        {
-          element: '#fichesClpeLink',
-          popover: {
-            title: 'Consulter les fiches en détail',
-            description: 'Accède directement aux fiches action en cours du territoire sélectionné sur le tableau de bord RPE. Uniquement disponible quand un CLPE précis est sélectionné.',
-            side: 'bottom'
-          }
-        },
-        {
-          element: '.eval-fiche-link',
-          popover: {
-            title: 'Évaluer une fiche action',
-            description: 'Un outil séparé permet d\u2019évaluer une fiche action à partir de son export PDF (ou en lot, plusieurs fiches à la fois) : score sur 4 critères, points forts et axes de progrès identifiés automatiquement.',
-            side: 'bottom'
+            side: 'top',
+            align: 'start'
           }
         }
       ];
+      /* Le lien vers les fiches en cours n'existe que pour un CLPE précis. */
+      if (state.clpe) {
+        steps.push({
+          element: '#fichesClpeLink',
+          popover: {
+            title: 'Consulter les fiches en détail',
+            description: 'Accède directement aux fiches action en cours du territoire sélectionné sur le tableau de bord RPE.',
+            side: 'bottom'
+          }
+        });
+      }
+      steps.push({
+        element: '.eval-fiche-link',
+        popover: {
+          title: 'Évaluer une fiche action',
+          description: 'Un outil séparé permet d\u2019évaluer une fiche action à partir de son export PDF (ou en lot, plusieurs fiches à la fois) : score sur 4 critères, points forts et axes de progrès identifiés automatiquement.',
+          side: 'bottom'
+        }
+      });
+      return steps;
     },
     perf: function () {
+      if (!state.clpe) {
+        return [
+          {
+            popover: {
+              title: '\uD83D\uDCCA Performance relative',
+              description: 'Compare les résultats emploi d\u2019un CLPE à ceux de ses 10 territoires les plus proches socio-économiquement - un repère plus pertinent qu\u2019une moyenne nationale ou régionale.'
+            }
+          },
+          {
+            element: '.map-filter-row',
+            popover: {
+              title: 'Sélectionnez un CLPE',
+              description: 'Cet onglet n\u2019affiche de résultat que pour un CLPE précisément sélectionné - filtrer par région ou département seul ne suffit pas. Choisissez un CLPE ici ou sur la carte pour voir ses indicateurs.',
+              side: 'top'
+            }
+          }
+        ];
+      }
       return [
         {
           popover: {
@@ -4527,7 +4558,7 @@ init();
         {
           popover: {
             title: '\u26A0\uFE0F À lire avec prudence',
-            description: 'Ces données ne permettent pas d\u2019attribuer directement les résultats à l\u2019action du CLPE. Cet onglet n\u2019affiche de résultat que pour un CLPE précisément sélectionné - filtrer par région ou département seul ne suffit pas.'
+            description: 'Ces données ne permettent pas d\u2019attribuer directement les résultats à l\u2019action du CLPE : à analyser avec les acteurs locaux, au regard du contexte du territoire.'
           }
         }
       ];
