@@ -499,7 +499,12 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 #printReport .pr-q-meta2{font-size:7.5pt;color:var(--ft-fg-3);text-align:right;white-space:nowrap}
 #printReport .pr-q-tag-emoji{font-size:10.5pt;text-align:center}
 /* Page Fréquentation */
-#printReport .pr-freq-bars{display:flex;align-items:flex-end;gap:16px;height:100mm;padding:10px 8px 0;flex:1}
+#printReport .pr-freq-content-wrap{flex:2 1 0;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#printReport .pr-notes-box{flex:1 1 0;display:flex;flex-direction:column;border:1.5px solid var(--ft-indigo-light);border-radius:8px;padding:10px 16px;margin-top:12px;min-height:0}
+#printReport .pr-notes-title{font-size:10.5pt;font-weight:700;color:var(--ft-navy);margin-bottom:6px;flex:none}
+#printReport .pr-notes-lines{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-height:0}
+#printReport .pr-notes-line{border-bottom:1px solid var(--ft-sable-dark);flex:1}
+#printReport .pr-freq-bars{display:flex;align-items:flex-end;gap:16px;height:60mm;padding:10px 8px 0;flex:1}
 #printReport .pr-freq-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
 #printReport .pr-freq-bar{width:60%;background:var(--ft-bleu);border-radius:4px 4px 0 0;min-height:2px}
 #printReport .pr-freq-val{font-size:10.5pt;font-weight:700;color:var(--ft-fg-2);margin-bottom:4px}
@@ -583,9 +588,9 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <h4>Présentation des 4 onglets du cockpit</h4>
           <ul>
             <li><b>Baromètre</b> : analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE.</li>
-            <li><b>Fréquentation</b> : objective la fréquence d'utilisation du tableau de bord RPE.</li>
             <li><b>Pilotage des actions</b> : reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés.</li>
             <li><b>Performance relative</b> : relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche.</li>
+            <li><b>Fréquentation</b> : objective la fréquence d'utilisation du tableau de bord RPE.</li>
           </ul>
         </div>
       </div>
@@ -638,11 +643,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="ct-val" id="ctValMaturite">-</div>
           <div class="ct-sub" id="ctSubMaturite"></div>
         </button>
-        <button class="cockpit-tab" data-brick="freq" data-color="bleu">
-          <div class="ct-label" title="La Fréquentation objective la fréquence d'utilisation du tableau de bord RPE.">Fréquentation TDB RPE</div>
-          <div class="ct-val" id="ctValFreq">-</div>
-          <div class="ct-sub" id="ctSubFreq"></div>
-        </button>
         <button class="cockpit-tab" data-brick="fiches" data-color="violet">
           <div class="ct-label" title="Le Pilotage des actions reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés.">Pilotage des actions</div>
           <div class="ct-val" id="ctValFiches">-</div>
@@ -652,6 +652,11 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="ct-label" title="La Performance relative relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche.">Performance relative</div>
           <div class="ct-val" id="ctValPerf">-</div>
           <div class="ct-sub" id="ctSubPerf"></div>
+        </button>
+        <button class="cockpit-tab" data-brick="freq" data-color="bleu">
+          <div class="ct-label" title="La Fréquentation objective la fréquence d'utilisation du tableau de bord RPE.">Fréquentation TDB RPE</div>
+          <div class="ct-val" id="ctValFreq">-</div>
+          <div class="ct-sub" id="ctSubFreq"></div>
         </button>
         <button class="btn-reset btn-pdf-sidebar" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
         <hr class="sidebar-sep">
@@ -3451,12 +3456,14 @@ function buildReportPageMaturiteQuestions() {
 function buildReportPageFreq() {
   var label = scopeLabel();
   var html = pageHeader(label, 'Fréquentation TDB RPE');
+  html += '<div class="pr-freq-content-wrap">';
   html += '<div class="pr-sect-intro">La fréquentation renseigne sur l\u2019utilisation du tableau de bord RPE par les membres du CLPE. Elle permet d\u2019observer si cet outil est régulièrement consulté et mobilisé pour préparer les échanges, suivre la feuille de route et piloter les actions.</div>';
   var rows = TDB_DATA.filter(inScope);
   var months = unique(rows.map(function (r) { return r.mois; })).sort();
   var trims = unique(months.map(moisToTrimestre)).sort();
   if (!trims.length) {
     html += '<p class="pr-empty">Aucune donnée sur ce périmètre.</p>';
+    html += '</div>' + buildReportNotesBox();
     return html;
   }
   var byTrim = {};
@@ -3493,7 +3500,19 @@ function buildReportPageFreq() {
     (pop ? '<div class="pr-hero"><div class="lbl">Cumul / 1000 hab. (année)</div><div class="val">' + fmt(cumulYTD / pop * 1000, 2) + '</div><div class="pr-auto-lbl">Compare l\u2019intensité d\u2019utilisation entre territoires de tailles différentes.</div></div>' : '<div></div>') +
     '</div>';
   html += '<div class="pr-precaution"><b>Précaution d\u2019interprétation :</b> le nombre de consultations est un indicateur d\u2019usage. Il ne suffit pas, à lui seul, à mesurer la qualité du pilotage. Il doit être mis en regard de la régularité de mise à jour des actions et de l\u2019utilisation effective du tableau de bord lors des réunions du CLPE.</div>';
+  html += '</div>';
+  html += buildReportNotesBox();
   return html;
+}
+/* Encadré "Notes" avec lignes, occupant environ le tiers inférieur de la page (le contenu
+   principal au-dessus étant enveloppé dans .pr-freq-content-wrap, flex:2 contre flex:1 ici) -
+   un espace laissé volontairement vierge pour la prise de notes manuscrite lors des échanges
+   collectifs autour du rapport. */
+function buildReportNotesBox() {
+  var nLines = 6;
+  var lines = '';
+  for (var i = 0; i < nLines; i++) lines += '<div class="pr-notes-line"></div>';
+  return '<div class="pr-notes-box"><div class="pr-notes-title">\uD83D\uDCDD Notes</div><div class="pr-notes-lines">' + lines + '</div></div>';
 }
 function buildReportPageFiches() {
   var label = scopeLabel();
@@ -3671,7 +3690,7 @@ function buildReportPageMaturiteDetail() {
   return html;
 }
 function buildPrintReportHTML() {
-  var pages = [buildReportPageMaturite(), buildReportPageMaturiteQuestions(), buildReportPageMaturiteDetail(), buildReportPageFreq(), buildReportPageFiches(), buildReportPagePerf()];
+  var pages = [buildReportPageMaturite(), buildReportPageMaturiteQuestions(), buildReportPageMaturiteDetail(), buildReportPageFiches(), buildReportPagePerf(), buildReportPageFreq()];
   document.getElementById('printReport').innerHTML = pages.map(function (p) { return '<div class="pr-page">' + p + '</div>'; }).join('');
 }
 function downloadPdfReport() {
