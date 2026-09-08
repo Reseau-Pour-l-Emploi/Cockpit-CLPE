@@ -336,7 +336,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .guide-btn-row{margin:10px 0}
 .guide-btn{display:inline-flex;align-items:center;gap:5px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);color:var(--ft-fg-2);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 13px;cursor:pointer}
 .cockpit-tab-wrap{position:relative}
-.cockpit-tab-wrap .cockpit-tab{display:block;width:100%;box-sizing:border-box}
+.cockpit-tab-wrap .cockpit-tab{display:block;width:100%;box-sizing:border-box;padding-right:34px}
 .tab-tour-icon-embed{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);border:1.5px solid rgba(0,0,0,.15);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2}
 .tab-tour-icon-embed:hover{background:#fff;border-color:var(--ft-jaune-dark)}
 .guide-btn:hover{background:var(--ft-indigo-light);color:var(--ft-indigo);border-color:var(--ft-indigo)}
@@ -4613,9 +4613,9 @@ init();
     }
   };
 
-  function runTour(steps) {
+  function runTour(steps, opts) {
     if (typeof driver === 'undefined') { alert('driver.js ne s\u2019est pas chargé (bloqué par un bloqueur de script ?)'); return; }
-    var cfg = Object.assign({}, driverConfig, { steps: steps });
+    var cfg = Object.assign({}, driverConfig, { steps: steps }, opts || {});
     var tour = window.driver.js.driver(cfg);
     tour.drive();
     return tour;
@@ -4626,11 +4626,34 @@ init();
     runTour(globalSteps());
   }
 
+  /* Sur la Performance relative, si aucun CLPE n'est encore sélectionné, le parcours ne
+     propose que 2 étapes invitant à en choisir un. Si l'utilisateur en sélectionne un
+     pendant ce parcours (filtre ou carte), on relance automatiquement avec le parcours
+     complet, sans qu'il ait besoin de rouvrir la visite lui-même. */
+  var clpeWatcher = null;
+  function clearClpeWatcher() { if (clpeWatcher) { clearInterval(clpeWatcher); clpeWatcher = null; } }
+  function watchForClpeSelection(activeTour) {
+    clearClpeWatcher();
+    clpeWatcher = setInterval(function () {
+      if (state.clpe) {
+        clearClpeWatcher();
+        activeTour.destroy();
+        setTimeout(function () { runTour(tabSteps.perf()); }, 150);
+      }
+    }, 400);
+  }
+
   function startTabTour(brick) {
     var stepsFn = tabSteps[brick];
     if (!stepsFn) return;
+    clearClpeWatcher();
     clickBrick(brick);
-    setTimeout(function () { runTour(stepsFn()); }, 150);
+    setTimeout(function () {
+      var steps = stepsFn();
+      var needsClpeWatch = brick === 'perf' && !state.clpe;
+      var tour = runTour(steps, needsClpeWatch ? { onDestroyed: clearClpeWatcher } : null);
+      if (needsClpeWatch && tour) watchForClpeSelection(tour);
+    }, 150);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
