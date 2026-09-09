@@ -335,6 +335,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .q-reco-cap{border-left-color:var(--ft-jaune-dark)}
 .guide-btn-row{margin:10px 0}
 .guide-btn{display:inline-flex;align-items:center;gap:5px;background:var(--ft-sable);border:1px solid var(--ft-sable-dark);color:var(--ft-fg-2);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 13px;cursor:pointer}
+.cockpit-tabs-group{display:flex;flex-direction:column;gap:10px}
 .cockpit-tab-wrap{position:relative}
 .cockpit-tab-wrap .cockpit-tab{display:block;width:100%;box-sizing:border-box;padding-right:34px}
 .tab-tour-icon-embed{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);border:1.5px solid rgba(0,0,0,.15);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2}
@@ -655,6 +656,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
     <div class="cockpit-layout">
       <div class="cockpit-tabs-sidebar" id="cockpitTabs">
+        <div class="cockpit-tabs-group">
         <div class="cockpit-tab-wrap">
         <button class="cockpit-tab active" data-brick="maturite" data-color="indigo">
           <div class="ct-label" title="Le Baromètre analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE.">Niveau de maturité</div>
@@ -686,6 +688,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="ct-sub" id="ctSubFreq"></div>
         </button>
         <button class="tab-tour-icon-embed" type="button" data-tour-brick="freq" title="Visite guidée de l’onglet">🧭</button>
+        </div>
         </div>
         <button class="btn-reset btn-pdf-sidebar" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
         <hr class="sidebar-sep">
@@ -4144,6 +4147,7 @@ function selectTrimestre(id) {
 function init() {
   document.getElementById('loader').style.display = 'block';
   document.getElementById('loader').textContent = 'Chargement des réponses…';
+  updateDataUpdatedLabel('maturite');
   fetchGithubLastCommitDates();
   Promise.all([
     fetchFresh(CONFIG.answersFile).then(function (r) {
@@ -4312,7 +4316,7 @@ init();
         }
       },
       {
-        element: '#cockpitTabs',
+        element: '.cockpit-tabs-group',
         popover: {
           title: 'Les 4 briques du cockpit',
           description: 'Maturité, Pilotage des actions, Performance relative, Fréquentation : chaque onglet a sa couleur, ses propres indicateurs, et le cadre de la page reprend cette couleur pour s\u2019y repérer.',
