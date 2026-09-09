@@ -130,12 +130,16 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ct-sub{font-size:11.5px;color:var(--ft-fg-2);margin-top:4px}
 .responses-inline{background:var(--ft-sable);border:1px solid var(--ft-sable-dark);border-radius:8px;padding:10px 14px;margin-bottom:14px}
 .mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.mat-col-divider{border-left:2px solid var(--ft-indigo-light);padding-left:24px}
+@media(max-width:820px){.mat-col-divider{border-left:none;padding-left:0;border-top:2px solid var(--ft-indigo-light);padding-top:16px;margin-top:8px}}
 .mat-indic-stack{display:flex;flex-direction:column;gap:12px}
 .mat-indic-stack .hero-card,.mat-indic-stack .bar-row-card{width:100%;box-sizing:border-box}
 .preco-pdf-row{display:flex;gap:10px;margin:14px 0 0;flex-wrap:wrap}
 .preco-pdf-row .btn-preco{width:auto;flex:1;margin-top:0}
 .btn-preco{border-color:var(--ft-jaune-dark);color:var(--ft-navy);font-weight:600}
 .mat-tabs-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:18px 0 4px}
+.mat-view-switch-btn{display:inline-block;background:var(--ft-white);border:1.5px solid var(--ft-indigo);color:var(--ft-indigo);font-size:12px;font-weight:600;font-family:var(--ft-font);border-radius:999px;padding:6px 14px;cursor:pointer;margin-bottom:12px}
+.mat-view-switch-btn:hover{background:var(--ft-indigo-light)}
 .fiches-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch;margin-top:16px}
 .hero-row-horiz{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
 .hero-row-horiz .hero-card{flex:1;min-width:180px}
@@ -828,10 +832,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             <div class="panel" id="mapSide" style="height:auto"></div>
 
             <div class="mat-tabs-bar">
-              <div class="seg" id="matDetailTabs">
-                <button data-tab="questions" class="active">Détail des questions</button>
-                <button data-tab="table" id="matTabTableBtn">Détail par CLPE</button>
-              </div>
               <div class="seg" id="qViewToggle">
                 <button data-qview="part" class="active">Vue par partie</button>
                 <button data-qview="theme">Vue par thématique</button>
@@ -840,6 +840,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
 
             <div class="mat-detail-panel" data-tab="questions">
               <div class="section-title" data-guide-key="detail-question" role="button" tabindex="0">Détail par question<span class="section-title-ico">ℹ️</span></div>
+              <button class="btn-reset mat-view-switch-btn" id="matTabTableBtn" type="button">Vue par territoire</button>
               <div class="qd-toolbar">
                 <button class="btn-reset btn-export" id="exportQuestionsBtn">Exporter en Excel</button>
                 <button class="btn-reset" id="unfoldAllBtn">Tout déplier</button>
@@ -849,7 +850,8 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="table" style="display:none">
-              <div class="section-title" data-guide-key="detail-clpe" role="button" tabindex="0">Détail par CLPE<span class="section-title-ico">ℹ️</span></div>
+              <div class="section-title" data-guide-key="detail-clpe" role="button" tabindex="0">Vue par territoire<span class="section-title-ico">ℹ️</span></div>
+              <button class="btn-reset mat-view-switch-btn" id="matTabQuestionsBtn" type="button">Détail par question</button>
               <div class="table-view-switch" id="tableViewSwitch">
                 <button class="tvs-btn active" data-mode="hierarchique" type="button">Vue hiérarchique</button>
                 <button class="tvs-btn" data-mode="clpe" type="button">Vue CLPE</button>
@@ -1223,7 +1225,7 @@ function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').repla
    à chaque rendu puisque le contenu dépend souvent du territoire sélectionné). */
 var SECTION_GUIDES = {
   reponses: 'Les indicateurs de cette page portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.',
-  'detail-question': 'Score moyen par question, en points, avec le nombre de répondants 👥 et l\'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur une partie ou une thématique affiche l\'ensemble de ses questions. Cliquer sur le numéro d\'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.',
+  'detail-question': 'Score moyen par question, en points, avec le nombre de répondants 👥 et l\'homogénéité des réponses (🟢🔵🔴 selon le niveau) entre parenthèses. Cliquer sur une partie ou une thématique affiche l\'ensemble de ses questions. Cliquer sur le numéro d\'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.',
   'detail-clpe': 'Les lignes sont regroupées par région puis par département tant qu\'un CLPE précis n\'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l\'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.'
 };
 function sectionTitle(text, key, guideHtml) {
@@ -1936,7 +1938,7 @@ function buildAxesEtPointsFortsHTML(records, g) {
 function renderIndicatorPanel(hostId, g, title, geoLine) {
   var host = document.getElementById(hostId);
   if (!g || !g.n) {
-    host.innerHTML = '<h3>' + esc(title) + '</h3>' + (geoLine ? '<div class="geo">' + esc(geoLine) + '</div>' : '') + '<div class="empty">Aucune réponse reçue ce trimestre sur ce périmètre.</div>';
+    host.innerHTML = '<div class="empty">Aucune réponse reçue ce trimestre sur ce périmètre.</div>';
     return;
   }
   var autoTxt = g.auto == null ? 'Non renseignée' : (CONFIG.autoLabels[Math.round(g.auto)] || '-');
@@ -1948,9 +1950,8 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   var niveauLvl = Math.max(1, Math.min(4, Math.round(niveauValue(g.total, META.totalMax))));
   var niveauInfo = NIVEAU_DESCRIPTIONS[niveauLvl];
 
-  var html = '<h3>' + esc(title) + '</h3>';
+  var html = '<div class="mat-grid"><div class="mat-indic-stack">';
   html += sectionTitle('Principaux résultats', hostId + '-principaux', 'Niveau de maturité et Auto-évaluation sont ramenés sur une échelle de 4 pour une lecture directe. Un écart entre les deux signale une différence entre la perception générale des membres et le détail des réponses. Fondamentaux et Pratiques détaillent les deux dimensions qui composent le niveau de maturité.');
-  html += '<div class="mat-grid"><div class="mat-indic-stack">';
   html += '<div class="mat-pair">';
   html += '<div class="hero-card"><div class="lbl">Niveau de maturité' + infoIcon("Score total ramené sur une échelle de 4, pour permettre une lecture directe du niveau de maturité du CLPE, indépendamment du barème détaillé du questionnaire. Le score détaillé (sur " + META.totalMax + ") est rappelé entre parenthèses.") + '</div><div class="val">' + niveauHTML(g.total, META.totalMax) + '</div><div class="track"><div class="fill" style="width:' + (niveauValue(g.total, META.totalMax) / 4 * 100) + '%"></div></div>' +
     (totalHomog == null ? '' : '<div class="homog-line">' + homogBadge(totalHomog) + '</div>') + '</div>';
@@ -1965,7 +1966,7 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
       (p.h == null ? '' : '<div class="homog-line">' + homogBadge(p.h) + '</div>') + '</div>';
   });
   html += '</div>';
-  html += '</div><div>';
+  html += '</div><div class="mat-col-divider">';
   html += sectionTitle('Analyse thématique', hostId + '-thematique', 'Répartit le niveau de maturité en 4 dimensions complémentaires (dynamique de fonctionnement, socle commun, pilotage et impact, mutualisation des offres de services). Plus le résultat se rapproche du bord, plus les pratiques correspondantes sont installées, partagées et mobilisées dans la durée.') + '<div class="radar-wrap" id="' + hostId + 'Radar"></div>';
   html += '</div></div>';
   html += buildAxesEtPointsFortsHTML(g.items, g);
@@ -2459,7 +2460,6 @@ function refreshMap() { MAPS.forEach(function (m) { m.refresh(); }); }
 function resetMapView() { MAPS.forEach(function (m) { m.fitAll(); }); }
 
 function switchMatTab(tab) {
-  document.querySelectorAll('#matDetailTabs button').forEach(function (b) { b.classList.toggle('active', b.dataset.tab === tab); });
   document.querySelectorAll('.mat-detail-panel').forEach(function (p) { p.style.display = (p.dataset.tab === tab) ? '' : 'none'; });
 }
 function renderAll() {
@@ -2474,7 +2474,8 @@ function renderAll() {
   refreshMap();
   var tableTabBtn = document.getElementById('matTabTableBtn');
   tableTabBtn.style.display = state.clpe ? 'none' : '';
-  if (state.clpe && tableTabBtn.classList.contains('active')) switchMatTab('questions');
+  var tablePanel = document.querySelector('.mat-detail-panel[data-tab="table"]');
+  if (state.clpe && tablePanel && tablePanel.style.display !== 'none') switchMatTab('questions');
   renderFreq();
   renderFreqWeek();
   renderFiches();
@@ -3941,10 +3942,8 @@ function bindEvents() {
     theMap.setLevel(btn.dataset.level);
   });
   document.getElementById('mapIndic').addEventListener('change', function () { theMap.refresh(); });
-  document.getElementById('matDetailTabs').addEventListener('click', function (e) {
-    var btn = e.target.closest('button'); if (!btn || btn.disabled) return;
-    switchMatTab(btn.dataset.tab);
-  });
+  document.getElementById('matTabTableBtn').addEventListener('click', function () { switchMatTab('table'); });
+  document.getElementById('matTabQuestionsBtn').addEventListener('click', function () { switchMatTab('questions'); });
   document.querySelectorAll('#perfTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
@@ -4437,18 +4436,18 @@ init();
           element: '#questionDetail',
           popover: {
             title: 'Le détail des questions',
-            description: 'Score, nombre de répondants 👥 et homogénéité des réponses ⚖️ pour chaque question. Cliquez sur une partie ou une thématique pour afficher l\u2019ensemble de ses questions, sur le numéro d\u2019une question pour voir le score de chaque modalité de réponse, ou sur la question elle-même pour voir les recommandations associées. Les tags ✅ / 🔺 / 💬 (point fort, axe de progrès, avis divergents) se cliquent aussi pour en savoir plus.',
+            description: 'Score, nombre de répondants 👥 et homogénéité des réponses (🟢🔵🔴 selon le niveau) pour chaque question. Cliquez sur une partie ou une thématique pour afficher l\u2019ensemble de ses questions, sur le numéro d\u2019une question pour voir le score de chaque modalité de réponse, ou sur la question elle-même pour voir les recommandations associées. Les tags ✅ / 🔺 / 💬 (point fort, axe de progrès, avis divergents) se cliquent aussi pour en savoir plus.',
             side: 'top'
           }
         }
       ];
-      /* Le tableau "Vue par CLPE" sert à descendre jusqu'à un CLPE précis : sans intérêt si
-         un CLPE est déjà sélectionné, l'étape est alors omise. */
+      /* Le bouton "Vue par territoire" sert à descendre jusqu'à un CLPE précis : sans
+         intérêt si un CLPE est déjà sélectionné, l'étape est alors omise. */
       if (!state.clpe) {
         steps.push({
           element: '#matTabTableBtn',
           popover: {
-            title: 'Vue par CLPE',
+            title: 'Vue par territoire',
             description: 'Bascule vers un tableau détaillé, région par région puis département par département, pour comparer les CLPE entre eux et descendre jusqu\u2019au détail d\u2019un territoire précis.',
             side: 'bottom'
           }
