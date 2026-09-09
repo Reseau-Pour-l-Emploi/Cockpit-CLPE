@@ -1020,7 +1020,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
       <table class="method-table">
         <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
-        <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, qualité des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
+        <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, pertinence des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
         <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (et non exigé tant que l'échéance de l'action n'est pas atteinte). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
         <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant, ou dont le vocabulaire se distingue du reste du réseau, est jugée plus innovante.</td></tr>
       </table>
@@ -3332,7 +3332,7 @@ function buildFichesPreconisationsHTML() {
       ]
     }
   ];
-  var html = '<div class="preco-summary">20 pistes concrètes pour améliorer la qualité de saisie et de suivi des fiches action, organisées en 7 thèmes.</div>';
+  var html = '<div class="preco-summary">20 pistes concrètes pour améliorer la rédaction et le suivi des fiches action, organisées en 7 thèmes.</div>';
   groups.forEach(function (g) {
     html += '<div class="preco-section"><h4>' + esc(g.title) + '</h4>';
     g.items.forEach(function (it) { html += '<div class="preco-item">' + esc(it) + '</div>'; });
@@ -3557,9 +3557,9 @@ function buildReportPageFiches() {
 
   // ---------- Colonne gauche : vue d'ensemble ----------
   html += '<div class="pr-split-col"><div class="pr-split-title">Vue d\u2019ensemble</div>';
-  html += '<div class="pr-sect-intro pr-sect-intro-sm">Les fiches action traduisent la feuille de route du CLPE en actions opérationnelles. Leur analyse permet d\u2019apprécier la qualité du cadrage, le suivi des bénéficiaires, la mesure des résultats et la capacité à capitaliser ou à valoriser les actions conduites.</div>';
+  html += '<div class="pr-sect-intro pr-sect-intro-sm">Les fiches action traduisent la feuille de route du CLPE en actions opérationnelles. Leur analyse permet d\u2019apprécier le cadrage, le suivi des bénéficiaires, la mesure des résultats et la capacité à capitaliser ou à valoriser les actions conduites.</div>';
   var fy = fichesYearSelected();
-  html += '<div class="pr-q-legend"><b>' + esc(fy ? 'Année ' + fy : 'Toutes années confondues') + ' :</b> Fiches saisies - nombre total d\u2019actions enregistrées. Bénéficiaires - nombre de bénéficiaires des actions saisies. Bénéficiaires par action - moyenne du nombre de bénéficiaires par action saisie. Score global - appréciation synthétique de la qualité de renseignement et de suivi des fiches.</div>';
+  html += '<div class="pr-q-legend"><b>' + esc(fy ? 'Année ' + fy : 'Toutes années confondues') + ' :</b> Fiches saisies - nombre total d\u2019actions enregistrées. Bénéficiaires - nombre de bénéficiaires des actions saisies. Bénéficiaires par action - moyenne du nombre de bénéficiaires par action saisie. Score global - appréciation synthétique du niveau de renseignement et de suivi des fiches.</div>';
   var nBenef = frows.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0);
   var nFichesAvecBenef = frows.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0);
   var moyBenef = nFichesAvecBenef ? nBenef / nFichesAvecBenef : null;
@@ -4458,14 +4458,14 @@ init();
           element: '#fichesHero',
           popover: {
             title: 'Les indicateurs clés',
-            description: 'Nombre de fiches saisies, bénéficiaires concernés (moyenne calculée uniquement sur les fiches renseignant ce champ) et score global sur 4, moyenne des 4 critères de qualité.',
+            description: 'Nombre de fiches saisies, bénéficiaires concernés (moyenne calculée uniquement sur les fiches renseignant ce champ) et score global sur 4, moyenne des 4 critères.',
             side: 'bottom'
           }
         },
         {
           element: '#fichesRadar',
           popover: {
-            title: 'Le radar qualité',
+            title: 'Le radar des critères',
             description: 'Situe les fiches du territoire sur 4 critères : description et cadrage, impact usager, bilan et valorisation, caractère innovant - calculé automatiquement à partir du contenu texte des fiches.',
             side: 'right'
           }
@@ -4483,7 +4483,7 @@ init();
           popover: {
             title: 'Points forts et axes de progrès',
             description: 'Jusqu\u2019à 3 de chaque, avec le pourcentage de fiches concernées - une alerte apparaît si ce pourcentage est faible, pour ne jamais présenter un signal isolé comme une tendance établie. Un renvoi "💡 Inspiration" propose parfois un autre territoire ou CLPE de référence.',
-            side: 'top',
+            side: 'bottom',
             align: 'start'
           }
         }
