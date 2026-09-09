@@ -82,6 +82,7 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ctx-filter.ctx-active{display:flex}
 .cockpit-map{height:640px;border:1px solid var(--ft-border);border-radius:8px;background:var(--ft-sable)}
 .intro-blocks-row{margin-top:16px}
+.intro-section summary{position:sticky;top:calc(var(--header-h, 68px) + 60px);z-index:800}
 .map-filter-row{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-top:14px}
 .map-filter-collapse{background:var(--ft-sable);border:1px solid var(--ft-border);border-top:none;border-radius:0 0 8px 8px;padding:0 18px 14px;margin-top:-1px}
 .filterbar-col{display:flex;flex-direction:column;gap:14px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:16px}
@@ -193,6 +194,10 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .responses-bar .btn-pdf-top{margin-left:0;flex:none}
 
 details.section{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);margin-bottom:16px}
+.intro-blocks-panel[data-color="indigo"] .intro-section summary{background:var(--ft-indigo-light)}
+.intro-blocks-panel[data-color="bleu"] .intro-section summary{background:var(--ft-bleu-light)}
+.intro-blocks-panel[data-color="violet"] .intro-section summary{background:var(--ft-violet-light)}
+.intro-blocks-panel[data-color="orange"] .intro-section summary{background:var(--ft-orange-light)}
 .intro-blocks-panel[data-color="indigo"] details.section{border-left:5px solid var(--ft-indigo);background:var(--ft-indigo-light)}
 .intro-blocks-panel[data-color="bleu"] details.section{border-left:5px solid var(--ft-bleu);background:var(--ft-bleu-light)}
 .intro-blocks-panel[data-color="violet"] details.section{border-left:5px solid var(--ft-violet);background:var(--ft-violet-light)}
@@ -2372,6 +2377,13 @@ CockpitMap.prototype.init = function () {
   if (this.ready) return;
   var el = document.getElementById(this.opts.containerId);
   if (!el) return;
+  /* Le conteneur de la carte est masqué (display:none) tant que le panneau "Territoire" n'a
+     pas été ouvert au moins une fois : initialiser Leaflet à ce moment-là (taille nulle)
+     produit des cadrages invalides (LatLng NaN) qu'un simple invalidateSize ultérieur ne
+     corrige pas toujours. On diffère donc toute la construction réelle - elle se fera au
+     premier appel de setLevel() une fois le panneau effectivement visible. */
+  var collapsePanel = document.getElementById('mapFilterCollapse');
+  if (collapsePanel && collapsePanel.style.display === 'none') return;
   this.ready = true;
   this.map = L.map(this.opts.containerId, { zoomControl: true, attributionControl: false, zoomSnap: 0.25 });
   this.outline = L.geoJSON(geoData.region, { style: { color: cssVar('--ft-navy'), weight: 1.8, fill: false, opacity: .9 }, interactive: false });
@@ -4097,14 +4109,14 @@ function bindEvents() {
     panel.style.display = expanded ? 'none' : '';
     this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     if (!expanded) {
-      /* Le conteneur Leaflet est masqué (display:none) tant que ce panneau n'a pas été
-         ouvert. La toute première initialisation de la carte (avec son premier cadrage) a
-         donc pu se produire alors que le conteneur avait une taille nulle, ce qu'un simple
-         invalidateSize ne suffit pas toujours à corriger : on force ici un réaffichage
-         complet (recalcul de la taille puis reconstruction du niveau courant avec un nouveau
-         cadrage) dès que le panneau redevient visible. */
+      /* Le conteneur Leaflet reste masqué (display:none) tant que ce panneau n'a pas été
+         ouvert au moins une fois : CockpitMap.prototype.init() diffère volontairement toute
+         construction réelle tant que ce conteneur est caché (cadrages invalides sinon). Une
+         fois le panneau visible, on relance donc l'initialisation (no-op si déjà prête) puis
+         on force un nouveau cadrage pour couvrir aussi le cas où elle avait déjà eu lieu. */
       setTimeout(function () {
         try {
+          theMap.init();
           theMap.map.invalidateSize();
           theMap.setLevel(theMap.level);
         } catch (e) {}
