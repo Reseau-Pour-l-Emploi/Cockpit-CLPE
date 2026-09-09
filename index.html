@@ -99,10 +99,10 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
    hauteur par rapport à l'ancienne rangée horizontale sur deux lignes. */
 .cockpit-layout{display:grid;grid-template-columns:196px 1fr;gap:20px;margin-top:16px;align-items:start}
 @media(max-width:900px){.cockpit-layout{grid-template-columns:1fr}}
-.cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px)}
+.cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:2.5px solid var(--ft-indigo);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px);box-shadow:0 2px 10px rgba(41,51,120,.12)}
 @media(max-width:900px){.cockpit-tabs-sidebar{position:static;flex-direction:row;flex-wrap:wrap}}
 .cockpit-main-col{min-width:0}
-.cockpit-tab{border:1.5px solid transparent;border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease,border-color .12s ease;position:relative}
+.cockpit-tab{border:2px solid var(--ft-sable-dark);border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease,border-color .12s ease;position:relative}
 .cockpit-tab:hover{box-shadow:var(--sh-sm)}
 .cockpit-tab.active{box-shadow:var(--sh-md);border-width:2.5px}
 .cockpit-tab.active::after{content:'';position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:9px solid var(--tab-color)}
@@ -166,7 +166,7 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ecart-neg{color:var(--ft-rouge)}
 .btn-preco:hover{background:var(--ft-jaune-dark);color:#fff}
 .btn-pdf-top{margin-left:auto;font-weight:700;background:var(--ft-indigo);color:#fff;border-color:var(--ft-indigo)}
-.btn-pdf-sidebar{width:100%;margin-top:4px;border-top:1px solid var(--ft-border);font-weight:700;background:var(--ft-indigo);color:#fff;border-radius:8px;padding:11px 14px;font-size:12.5px;text-align:center}
+.btn-pdf-sidebar{width:100%;margin-top:4px;border-top:2px solid var(--ft-border);font-weight:700;background:var(--ft-indigo);color:#fff;border-radius:8px;padding:11px 14px;font-size:12.5px;text-align:center}
 .btn-pdf-sidebar:hover{background:var(--ft-indigo-dark)}
 @media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}}
 .sidebar-sep{border:none;border-top:1px solid var(--ft-border);margin:10px 0 8px}
@@ -283,6 +283,11 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .hero-card .auto-score{font-size:12px;margin:2px 0 0;white-space:nowrap}
 .hero-card .homog-line{font-size:11px;color:var(--ft-fg-3);margin-top:6px}
 .part-title{font-size:12.5px;font-weight:700;color:var(--ft-fg-2);margin:14px 0 6px}
+.section-title{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:800;color:var(--ft-navy);margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--ft-indigo-light);cursor:pointer;user-select:none}
+.section-title:first-child{margin-top:0}
+.section-title:hover{color:var(--ft-indigo)}
+.section-title:hover .section-title-ico{opacity:1}
+.section-title .section-title-ico{font-size:13px;opacity:.55;transition:opacity .12s ease}
 .struct-title-row{display:flex;align-items:center;gap:8px}
 .struct-title-row .meta-badge{background:var(--ft-indigo);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 9px;cursor:help}
 .part-title-center{text-align:center;text-decoration:underline}
@@ -611,17 +616,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           </ul>
         </div>
       </div>
-      <button class="hero-cta" id="commentNaviguerBtn">Comment naviguer ?</button>
       <button class="hero-cta" id="visiteGuideeBtn" style="background:var(--ft-jaune-dark)">🧭 Visite guidée</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="commentNaviguerOverlay">
-  <div class="modal-box">
-    <div class="modal-head"><h3>Comment naviguer</h3><button class="modal-close" id="commentNaviguerClose" aria-label="Fermer">✕</button></div>
-    <div class="modal-body">
-      <p>Choisissez un territoire via les filtres à droite de la carte, ou en cliquant directement sur la carte (une seule carte, commune à tout le cockpit). Cliquez sur l'un des 4 onglets dans la marge de gauche pour changer de brique : la carte et le détail en dessous se mettent à jour.</p>
     </div>
   </div>
 </div>
@@ -659,7 +654,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="cockpit-tabs-group">
         <div class="cockpit-tab-wrap">
         <button class="cockpit-tab active" data-brick="maturite" data-color="indigo">
-          <div class="ct-label" title="Le Baromètre analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE.">Niveau de maturité</div>
+          <div class="ct-label" title="Le Baromètre analyse les réponses pour comprendre la perception du niveau de maturité des membres des CLPE. Cliquez pour voir le détail - la valeur ci-dessous est le niveau de maturité du territoire sélectionné." data-indic-tip>Niveau de maturité</div>
           <div class="ct-val" id="ctValMaturite">-</div>
           <div class="ct-sub" id="ctSubMaturite"></div>
         </button>
@@ -667,7 +662,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
         <div class="cockpit-tab-wrap">
         <button class="cockpit-tab" data-brick="fiches" data-color="violet">
-          <div class="ct-label" title="Le Pilotage des actions reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés.">Pilotage des actions</div>
+          <div class="ct-label" title="Le Pilotage des actions reflète le dynamisme d'un territoire, la prise en compte de l'impact usager et la volonté de capitaliser sur les travaux engagés. Cliquez pour voir le détail - la valeur ci-dessous est le score global des fiches action du territoire sélectionné." data-indic-tip>Pilotage des actions</div>
           <div class="ct-val" id="ctValFiches">-</div>
           <div class="ct-sub" id="ctSubFiches"></div>
         </button>
@@ -675,7 +670,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
         <div class="cockpit-tab-wrap">
         <button class="cockpit-tab" data-brick="perf" data-color="orange">
-          <div class="ct-label" title="La Performance relative relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche.">Performance relative</div>
+          <div class="ct-label" title="La Performance relative relativise la performance du territoire sur les indicateurs phares (accès et présence en emploi) en la comparant aux résultats de territoires bénéficiant d'un contexte socio-économique proche. Cliquez pour voir le détail - la valeur ci-dessous est l'écart au taux d'accès à l'emploi (TAE) du territoire sélectionné." data-indic-tip>Performance relative</div>
           <div class="ct-val" id="ctValPerf">-</div>
           <div class="ct-sub" id="ctSubPerf"></div>
         </button>
@@ -683,7 +678,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
         <div class="cockpit-tab-wrap">
         <button class="cockpit-tab" data-brick="freq" data-color="bleu">
-          <div class="ct-label" title="La Fréquentation objective la fréquence d'utilisation du tableau de bord RPE.">Fréquentation TDB RPE</div>
+          <div class="ct-label" title="La Fréquentation objective la fréquence d'utilisation du tableau de bord RPE. Cliquez pour voir le détail - la valeur ci-dessous est le cumul de consultations du dernier trimestre pour le territoire sélectionné." data-indic-tip>Fréquentation TDB RPE</div>
           <div class="ct-val" id="ctValFreq">-</div>
           <div class="ct-sub" id="ctSubFreq"></div>
         </button>
@@ -809,7 +804,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             <button data-level="clpe" class="active">CLPE</button>
           </div>
         </div>
-        <div class="fgroup ctx-filter" data-brick="maturite" id="sessionCtxGroup"><label for="sessionSelect">Trimestre</label><select id="sessionSelect"></select></div>
+        <div class="fgroup ctx-filter" data-brick="maturite" id="sessionCtxGroup" style="display:none"><label for="sessionSelect">Trimestre</label><select id="sessionSelect"></select></div>
         <button class="btn-reset" id="resetBtn">Réinitialiser</button>
       </div>
     </div>
@@ -819,9 +814,8 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="tab-panel" data-brick="maturite" id="panelMaturite">
 
 
-            <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent1">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent1" style="display:none">Les indicateurs ci-dessous portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.</div>
             <div class="responses-inline">
-              <div class="part-title">Réponses</div>
+              <div class="section-title" data-guide-key="reponses" role="button" tabindex="0">Réponses<span class="section-title-ico">ℹ️</span></div>
               <div class="f-summary" id="fRateSummary"></div>
               <div class="f-summary" id="fSummary"></div>
               <div class="geo" id="globalCopresLine"></div>
@@ -845,7 +839,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="questions">
-              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent2">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent2" style="display:none">Score moyen par question, en points, avec le nombre de répondants 👥 et l'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur le numéro d'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.</div>
+              <div class="section-title" data-guide-key="detail-question" role="button" tabindex="0">Détail par question<span class="section-title-ico">ℹ️</span></div>
               <div class="qd-toolbar">
                 <button class="btn-reset btn-export" id="exportQuestionsBtn">Exporter en Excel</button>
                 <button class="btn-reset" id="unfoldAllBtn">Tout déplier</button>
@@ -855,7 +849,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
 
             <div class="mat-detail-panel" data-tab="table" style="display:none">
-              <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent3">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent3" style="display:none">Les lignes sont regroupées par région puis par département tant qu'un CLPE précis n'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.</div>
+              <div class="section-title" data-guide-key="detail-clpe" role="button" tabindex="0">Détail par CLPE<span class="section-title-ico">ℹ️</span></div>
               <div class="table-view-switch" id="tableViewSwitch">
                 <button class="tvs-btn active" data-mode="hierarchique" type="button">Vue hiérarchique</button>
                 <button class="tvs-btn" data-mode="clpe" type="button">Vue CLPE</button>
@@ -1224,6 +1218,18 @@ function homogBadge(h) {
   return '<span class="meta-badge"><span class="meta-emoji" title="' + esc(HOMOG_TOOLTIP) + '">' + homogeneityEmoji(h) + '</span>\u00A0<span title="' + esc(HOMOG_TOOLTIP) + '" style="color:' + homogeneityColor(h) + ';font-weight:700;cursor:help">' + fmt(h, 0) + '\u00A0%</span></span>';
 }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+/* Titre de section cliquable, réutilisé sur tous les onglets : le titre ouvre directement la
+   popup "Guide de lecture" partagée (SECTION_GUIDES sert de registre de contenu, tenu à jour
+   à chaque rendu puisque le contenu dépend souvent du territoire sélectionné). */
+var SECTION_GUIDES = {
+  reponses: 'Les indicateurs de cette page portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.',
+  'detail-question': 'Score moyen par question, en points, avec le nombre de répondants 👥 et l\'homogénéité ⚖️ des réponses entre parenthèses. Cliquer sur une partie ou une thématique affiche l\'ensemble de ses questions. Cliquer sur le numéro d\'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.',
+  'detail-clpe': 'Les lignes sont regroupées par région puis par département tant qu\'un CLPE précis n\'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l\'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.'
+};
+function sectionTitle(text, key, guideHtml) {
+  SECTION_GUIDES[key] = guideHtml;
+  return '<div class="section-title" data-guide-key="' + key + '" role="button" tabindex="0">' + esc(text) + '<span class="section-title-ico">\u2139\uFE0F</span></div>';
+}
 function infoIcon(text) { return '<span class="info-icon" tabindex="0" role="button" aria-label="Note de lecture" data-info="' + esc(text) + '">\u2139\uFE0F</span>'; }
 function partInfoText(key) { return CONFIG.partInfo[key]; }
 function themeInfoText(t) { return CONFIG.themeInfo[t]; }
@@ -1921,7 +1927,8 @@ function buildAxesEtPointsFortsHTML(records, g) {
     return h + '</div></div>';
   }).join('') : '<p class="preco-empty">Aucun point fort majeur ne se détache sur ce périmètre.</p>';
 
-  return '<div class="priorites-2col">' +
+  return sectionTitle('Points forts et axes de progrès', 'axes-forts', 'Sélection automatique à partir des scores du territoire sélectionné : les points forts sont les pratiques les mieux installées (homogénéité et score élevés), les axes de progrès les moins développées. Cliquez sur un point fort pour en savoir plus, ou sur "Voir les recommandations" pour un axe de progrès.') +
+    '<div class="priorites-2col">' +
     '<div class="priorites-box priorites-box-forts"><div class="priorites-title">\u2705 Les points forts du CLPE</div><div class="priorites-list">' + fortsHtml + '</div></div>' +
     '<div class="priorites-box priorites-box-axes"><div class="priorites-title">\uD83C\uDFAF Les axes de progrès du CLPE</div><div class="priorites-list">' + axesHtml + '</div></div>' +
     '</div>';
@@ -1942,6 +1949,7 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   var niveauInfo = NIVEAU_DESCRIPTIONS[niveauLvl];
 
   var html = '<h3>' + esc(title) + '</h3>';
+  html += sectionTitle('Principaux résultats', hostId + '-principaux', 'Niveau de maturité et Auto-évaluation sont ramenés sur une échelle de 4 pour une lecture directe. Un écart entre les deux signale une différence entre la perception générale des membres et le détail des réponses. Fondamentaux et Pratiques détaillent les deux dimensions qui composent le niveau de maturité.');
   html += '<div class="mat-grid"><div class="mat-indic-stack">';
   html += '<div class="mat-pair">';
   html += '<div class="hero-card"><div class="lbl">Niveau de maturité' + infoIcon("Score total ramené sur une échelle de 4, pour permettre une lecture directe du niveau de maturité du CLPE, indépendamment du barème détaillé du questionnaire. Le score détaillé (sur " + META.totalMax + ") est rappelé entre parenthèses.") + '</div><div class="val">' + niveauHTML(g.total, META.totalMax) + '</div><div class="track"><div class="fill" style="width:' + (niveauValue(g.total, META.totalMax) / 4 * 100) + '%"></div></div>' +
@@ -1958,7 +1966,7 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   });
   html += '</div>';
   html += '</div><div>';
-  html += '<div class="part-title part-title-center">Thématiques</div><div class="radar-wrap" id="' + hostId + 'Radar"></div>';
+  html += sectionTitle('Analyse thématique', hostId + '-thematique', 'Répartit le niveau de maturité en 4 dimensions complémentaires (dynamique de fonctionnement, socle commun, pilotage et impact, mutualisation des offres de services). Plus le résultat se rapproche du bord, plus les pratiques correspondantes sont installées, partagées et mobilisées dans la durée.') + '<div class="radar-wrap" id="' + hostId + 'Radar"></div>';
   html += '</div></div>';
   html += buildAxesEtPointsFortsHTML(g.items, g);
   host.innerHTML = html;
@@ -3480,7 +3488,7 @@ function buildReportPageMaturiteQuestions() {
       var meta = fmt(s.v) + '/' + s.mx + ' (' + fmt(s.pct, 0) + '\u00A0%)';
       html += '<div class="pr-q-line"><span class="pr-q-num">Q' + n + '</span><span title="' + esc(META.questions[n].text) + '">' + esc(META.questions[n].text.length > 70 ? META.questions[n].text.slice(0, 68) + '\u2026' : META.questions[n].text) + '</span>' +
         '<span class="pr-q-val">' + meta + '</span>' +
-        '<span class="pr-q-meta2">\uD83D\uDC65\u00A0' + s.count + ' \u00b7 \u2696\uFE0F\u00A0' + (s.h == null ? 'n/d' : fmt(s.h, 0) + '\u00A0%') + '</span>' +
+        '<span class="pr-q-meta2">\uD83D\uDC65\u00A0' + s.count + ' \u00b7 ' + homogeneityEmoji(s.h) + '\u00A0' + (s.h == null ? 'n/d' : fmt(s.h, 0) + '\u00A0%') + '</span>' +
         '<span class="pr-q-tag-emoji">' + (tag ? PR_TAG_EMOJI[tag] : '') + '</span></div>';
     });
   });
@@ -4030,18 +4038,11 @@ function bindEvents() {
     heroToggleBtn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     heroToggleBtn.innerHTML = '<span class="hero-chev">\u25BE</span> ' + (expanded ? 'En savoir plus' : 'Masquer');
   });
-  document.getElementById('commentNaviguerBtn').addEventListener('click', function () {
-    document.getElementById('commentNaviguerOverlay').classList.add('show');
-  });
-  document.getElementById('commentNaviguerClose').addEventListener('click', function () {
-    document.getElementById('commentNaviguerOverlay').classList.remove('show');
-  });
   document.getElementById('globalStructMoreBtn').addEventListener('click', function () {
     var wrap = document.getElementById('globalStructTagsWrap');
     var expanded = wrap.classList.toggle('expanded');
     this.textContent = expanded ? 'Voir moins' : 'Voir plus';
   });
-  document.getElementById('commentNaviguerOverlay').addEventListener('click', function (e) { if (e.target.id === 'commentNaviguerOverlay') document.getElementById('commentNaviguerOverlay').classList.remove('show'); });
   document.addEventListener('click', function (e) {
     var tag = e.target.closest('.pf-tag'); if (!tag) return;
     e.stopPropagation();
@@ -4055,11 +4056,28 @@ function bindEvents() {
   });
   document.getElementById('pfTagClose').addEventListener('click', function () { document.getElementById('pfTagOverlay').classList.remove('show'); });
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest('.guide-btn'); if (!btn) return;
-    var src = document.getElementById(btn.dataset.guideSrc);
-    if (!src) return;
-    document.getElementById('guidePopupBody').innerHTML = src.innerHTML;
-    document.getElementById('guidePopupOverlay').classList.add('show');
+    var btn = e.target.closest('.guide-btn');
+    if (btn) {
+      var src = document.getElementById(btn.dataset.guideSrc);
+      if (!src) return;
+      document.getElementById('guidePopupBody').innerHTML = src.innerHTML;
+      document.getElementById('guidePopupOverlay').classList.add('show');
+      return;
+    }
+    var st = e.target.closest('.section-title[data-guide-key]');
+    if (st) {
+      var html = SECTION_GUIDES[st.dataset.guideKey];
+      if (!html) return;
+      document.getElementById('guidePopupBody').innerHTML = html;
+      document.getElementById('guidePopupOverlay').classList.add('show');
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var st = e.target.closest && e.target.closest('.section-title[data-guide-key]');
+    if (!st) return;
+    e.preventDefault();
+    st.click();
   });
   document.getElementById('guidePopupClose').addEventListener('click', function () { document.getElementById('guidePopupOverlay').classList.remove('show'); });
   document.getElementById('legalMentionsBtn').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.add('show'); });
@@ -4079,7 +4097,7 @@ function bindEvents() {
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('commentNaviguerOverlay').classList.remove('show'); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); document.getElementById('legalMentionsOverlay').classList.remove('show'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); document.getElementById('legalMentionsOverlay').classList.remove('show'); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
