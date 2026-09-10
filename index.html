@@ -104,11 +104,15 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
    "Source et enjeux" correspondant en haut de la page. Disposition verticale : dégage de la
    hauteur par rapport à l'ancienne rangée horizontale sur deux lignes. */
 .cockpit-layout{display:grid;grid-template-columns:196px 44px 1fr;gap:20px;margin-top:16px;align-items:start;position:relative}
+.cockpit-tabs-sidebar{grid-column:1}
+.source-tab-col{grid-column:2}
+.cockpit-main-col{grid-column:3}
+@media(max-width:900px){.cockpit-tabs-sidebar,.source-tab-col,.cockpit-main-col{grid-column:1}}
 @media(max-width:900px){.cockpit-layout{grid-template-columns:1fr}}
 .cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px)}
 @media(max-width:900px){.cockpit-tabs-sidebar{position:static;flex-direction:row;flex-wrap:wrap}.cockpit-tab-wrap{flex:1 1 calc(50% - 5px);min-width:160px}}
 .cockpit-main-col{min-width:0;transition:margin-left .15s ease}
-.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;writing-mode:vertical-rl;text-orientation:mixed;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
+.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;height:calc(100vh - var(--header-h, 68px) - 70px);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
 .source-tab-col span{font-size:14px;font-weight:700;color:var(--ft-navy);white-space:nowrap}
 .source-tab-col[data-color="indigo"]{background:var(--ft-indigo-light)}
 .source-tab-col[data-color="bleu"]{background:var(--ft-bleu-light)}
@@ -3978,17 +3982,11 @@ if (typeof IntersectionObserver !== 'undefined') {
    le contenu et bascule en bandeau horizontal classique, en place. Un second clic sur le
    bandeau horizontal referme le contenu et rebascule en onglet vertical. ---------- */
 /* "Source et enjeux" : une colonne dédiée, entre la marge de gauche et le contenu principal,
-   affiche le titre de l'onglet actif à la verticale (hauteur alignée sur les 4 boutons
-   d'onglet, fond assorti à leur couleur). Au clic : remonte en haut de page, masque cette
-   colonne et affiche le bandeau "Source et enjeux" réel, déplié, à sa place habituelle en
-   haut de la colonne principale. Un clic sur ce bandeau réel (une fois déplié) le referme et
-   fait réapparaître la colonne verticale. */
-function syncSourceTabColHeight() {
-  var col = document.getElementById('sourceTabCol');
-  var tabsGroup = document.querySelector('.cockpit-tabs-group');
-  if (!col || !tabsGroup) return;
-  col.style.height = tabsGroup.getBoundingClientRect().height + 'px';
-}
+   affiche le titre de l'onglet actif à la verticale (hauteur pleine page, fond assorti à
+   leur couleur). Au clic : remonte en haut de page, masque cette colonne et affiche le
+   bandeau "Source et enjeux" réel, déplié, à sa place habituelle en haut de la colonne
+   principale. Un clic sur ce bandeau réel (une fois déplié) le referme et fait réapparaître
+   la colonne verticale. */
 function syncSourceTabCol() {
   var col = document.getElementById('sourceTabCol');
   var colText = document.getElementById('sourceTabColText');
@@ -4005,7 +4003,6 @@ function syncSourceTabCol() {
     col.dataset.color = activePanel.dataset.color;
     col.style.display = 'flex';
     details.style.display = 'none';
-    syncSourceTabColHeight();
   }
 }
 function initSourceTabs() {
@@ -4026,7 +4023,6 @@ function initSourceTabs() {
       syncSourceTabCol();
     });
   });
-  window.addEventListener('resize', syncSourceTabColHeight);
   syncSourceTabCol();
 }
 initSourceTabs();
