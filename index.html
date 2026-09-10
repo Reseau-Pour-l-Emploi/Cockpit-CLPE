@@ -667,7 +667,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
   <div id="app" style="display:none">
 
     <div class="cockpit-context-bar" id="cockpitTabsRow">
-      <button class="cockpit-territory-bar" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint">✏️ Changer de territoire / voir la carte</span></button>
+      <button class="cockpit-territory-bar" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint" id="territoryChangeHint">✏️ Afficher la carte et les filtres</span></button>
       <div class="cockpit-meta-bar" id="cockpitMetaBar">
         <span>Données mises à jour le <b id="dataUpdatedLabel"></b></span>
         <span id="lastPeriodWrap">Dernière période disponible (<span id="lastPeriodBrick"></span>) : <b id="lastPeriodLabel"></b></span>
@@ -4288,6 +4288,8 @@ function bindEvents() {
     var expanded = panel.style.display !== 'none';
     panel.style.display = expanded ? 'none' : '';
     this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    document.getElementById('territoryChangeHint').textContent = expanded ? '\u270F\uFE0F Afficher la carte et les filtres' : '\u270F\uFE0F Masquer la carte et les filtres';
+    syncFloatingTerritoryBar();
     if (!expanded) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       /* Le conteneur Leaflet reste masqué (display:none) tant que ce panneau n'a pas été
@@ -4563,6 +4565,7 @@ init();
             if (panel.style.display !== 'none') {
               panel.style.display = 'none';
               document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte et les filtres';
             }
             territoryStepOpenedPanel = false;
           }
@@ -4581,7 +4584,7 @@ init();
         popover: {
           title: 'Changer l\u2019indicateur de la carte',
           description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte - la liste proposée change selon l\u2019onglet actif.',
-          side: 'right'
+          side: 'bottom'
         },
         onHighlightStarted: function () {
           var panel = document.getElementById('mapFilterCollapse');
@@ -4594,6 +4597,7 @@ init();
             if (panel.style.display !== 'none') {
               panel.style.display = 'none';
               document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte et les filtres';
             }
             territoryStepOpenedPanel = false;
           }
@@ -4709,8 +4713,7 @@ init();
           popover: {
             title: 'Le détail des questions',
             description: 'Score, nombre de répondants 👥 et homogénéité des réponses (🟢🔵🔴 selon le niveau) pour chaque question. Cliquez sur une partie ou une thématique pour afficher l\u2019ensemble de ses questions, sur le numéro d\u2019une question pour voir le score de chaque modalité de réponse, ou sur la question elle-même pour voir les recommandations associées. Les tags ✅ / 🔺 / 💬 (point fort, axe de progrès, avis divergents) se cliquent aussi pour en savoir plus.',
-            side: 'top',
-            align: 'start'
+            side: 'bottom'
           }
         }
       ];
@@ -4786,7 +4789,7 @@ init();
           popover: {
             title: 'Points forts et axes de progrès',
             description: 'Jusqu\u2019à 3 de chaque, avec le pourcentage de fiches concernées - une alerte apparaît si ce pourcentage est faible, pour ne jamais présenter un signal isolé comme une tendance établie. Un renvoi "💡 Inspiration" propose parfois un autre territoire ou CLPE de référence.',
-            side: 'bottom',
+            side: 'top',
             align: 'start'
           }
         }
@@ -4889,7 +4892,7 @@ init();
           popover: {
             title: 'Le tableau des territoires proches',
             description: 'Liste les 10 CLPE retenus pour la comparaison et leurs résultats. La proximité socio-économique n\u2019est pas réciproque : un territoire peut apparaître comme proche d\u2019un autre sans que l\u2019inverse soit vrai.',
-            side: 'bottom'
+            side: 'top'
           }
         },
         {
@@ -4970,6 +4973,7 @@ init();
           if (panel.style.display !== 'none') {
             panel.style.display = 'none';
             document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+            document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte et les filtres';
           }
         }
         if (userOnDestroyed) userOnDestroyed();
