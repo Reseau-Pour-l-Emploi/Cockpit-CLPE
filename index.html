@@ -82,31 +82,23 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ctx-filter.ctx-active{display:flex}
 .cockpit-map{height:640px;border:1px solid var(--ft-border);border-radius:8px;background:var(--ft-sable)}
 .intro-blocks-row{margin-top:16px}
-.floating-source-title{position:fixed;z-index:840;display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;cursor:pointer;font-family:var(--ft-font);font-weight:700;font-size:14.5px;color:var(--ft-navy);border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box;background:var(--ft-white);animation:floatTitleIn .15s ease}
-.floating-source-title .hint{margin-left:auto;font-size:11.5px;font-weight:600;opacity:.75;white-space:nowrap}
-@keyframes floatTitleIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.floating-source-title[data-color="indigo"]{background:var(--ft-indigo-light);border-left:5px solid var(--ft-indigo)}
-.floating-source-title[data-color="bleu"]{background:var(--ft-bleu-light);border-left:5px solid var(--ft-bleu)}
-.floating-source-title[data-color="violet"]{background:var(--ft-violet-light);border-left:5px solid var(--ft-violet)}
-.floating-source-title[data-color="orange"]{background:var(--ft-orange-light);border-left:5px solid var(--ft-orange)}
 .map-filter-row{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-top:14px}
 @media(max-width:760px){.map-filter-row{grid-template-columns:1fr}}
 .map-filter-collapse{background:var(--ft-sable);border:1px solid var(--ft-border);border-top:none;border-radius:0 0 8px 8px;padding:0 18px 14px;margin-top:-1px}
 .filterbar-col{display:flex;flex-direction:column;gap:14px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:16px}
 .filterbar-col .fgroup{display:flex;flex-direction:column;gap:5px}
 .filterbar-col select,.filterbar-col input{width:100%;box-sizing:border-box}
-.cockpit-context-bar{display:flex;flex-direction:column;gap:10px;position:fixed;top:var(--header-h, 68px);z-index:850;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box}
-.cockpit-context-bar.condensed{box-shadow:var(--sh-md);padding:8px 18px}
+.cockpit-context-bar{display:flex;flex-direction:column;gap:10px;margin-top:14px;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box}
 .cockpit-territory-bar{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--ft-navy);background:var(--ft-indigo-light);padding:7px 16px;border-radius:6px;border:1.5px dashed var(--ft-indigo);cursor:pointer;font-family:var(--ft-font)}
 @media(max-width:600px){.cockpit-territory-bar{flex-wrap:wrap;font-size:14px;width:100%;box-sizing:border-box}}
 .cockpit-territory-bar:hover{background:var(--ft-indigo);color:#fff}
 .cockpit-territory-bar:hover b{color:#fff}
 .territory-change-hint{font-size:12px;font-weight:600;color:var(--ft-indigo);white-space:nowrap}
+.floating-territory-bar{position:fixed;top:calc(var(--header-h, 68px) + 10px);left:50%;transform:translateX(-50%);z-index:860;display:none;box-shadow:var(--sh-md);animation:floatTitleIn .15s ease}
+@keyframes floatTitleIn{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .cockpit-territory-bar:hover .territory-change-hint{color:#fff}
-.cockpit-context-bar.condensed .cockpit-territory-bar{font-size:13px;padding:5px 12px}
 .cockpit-meta-bar{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ft-fg-3)}
 .cockpit-meta-bar b{color:var(--ft-fg-2);font-weight:600}
-.cockpit-context-bar.condensed .cockpit-meta-bar{display:none}
 /* Barre latérale de gauche : fond blanc pour le conteneur, chaque onglet avec sa propre
    couleur de fond claire (et non plus une simple bordure), retrouvée ensuite dans le bloc
    "Source et enjeux" correspondant en haut de la page. Disposition verticale : dégage de la
@@ -210,6 +202,12 @@ details.section{background:var(--ft-white);border:1px solid var(--ft-border);bor
 .intro-blocks-panel[data-color="orange"] details.section{border-left:5px solid var(--ft-orange);background:var(--ft-orange-light)}
 .intro-blocks-panel details.section .section-body{background:var(--ft-white);border-radius:0 0 6px 6px}
 details.section>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 20px;user-select:none}
+details.section>summary[data-mode="vertical"]{position:fixed;top:calc(var(--header-h, 68px) + 90px);right:0;z-index:840;width:38px;max-height:calc(100vh - var(--header-h, 68px) - 110px);writing-mode:vertical-rl;text-orientation:mixed;background:var(--ft-white);border:1px solid var(--ft-border);border-right:none;border-radius:8px 0 0 8px;box-shadow:var(--sh-md);padding:18px 9px;flex-direction:column;justify-content:flex-start;overflow:hidden}
+details.section>summary[data-mode="vertical"] h2{display:none}
+details.section>summary[data-mode="vertical"] .hint{display:none}
+details.section>summary[data-mode="vertical"] .chev{display:none}
+details.section>summary[data-mode="vertical"]::before{content:'\2139\FE0F Source et enjeux';font-size:12px;font-weight:700;color:var(--ft-indigo);margin-bottom:10px;white-space:nowrap}
+@media(max-width:760px){details.section>summary[data-mode="vertical"]{display:none}}
 details.section>summary::-webkit-details-marker{display:none}
 details.section>summary .chev{width:10px;height:10px;border-right:2px solid var(--ft-indigo);border-bottom:2px solid var(--ft-indigo);transform:rotate(-45deg);transition:transform .18s ease;flex:none}
 details.section[open]>summary .chev{transform:rotate(45deg)}
@@ -636,7 +634,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           </ul>
         </div>
       </div>
-      <button class="hero-cta" id="visiteGuideeBtn" style="background:var(--ft-jaune-dark)">🧭 Visite guidée</button>
+      <button class="hero-cta" id="visiteGuideeBtn">🧭 Visite guidée</button>
     </div>
   </div>
 </div>
@@ -668,7 +666,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <span id="lastPeriodWrap">Dernière période disponible (<span id="lastPeriodBrick"></span>) : <b id="lastPeriodLabel"></b></span>
       </div>
     </div>
-    <div id="cockpitContextBarSpacer"></div>
 
     <div class="cockpit-layout">
       <div class="cockpit-tabs-sidebar" id="cockpitTabs">
@@ -718,7 +715,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
       </div>
       <div class="cockpit-main-col">
-        <div class="floating-source-title" id="floatingSourceTitle" role="button" tabindex="0" style="display:none"></div>
 
     <div class="intro-blocks-row" id="introBlocksRow">
       <div class="intro-blocks-panel" data-brick="maturite" data-color="indigo">
@@ -2507,7 +2503,7 @@ function renderAll() {
   renderFichesMonthChart();
   renderPerf();
   renderCockpitGrid(g);
-  positionContextBar();
+  syncFloatingTerritoryBar();
 }
 function renderResponsesBar(g) {
   var items = g.n ? g.items : [];
@@ -3211,9 +3207,9 @@ function renderPerfTable() {
 }
 function renderPerf() {
   perfSyncSelection();
-  function heroValue(label, row, key) {
+  function heroValue(label, row, key, emph) {
     if (!row) return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val">-</div></div>';
-    return '<div class="hero-card hero-card-emph"><div class="lbl">' + label + '</div><div class="val">' + fmt(row[key], 1) + '<span class="unit"> %</span></div></div>';
+    return '<div class="hero-card' + (emph ? ' hero-card-emph' : '') + '"><div class="lbl">' + label + '</div><div class="val">' + fmt(row[key], 1) + '<span class="unit"> %</span></div></div>';
   }
   function heroDelta(label, row, key, refKey) {
     if (!row) return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val">-</div></div>';
@@ -3228,7 +3224,8 @@ function renderPerf() {
   var row = perfSelectedId ? PERF_ID_TO_ROW[perfSelectedId] : null;
   document.getElementById('perfHero').innerHTML = !row
     ? '<p class="preco-empty">' + ((state.dept || state.region) ? 'Cette brique ne montre des résultats que pour un CLPE précis (cliquez-en un sur la carte) : pas de résultat pour une sélection région/département.' : 'Sélectionnez un CLPE (carte ou filtres) pour voir son écart aux territoires les plus comparables socio-économiquement.') + '</p>'
-    : heroValue('Taux d\u2019accès à l\u2019emploi (TAE)', row, 'tae') + heroValue('Taux de présence en emploi (TPE)', row, 'tpe') +
+    : heroValue('Taux d\u2019accès à l\u2019emploi (TAE)', row, 'tae', true) + heroValue('Taux de présence en emploi (TPE)', row, 'tpe', true) +
+      heroValue('TAE moyen des 10 territoires proches', row, 'taeD') + heroValue('TPE moyen des 10 territoires proches', row, 'tpeD') +
       heroDelta('Écart TAE aux 10 territoires proches', row, 'deltaTae', { self: 'tae', peer: 'taeD' }) + heroDelta('Écart TPE aux 10 territoires proches', row, 'deltaTpe', { self: 'tpe', peer: 'tpeD' }) +
       heroEvol('Évolution du TAE sur un an', row, 'evolTae') + heroEvol('Évolution du TPE sur un an', row, 'evolTpe');
   renderPerfTable();
@@ -3931,66 +3928,70 @@ var freqGranularity = 'trimestre';
    dupliquer inutilement en haut de page. Fonction de portée globale (appelée aussi bien
    depuis init() que depuis le clic sur un onglet) - un seul IntersectionObserver actif à la
    fois, ré-attaché à chaque appel sur le résumé de la brique active. */
-var sourceObserver = null;
 /* Les deux bandeaux flottants (territoire + titre "Source et enjeux") partagent la même
    approche - position:fixed, avec une position recalculée dynamiquement en JS plutôt que
    des valeurs CSS figées - pour rester alignés l'un sous l'autre sans jamais se chevaucher,
    quelle que soit la largeur d'écran ou la longueur du contenu affiché. */
-function positionContextBar() {
-  var bar = document.getElementById('cockpitTabsRow');
-  var mainEl = document.querySelector('main');
-  var spacer = document.getElementById('cockpitContextBarSpacer');
-  if (!bar || !mainEl) return;
-  var r = mainEl.getBoundingClientRect();
-  bar.style.left = r.left + 'px';
-  bar.style.width = r.width + 'px';
-  if (spacer) spacer.style.height = (bar.getBoundingClientRect().height + 14) + 'px';
-  positionFloatingTitle();
+/* ---------- Bandeau "Territoire sélectionné" : reste dans le flux normal de la page, et
+   n'apparaît sous forme flottante (fixe, en haut) qu'une fois sorti de l'écran au défilement -
+   il ne doit jamais recouvrir l'en-tête dès le chargement. ---------- */
+var floatingTerritoryBar = null;
+function ensureFloatingTerritoryBar() {
+  if (floatingTerritoryBar) return floatingTerritoryBar;
+  var original = document.getElementById('cockpitTerritoryBar');
+  var el = document.createElement('button');
+  el.type = 'button';
+  el.id = 'floatingTerritoryBar';
+  el.className = 'cockpit-territory-bar floating-territory-bar';
+  el.setAttribute('aria-hidden', 'true');
+  el.tabIndex = -1;
+  el.addEventListener('click', function () { original.click(); });
+  document.body.appendChild(el);
+  floatingTerritoryBar = el;
+  return el;
 }
-function positionFloatingTitle() {
-  var floatingTitle = document.getElementById('floatingSourceTitle');
-  var col = document.querySelector('.cockpit-main-col');
-  var bar = document.getElementById('cockpitTabsRow');
-  if (!col || !floatingTitle) return;
-  var r = col.getBoundingClientRect();
-  floatingTitle.style.left = r.left + 'px';
-  floatingTitle.style.width = r.width + 'px';
-  if (bar) floatingTitle.style.top = (bar.getBoundingClientRect().bottom + 10) + 'px';
+function syncFloatingTerritoryBar() {
+  var original = document.getElementById('cockpitTerritoryBar');
+  var el = ensureFloatingTerritoryBar();
+  el.innerHTML = original.innerHTML;
 }
-window.addEventListener('resize', positionContextBar);
-/* Le bandeau "Territoire sélectionné" peut changer de hauteur pour des raisons qui
-   n'entraînent ni redimensionnement de fenêtre ni nouvel appel à renderAll() (ex. un nom de
-   territoire plus long qui passe à la ligne sur un écran étroit) : un ResizeObserver dédié
-   garantit que l'espaceur et le bandeau "Source et enjeux" restent toujours synchronisés
-   avec sa taille réelle, quelle qu'en soit la cause - c'est ce qui provoquait le conflit
-   visuel entre les deux bandeaux flottants. */
-if (typeof ResizeObserver !== 'undefined') {
-  var contextBarResizeObserver = new ResizeObserver(function () { positionContextBar(); });
+if (typeof IntersectionObserver !== 'undefined') {
   document.addEventListener('DOMContentLoaded', function () {
-    var bar = document.getElementById('cockpitTabsRow');
-    if (bar) contextBarResizeObserver.observe(bar);
+    var original = document.getElementById('cockpitTerritoryBar');
+    if (!original) return;
+    var obs = new IntersectionObserver(function (entries) {
+      var el = ensureFloatingTerritoryBar();
+      el.style.display = entries[0].isIntersecting ? 'none' : 'inline-flex';
+    }, { rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 68) + 'px 0px 0px 0px', threshold: 0 });
+    obs.observe(original);
   });
 }
-function watchActiveSummary() {
-  var floatingTitle = document.getElementById('floatingSourceTitle');
-  if (sourceObserver) sourceObserver.disconnect();
-  var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + activeBrick + '"]');
-  var summary = activePanel ? activePanel.querySelector('summary') : null;
-  if (!summary) { floatingTitle.style.display = 'none'; return; }
-  var titleHtml = summary.querySelector('h2') ? summary.querySelector('h2').innerHTML : summary.textContent;
-  floatingTitle.innerHTML = titleHtml + '<span class="hint">Cliquer pour ' + (activePanel.querySelector('details').open ? 'replier' : 'déplier') + '</span>';
-  floatingTitle.dataset.color = activePanel.dataset.color;
-  sourceObserver = new IntersectionObserver(function (entries) {
-    var nowVisible = !entries[0].isIntersecting;
-    /* position:fixed retire volontairement l'élément du flux normal de la page : son
-       apparition/disparition ne déplace donc plus le résumé observé ci-dessous, ce qui
-       évite la boucle de rétroaction (l'ancienne version, en position:sticky, faisait
-       trembler le haut de page au défilement). */
-    if (nowVisible) positionFloatingTitle();
-    floatingTitle.style.display = nowVisible ? 'flex' : 'none';
-  }, { rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 68) + 'px 0px 0px 0px', threshold: 0 });
-  sourceObserver.observe(summary);
+
+/* ---------- "Source et enjeux" : onglet vertical fixe par défaut sur le bord droit, texte
+   tourné à 90°, toujours aligné en haut de la page. Au clic : remonte en haut de page, déplie
+   le contenu et bascule en bandeau horizontal classique, en place. Un second clic sur le
+   bandeau horizontal referme le contenu et rebascule en onglet vertical. ---------- */
+function setSummaryMode(summary, mode) {
+  summary.dataset.mode = mode;
 }
+function initSourceTabs() {
+  document.querySelectorAll('.intro-blocks-panel details > summary').forEach(function (summary) {
+    setSummaryMode(summary, 'vertical');
+    summary.addEventListener('click', function (e) {
+      e.preventDefault();
+      var details = summary.closest('details');
+      if (summary.dataset.mode === 'vertical') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setSummaryMode(summary, 'horizontal');
+        details.open = true;
+      } else {
+        details.open = false;
+        setSummaryMode(summary, 'vertical');
+      }
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', initSourceTabs);
 var theMap = new CockpitMap({ containerId: 'map', levelBoxId: 'mapLevel', indicSelId: 'mapIndic', legendId: 'mapLegend', indicators: [] });
 theMap.setBrick = function (cfg) {
   cfg = cfg || { indicators: [] };
@@ -4058,18 +4059,13 @@ function bindEvents() {
   document.getElementById('reportPdfBtn').addEventListener('click', downloadPdfReport);
   document.getElementById('backToTopBtn').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
   (function () {
-    var tabs = document.getElementById('cockpitTabsRow'), btn = document.getElementById('backToTopBtn');
+    var btn = document.getElementById('backToTopBtn');
     var header = document.querySelector('header.site');
     function updateHeaderOffset() {
       document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
     }
-    /* Le bandeau est en position:fixed (plus sticky) : son rectangle ne bouge donc plus avec
-       le défilement, on ne peut plus détecter l'état "condensé" via sa position - on se base
-       directement sur la position de défilement de la page. */
     function onScroll() {
-      var stuck = window.scrollY > 4;
-      tabs.classList.toggle('condensed', stuck);
-      btn.classList.toggle('show', stuck);
+      btn.classList.toggle('show', window.scrollY > 4);
     }
     window.addEventListener('resize', function () { updateHeaderOffset(); onScroll(); });
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -4085,7 +4081,13 @@ function bindEvents() {
       document.querySelectorAll('.intro-blocks-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       activateBrick(tab.dataset.brick);
-      watchActiveSummary();
+      (function () {
+        var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + tab.dataset.brick + '"]');
+        var details = activePanel ? activePanel.querySelector('details') : null;
+        var summary = activePanel ? activePanel.querySelector('summary') : null;
+        if (details) details.open = false;
+        if (summary) setSummaryMode(summary, 'vertical');
+      })();
       document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       updateDataUpdatedLabel(tab.dataset.brick);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4247,22 +4249,6 @@ function bindEvents() {
   document.getElementById('guidePopupClose').addEventListener('click', function () { document.getElementById('guidePopupOverlay').classList.remove('show'); });
   document.getElementById('legalMentionsBtn').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.add('show'); });
   document.getElementById('legalMentionsClose').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.remove('show'); });
-  /* Titre flottant "Source et enjeux" : n'apparaît qu'une fois le titre d'origine (dans le
-     bloc dépliable, en haut de la colonne principale) sorti de l'écran, pour ne jamais le
-     dupliquer inutilement en haut de page. Un seul IntersectionObserver, ré-attaché à chaque
-     changement d'onglet sur le résumé actif. */
-  document.getElementById('floatingSourceTitle').addEventListener('click', function () {
-    var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + activeBrick + '"]');
-    var details = activePanel ? activePanel.querySelector('details') : null;
-    if (!details) return;
-    details.open = !details.open;
-    if (details.querySelector('summary').scrollIntoView) details.querySelector('summary').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    watchActiveSummary();
-  });
-  document.querySelectorAll('.intro-blocks-panel details').forEach(function (d) {
-    d.addEventListener('toggle', watchActiveSummary);
-  });
-  watchActiveSummary();
 
   document.getElementById('cockpitTerritoryBar').addEventListener('click', function () {
     var panel = document.getElementById('mapFilterCollapse');
@@ -4480,11 +4466,10 @@ function init() {
       updateDataUpdatedLabel('maturite');
       document.getElementById('loader').style.display = 'none';
       document.getElementById('app').style.display = 'block';
-      positionContextBar();
+      syncFloatingTerritoryBar();
       refreshFilters();
       theMap.show();
       activateBrick('maturite');
-      watchActiveSummary();
       renderAll();
     }).catch(function (err) { showError(err.message || String(err)); });
 }
@@ -4557,6 +4542,29 @@ init();
         }
       },
       {
+        element: '#mapIndicWrap',
+        popover: {
+          title: 'Changer l\u2019indicateur de la carte',
+          description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte - la liste proposée change selon l\u2019onglet actif.',
+          side: 'bottom'
+        },
+        onHighlightStarted: function () {
+          var panel = document.getElementById('mapFilterCollapse');
+          territoryStepOpenedPanel = panel.style.display === 'none';
+          if (territoryStepOpenedPanel) document.getElementById('cockpitTerritoryBar').click();
+        },
+        onDeselected: function () {
+          if (territoryStepOpenedPanel) {
+            var panel = document.getElementById('mapFilterCollapse');
+            if (panel.style.display !== 'none') {
+              panel.style.display = 'none';
+              document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+            }
+            territoryStepOpenedPanel = false;
+          }
+        }
+      },
+      {
         element: '.tab-tour-icon-embed',
         popover: {
           title: 'Deux types de guides',
@@ -4609,11 +4617,24 @@ init();
           }
         },
         {
-          element: '#mapIndicWrap',
+          element: '.intro-blocks-panel[data-brick="maturite"] summary',
           popover: {
-            title: 'Changer l\u2019indicateur de la carte',
-            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (niveau de maturité, fondamentaux, pratiques...).',
+            title: 'Source et enjeux',
+            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte et la méthodologie de cet onglet.',
             side: 'bottom'
+          },
+          onHighlightStarted: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="maturite"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (!details) return;
+            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
+            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+          },
+          onDeselected: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="maturite"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (details) details.open = false;
+            if (summary) setSummaryMode(summary, 'vertical');
           }
         },
         {
@@ -4680,11 +4701,24 @@ init();
           }
         },
         {
-          element: '#mapIndicWrap',
+          element: '.intro-blocks-panel[data-brick="fiches"] summary',
           popover: {
-            title: 'Changer l\u2019indicateur de la carte',
-            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (nombre de fiches, bénéficiaires, score global ou l\u2019un des 4 critères).',
+            title: 'Source et enjeux',
+            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte, la méthodologie de calcul du score et le lien vers l\u2019outil d\u2019évaluation d\u2019une fiche action.',
             side: 'bottom'
+          },
+          onHighlightStarted: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="fiches"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (!details) return;
+            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
+            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+          },
+          onDeselected: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="fiches"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (details) details.open = false;
+            if (summary) setSummaryMode(summary, 'vertical');
           }
         },
         {
@@ -4732,14 +4766,6 @@ init();
           }
         });
       }
-      steps.push({
-        element: '.eval-fiche-link',
-        popover: {
-          title: 'Évaluer une fiche action',
-          description: 'Un outil séparé permet d\u2019évaluer une fiche action à partir de son export PDF (ou en lot, plusieurs fiches à la fois) : score sur 4 critères, points forts et axes de progrès identifiés automatiquement.',
-          side: 'bottom'
-        }
-      });
       return steps;
     },
     perf: function () {
@@ -4749,6 +4775,27 @@ init();
             popover: {
               title: '\uD83D\uDCCA Performance relative',
               description: 'Compare les résultats emploi d\u2019un CLPE à ceux de ses 10 territoires les plus proches socio-économiquement - un repère plus pertinent qu\u2019une moyenne nationale ou régionale.'
+            }
+          },
+          {
+            element: '.intro-blocks-panel[data-brick="perf"] summary',
+            popover: {
+              title: 'Source et enjeux',
+              description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte et les précautions de lecture de cet onglet.',
+              side: 'bottom'
+            },
+            onHighlightStarted: function () {
+              var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
+              var details = summary ? summary.closest('details') : null;
+              if (!details) return;
+              if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
+              else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+            },
+            onDeselected: function () {
+              var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
+              var details = summary ? summary.closest('details') : null;
+              if (details) details.open = false;
+              if (summary) setSummaryMode(summary, 'vertical');
             }
           },
           {
@@ -4773,18 +4820,31 @@ init();
           }
         },
         {
-          element: '#mapIndicWrap',
+          element: '.intro-blocks-panel[data-brick="perf"] summary',
           popover: {
-            title: 'Changer l\u2019indicateur de la carte',
-            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (écart TAE, écart TPE, évolution...).',
+            title: 'Source et enjeux',
+            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte et les précautions de lecture de cet onglet.',
             side: 'bottom'
+          },
+          onHighlightStarted: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (!details) return;
+            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
+            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+          },
+          onDeselected: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (details) details.open = false;
+            if (summary) setSummaryMode(summary, 'vertical');
           }
         },
         {
           element: '#perfHero',
           popover: {
             title: 'Les indicateurs clés',
-            description: 'Écart du taux d\u2019accès à l\u2019emploi (TAE) et du taux de présence en emploi (TPE) par rapport à la moyenne des 10 territoires proches, exprimé en points de pourcentage (pp) - à ne pas confondre avec une évolution en %. L\u2019évolution sur un an est indiquée séparément.',
+            description: 'Taux d\u2019accès à l\u2019emploi (TAE) et taux de présence en emploi (TPE) du territoire, la moyenne de ces mêmes taux sur les 10 territoires proches, et l\u2019écart entre les deux exprimé en points de pourcentage (pp) - à ne pas confondre avec une évolution en %. L\u2019évolution sur un an est indiquée séparément.',
             side: 'bottom'
           }
         },
@@ -4813,18 +4873,31 @@ init();
           }
         },
         {
-          element: '#mapIndicWrap',
+          element: '.intro-blocks-panel[data-brick="freq"] summary',
           popover: {
-            title: 'Changer l\u2019indicateur de la carte',
-            description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte (cumul de consultations, évolution...).',
+            title: 'Source et enjeux',
+            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte de cet onglet.',
             side: 'bottom'
+          },
+          onHighlightStarted: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="freq"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (!details) return;
+            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
+            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+          },
+          onDeselected: function () {
+            var summary = document.querySelector('.intro-blocks-panel[data-brick="freq"] summary');
+            var details = summary ? summary.closest('details') : null;
+            if (details) details.open = false;
+            if (summary) setSummaryMode(summary, 'vertical');
           }
         },
         {
           element: '#freqChart',
           popover: {
-            title: 'Consultations par mois',
-            description: 'Permet de repérer les périodes de forte utilisation, les baisses de fréquentation et l\u2019installation progressive de l\u2019outil dans les pratiques du CLPE.',
+            title: 'Consultations par trimestre / mois / semaine',
+            description: 'Permet de repérer les périodes de forte utilisation, les baisses de fréquentation et l\u2019installation progressive de l\u2019outil dans les pratiques du CLPE. Les boutons à droite du titre basculent entre les trois échelles de temps.',
             side: 'bottom'
           }
         },
@@ -4833,14 +4906,6 @@ init();
           popover: {
             title: 'Les indicateurs clés',
             description: 'Dernier trimestre, cumul depuis janvier, évolution par rapport au trimestre précédent et cumul rapporté à 1000 habitants - ce dernier permet de comparer des territoires de tailles différentes.',
-            side: 'top'
-          }
-        },
-        {
-          element: '#freqWeekChart',
-          popover: {
-            title: 'Sessions par semaine',
-            description: 'Vue plus fine, semaine par semaine, du même indicateur d\u2019usage.',
             side: 'top'
           }
         },
