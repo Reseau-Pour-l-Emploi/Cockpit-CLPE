@@ -39,9 +39,9 @@ body{margin:0;font-family:var(--ft-font);font-size:14px;line-height:1.5;color:va
 a{color:var(--ft-indigo)}
 
 header.site{background:var(--ft-white);border-bottom:1px solid var(--ft-border);position:sticky;top:0;z-index:1100}
-.site-inner{max-width:80vw;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.site-inner{max-width:86vw;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .hero-band{background:linear-gradient(135deg,var(--ft-navy),var(--ft-indigo));color:#fff}
-.hero-band-inner{max-width:80vw;margin:0 auto;padding:22px 24px}
+.hero-band-inner{max-width:86vw;margin:0 auto;padding:22px 24px}
 .hero-band-flex{display:flex;justify-content:space-between;align-items:flex-start;gap:28px;flex-wrap:wrap}
 .hero-band-text{flex:1;min-width:280px}
 .hero-accroche{margin:0;font-size:14.5px;line-height:1.6;color:#fff;max-width:980px}
@@ -67,7 +67,7 @@ header.site{background:var(--ft-white);border-bottom:1px solid var(--ft-border);
 .session-select label{font-size:12px;font-weight:500;color:var(--ft-fg-2)}
 .session-select select{font-family:var(--ft-font);font-size:13px;font-weight:500;padding:8px 12px;border:1px solid var(--ft-indigo);border-radius:999px;background:var(--ft-indigo);color:#fff}
 
-main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
+main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 
 #loader{padding:48px 0;text-align:center;color:var(--ft-fg-3)}
 #loadError{display:none;background:var(--ft-orange-light);border-left:4px solid var(--ft-orange);border-radius:4px;padding:12px 16px;margin:16px 0}
@@ -103,11 +103,19 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
    couleur de fond claire (et non plus une simple bordure), retrouvée ensuite dans le bloc
    "Source et enjeux" correspondant en haut de la page. Disposition verticale : dégage de la
    hauteur par rapport à l'ancienne rangée horizontale sur deux lignes. */
-.cockpit-layout{display:grid;grid-template-columns:196px 1fr;gap:20px;margin-top:16px;align-items:start}
+.cockpit-layout{display:grid;grid-template-columns:196px 44px 1fr;gap:20px;margin-top:16px;align-items:start;position:relative}
 @media(max-width:900px){.cockpit-layout{grid-template-columns:1fr}}
 .cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px)}
 @media(max-width:900px){.cockpit-tabs-sidebar{position:static;flex-direction:row;flex-wrap:wrap}.cockpit-tab-wrap{flex:1 1 calc(50% - 5px);min-width:160px}}
-.cockpit-main-col{min-width:0}
+.cockpit-main-col{min-width:0;transition:margin-left .15s ease}
+.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;writing-mode:vertical-rl;text-orientation:mixed;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
+.source-tab-col span{font-size:14px;font-weight:700;color:var(--ft-navy);white-space:nowrap}
+.source-tab-col[data-color="indigo"]{background:var(--ft-indigo-light)}
+.source-tab-col[data-color="bleu"]{background:var(--ft-bleu-light)}
+.source-tab-col[data-color="violet"]{background:var(--ft-violet-light)}
+.source-tab-col[data-color="orange"]{background:var(--ft-orange-light)}
+@media(max-width:900px){.source-tab-col{display:none}}
+.cockpit-main-col.source-shifted{margin-left:280px}
 .cockpit-tab{border:2px solid var(--ft-sable-dark);border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease,border-color .12s ease;position:relative}
 .cockpit-tab:hover{box-shadow:var(--sh-sm)}
 .cockpit-tab.active{box-shadow:var(--sh-md);border-width:2.5px}
@@ -202,15 +210,7 @@ details.section{background:var(--ft-white);border:1px solid var(--ft-border);bor
 .intro-blocks-panel[data-color="orange"] details.section{border-left:5px solid var(--ft-orange);background:var(--ft-orange-light)}
 .intro-blocks-panel details.section .section-body{background:var(--ft-white);border-radius:0 0 6px 6px}
 details.section>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 20px;user-select:none}
-details.section>summary[data-mode="vertical"]{position:fixed;top:var(--header-h, 68px);right:0;bottom:0;z-index:840;width:44px;writing-mode:vertical-rl;text-orientation:mixed;background:var(--ft-white);border:1px solid var(--ft-border);border-right:none;border-bottom:none;border-radius:8px 0 0 0;box-shadow:var(--sh-md);padding:18px 11px;flex-direction:column;justify-content:flex-start;overflow:hidden}
-details.section>summary[data-mode="vertical"] h2{display:block;font-size:14px;font-weight:700;color:var(--ft-navy);white-space:nowrap;margin:0}
-details.section>summary[data-mode="vertical"] .hint{display:none}
-details.section>summary[data-mode="vertical"] .chev{display:none}
-@media(max-width:760px){details.section>summary[data-mode="vertical"]{display:none}}
-.intro-blocks-panel[data-color="indigo"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-indigo)}
-.intro-blocks-panel[data-color="bleu"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-bleu)}
-.intro-blocks-panel[data-color="violet"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-violet)}
-.intro-blocks-panel[data-color="orange"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-orange)}
+@media(max-width:760px){details.section{margin-top:0}}
 details.section>summary::-webkit-details-marker{display:none}
 details.section>summary .chev{width:10px;height:10px;border-right:2px solid var(--ft-indigo);border-bottom:2px solid var(--ft-indigo);transform:rotate(-45deg);transition:transform .18s ease;flex:none}
 details.section[open]>summary .chev{transform:rotate(45deg)}
@@ -457,7 +457,7 @@ tr.hl-row{background:var(--ft-jaune-light)!important}
 .detail-cell{background:var(--ft-sable);padding:14px 16px!important}
 
 footer.site{border-top:1px solid var(--ft-border);background:var(--ft-white);margin-top:24px}
-footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px;color:var(--ft-fg-3);display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center}
+footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px;color:var(--ft-fg-3);display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center}
 @media(max-width:700px){.site-inner,.hero-band-inner,main,footer.site .inner{max-width:100%;padding-left:12px;padding-right:12px}}
 .footer-icon{height:28px;width:auto;flex:none}
 .footer-title{font-weight:700;color:var(--ft-fg-1);font-size:13px;white-space:nowrap}
@@ -716,6 +716,9 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
           <span>Pour vous accompagner</span>
         </a>
         </div>
+      </div>
+      <div class="source-tab-col" id="sourceTabCol" role="button" tabindex="0">
+        <span id="sourceTabColText"></span>
       </div>
       <div class="cockpit-main-col">
 
@@ -3974,25 +3977,57 @@ if (typeof IntersectionObserver !== 'undefined') {
    tourné à 90°, toujours aligné en haut de la page. Au clic : remonte en haut de page, déplie
    le contenu et bascule en bandeau horizontal classique, en place. Un second clic sur le
    bandeau horizontal referme le contenu et rebascule en onglet vertical. ---------- */
-function setSummaryMode(summary, mode) {
-  summary.dataset.mode = mode;
+/* "Source et enjeux" : une colonne dédiée, entre la marge de gauche et le contenu principal,
+   affiche le titre de l'onglet actif à la verticale (hauteur alignée sur les 4 boutons
+   d'onglet, fond assorti à leur couleur). Au clic : remonte en haut de page, masque cette
+   colonne et affiche le bandeau "Source et enjeux" réel, déplié, à sa place habituelle en
+   haut de la colonne principale. Un clic sur ce bandeau réel (une fois déplié) le referme et
+   fait réapparaître la colonne verticale. */
+function syncSourceTabColHeight() {
+  var col = document.getElementById('sourceTabCol');
+  var tabsGroup = document.querySelector('.cockpit-tabs-group');
+  if (!col || !tabsGroup) return;
+  col.style.height = tabsGroup.getBoundingClientRect().height + 'px';
+}
+function syncSourceTabCol() {
+  var col = document.getElementById('sourceTabCol');
+  var colText = document.getElementById('sourceTabColText');
+  var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + activeBrick + '"]');
+  var details = activePanel ? activePanel.querySelector('details') : null;
+  var summary = details ? details.querySelector('summary') : null;
+  if (!details || !summary) return;
+  if (details.open) {
+    col.style.display = 'none';
+    details.style.display = '';
+  } else {
+    var h2 = summary.querySelector('h2');
+    colText.textContent = h2 ? h2.textContent : summary.textContent;
+    col.dataset.color = activePanel.dataset.color;
+    col.style.display = 'flex';
+    details.style.display = 'none';
+    syncSourceTabColHeight();
+  }
 }
 function initSourceTabs() {
+  var col = document.getElementById('sourceTabCol');
+  col.addEventListener('click', function () {
+    var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + activeBrick + '"]');
+    var details = activePanel ? activePanel.querySelector('details') : null;
+    if (!details) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    details.open = true;
+    syncSourceTabCol();
+  });
   document.querySelectorAll('.intro-blocks-panel details > summary').forEach(function (summary) {
-    setSummaryMode(summary, 'vertical');
     summary.addEventListener('click', function (e) {
       e.preventDefault();
       var details = summary.closest('details');
-      if (summary.dataset.mode === 'vertical') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setSummaryMode(summary, 'horizontal');
-        details.open = true;
-      } else {
-        details.open = false;
-        setSummaryMode(summary, 'vertical');
-      }
+      details.open = !details.open;
+      syncSourceTabCol();
     });
   });
+  window.addEventListener('resize', syncSourceTabColHeight);
+  syncSourceTabCol();
 }
 initSourceTabs();
 var theMap = new CockpitMap({ containerId: 'map', levelBoxId: 'mapLevel', indicSelId: 'mapIndic', legendId: 'mapLegend', indicators: [] });
@@ -4087,9 +4122,8 @@ function bindEvents() {
       (function () {
         var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + tab.dataset.brick + '"]');
         var details = activePanel ? activePanel.querySelector('details') : null;
-        var summary = activePanel ? activePanel.querySelector('summary') : null;
         if (details) details.open = false;
-        if (summary) setSummaryMode(summary, 'vertical');
+        syncSourceTabCol();
       })();
       document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       updateDataUpdatedLabel(tab.dataset.brick);
@@ -4474,6 +4508,7 @@ function init() {
       refreshFilters();
       theMap.show();
       activateBrick('maturite');
+      syncSourceTabCol();
       renderAll();
     }).catch(function (err) { showError(err.message || String(err)); });
 }
@@ -4621,24 +4656,24 @@ init();
           }
         },
         {
-          element: '.intro-blocks-panel[data-brick="maturite"] summary',
+          element: '#sourceTabCol',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et la méthodologie de cet onglet.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="maturite"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="maturite"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
-            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
+            else { details.open = true; syncSourceTabCol(); }
           },
           onDeselected: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="maturite"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="maturite"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (details) details.open = false;
-            if (summary) setSummaryMode(summary, 'vertical');
+            syncSourceTabCol();
           }
         },
         {
@@ -4705,24 +4740,24 @@ init();
           }
         },
         {
-          element: '.intro-blocks-panel[data-brick="fiches"] summary',
+          element: '#sourceTabCol',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte, la méthodologie de calcul du score et le lien vers l\u2019outil d\u2019évaluation d\u2019une fiche action.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="fiches"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="fiches"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
-            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
+            else { details.open = true; syncSourceTabCol(); }
           },
           onDeselected: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="fiches"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="fiches"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (details) details.open = false;
-            if (summary) setSummaryMode(summary, 'vertical');
+            syncSourceTabCol();
           }
         },
         {
@@ -4782,24 +4817,24 @@ init();
             }
           },
           {
-            element: '.intro-blocks-panel[data-brick="perf"] summary',
+            element: '#sourceTabCol',
             popover: {
               title: 'Source et enjeux',
               description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
               side: 'bottom'
             },
             onHighlightStarted: function () {
-              var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
-              var details = summary ? summary.closest('details') : null;
+              var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
+              var details = activePanel ? activePanel.querySelector('details') : null;
               if (!details) return;
-              if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
-              else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+              if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
+              else { details.open = true; syncSourceTabCol(); }
             },
             onDeselected: function () {
-              var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
-              var details = summary ? summary.closest('details') : null;
+              var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
+              var details = activePanel ? activePanel.querySelector('details') : null;
               if (details) details.open = false;
-              if (summary) setSummaryMode(summary, 'vertical');
+              syncSourceTabCol();
             }
           },
           {
@@ -4824,24 +4859,24 @@ init();
           }
         },
         {
-          element: '.intro-blocks-panel[data-brick="perf"] summary',
+          element: '#sourceTabCol',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
-            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
+            else { details.open = true; syncSourceTabCol(); }
           },
           onDeselected: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="perf"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (details) details.open = false;
-            if (summary) setSummaryMode(summary, 'vertical');
+            syncSourceTabCol();
           }
         },
         {
@@ -4877,24 +4912,24 @@ init();
           }
         },
         {
-          element: '.intro-blocks-panel[data-brick="freq"] summary',
+          element: '#sourceTabCol',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte de cet onglet.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="freq"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="freq"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; setSummaryMode(summary, 'vertical'); setTimeout(function () { details.open = true; setSummaryMode(summary, 'horizontal'); }, 400); }
-            else { details.open = true; setSummaryMode(summary, 'horizontal'); }
+            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
+            else { details.open = true; syncSourceTabCol(); }
           },
           onDeselected: function () {
-            var summary = document.querySelector('.intro-blocks-panel[data-brick="freq"] summary');
-            var details = summary ? summary.closest('details') : null;
+            var activePanel = document.querySelector('.intro-blocks-panel[data-brick="freq"]');
+            var details = activePanel ? activePanel.querySelector('details') : null;
             if (details) details.open = false;
-            if (summary) setSummaryMode(summary, 'vertical');
+            syncSourceTabCol();
           }
         },
         {
