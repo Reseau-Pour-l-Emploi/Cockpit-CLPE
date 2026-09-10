@@ -202,13 +202,15 @@ details.section{background:var(--ft-white);border:1px solid var(--ft-border);bor
 .intro-blocks-panel[data-color="orange"] details.section{border-left:5px solid var(--ft-orange);background:var(--ft-orange-light)}
 .intro-blocks-panel details.section .section-body{background:var(--ft-white);border-radius:0 0 6px 6px}
 details.section>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 20px;user-select:none}
-details.section>summary[data-mode="vertical"]{position:fixed;top:calc(var(--header-h, 68px) + 90px);right:0;z-index:840;width:38px;writing-mode:vertical-rl;text-orientation:mixed;background:var(--ft-white);border:1px solid var(--ft-border);border-right:none;border-radius:8px 0 0 8px;box-shadow:var(--sh-md);padding:18px 9px;flex-direction:column;justify-content:flex-start}
-details.section>summary[data-mode="vertical"] h2{display:none}
+details.section>summary[data-mode="vertical"]{position:fixed;top:var(--header-h, 68px);right:0;bottom:0;z-index:840;width:44px;writing-mode:vertical-rl;text-orientation:mixed;background:var(--ft-white);border:1px solid var(--ft-border);border-right:none;border-bottom:none;border-radius:8px 0 0 0;box-shadow:var(--sh-md);padding:18px 11px;flex-direction:column;justify-content:flex-start;overflow:hidden}
+details.section>summary[data-mode="vertical"] h2{display:block;font-size:14px;font-weight:700;color:var(--ft-navy);white-space:nowrap;margin:0}
 details.section>summary[data-mode="vertical"] .hint{display:none}
 details.section>summary[data-mode="vertical"] .chev{display:none}
-details.section>summary .vlabel{display:none}
-details.section>summary[data-mode="vertical"] .vlabel{display:block;font-size:12px;font-weight:700;color:var(--ft-indigo);white-space:nowrap}
 @media(max-width:760px){details.section>summary[data-mode="vertical"]{display:none}}
+.intro-blocks-panel[data-color="indigo"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-indigo)}
+.intro-blocks-panel[data-color="bleu"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-bleu)}
+.intro-blocks-panel[data-color="violet"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-violet)}
+.intro-blocks-panel[data-color="orange"] summary[data-mode="vertical"]{border-left:4px solid var(--ft-orange)}
 details.section>summary::-webkit-details-marker{display:none}
 details.section>summary .chev{width:10px;height:10px;border-right:2px solid var(--ft-indigo);border-bottom:2px solid var(--ft-indigo);transform:rotate(-45deg);transition:transform .18s ease;flex:none}
 details.section[open]>summary .chev{transform:rotate(45deg)}
@@ -720,7 +722,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
     <div class="intro-blocks-row" id="introBlocksRow">
       <div class="intro-blocks-panel" data-brick="maturite" data-color="indigo">
         <details class="section intro-section">
-          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>📊 Démarche de progression et d’impact des Comités locaux pour l'emploi (CLPE)</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="chev"></span><h2>📊 Démarche de progression et d’impact des Comités locaux pour l'emploi (CLPE)</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces résultats découlent d'un questionnaire partagé avec les membres des comités locaux. Son but ? Évaluer le niveau de maturité des CLPE (Comités Locaux pour l'Emploi) et encourager un pilotage collaboratif au profit de tous les acteurs du RPE.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> établir un indice de maturité précis pour suivre pas à pas l'évolution des dynamiques territoriales jusqu'à la cible 2027.</p>
@@ -752,7 +754,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="intro-blocks-panel" data-brick="freq" data-color="bleu" style="display:none">
         <details class="section intro-section">
-          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>📶 Fréquentation du Tableau de bord RPE</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="chev"></span><h2>📶 Fréquentation du Tableau de bord RPE</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des connexions au tableau de bord du Réseau pour l'emploi, l'outil de pilotage stratégique de référence pour l'ensemble des acteurs du RPE. Elles ne mesurent pas le contenu consulté, seulement le fait de s'y connecter.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> objectiver le niveau d'appropriation du tableau de bord RPE par les membres des CLPE, condition nécessaire à un pilotage partagé et outillé du réseau.</p>
@@ -769,7 +771,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="intro-blocks-panel" data-brick="fiches" data-color="violet" style="display:none">
         <details class="section intro-section">
-          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>🎯 Pilotage des actions du Réseau pour l'emploi</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="chev"></span><h2>🎯 Pilotage des actions du Réseau pour l'emploi</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des fiches action saisies par les CLPE pour documenter les initiatives conduites sur leur territoire. Leur qualité de rédaction en dit long sur la structuration et la capacité de pilotage du réseau local.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> objectiver le dynamisme des territoires, la prise en compte de l'impact usager dans les actions engagées, et la capacité du réseau à capitaliser sur ses réalisations.</p>
@@ -797,7 +799,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="intro-blocks-panel" data-brick="perf" data-color="orange" style="display:none">
         <details class="section intro-section">
-          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>📊 Performance relative des CLPE</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="chev"></span><h2>📊 Performance relative des CLPE</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des indicateurs officiels de taux d'accès à l'emploi (TAE) et de taux de présence en emploi (TPE), rapportés à un groupe de territoires socio-économiquement comparables plutôt qu'à une moyenne nationale uniforme.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> relativiser la performance d'un CLPE en la comparant à des territoires confrontés à des réalités socio-économiques proches, plutôt qu'à des voisins géographiques aux contextes parfois très différents.</p>
@@ -4622,7 +4624,7 @@ init();
           element: '.intro-blocks-panel[data-brick="maturite"] summary',
           popover: {
             title: 'Source et enjeux',
-            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte et la méthodologie de cet onglet.',
+            description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et la méthodologie de cet onglet.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
@@ -4706,7 +4708,7 @@ init();
           element: '.intro-blocks-panel[data-brick="fiches"] summary',
           popover: {
             title: 'Source et enjeux',
-            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte, la méthodologie de calcul du score et le lien vers l\u2019outil d\u2019évaluation d\u2019une fiche action.',
+            description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte, la méthodologie de calcul du score et le lien vers l\u2019outil d\u2019évaluation d\u2019une fiche action.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
@@ -4783,7 +4785,7 @@ init();
             element: '.intro-blocks-panel[data-brick="perf"] summary',
             popover: {
               title: 'Source et enjeux',
-              description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte et les précautions de lecture de cet onglet.',
+              description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
               side: 'bottom'
             },
             onHighlightStarted: function () {
@@ -4825,7 +4827,7 @@ init();
           element: '.intro-blocks-panel[data-brick="perf"] summary',
           popover: {
             title: 'Source et enjeux',
-            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte et les précautions de lecture de cet onglet.',
+            description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
@@ -4878,7 +4880,7 @@ init();
           element: '.intro-blocks-panel[data-brick="freq"] summary',
           popover: {
             title: 'Source et enjeux',
-            description: 'Cliquez sur ce bandeau (ou sur sa version flottante une fois qu\u2019il a défilé hors de l\u2019écran) pour déplier ou replier le contexte de cet onglet.',
+            description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte de cet onglet.',
             side: 'bottom'
           },
           onHighlightStarted: function () {
