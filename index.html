@@ -4092,7 +4092,7 @@ function bindEvents() {
     document.querySelectorAll('#freqGranularity button').forEach(function (b) { b.classList.toggle('active', b === btn); });
     document.getElementById('freqChart').style.display = freqGranularity === 'semaine' ? 'none' : '';
     document.getElementById('freqWeekChart').style.display = freqGranularity === 'semaine' ? '' : 'none';
-    if (freqGranularity === 'semaine') renderFreqWeek(); else renderFreq();
+    if (freqGranularity === 'semaine') { document.getElementById('freqMonthLegend').innerHTML = ''; renderFreqWeek(); } else renderFreq();
   });
   document.getElementById('questionDetail').addEventListener('click', function (e) {
     if (e.target.closest('.info-icon')) return;
