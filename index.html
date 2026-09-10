@@ -112,13 +112,16 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px)}
 @media(max-width:900px){.cockpit-tabs-sidebar{position:static;flex-direction:row;flex-wrap:wrap}.cockpit-tab-wrap{flex:1 1 calc(50% - 5px);min-width:160px}}
 .cockpit-main-col{min-width:0;transition:margin-left .15s ease}
-.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;height:calc(100vh - var(--header-h, 68px) - 70px);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);display:flex;align-items:center;justify-content:flex-end;padding-bottom:22px;box-sizing:border-box;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
+.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;height:calc(100vh - var(--header-h, 68px) - 70px);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);display:flex;align-items:center;justify-content:flex-end;gap:10px;padding-bottom:22px;box-sizing:border-box;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
 .source-tab-col span{font-size:14px;font-weight:700;color:var(--ft-navy);white-space:nowrap}
+.source-tab-arrow{font-size:16px !important;font-weight:400 !important;opacity:.65}
 .source-tab-col[data-color="indigo"]{background:var(--ft-indigo-light)}
 .source-tab-col[data-color="bleu"]{background:var(--ft-bleu-light)}
 .source-tab-col[data-color="violet"]{background:var(--ft-violet-light)}
 .source-tab-col[data-color="orange"]{background:var(--ft-orange-light)}
-@media(max-width:900px){.source-tab-col{display:none}}
+@media(max-width:900px){
+  .source-tab-col{position:static;width:auto;height:auto;writing-mode:horizontal-tb;text-orientation:initial;transform:none;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;padding:12px 16px;margin-bottom:14px}
+}
 .cockpit-main-col.source-shifted{margin-left:280px}
 .cockpit-tab{border:2px solid var(--ft-sable-dark);border-radius:8px;padding:12px 14px;cursor:pointer;text-align:left;font-family:var(--ft-font);transition:box-shadow .12s ease,border-color .12s ease;position:relative}
 .cockpit-tab:hover{box-shadow:var(--sh-sm)}
@@ -723,6 +726,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="source-tab-col" id="sourceTabCol" role="button" tabindex="0">
         <span id="sourceTabColText"></span>
+        <span class="source-tab-arrow">▸</span>
       </div>
       <div class="cockpit-main-col">
 
@@ -3999,7 +4003,7 @@ function syncSourceTabCol() {
     details.style.display = '';
   } else {
     var h2 = summary.querySelector('h2');
-    colText.textContent = h2 ? h2.textContent : summary.textContent;
+    colText.textContent = (h2 ? h2.textContent : summary.textContent).replace(/\u2019/g, "'");
     col.dataset.color = activePanel.dataset.color;
     col.style.display = 'flex';
     details.style.display = 'none';
