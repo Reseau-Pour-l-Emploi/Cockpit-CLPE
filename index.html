@@ -164,8 +164,8 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .fiches-month-legend .fk-swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
 .hero-row-vert{display:flex;flex-direction:column;gap:12px}
 .hero-row-vert .hero-card{width:100%;box-sizing:border-box}
-.freq-bars{display:flex;align-items:flex-end;gap:10px;height:140px;padding:10px 4px 0}
-.freq-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.freq-bars{display:flex;align-items:flex-end;gap:10px;height:140px;padding:10px 4px 0;overflow-x:auto}
+.freq-bar-col{flex:1 0 32px;min-width:32px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
 .freq-bar-col .fb{width:70%;background:var(--ft-bleu);border-radius:4px 4px 0 0;min-height:2px}
 .freq-bar-col .fb-val{font-size:11px;color:var(--ft-fg-2);margin-bottom:3px;font-weight:600}
 .freq-bar-col .fb-lbl{font-size:10.5px;color:var(--ft-fg-3);margin-top:5px}
@@ -2640,10 +2640,15 @@ function renderFreq() {
   var chartKeys = freqGranularity === 'mois' ? months : trimestres;
   var chartVals = freqGranularity === 'mois' ? byMonth : byTrim;
   var maxV = Math.max.apply(null, chartKeys.map(function (k) { return chartVals[k]; }).concat([1]));
+  /* Au-delà d'une douzaine de barres (typiquement la vue par mois sur plusieurs années),
+     n'étiqueter qu'une barre sur N pour éviter un axe des abscisses surchargé - la barre
+     elle-même reste affichée pour chaque période, seule l'étiquette texte est éclaircie. */
+  var labelEvery = Math.max(1, Math.ceil(chartKeys.length / 12));
   var html = '<div class="freq-bars">';
-  chartKeys.forEach(function (k) {
+  chartKeys.forEach(function (k, i) {
     var v = chartVals[k], h = Math.max(2, v / maxV * 110);
-    html += '<div class="freq-bar-col"><div class="fb-val">' + fmt(v, 0) + '</div><div class="fb" style="height:' + h + 'px"></div><div class="fb-lbl">' + esc(k) + '</div></div>';
+    var lbl = (i % labelEvery === 0 || i === chartKeys.length - 1) ? esc(k) : '';
+    html += '<div class="freq-bar-col"><div class="fb-val">' + fmt(v, 0) + '</div><div class="fb" style="height:' + h + 'px" title="' + esc(k) + '"></div><div class="fb-lbl">' + lbl + '</div></div>';
   });
   html += '</div>';
   document.getElementById('freqChart').innerHTML = chartKeys.length ? html : '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
@@ -3908,6 +3913,13 @@ theMap.setBrick = function (cfg) {
   document.querySelectorAll('#' + this.opts.levelBoxId + ' button').forEach(function (b) {
     b.disabled = !!(cfg.levelLock && b.dataset.level !== cfg.levelLock);
   });
+  /* Si le panneau carte est actuellement masqué, on ne touche pas à Leaflet ici : reconstruire
+     les couches sur un conteneur caché peut corrompre son état (comme le cadrage initial),
+     avec un symptôme différé - la carte ne réapparaît plus après un changement d'onglet suivi
+     d'une réouverture. Le prochain clic sur le bandeau "Territoire sélectionné" relance de
+     toute façon un setLevel() complet, qui reprendra le bon niveau et les bonnes options. */
+  var collapsePanel = document.getElementById('mapFilterCollapse');
+  if (collapsePanel && collapsePanel.style.display === 'none') return;
   this.setLevel(cfg.levelLock || this.level, true);
   this.fitAll();
 };
@@ -4735,7 +4747,25 @@ init();
 
   function runTour(steps, opts) {
     if (typeof driver === 'undefined') { alert('driver.js ne s\u2019est pas chargé (bloqué par un bloqueur de script ?)'); return; }
-    var cfg = Object.assign({}, driverConfig, { steps: steps }, opts || {});
+    /* Certaines étapes ouvrent automatiquement le panneau carte + filtres (replié par défaut)
+       pour pouvoir le mettre en surbrillance. On note son état AVANT le parcours pour le
+       refermer à la fin s'il était fermé au départ - sinon toutes les zones en surbrillance
+       des étapes suivantes se décalent, le panneau restant ouvert indéfiniment. */
+    var panelClosedBeforeTour = document.getElementById('mapFilterCollapse').style.display === 'none';
+    var userOnDestroyed = opts && opts.onDestroyed;
+    var wrappedOpts = Object.assign({}, opts || {}, {
+      onDestroyed: function () {
+        if (panelClosedBeforeTour) {
+          var panel = document.getElementById('mapFilterCollapse');
+          if (panel.style.display !== 'none') {
+            panel.style.display = 'none';
+            document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+          }
+        }
+        if (userOnDestroyed) userOnDestroyed();
+      }
+    });
+    var cfg = Object.assign({}, driverConfig, { steps: steps }, wrappedOpts);
     var tour = window.driver.js.driver(cfg);
     tour.drive();
     return tour;
