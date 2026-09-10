@@ -112,7 +112,7 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .cockpit-tabs-sidebar{display:flex;flex-direction:column;gap:10px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:10px;padding:10px;position:sticky;top:calc(var(--header-h, 68px) + 60px)}
 @media(max-width:900px){.cockpit-tabs-sidebar{position:static;flex-direction:row;flex-wrap:wrap}.cockpit-tab-wrap{flex:1 1 calc(50% - 5px);min-width:160px}}
 .cockpit-main-col{min-width:0;transition:margin-left .15s ease}
-.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;height:calc(100vh - var(--header-h, 68px) - 70px);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);display:flex;align-items:center;justify-content:flex-end;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
+.source-tab-col{position:sticky;top:calc(var(--header-h, 68px) + 60px);width:44px;height:calc(100vh - var(--header-h, 68px) - 70px);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);display:flex;align-items:center;justify-content:flex-end;padding-bottom:22px;box-sizing:border-box;border-radius:8px;cursor:pointer;box-shadow:var(--sh-sm);overflow:hidden}
 .source-tab-col span{font-size:14px;font-weight:700;color:var(--ft-navy);white-space:nowrap}
 .source-tab-col[data-color="indigo"]{background:var(--ft-indigo-light)}
 .source-tab-col[data-color="bleu"]{background:var(--ft-bleu-light)}
@@ -4581,7 +4581,7 @@ init();
         popover: {
           title: 'Changer l\u2019indicateur de la carte',
           description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte - la liste proposée change selon l\u2019onglet actif.',
-          side: 'bottom'
+          side: 'right'
         },
         onHighlightStarted: function () {
           var panel = document.getElementById('mapFilterCollapse');
@@ -4630,7 +4630,7 @@ init();
           description: 'Chaque onglet a sa propre date de mise à jour, affichée ici et propre à sa source de données. Les données sont chargées manuellement dans le cockpit : pensez à vérifier cette date en changeant d\u2019onglet pour savoir si une actualisation a eu lieu récemment.',
           side: 'bottom'
         },
-        onHighlightStarted: function () { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        onHighlightStarted: function () { window.scrollTo({ top: 0, behavior: 'auto' }); }
       },
       {
         popover: {
@@ -4652,7 +4652,7 @@ init();
           }
         },
         {
-          element: '#sourceTabCol',
+          element: '.intro-blocks-panel[data-brick="maturite"] details',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et la méthodologie de cet onglet.',
@@ -4709,7 +4709,8 @@ init();
           popover: {
             title: 'Le détail des questions',
             description: 'Score, nombre de répondants 👥 et homogénéité des réponses (🟢🔵🔴 selon le niveau) pour chaque question. Cliquez sur une partie ou une thématique pour afficher l\u2019ensemble de ses questions, sur le numéro d\u2019une question pour voir le score de chaque modalité de réponse, ou sur la question elle-même pour voir les recommandations associées. Les tags ✅ / 🔺 / 💬 (point fort, axe de progrès, avis divergents) se cliquent aussi pour en savoir plus.',
-            side: 'top'
+            side: 'top',
+            align: 'start'
           }
         }
       ];
@@ -4736,7 +4737,7 @@ init();
           }
         },
         {
-          element: '#sourceTabCol',
+          element: '.intro-blocks-panel[data-brick="fiches"] details',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte, la méthodologie de calcul du score et le lien vers l\u2019outil d\u2019évaluation d\u2019une fiche action.',
@@ -4777,7 +4778,7 @@ init();
           popover: {
             title: 'Planification dans l\u2019année',
             description: 'Positionne chaque action au mois de fin de sa première étape plutôt qu\u2019à sa date de création, pour refléter le rythme réel de mise en œuvre. Une répartition étalée traduit une planification qui lisse la charge de travail.',
-            side: 'top'
+            side: 'bottom'
           }
         },
         {
@@ -4813,7 +4814,7 @@ init();
             }
           },
           {
-            element: '#sourceTabCol',
+            element: '.intro-blocks-panel[data-brick="perf"] details',
             popover: {
               title: 'Source et enjeux',
               description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
@@ -4855,7 +4856,7 @@ init();
           }
         },
         {
-          element: '#sourceTabCol',
+          element: '.intro-blocks-panel[data-brick="perf"] details',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
@@ -4888,7 +4889,7 @@ init();
           popover: {
             title: 'Le tableau des territoires proches',
             description: 'Liste les 10 CLPE retenus pour la comparaison et leurs résultats. La proximité socio-économique n\u2019est pas réciproque : un territoire peut apparaître comme proche d\u2019un autre sans que l\u2019inverse soit vrai.',
-            side: 'top'
+            side: 'bottom'
           }
         },
         {
@@ -4908,7 +4909,7 @@ init();
           }
         },
         {
-          element: '#sourceTabCol',
+          element: '.intro-blocks-panel[data-brick="freq"] details',
           popover: {
             title: 'Source et enjeux',
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte de cet onglet.',
