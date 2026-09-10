@@ -202,11 +202,12 @@ details.section{background:var(--ft-white);border:1px solid var(--ft-border);bor
 .intro-blocks-panel[data-color="orange"] details.section{border-left:5px solid var(--ft-orange);background:var(--ft-orange-light)}
 .intro-blocks-panel details.section .section-body{background:var(--ft-white);border-radius:0 0 6px 6px}
 details.section>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 20px;user-select:none}
-details.section>summary[data-mode="vertical"]{position:fixed;top:calc(var(--header-h, 68px) + 90px);right:0;z-index:840;width:38px;max-height:calc(100vh - var(--header-h, 68px) - 110px);writing-mode:vertical-rl;text-orientation:mixed;background:var(--ft-white);border:1px solid var(--ft-border);border-right:none;border-radius:8px 0 0 8px;box-shadow:var(--sh-md);padding:18px 9px;flex-direction:column;justify-content:flex-start;overflow:hidden}
+details.section>summary[data-mode="vertical"]{position:fixed;top:calc(var(--header-h, 68px) + 90px);right:0;z-index:840;width:38px;writing-mode:vertical-rl;text-orientation:mixed;background:var(--ft-white);border:1px solid var(--ft-border);border-right:none;border-radius:8px 0 0 8px;box-shadow:var(--sh-md);padding:18px 9px;flex-direction:column;justify-content:flex-start}
 details.section>summary[data-mode="vertical"] h2{display:none}
 details.section>summary[data-mode="vertical"] .hint{display:none}
 details.section>summary[data-mode="vertical"] .chev{display:none}
-details.section>summary[data-mode="vertical"]::before{content:'\2139\FE0F Source et enjeux';font-size:12px;font-weight:700;color:var(--ft-indigo);margin-bottom:10px;white-space:nowrap}
+details.section>summary .vlabel{display:none}
+details.section>summary[data-mode="vertical"] .vlabel{display:block;font-size:12px;font-weight:700;color:var(--ft-indigo);white-space:nowrap}
 @media(max-width:760px){details.section>summary[data-mode="vertical"]{display:none}}
 details.section>summary::-webkit-details-marker{display:none}
 details.section>summary .chev{width:10px;height:10px;border-right:2px solid var(--ft-indigo);border-bottom:2px solid var(--ft-indigo);transform:rotate(-45deg);transition:transform .18s ease;flex:none}
@@ -719,7 +720,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
     <div class="intro-blocks-row" id="introBlocksRow">
       <div class="intro-blocks-panel" data-brick="maturite" data-color="indigo">
         <details class="section intro-section">
-          <summary><span class="chev"></span><h2>📊 Démarche de progression et d’impact des Comités locaux pour l'emploi (CLPE)</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>📊 Démarche de progression et d’impact des Comités locaux pour l'emploi (CLPE)</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces résultats découlent d'un questionnaire partagé avec les membres des comités locaux. Son but ? Évaluer le niveau de maturité des CLPE (Comités Locaux pour l'Emploi) et encourager un pilotage collaboratif au profit de tous les acteurs du RPE.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> établir un indice de maturité précis pour suivre pas à pas l'évolution des dynamiques territoriales jusqu'à la cible 2027.</p>
@@ -751,7 +752,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="intro-blocks-panel" data-brick="freq" data-color="bleu" style="display:none">
         <details class="section intro-section">
-          <summary><span class="chev"></span><h2>📶 Fréquentation du Tableau de bord RPE</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>📶 Fréquentation du Tableau de bord RPE</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des connexions au tableau de bord du Réseau pour l'emploi, l'outil de pilotage stratégique de référence pour l'ensemble des acteurs du RPE. Elles ne mesurent pas le contenu consulté, seulement le fait de s'y connecter.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> objectiver le niveau d'appropriation du tableau de bord RPE par les membres des CLPE, condition nécessaire à un pilotage partagé et outillé du réseau.</p>
@@ -768,7 +769,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="intro-blocks-panel" data-brick="fiches" data-color="violet" style="display:none">
         <details class="section intro-section">
-          <summary><span class="chev"></span><h2>🎯 Pilotage des actions du Réseau pour l'emploi</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>🎯 Pilotage des actions du Réseau pour l'emploi</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des fiches action saisies par les CLPE pour documenter les initiatives conduites sur leur territoire. Leur qualité de rédaction en dit long sur la structuration et la capacité de pilotage du réseau local.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> objectiver le dynamisme des territoires, la prise en compte de l'impact usager dans les actions engagées, et la capacité du réseau à capitaliser sur ses réalisations.</p>
@@ -796,7 +797,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
       </div>
       <div class="intro-blocks-panel" data-brick="perf" data-color="orange" style="display:none">
         <details class="section intro-section">
-          <summary><span class="chev"></span><h2>📊 Performance relative des CLPE</h2><span class="hint">Source et enjeux</span></summary>
+          <summary><span class="vlabel">ℹ️ Source et enjeux</span><span class="chev"></span><h2>📊 Performance relative des CLPE</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des indicateurs officiels de taux d'accès à l'emploi (TAE) et de taux de présence en emploi (TPE), rapportés à un groupe de territoires socio-économiquement comparables plutôt qu'à une moyenne nationale uniforme.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> relativiser la performance d'un CLPE en la comparant à des territoires confrontés à des réalités socio-économiques proches, plutôt qu'à des voisins géographiques aux contextes parfois très différents.</p>
@@ -3956,7 +3957,7 @@ function syncFloatingTerritoryBar() {
   el.innerHTML = original.innerHTML;
 }
 if (typeof IntersectionObserver !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', function () {
+  (function () {
     var original = document.getElementById('cockpitTerritoryBar');
     if (!original) return;
     var obs = new IntersectionObserver(function (entries) {
@@ -3964,7 +3965,7 @@ if (typeof IntersectionObserver !== 'undefined') {
       el.style.display = entries[0].isIntersecting ? 'none' : 'inline-flex';
     }, { rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 68) + 'px 0px 0px 0px', threshold: 0 });
     obs.observe(original);
-  });
+  })();
 }
 
 /* ---------- "Source et enjeux" : onglet vertical fixe par défaut sur le bord droit, texte
@@ -3991,7 +3992,7 @@ function initSourceTabs() {
     });
   });
 }
-document.addEventListener('DOMContentLoaded', initSourceTabs);
+initSourceTabs();
 var theMap = new CockpitMap({ containerId: 'map', levelBoxId: 'mapLevel', indicSelId: 'mapIndic', legendId: 'mapLegend', indicators: [] });
 theMap.setBrick = function (cfg) {
   cfg = cfg || { indicators: [] };
@@ -4256,6 +4257,7 @@ function bindEvents() {
     panel.style.display = expanded ? 'none' : '';
     this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     if (!expanded) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       /* Le conteneur Leaflet reste masqué (display:none) tant que ce panneau n'a pas été
          ouvert au moins une fois : CockpitMap.prototype.init() diffère volontairement toute
          construction réelle tant que ce conteneur est caché (cadrages invalides sinon). Une
@@ -4980,7 +4982,7 @@ init();
     }, 150);
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  (function () {
     var globalBtn = document.getElementById('visiteGuideeBtn');
     if (globalBtn) globalBtn.addEventListener('click', startGlobalTour);
     document.addEventListener('click', function (e) {
@@ -4989,7 +4991,7 @@ init();
       e.stopPropagation();
       startTabTour(btn.dataset.tourBrick);
     });
-  });
+  })();
 })();
 </script>
 </body>
