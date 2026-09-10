@@ -82,7 +82,13 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ctx-filter.ctx-active{display:flex}
 .cockpit-map{height:640px;border:1px solid var(--ft-border);border-radius:8px;background:var(--ft-sable)}
 .intro-blocks-row{margin-top:16px}
-.intro-section summary{position:sticky;top:calc(var(--header-h, 68px) + 60px);z-index:800}
+.floating-source-title{position:sticky;top:calc(var(--header-h, 68px) + 60px);z-index:800;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:8px;cursor:pointer;font-family:var(--ft-font);font-weight:700;font-size:14.5px;color:var(--ft-navy);box-shadow:var(--sh-md);margin-bottom:10px;animation:floatTitleIn .15s ease}
+.floating-source-title .hint{margin-left:auto;font-size:11.5px;font-weight:600;opacity:.75;white-space:nowrap}
+@keyframes floatTitleIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.floating-source-title[data-color="indigo"]{background:var(--ft-indigo-light);border-left:5px solid var(--ft-indigo)}
+.floating-source-title[data-color="bleu"]{background:var(--ft-bleu-light);border-left:5px solid var(--ft-bleu)}
+.floating-source-title[data-color="violet"]{background:var(--ft-violet-light);border-left:5px solid var(--ft-violet)}
+.floating-source-title[data-color="orange"]{background:var(--ft-orange-light);border-left:5px solid var(--ft-orange)}
 .map-filter-row{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-top:14px}
 .map-filter-collapse{background:var(--ft-sable);border:1px solid var(--ft-border);border-top:none;border-radius:0 0 8px 8px;padding:0 18px 14px;margin-top:-1px}
 .filterbar-col{display:flex;flex-direction:column;gap:14px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:16px}
@@ -194,10 +200,6 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .responses-bar .btn-pdf-top{margin-left:0;flex:none}
 
 details.section{background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);margin-bottom:16px}
-.intro-blocks-panel[data-color="indigo"] .intro-section summary{background:var(--ft-indigo-light)}
-.intro-blocks-panel[data-color="bleu"] .intro-section summary{background:var(--ft-bleu-light)}
-.intro-blocks-panel[data-color="violet"] .intro-section summary{background:var(--ft-violet-light)}
-.intro-blocks-panel[data-color="orange"] .intro-section summary{background:var(--ft-orange-light)}
 .intro-blocks-panel[data-color="indigo"] details.section{border-left:5px solid var(--ft-indigo);background:var(--ft-indigo-light)}
 .intro-blocks-panel[data-color="bleu"] details.section{border-left:5px solid var(--ft-bleu);background:var(--ft-bleu-light)}
 .intro-blocks-panel[data-color="violet"] details.section{border-left:5px solid var(--ft-violet);background:var(--ft-violet-light)}
@@ -654,7 +656,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
   <div id="app" style="display:none">
 
     <div class="cockpit-context-bar" id="cockpitTabsRow">
-      <button class="cockpit-territory-bar" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint">✏️ Changer de territoire</span></button>
+      <button class="cockpit-territory-bar" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint">✏️ Changer de territoire / voir la carte</span></button>
       <div class="cockpit-meta-bar" id="cockpitMetaBar">
         <span>Données mises à jour le <b id="dataUpdatedLabel"></b></span>
         <span id="lastPeriodWrap">Dernière période disponible (<span id="lastPeriodBrick"></span>) : <b id="lastPeriodLabel"></b></span>
@@ -709,6 +711,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
       </div>
       <div class="cockpit-main-col">
+        <div class="floating-source-title" id="floatingSourceTitle" role="button" tabindex="0" style="display:none"></div>
 
     <div class="intro-blocks-row" id="introBlocksRow">
       <div class="intro-blocks-panel" data-brick="maturite" data-color="indigo">
@@ -773,7 +776,18 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
               <li>💡 Distinguer les actions qui ont un effet direct et mesurable sur l'usager final de celles à portée plus institutionnelle.</li>
               <li>🕒 Identifier les territoires qui capitalisent sur leurs actions (bilans renseignés, enseignements partagés) pour éclairer les autres.</li>
             </ul>
-            <p>Un outil dédié permet d'ailleurs d'évaluer et d'améliorer la saisie d'une fiche action, isolée ou en lot : voir le lien "Évaluez une fiche action en pdf" ci-dessous.</p>
+            <p>Un outil dédié permet d'évaluer et d'améliorer la saisie d'une fiche action, isolée ou en lot : <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a></p>
+            <h3>📘 Méthodologie - comment le score est calculé</h3>
+            <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
+            <p>Pour rester cohérent avec le niveau de maturité, affiché lui aussi sur une échelle de 0 à 4, ce score est ensuite ramené sur cette même échelle (division par 25) partout où il est présenté dans le cockpit.</p>
+            <table class="method-table">
+              <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
+              <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, pertinence des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
+              <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (et non exigé tant que l'échéance de l'action n'est pas atteinte). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
+              <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant, ou dont le vocabulaire se distingue du reste du réseau, est jugée plus innovante.</td></tr>
+            </table>
+            <p style="margin-top:10px">Un critère non évalué (bilan non renseigné, notamment) n'entre pas dans le score global : les poids des autres critères sont alors reproportionnés pour totaliser 100&nbsp;%, plutôt que de compter comme 0.</p>
+            <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action.</p>
           </div>
         </details>
       </div>
@@ -887,38 +901,36 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
         </div>
         <div class="tab-panel" data-brick="freq" id="panelFreq" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent4">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent4" style="display:none">Nombre de consultations du tableau de bord du Réseau pour l'emploi par les membres du CLPE (données réelles).</div>
-          <h3 id="freqScopeTitle"></h3>
-          <div class="part-title">Consultations par mois</div>
-          <div id="freqChart"></div>
+          <div class="section-title" data-guide-key="freq-principaux" role="button" tabindex="0">Principaux résultats<span class="section-title-ico">ℹ️</span></div>
           <div class="freq-kpis" id="freqKpis"></div>
-          <div class="part-title">Nombre de sessions par semaine</div>
-          <div id="freqWeekChart"></div>
+          <div class="mat-tabs-bar">
+            <div class="section-title" data-guide-key="freq-chart" role="button" tabindex="0" style="margin:0;border-bottom:none;padding-bottom:0">Consultations par trimestre<span class="section-title-ico">ℹ️</span></div>
+            <div class="seg" id="freqGranularity">
+              <button data-gran="trimestre" class="active">Trimestre</button>
+              <button data-gran="mois">Mois</button>
+              <button data-gran="semaine">Semaine</button>
+            </div>
+          </div>
+          <div id="freqChart"></div>
+          <div id="freqWeekChart" style="display:none"></div>
         </div>
 
         <div class="tab-panel" data-brick="fiches" id="panelFiches" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent5">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent5" style="display:none">Nombre de fiches action saisies, nombre de bénéficiaires impactés et score moyen sur 4 critères notés sur 4 (données réelles).</div>
-          <div class="fiches-links-row">
-            <a href="evaluation-fiche-action.html" target="_blank" rel="noopener" class="eval-fiche-link">📄 Évaluez une fiche action en pdf</a>
-            <button class="btn-secondary-link" id="methodoBtn">📘 Méthodologie</button>
-          </div>
-          <h3 id="fichesScopeTitle"></h3>
+          <div class="section-title" data-guide-key="fiches-principaux" role="button" tabindex="0">Principaux résultats<span class="section-title-ico">ℹ️</span></div>
           <div class="hero-row-horiz" id="fichesHero"></div>
           <div id="fichesClpeLink"></div>
           <div class="fiches-grid">
             <div>
-              <div class="part-title part-title-center">Score par critère</div>
+              <div class="section-title" data-guide-key="fiches-score" role="button" tabindex="0">Score par critère<span class="section-title-ico">ℹ️</span></div>
               <div class="radar-wrap" id="fichesRadar"></div>
             </div>
             <div>
-              <div class="part-title part-title-center">Planification des actions dans l'année</div>
+              <div class="section-title" data-guide-key="fiches-planif" role="button" tabindex="0">Planification des actions dans l'année<span class="section-title-ico">ℹ️</span></div>
               <div id="fichesMonthChart"></div>
               <div class="fiches-month-legend" id="fichesMonthLegend"></div>
-              <div class="guide-btn-row" style="margin-top:8px"><button class="guide-btn" type="button" data-guide-src="guideContent6">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent6" style="display:none">Chaque action est positionnée au mois de fin de sa première étape (et non à sa date de création), pour refléter le rythme réel de mise en œuvre plutôt que celui de la saisie administrative. Une répartition étalée sur l'année traduit une planification qui lisse la charge de travail ; une concentration marquée sur quelques mois peut signaler un pilotage réactif ou une saisie tardive regroupée en fin de période plutôt qu'une programmation anticipée.</div>
             </div>
           </div>
-          <div class="part-title" style="margin-top:14px">Points forts et axes de progrès du territoire</div>
-          <div class="guide-btn-row" style="margin-top:0"><button class="guide-btn" type="button" data-guide-src="guideContent7">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent7" style="display:none">Pour chaque fiche action, l'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Jusqu'à 3 éléments de chaque côté, avec une alerte ⚠️ dès que l'observation repose sur moins de 30&nbsp;% des fiches du territoire.</div>
+          <div class="section-title" data-guide-key="fiches-axes" role="button" tabindex="0" style="margin-top:14px">Points forts et axes de progrès<span class="section-title-ico">ℹ️</span></div>
           <div class="fiches-pf-preco-grid">
             <div>
               <div class="pf-preco-col-title">✅ Points forts</div>
@@ -933,24 +945,21 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
-          <div class="guide-btn-row"><button class="guide-btn" type="button" data-guide-src="guideContent8">ℹ️ Guide de lecture</button></div><div class="guide" id="guideContent8" style="display:none">Pour chaque CLPE, l'écart du taux d'accès à l'emploi (TAE) et du taux de présence en emploi (TPE) est calculé par rapport à la moyenne de ses 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches). Cette proximité n'est pas réciproque. L'évolution du TAE et du TPE sur un an est également indiquée (données réelles). La vue région ou département sert uniquement à zoomer et filtrer, sans afficher de donnée à ces mailles : cliquez jusqu'à un CLPE précis pour voir ses résultats (la carte revient alors automatiquement en vue France entière, avec ses 10 territoires de comparaison en surbrillance). Non disponible si une région ou un département est sélectionné sans CLPE précis - mais les autres onglets restent consultables sur ce même périmètre.</div>
-          <h3 id="perfScopeTitle"></h3>
+          <div class="section-title" data-guide-key="perf-principaux" role="button" tabindex="0">Principaux résultats<span class="section-title-ico">ℹ️</span></div>
           <div class="hero-row" id="perfHero"></div>
-          <div class="part-title" id="perfTableTitle" style="display:none">Territoires les plus proches</div>
+          <div class="section-title" id="perfTableTitle" data-guide-key="perf-tableau" role="button" tabindex="0" style="display:none">Tableau de comparaison<span class="section-title-ico">ℹ️</span></div>
           <div class="table-scroll">
           <table class="clpe" id="perfTable" style="display:none">
             <thead><tr>
               <th data-sort="clpe">CLPE</th>
               <th data-sort="departement">Département</th>
               <th data-sort="region">Région</th>
-              <th data-sort="tae">TAE (%)</th>
-              <th data-sort="tpe">TPE (%)</th>
-              <th data-sort="taeD">Moy. TAE proches (%)</th>
-              <th data-sort="tpeD">Moy. TPE proches (%)</th>
-              <th data-sort="deltaTae">Δ TAE (pp)</th>
-              <th data-sort="deltaTpe">Δ TPE (pp)</th>
-              <th data-sort="evolTae">Évolution TAE / an (pp)</th>
-              <th data-sort="evolTpe">Évolution TPE / an (pp)</th>
+              <th data-sort="tae">TAE</th>
+              <th data-sort="tpe">TPE</th>
+              <th data-sort="deltaTae">Δ TAE</th>
+              <th data-sort="deltaTpe">Δ TPE</th>
+              <th data-sort="evolTae">Évolution TAE / an</th>
+              <th data-sort="evolTpe">Évolution TPE / an</th>
             </tr></thead>
             <tbody id="perfTbody"></tbody>
           </table>
@@ -1014,23 +1023,6 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
   <div class="modal-box preco-box">
     <div class="modal-head"><h3>Points forts et préconisations - Pilotage des actions</h3><button class="modal-close" id="fichesPrecoClose" aria-label="Fermer">✕</button></div>
     <div class="modal-body" id="fichesPrecoBody"></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="methodoOverlay">
-  <div class="modal-box preco-box">
-    <div class="modal-head"><h3>📘 Méthodologie - comment le score est calculé</h3><button class="modal-close" id="methodoClose" aria-label="Fermer">✕</button></div>
-    <div class="modal-body">
-      <p>Le score global est calculé sur <b>100 points</b>, à partir de 4 critères pondérés :</p>
-      <table class="method-table">
-        <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions), rattachement à un CLPE renseigné.</td></tr>
-        <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, pertinence des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
-        <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (et non exigé tant que l'échéance de l'action n'est pas atteinte). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
-        <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant, ou dont le vocabulaire se distingue du reste du réseau, est jugée plus innovante.</td></tr>
-      </table>
-      <p style="margin-top:10px">Un critère non évalué (bilan non renseigné, notamment) n'entre pas dans le score global : les poids des autres critères sont alors reproportionnés pour totaliser 100&nbsp;%, plutôt que de compter comme 0.</p>
-      <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action. Vous pouvez évaluer une fiche isolée ou un lot complet avec le même niveau de détail via l'outil <a href="evaluation-fiche-action.html" target="_blank" rel="noopener">Évaluez une fiche action en pdf</a>.</p>
-    </div>
   </div>
 </div>
 
@@ -1233,7 +1225,15 @@ function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').repla
    à chaque rendu puisque le contenu dépend souvent du territoire sélectionné). */
 var SECTION_GUIDES = {
   reponses: 'Les indicateurs de cette page portent sur le territoire sélectionné (filtres ou carte). Au niveau national, régional ou départemental, chaque CLPE compte pour un poids égal, quel que soit son nombre de répondants.',
-  'detail-question': 'Score moyen par question, en points, avec le nombre de répondants 👥 et l\'homogénéité des réponses (🟢🔵🔴 selon le niveau) entre parenthèses. Cliquer sur une partie ou une thématique affiche l\'ensemble de ses questions. Cliquer sur le numéro d\'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.<br><br><b>Vue par territoire :</b> les lignes sont regroupées par région puis par département tant qu\'un CLPE précis n\'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l\'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.'
+  'detail-question': 'Score moyen par question, en points, avec le nombre de répondants 👥 et l\'homogénéité des réponses (🟢🔵🔴 selon le niveau) entre parenthèses. Cliquer sur une partie ou une thématique affiche l\'ensemble de ses questions. Cliquer sur le numéro d\'une question affiche ses modalités de réponse et le score associé à chacune. Cliquer sur la question permet de voir les recommandations en lien avec le score obtenu.<br><br><b>Vue par territoire :</b> les lignes sont regroupées par région puis par département tant qu\'un CLPE précis n\'est pas sélectionné - cliquez sur une ligne pour descendre au niveau suivant (les résultats affichés sont alors consolidés sur l\'ensemble du regroupement). Une fois au niveau CLPE, cliquer une ligne déplie le détail question par question. Cliquer un en-tête trie le tableau.',
+  'fiches-principaux': 'Nombre de fiches action saisies, nombre de bénéficiaires impactés et score global moyen sur 100 (détail du calcul dans "Source et enjeux" ci-dessus).',
+  'fiches-score': 'Situe les fiches du territoire sur les 4 critères qui composent le score global : description, impact usager, bilan et valorisation, caractère innovant. Le détail de la pondération et des règles de calcul est disponible dans "Source et enjeux" ci-dessus.',
+  'fiches-planif': 'Chaque action est positionnée au mois de fin de sa première étape (et non à sa date de création), pour refléter le rythme réel de mise en œuvre plutôt que celui de la saisie administrative. Une répartition étalée sur l\'année traduit une planification qui lisse la charge de travail ; une concentration marquée sur quelques mois peut signaler un pilotage réactif ou une saisie tardive regroupée en fin de période plutôt qu\'une programmation anticipée.',
+  'fiches-axes': 'Pour chaque fiche action, l\'élément précis sur lequel elle se classe le plus faiblement <b>par rapport aux autres actions</b> (et non en valeur absolue) est retenu comme son axe de progrès ; à l\'inverse, celui sur lequel elle se classe le mieux est retenu comme son point fort. Un point fort ne peut pas être en même temps un axe de progrès. Jusqu\'à 3 éléments de chaque côté, avec une alerte ⚠️ dès que l\'observation repose sur moins de 30&nbsp;% des fiches du territoire.',
+  'perf-principaux': 'Pour le CLPE sélectionné, le taux d\'accès à l\'emploi (TAE) et le taux de présence en emploi (TPE), avec leur écart par rapport à la moyenne des 10 territoires les plus proches <b>socio-économiquement</b> (démographie, entreprises, chômage... - et non géographiquement : deux CLPE éloignés peuvent avoir des profils très proches), ainsi que leur évolution sur les 12 derniers mois. Cette proximité n\'est pas réciproque. Uniquement disponible pour un CLPE précis - la vue région ou département sert uniquement à zoomer et filtrer.',
+  'perf-tableau': 'Liste les 10 territoires retenus pour la comparaison, avec leurs propres résultats. Cliquer un en-tête trie le tableau.',
+  'freq-principaux': 'Dernier trimestre disponible, cumul de consultations depuis le début de l\'année (et rapporté à 1000 habitants pour comparer des territoires de tailles différentes), et évolution par rapport au trimestre précédent complet.',
+  'freq-chart': 'Nombre de consultations du tableau de bord du Réseau pour l\'emploi par les membres du CLPE (données réelles). Basculez entre les vues trimestre, mois et semaine avec les boutons à droite.'
 };
 function sectionTitle(text, key, guideHtml) {
   SECTION_GUIDES[key] = guideHtml;
@@ -2119,7 +2119,6 @@ function openQuestionModal(n) {
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
 function closeFichesPreco() { document.getElementById('fichesPrecoOverlay').classList.remove('show'); }
-function closeMethodo() { document.getElementById('methodoOverlay').classList.remove('show'); }
 
 var tableSort = { key: 'total', dir: -1 };
 /* Regroupement hiérarchique du tableau "Détail par CLPE" : région > département > CLPE.
@@ -2634,15 +2633,20 @@ function renderFreq() {
     var trimMonths = trimestreMonths(t);
     byTrim[t] = rows.filter(function (r) { return trimMonths.indexOf(r.mois) >= 0; }).reduce(function (s, r) { return s + r.nb; }, 0);
   });
-  document.getElementById('freqScopeTitle').textContent = scopeLabel();
-  var maxV = Math.max.apply(null, trimestres.map(function (t) { return byTrim[t]; }).concat([1]));
+  var byMonth = {};
+  months.forEach(function (m) {
+    byMonth[m] = rows.filter(function (r) { return r.mois === m; }).reduce(function (s, r) { return s + r.nb; }, 0);
+  });
+  var chartKeys = freqGranularity === 'mois' ? months : trimestres;
+  var chartVals = freqGranularity === 'mois' ? byMonth : byTrim;
+  var maxV = Math.max.apply(null, chartKeys.map(function (k) { return chartVals[k]; }).concat([1]));
   var html = '<div class="freq-bars">';
-  trimestres.forEach(function (t) {
-    var v = byTrim[t], h = Math.max(2, v / maxV * 110);
-    html += '<div class="freq-bar-col"><div class="fb-val">' + fmt(v, 0) + '</div><div class="fb" style="height:' + h + 'px"></div><div class="fb-lbl">' + esc(t) + '</div></div>';
+  chartKeys.forEach(function (k) {
+    var v = chartVals[k], h = Math.max(2, v / maxV * 110);
+    html += '<div class="freq-bar-col"><div class="fb-val">' + fmt(v, 0) + '</div><div class="fb" style="height:' + h + 'px"></div><div class="fb-lbl">' + esc(k) + '</div></div>';
   });
   html += '</div>';
-  document.getElementById('freqChart').innerHTML = trimestres.length ? html : '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
+  document.getElementById('freqChart').innerHTML = chartKeys.length ? html : '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
 
   var kpi = document.getElementById('freqKpis');
   if (!trimestres.length) { kpi.innerHTML = ''; return; }
@@ -2856,7 +2860,6 @@ function renderFichesMonthChart() {
 }
 function renderFiches() {
   var rows = fichesRows().filter(inScope);
-  document.getElementById('fichesScopeTitle').textContent = scopeLabel();
   var nFiches = rows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
   var nBeneficiaires = rows.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0);
   var nFichesAvecBenef = rows.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0);
@@ -3094,9 +3097,9 @@ var perfSelectedId = null, perfNearbyIds = [];
 function perfRowHTML(r) {
   var isSel = r.id === perfSelectedId, isNear = perfNearbyIds.indexOf(r.id) >= 0;
   var cls = isSel ? 'hl-row' : (isNear ? 'nearby-row' : '');
-  function deltaCell(v) { return '<td class="' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 2) + '</td>'; }
+  function deltaCell(v) { return '<td class="' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 1) + '\u00A0pp</td>'; }
   return '<tr class="' + cls + '" data-perf-id="' + esc(r.id) + '"><td><b>' + esc(r.clpe) + '</b></td><td>' + esc(r.departement) + '</td><td>' + esc(r.region) + '</td>' +
-    '<td>' + fmt(r.tae, 2) + '</td><td>' + fmt(r.tpe, 2) + '</td><td>' + fmt(r.taeD, 2) + '</td><td>' + fmt(r.tpeD, 2) + '</td>' +
+    '<td>' + fmt(r.tae, 1) + '\u00A0%</td><td>' + fmt(r.tpe, 1) + '\u00A0%</td>' +
     deltaCell(r.deltaTae) + deltaCell(r.deltaTpe) + deltaCell(r.evolTae) + deltaCell(r.evolTpe) + '</tr>';
 }
 /* Sélection d'un CLPE sur la brique Performance relative : met en surbrillance ses 10
@@ -3137,7 +3140,6 @@ function selectPerfClpe(id) {
   theMap.fitAll();
 }
 function renderPerfTable() {
-  document.getElementById('perfTableTitle').textContent = perfSelectedId ? '10 territoires socio-économiquement les plus proches de ' + PERF_ID_TO_ROW[perfSelectedId].clpe : '';
   var rows = perfSelectedId ? [PERF_ID_TO_ROW[perfSelectedId]].concat(perfNearbyIds.map(function (id) { return PERF_ID_TO_ROW[id]; }).filter(Boolean)) : [];
   if (perfTableSort.key) {
     var strKeys = { clpe: 1, region: 1, departement: 1 };
@@ -3152,21 +3154,25 @@ function renderPerfTable() {
 }
 function renderPerf() {
   perfSyncSelection();
-  document.getElementById('perfScopeTitle').textContent = perfSelectedId ? PERF_ID_TO_ROW[perfSelectedId].clpe : 'Aucun CLPE sélectionné';
+  function heroValue(label, row, key) {
+    if (!row) return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val">-</div></div>';
+    return '<div class="hero-card hero-card-emph"><div class="lbl">' + label + '</div><div class="val">' + fmt(row[key], 1) + '<span class="unit"> %</span></div></div>';
+  }
   function heroDelta(label, row, key, refKey) {
     if (!row) return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val">-</div></div>';
     var v = row[key];
-    return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val ' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 2) + '<span class="unit"> pp</span></div><div class="ct-sub" style="margin-top:4px">Territoire : ' + fmt(row[refKey.self], 2) + ' % \u00b7 Moy. proches : ' + fmt(row[refKey.peer], 2) + ' %</div></div>';
+    return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val ' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 1) + '<span class="unit"> pp</span></div><div class="ct-sub" style="margin-top:4px">Territoire : ' + fmt(row[refKey.self], 1) + ' % \u00b7 Moy. proches : ' + fmt(row[refKey.peer], 1) + ' %</div></div>';
   }
   function heroEvol(label, row, key) {
     if (!row) return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val">-</div></div>';
     var v = row[key];
-    return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val ' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 2) + '<span class="unit"> pp</span></div><div class="ct-sub" style="margin-top:4px">Sur les 12 derniers mois</div></div>';
+    return '<div class="hero-card"><div class="lbl">' + label + '</div><div class="val ' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 1) + '<span class="unit"> pp</span></div><div class="ct-sub" style="margin-top:4px">Sur les 12 derniers mois</div></div>';
   }
   var row = perfSelectedId ? PERF_ID_TO_ROW[perfSelectedId] : null;
   document.getElementById('perfHero').innerHTML = !row
     ? '<p class="preco-empty">' + ((state.dept || state.region) ? 'Cette brique ne montre des résultats que pour un CLPE précis (cliquez-en un sur la carte) : pas de résultat pour une sélection région/département.' : 'Sélectionnez un CLPE (carte ou filtres) pour voir son écart aux territoires les plus comparables socio-économiquement.') + '</p>'
-    : heroDelta('Écart TAE aux 10 territoires proches', row, 'deltaTae', { self: 'tae', peer: 'taeD' }) + heroDelta('Écart TPE aux 10 territoires proches', row, 'deltaTpe', { self: 'tpe', peer: 'tpeD' }) +
+    : heroValue('Taux d\u2019accès à l\u2019emploi (TAE)', row, 'tae') + heroValue('Taux de présence en emploi (TPE)', row, 'tpe') +
+      heroDelta('Écart TAE aux 10 territoires proches', row, 'deltaTae', { self: 'tae', peer: 'taeD' }) + heroDelta('Écart TPE aux 10 territoires proches', row, 'deltaTpe', { self: 'tpe', peer: 'tpeD' }) +
       heroEvol('Évolution du TAE sur un an', row, 'evolTae') + heroEvol('Évolution du TPE sur un an', row, 'evolTpe');
   renderPerfTable();
 }
@@ -3862,6 +3868,27 @@ var BRICKS = {
   }
 };
 var activeBrick = null;
+var freqGranularity = 'trimestre';
+/* Titre flottant "Source et enjeux" : n'apparaît qu'une fois le titre d'origine (dans le
+   bloc dépliable, en haut de la colonne principale) sorti de l'écran, pour ne jamais le
+   dupliquer inutilement en haut de page. Fonction de portée globale (appelée aussi bien
+   depuis init() que depuis le clic sur un onglet) - un seul IntersectionObserver actif à la
+   fois, ré-attaché à chaque appel sur le résumé de la brique active. */
+var sourceObserver = null;
+function watchActiveSummary() {
+  var floatingTitle = document.getElementById('floatingSourceTitle');
+  if (sourceObserver) sourceObserver.disconnect();
+  var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + activeBrick + '"]');
+  var summary = activePanel ? activePanel.querySelector('summary') : null;
+  if (!summary) { floatingTitle.style.display = 'none'; return; }
+  var titleHtml = summary.querySelector('h2') ? summary.querySelector('h2').innerHTML : summary.textContent;
+  floatingTitle.innerHTML = titleHtml + '<span class="hint">Cliquer pour ' + (activePanel.querySelector('details').open ? 'replier' : 'déplier') + '</span>';
+  floatingTitle.dataset.color = activePanel.dataset.color;
+  sourceObserver = new IntersectionObserver(function (entries) {
+    floatingTitle.style.display = entries[0].isIntersecting ? 'none' : 'flex';
+  }, { rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 68) + 'px 0px 0px 0px', threshold: 0 });
+  sourceObserver.observe(summary);
+}
 var theMap = new CockpitMap({ containerId: 'map', levelBoxId: 'mapLevel', indicSelId: 'mapIndic', legendId: 'mapLegend', indicators: [] });
 theMap.setBrick = function (cfg) {
   cfg = cfg || { indicators: [] };
@@ -3950,6 +3977,7 @@ function bindEvents() {
       document.querySelectorAll('.intro-blocks-panel').forEach(function (p) { p.style.display = (p.dataset.brick === tab.dataset.brick) ? '' : 'none'; });
       document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       activateBrick(tab.dataset.brick);
+      watchActiveSummary();
       document.getElementById('tabContent').className = 'tab-content tab-content-' + tab.dataset.color;
       updateDataUpdatedLabel(tab.dataset.brick);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4001,6 +4029,14 @@ function bindEvents() {
     document.querySelectorAll('#qViewToggle button').forEach(function (b) { b.classList.toggle('active', b === btn); });
     renderQuestionDetail();
     if (state.expanded) renderTable();
+  });
+  document.getElementById('freqGranularity').addEventListener('click', function (e) {
+    var btn = e.target.closest('button'); if (!btn) return;
+    freqGranularity = btn.dataset.gran;
+    document.querySelectorAll('#freqGranularity button').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    document.getElementById('freqChart').style.display = freqGranularity === 'semaine' ? 'none' : '';
+    document.getElementById('freqWeekChart').style.display = freqGranularity === 'semaine' ? '' : 'none';
+    if (freqGranularity === 'semaine') renderFreqWeek(); else renderFreq();
   });
   document.getElementById('questionDetail').addEventListener('click', function (e) {
     if (e.target.closest('.info-icon')) return;
@@ -4103,6 +4139,23 @@ function bindEvents() {
   document.getElementById('guidePopupClose').addEventListener('click', function () { document.getElementById('guidePopupOverlay').classList.remove('show'); });
   document.getElementById('legalMentionsBtn').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.add('show'); });
   document.getElementById('legalMentionsClose').addEventListener('click', function () { document.getElementById('legalMentionsOverlay').classList.remove('show'); });
+  /* Titre flottant "Source et enjeux" : n'apparaît qu'une fois le titre d'origine (dans le
+     bloc dépliable, en haut de la colonne principale) sorti de l'écran, pour ne jamais le
+     dupliquer inutilement en haut de page. Un seul IntersectionObserver, ré-attaché à chaque
+     changement d'onglet sur le résumé actif. */
+  document.getElementById('floatingSourceTitle').addEventListener('click', function () {
+    var activePanel = document.querySelector('.intro-blocks-panel[data-brick="' + activeBrick + '"]');
+    var details = activePanel ? activePanel.querySelector('details') : null;
+    if (!details) return;
+    details.open = !details.open;
+    if (details.querySelector('summary').scrollIntoView) details.querySelector('summary').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    watchActiveSummary();
+  });
+  document.querySelectorAll('.intro-blocks-panel details').forEach(function (d) {
+    d.addEventListener('toggle', watchActiveSummary);
+  });
+  watchActiveSummary();
+
   document.getElementById('cockpitTerritoryBar').addEventListener('click', function () {
     var panel = document.getElementById('mapFilterCollapse');
     var expanded = panel.style.display !== 'none';
@@ -4127,18 +4180,13 @@ function bindEvents() {
   document.getElementById('guidePopupOverlay').addEventListener('click', function (e) { if (e.target.id === 'guidePopupOverlay') document.getElementById('guidePopupOverlay').classList.remove('show'); });
   document.getElementById('pfTagOverlay').addEventListener('click', function (e) { if (e.target.id === 'pfTagOverlay') document.getElementById('pfTagOverlay').classList.remove('show'); });
   document.getElementById('fichesPrecoOverlay').addEventListener('click', function (e) { if (e.target.id === 'fichesPrecoOverlay') closeFichesPreco(); });
-  document.getElementById('methodoBtn').addEventListener('click', function () {
-    document.getElementById('methodoOverlay').classList.add('show');
-  });
-  document.getElementById('methodoClose').addEventListener('click', closeMethodo);
-  document.getElementById('methodoOverlay').addEventListener('click', function (e) { if (e.target.id === 'methodoOverlay') closeMethodo(); });
   document.addEventListener('click', function (e) {
     var icon = e.target.closest('.info-icon');
     if (icon) { e.stopPropagation(); openInfoPopup(icon, icon.getAttribute('data-info')); return; }
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); closeMethodo(); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); document.getElementById('legalMentionsOverlay').classList.remove('show'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); document.getElementById('legalMentionsOverlay').classList.remove('show'); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
       var k = th.dataset.sort;
@@ -4327,6 +4375,7 @@ function init() {
       refreshFilters();
       theMap.show();
       activateBrick('maturite');
+      watchActiveSummary();
       renderAll();
     }).catch(function (err) { showError(err.message || String(err)); });
 }
@@ -4362,7 +4411,7 @@ init();
         element: '#cockpitTerritoryBar',
         popover: {
           title: 'Le territoire sélectionné',
-          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi.',
+          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi. Cliquez sur ce bandeau à tout moment pour afficher ou masquer la carte et les filtres, et changer de territoire.',
           side: 'bottom'
         }
       },

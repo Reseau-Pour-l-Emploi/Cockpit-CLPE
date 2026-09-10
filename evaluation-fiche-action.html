@@ -1087,12 +1087,16 @@ function toFrenchTitleCase(s) {
    chaque classement pondéré par criticité) alimentent les colonnes axe_pct et axe_pct_fort,
    exactement comme sur le site. */
 var SITE_SOURCE_AXES = ['description', 'problematique', 'etapes', 'ciblage', 'suivi', 'resultats', 'impact_usager', 'maj', 'bilan', 'valorisation', 'diversite_acteurs', 'efficacite', 'vigilance', 'moyens'];
-function buildSiteSourceCsv(rows, normalized, allScores) {
+async function buildSiteSourceCsv(rows, normalized, allScores) {
+  var casing = await fetchReferentielCasingLookup();
+  var nCasingHits = 0;
   var groups = {};
   rows.forEach(function (row, idx) {
-    var region = toFrenchTitleCase(row['C_LBLREGION'] || '');
-    var dept = toFrenchTitleCase(row['C_LBLDEPARTEMENT'] || '');
-    var clpe = toFrenchTitleCase(row['C_LBLTERRITOIRE'] || '');
+    var rawClpe = row['C_LBLTERRITOIRE'] || '';
+    var ref = casing[normRefKey(rawClpe)];
+    var region, dept, clpe;
+    if (ref) { region = ref.region; dept = ref.departement; clpe = ref.clpe; nCasingHits++; }
+    else { region = toFrenchTitleCase(row['C_LBLREGION'] || ''); dept = toFrenchTitleCase(row['C_LBLDEPARTEMENT'] || ''); clpe = toFrenchTitleCase(rawClpe); }
     var nf = normalized[idx];
     if (!clpe || !nf.dCreation) return;
     var annee = nf.dCreation.getFullYear();
@@ -1121,7 +1125,7 @@ function buildSiteSourceCsv(rows, normalized, allScores) {
     g.idxs.forEach(function (idx) {
       var nf = normalized[idx], s = allScores[idx], row = rows[idx];
       nbActeurs += nf.acteurs.length;
-      if (nf.beneficiaires != null) { nbBenef += nf.beneficiaires; nbFichesAvecBenef++; }
+      if (nf.beneficiaires != null) { nbBenef += nf.beneficiaires; if (nf.beneficiaires > 0) nbFichesAvecBenef++; }
       sumInnovant += s.evalInnovation / 25;
       sumImpact += s.evalImpact.total / 25;
       sumQualite += s.evalDescription.total / 25;
@@ -1146,7 +1150,37 @@ function buildSiteSourceCsv(rows, normalized, allScores) {
     lines.push(out.map(function (v) { return String(v).replace(/;/g, ','); }).join(';'));
   });
 
-  return lines.join('\n');
+  return { csv: lines.join('\n'), nCasingHits: nCasingHits, nTotal: rows.length };
+}
+/* Normalise une clé (accents, apostrophes, tirets, espaces, casse) pour retrouver un CLPE
+   dans le référentiel indépendamment des variantes typographiques. */
+function normRefKey(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/['\u2019\-\s]+/g, '').trim();
+}
+/* La casse exacte des noms de région/département/CLPE dans le référentiel du site suit des
+   conventions saisies à la main (ex. "Grenoble centre", pas "Grenoble Centre") qu'aucun
+   algorithme de casse ne peut deviner de façon fiable à partir de l'export brut (tout en
+   majuscules). Si l'outil est hébergé au même endroit que le site (même dossier data/), on
+   récupère le référentiel existant pour recaser les noms à l'identique ; à défaut, on retombe
+   sur la conversion algorithmique (toFrenchTitleCase), moins fidèle mais toujours lisible. */
+var referentielCasingLookup = null;
+async function fetchReferentielCasingLookup() {
+  if (referentielCasingLookup) return referentielCasingLookup;
+  referentielCasingLookup = {};
+  try {
+    var r = await fetch('data/referentiel_clpe.csv');
+    if (!r.ok) return referentielCasingLookup;
+    var text = await r.text();
+    text.split(/\r\n|\n/).forEach(function (line) {
+      if (!line) return;
+      var parts = line.split(';');
+      if (parts.length !== 3) return;
+      var region = parts[0].trim(), dept = parts[1].trim(), clpe = parts[2].trim();
+      referentielCasingLookup[normRefKey(clpe)] = { region: region, departement: dept, clpe: clpe };
+    });
+  } catch (e) { /* Outil utilisé hors du dossier du site (local, autre hébergement) : pas de référentiel disponible, on garde le repli algorithmique. */ }
+  return referentielCasingLookup;
 }
 async function processBulkFile(file) {
   var buf = await file.arrayBuffer();
@@ -1206,13 +1240,13 @@ async function processBulkFile(file) {
   /* Agrégation par région/département/CLPE/année, au même format exact que le fichier
      source data/fiches_action.csv utilisé par le site : ce même lot déposé peut ainsi
      directement remplacer ou compléter ce fichier sur GitHub, sans étape intermédiaire. */
-  var siteSourceCsv = buildSiteSourceCsv(rows, normalized, allScores);
+  var siteSource = await buildSiteSourceCsv(rows, normalized, allScores);
 
-  return { workbook: outWb, n: outRows.length, batchSummary: batchSummary, batchSummaryForts: batchSummaryForts, siteSourceCsv: siteSourceCsv };
+  return { workbook: outWb, n: outRows.length, batchSummary: batchSummary, batchSummaryForts: batchSummaryForts, siteSourceCsv: siteSource.csv, siteSourceCasingHits: siteSource.nCasingHits, siteSourceCasingTotal: siteSource.nTotal };
 }
 
 var dropzoneBulk = document.getElementById('dropzoneBulk'), fileInputBulk = document.getElementById('fileInputBulk');
-var lastBulkWorkbook = null, lastBulkFileName = '', lastSiteSourceCsv = null;
+var lastBulkWorkbook = null, lastBulkFileName = '', lastSiteSourceCsv = null, lastSiteSourceCasing = null;
 dropzoneBulk.addEventListener('click', function () { fileInputBulk.click(); });
 dropzoneBulk.addEventListener('dragover', function (e) { e.preventDefault(); dropzoneBulk.classList.add('drag'); });
 dropzoneBulk.addEventListener('dragleave', function () { dropzoneBulk.classList.remove('drag'); });
@@ -1239,6 +1273,7 @@ async function handleBulkFile(file) {
     lastBulkWorkbook = result.workbook;
     lastBulkFileName = 'fiches_action_evaluees.csv';
     lastSiteSourceCsv = result.siteSourceCsv;
+    lastSiteSourceCasing = { hits: result.siteSourceCasingHits, total: result.siteSourceCasingTotal };
     document.getElementById('bulkCount').textContent = result.n;
     document.getElementById('bulkTxt').textContent = "fiches action évaluées. Le fichier .csv téléchargeable ci-dessous reprend toutes les colonnes d'origine, complétées de 8 colonnes : les 4 critères (description, impact, bilan, caractère innovant), le score global (calculé sur les seuls critères évalués), les critères exclus le cas échéant, les points forts et l'axe de progrès prioritaire de chaque fiche. Format point-virgule/UTF-8, identique aux autres fichiers de data/ : déposable directement dans le dépôt GitHub sans conversion.";
     document.getElementById('bulkFileName').textContent = lastBulkFileName;
@@ -1279,7 +1314,8 @@ document.getElementById('downloadSiteSourceBtn').addEventListener('click', funct
   a.href = url; a.download = 'fiches_action.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  document.getElementById('siteSourceFileName').textContent = 'fiches_action.csv - à déposer directement dans data/ sur GitHub';
+  document.getElementById('siteSourceFileName').textContent = 'fiches_action.csv - à déposer directement dans data/ sur GitHub' +
+    (lastSiteSourceCasing ? ' (' + lastSiteSourceCasing.hits + '/' + lastSiteSourceCasing.total + ' fiches recasées via le référentiel du site' + (lastSiteSourceCasing.hits < lastSiteSourceCasing.total ? ', le reste en casse approximative' : '') + ')' : '');
 });
 
 document.getElementById('downloadTemplateBtn').addEventListener('click', function () {
