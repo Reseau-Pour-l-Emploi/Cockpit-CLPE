@@ -912,6 +912,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
           </div>
           <div id="freqChart"></div>
+          <div class="fiches-month-legend" id="freqMonthLegend"></div>
           <div id="freqWeekChart" style="display:none"></div>
         </div>
 
@@ -2637,21 +2638,64 @@ function renderFreq() {
   months.forEach(function (m) {
     byMonth[m] = rows.filter(function (r) { return r.mois === m; }).reduce(function (s, r) { return s + r.nb; }, 0);
   });
-  var chartKeys = freqGranularity === 'mois' ? months : trimestres;
-  var chartVals = freqGranularity === 'mois' ? byMonth : byTrim;
-  var maxV = Math.max.apply(null, chartKeys.map(function (k) { return chartVals[k]; }).concat([1]));
-  /* Au-delà d'une douzaine de barres (typiquement la vue par mois sur plusieurs années),
-     n'étiqueter qu'une barre sur N pour éviter un axe des abscisses surchargé - la barre
-     elle-même reste affichée pour chaque période, seule l'étiquette texte est éclaircie. */
-  var labelEvery = Math.max(1, Math.ceil(chartKeys.length / 12));
-  var html = '<div class="freq-bars">';
-  chartKeys.forEach(function (k, i) {
-    var v = chartVals[k], h = Math.max(2, v / maxV * 110);
-    var lbl = (i % labelEvery === 0 || i === chartKeys.length - 1) ? esc(k) : '';
-    html += '<div class="freq-bar-col"><div class="fb-val">' + fmt(v, 0) + '</div><div class="fb" style="height:' + h + 'px" title="' + esc(k) + '"></div><div class="fb-lbl">' + lbl + '</div></div>';
-  });
-  html += '</div>';
-  document.getElementById('freqChart').innerHTML = chartKeys.length ? html : '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
+  var chartKeys = trimestres, chartVals = byTrim;
+  if (freqGranularity !== 'mois') {
+    var maxV = Math.max.apply(null, chartKeys.map(function (k) { return chartVals[k]; }).concat([1]));
+    var html = '<div class="freq-bars">';
+    chartKeys.forEach(function (k) {
+      var v = chartVals[k], h = Math.max(2, v / maxV * 110);
+      html += '<div class="freq-bar-col"><div class="fb-val">' + fmt(v, 0) + '</div><div class="fb" style="height:' + h + 'px" title="' + esc(k) + '"></div><div class="fb-lbl">' + esc(k) + '</div></div>';
+    });
+    html += '</div>';
+    document.getElementById('freqChart').innerHTML = chartKeys.length ? html : '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
+    document.getElementById('freqMonthLegend').innerHTML = '';
+  } else {
+    /* Vue par mois : 12 positions fixes (Jan à Déc), une barre par année juxtaposée à chaque
+       mois plutôt qu'une liste chronologique à plat - beaucoup plus lisible dès que
+       plusieurs années de données sont disponibles, et permet la comparaison directe d'un
+       même mois d'une année sur l'autre. */
+    var years = unique(months.map(function (m) { return m.slice(0, 4); })).sort();
+    if (!years.length) {
+      document.getElementById('freqChart').innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>';
+      document.getElementById('freqMonthLegend').innerHTML = '';
+    } else {
+      var palette = [cssVar('--ft-bleu'), cssVar('--ft-indigo'), cssVar('--ft-violet'), cssVar('--ft-jaune-dark'), cssVar('--ft-orange')];
+      var yearColors = {}; years.forEach(function (y, i) { yearColors[y] = palette[i % palette.length]; });
+      var byYearMonth = {};
+      years.forEach(function (y) {
+        byYearMonth[y] = [];
+        for (var m = 1; m <= 12; m++) {
+          var key = y + '-' + (m < 10 ? '0' + m : m);
+          byYearMonth[y].push(byMonth[key] || 0);
+        }
+      });
+      var maxMV = Math.max.apply(null, years.reduce(function (acc, y) { return acc.concat(byYearMonth[y]); }, []).concat([1]));
+      var moisLbl = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+      var W = 900, H = 220, padL = 34, padR = 10, padT = 14, padB = 26;
+      var groupW = (W - padL - padR) / 12;
+      var barGap = 2, barW = Math.max(3, (groupW - barGap * (years.length + 1)) / years.length);
+      var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Consultations par mois, comparaison annuelle">';
+      [0.25, 0.5, 0.75, 1].forEach(function (f) {
+        var y = H - padB - f * (H - padT - padB);
+        svg += '<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '" stroke="' + cssVar('--ft-sable-dark') + '" stroke-width="1"/>';
+        svg += '<text x="' + (padL - 6) + '" y="' + (y + 3).toFixed(1) + '" font-size="9" text-anchor="end" fill="' + cssVar('--ft-fg-3') + '">' + fmt(f * maxMV, 0) + '</text>';
+      });
+      for (var mi = 0; mi < 12; mi++) {
+        var gx = padL + mi * groupW;
+        years.forEach(function (y, yi) {
+          var v = byYearMonth[y][mi];
+          var bh = v ? (v / maxMV) * (H - padT - padB) : 0;
+          var bx = gx + barGap + yi * (barW + barGap);
+          var by = H - padB - bh;
+          if (v) svg += '<rect x="' + bx.toFixed(1) + '" y="' + by.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="' + yearColors[y] + '"><title>' + esc(y) + ' - ' + moisLbl[mi] + ' : ' + fmt(v, 0) + '</title></rect>';
+        });
+        svg += '<text x="' + (gx + groupW / 2).toFixed(1) + '" y="' + (H - 8) + '" font-size="9" text-anchor="middle" fill="' + cssVar('--ft-fg-3') + '">' + moisLbl[mi] + '</text>';
+      }
+      svg += '</svg>';
+      document.getElementById('freqChart').innerHTML = svg;
+      document.getElementById('freqMonthLegend').innerHTML = years.map(function (y) { return '<span><span class="fk-swatch" style="background:' + yearColors[y] + '"></span>' + esc(y) + '</span>'; }).join('');
+    }
+  }
 
   var kpi = document.getElementById('freqKpis');
   if (!trimestres.length) { kpi.innerHTML = ''; return; }
@@ -4412,6 +4456,7 @@ init();
 
   /* ---------- Parcours global : navigation générale du site ---------- */
   function globalSteps() {
+    var territoryStepOpenedPanel = false;
     return [
       {
         popover: {
@@ -4436,7 +4481,18 @@ init();
         },
         onHighlightStarted: function () {
           var panel = document.getElementById('mapFilterCollapse');
-          if (panel.style.display === 'none') document.getElementById('cockpitTerritoryBar').click();
+          territoryStepOpenedPanel = panel.style.display === 'none';
+          if (territoryStepOpenedPanel) document.getElementById('cockpitTerritoryBar').click();
+        },
+        onDeselected: function () {
+          if (territoryStepOpenedPanel) {
+            var panel = document.getElementById('mapFilterCollapse');
+            if (panel.style.display !== 'none') {
+              panel.style.display = 'none';
+              document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+            }
+            territoryStepOpenedPanel = false;
+          }
         }
       },
       {
