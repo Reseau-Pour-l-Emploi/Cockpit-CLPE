@@ -82,7 +82,7 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .ctx-filter.ctx-active{display:flex}
 .cockpit-map{height:640px;border:1px solid var(--ft-border);border-radius:8px;background:var(--ft-sable)}
 .intro-blocks-row{margin-top:16px}
-.floating-source-title{position:fixed;top:calc(var(--header-h, 68px) + 12px);z-index:800;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:8px;cursor:pointer;font-family:var(--ft-font);font-weight:700;font-size:14.5px;color:var(--ft-navy);box-shadow:var(--sh-md);animation:floatTitleIn .15s ease}
+.floating-source-title{position:fixed;z-index:840;display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;cursor:pointer;font-family:var(--ft-font);font-weight:700;font-size:14.5px;color:var(--ft-navy);border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box;background:var(--ft-white);animation:floatTitleIn .15s ease}
 .floating-source-title .hint{margin-left:auto;font-size:11.5px;font-weight:600;opacity:.75;white-space:nowrap}
 @keyframes floatTitleIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .floating-source-title[data-color="indigo"]{background:var(--ft-indigo-light);border-left:5px solid var(--ft-indigo)}
@@ -95,7 +95,7 @@ main{max-width:80vw;margin:0 auto;padding:20px 24px 56px}
 .filterbar-col{display:flex;flex-direction:column;gap:14px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-sm);padding:16px}
 .filterbar-col .fgroup{display:flex;flex-direction:column;gap:5px}
 .filterbar-col select,.filterbar-col input{width:100%;box-sizing:border-box}
-.cockpit-context-bar{display:flex;flex-direction:column;gap:8px;margin-top:14px;position:sticky;top:var(--header-h, 68px);z-index:850;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);transition:padding .15s ease,box-shadow .15s ease}
+.cockpit-context-bar{display:flex;flex-direction:column;gap:10px;position:fixed;top:var(--header-h, 68px);z-index:850;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box}
 .cockpit-context-bar.condensed{box-shadow:var(--sh-md);padding:8px 18px}
 .cockpit-territory-bar{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--ft-navy);background:var(--ft-indigo-light);padding:7px 16px;border-radius:6px;border:1.5px dashed var(--ft-indigo);cursor:pointer;font-family:var(--ft-font)}
 @media(max-width:600px){.cockpit-territory-bar{flex-wrap:wrap;font-size:14px;width:100%;box-sizing:border-box}}
@@ -668,6 +668,7 @@ footer.site .inner{max-width:80vw;margin:0 auto;padding:16px 24px;font-size:12px
         <span id="lastPeriodWrap">Dernière période disponible (<span id="lastPeriodBrick"></span>) : <b id="lastPeriodLabel"></b></span>
       </div>
     </div>
+    <div id="cockpitContextBarSpacer"></div>
 
     <div class="cockpit-layout">
       <div class="cockpit-tabs-sidebar" id="cockpitTabs">
@@ -2506,6 +2507,7 @@ function renderAll() {
   renderFichesMonthChart();
   renderPerf();
   renderCockpitGrid(g);
+  positionContextBar();
 }
 function renderResponsesBar(g) {
   var items = g.n ? g.items : [];
@@ -3930,18 +3932,45 @@ var freqGranularity = 'trimestre';
    depuis init() que depuis le clic sur un onglet) - un seul IntersectionObserver actif à la
    fois, ré-attaché à chaque appel sur le résumé de la brique active. */
 var sourceObserver = null;
+/* Les deux bandeaux flottants (territoire + titre "Source et enjeux") partagent la même
+   approche - position:fixed, avec une position recalculée dynamiquement en JS plutôt que
+   des valeurs CSS figées - pour rester alignés l'un sous l'autre sans jamais se chevaucher,
+   quelle que soit la largeur d'écran ou la longueur du contenu affiché. */
+function positionContextBar() {
+  var bar = document.getElementById('cockpitTabsRow');
+  var mainEl = document.querySelector('main');
+  var spacer = document.getElementById('cockpitContextBarSpacer');
+  if (!bar || !mainEl) return;
+  var r = mainEl.getBoundingClientRect();
+  bar.style.left = r.left + 'px';
+  bar.style.width = r.width + 'px';
+  if (spacer) spacer.style.height = (bar.getBoundingClientRect().height + 14) + 'px';
+  positionFloatingTitle();
+}
 function positionFloatingTitle() {
   var floatingTitle = document.getElementById('floatingSourceTitle');
   var col = document.querySelector('.cockpit-main-col');
-  if (!col) return;
+  var bar = document.getElementById('cockpitTabsRow');
+  if (!col || !floatingTitle) return;
   var r = col.getBoundingClientRect();
   floatingTitle.style.left = r.left + 'px';
   floatingTitle.style.width = r.width + 'px';
+  if (bar) floatingTitle.style.top = (bar.getBoundingClientRect().bottom + 10) + 'px';
 }
-window.addEventListener('resize', function () {
-  var floatingTitle = document.getElementById('floatingSourceTitle');
-  if (floatingTitle.style.display !== 'none') positionFloatingTitle();
-});
+window.addEventListener('resize', positionContextBar);
+/* Le bandeau "Territoire sélectionné" peut changer de hauteur pour des raisons qui
+   n'entraînent ni redimensionnement de fenêtre ni nouvel appel à renderAll() (ex. un nom de
+   territoire plus long qui passe à la ligne sur un écran étroit) : un ResizeObserver dédié
+   garantit que l'espaceur et le bandeau "Source et enjeux" restent toujours synchronisés
+   avec sa taille réelle, quelle qu'en soit la cause - c'est ce qui provoquait le conflit
+   visuel entre les deux bandeaux flottants. */
+if (typeof ResizeObserver !== 'undefined') {
+  var contextBarResizeObserver = new ResizeObserver(function () { positionContextBar(); });
+  document.addEventListener('DOMContentLoaded', function () {
+    var bar = document.getElementById('cockpitTabsRow');
+    if (bar) contextBarResizeObserver.observe(bar);
+  });
+}
 function watchActiveSummary() {
   var floatingTitle = document.getElementById('floatingSourceTitle');
   if (sourceObserver) sourceObserver.disconnect();
@@ -4034,12 +4063,11 @@ function bindEvents() {
     function updateHeaderOffset() {
       document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
     }
-    /* Les onglets sont en position:sticky, collés juste sous l'en-tête (lui-même sticky) :
-       une fois réellement "collés", leur rectangle atteint exactement ce décalage (offset de
-       l'en-tête), pas 0 (l'en-tête étant au-dessus, avec un z-index supérieur). */
+    /* Le bandeau est en position:fixed (plus sticky) : son rectangle ne bouge donc plus avec
+       le défilement, on ne peut plus détecter l'état "condensé" via sa position - on se base
+       directement sur la position de défilement de la page. */
     function onScroll() {
-      var offset = header.offsetHeight;
-      var stuck = tabs.getBoundingClientRect().top <= offset + 1;
+      var stuck = window.scrollY > 4;
       tabs.classList.toggle('condensed', stuck);
       btn.classList.toggle('show', stuck);
     }
@@ -4452,6 +4480,7 @@ function init() {
       updateDataUpdatedLabel('maturite');
       document.getElementById('loader').style.display = 'none';
       document.getElementById('app').style.display = 'block';
+      positionContextBar();
       refreshFilters();
       theMap.show();
       activateBrick('maturite');
