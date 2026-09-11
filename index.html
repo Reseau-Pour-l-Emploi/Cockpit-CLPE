@@ -89,14 +89,18 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .filterbar-col .fgroup{display:flex;flex-direction:column;gap:5px}
 .filterbar-col select,.filterbar-col input{width:100%;box-sizing:border-box}
 .cockpit-context-bar{display:flex;flex-direction:column;gap:10px;margin-top:14px;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box}
-.cockpit-territory-bar{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--ft-navy);background:var(--ft-indigo-light);padding:7px 16px;border-radius:6px;border:1.5px dashed var(--ft-indigo);cursor:pointer;font-family:var(--ft-font)}
+.cockpit-territory-bar{display:flex;align-items:center;flex-wrap:wrap;gap:14px;font-family:var(--ft-font);background:var(--ft-indigo-light);padding:7px 16px;border-radius:6px;border:1.5px dashed var(--ft-indigo)}
+.territory-toggle{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--ft-navy);background:none;border:none;padding:0;cursor:pointer;font-family:var(--ft-font)}
+.territory-filters-inline{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.territory-filters-inline .fgroup{margin:0}
+.territory-filters-inline label{font-size:10.5px}
+.territory-filters-inline select,.territory-filters-inline input{font-size:12px;padding:5px 8px;min-width:130px}
 @media(max-width:600px){.cockpit-territory-bar{flex-wrap:wrap;font-size:14px;width:100%;box-sizing:border-box}}
-.cockpit-territory-bar:hover{background:var(--ft-indigo);color:#fff}
-.cockpit-territory-bar:hover b{color:#fff}
+.territory-toggle:hover{color:var(--ft-indigo-dark, var(--ft-indigo))}
+.territory-toggle:hover .territory-change-hint{text-decoration:underline}
 .territory-change-hint{font-size:12px;font-weight:600;color:var(--ft-indigo);white-space:nowrap}
 .floating-territory-bar{position:fixed;top:calc(var(--header-h, 68px) + 10px);left:50%;transform:translateX(-50%);z-index:860;display:none;box-shadow:var(--sh-md);animation:floatTitleIn .15s ease}
 @keyframes floatTitleIn{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.cockpit-territory-bar:hover .territory-change-hint{color:#fff}
 .cockpit-meta-bar{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ft-fg-3)}
 .cockpit-meta-bar b{color:var(--ft-fg-2);font-weight:600}
 /* Barre latérale de gauche : fond blanc pour le conteneur, chaque onglet avec sa propre
@@ -202,6 +206,8 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 @media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}.share-btn-wrap{width:auto;display:inline-block}}
 .sidebar-sep{border:none;border-top:1px solid var(--ft-border);margin:10px 0 8px}
 .btn-sidebar-link{display:block;width:100%;box-sizing:border-box;text-align:center;background:var(--ft-white);color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:9px 12px;font-size:11.5px;font-weight:600;text-decoration:none;margin-top:8px;line-height:1.3}
+.btn-suggestion-link{display:block;width:100%;box-sizing:border-box;text-align:center;background:transparent;color:var(--ft-fg-3);border:1px dashed var(--ft-border);border-radius:8px;padding:8px 12px;font-size:11px;font-weight:600;text-decoration:none;margin-top:14px;line-height:1.3}
+.btn-suggestion-link:hover{color:var(--ft-indigo);border-color:var(--ft-indigo)}
 .btn-academie-link{display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;background:var(--ft-white);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:8px 10px;text-decoration:none;margin-top:8px;overflow:hidden}
 .btn-academie-link img{width:30px;height:auto;flex:none}
 .btn-academie-link span{color:var(--ft-indigo);font-size:11px;font-weight:600;line-height:1.25;min-width:0}
@@ -336,6 +342,7 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .radar-wrap svg{max-width:100%;height:auto}
 .info-icon{position:relative;display:inline-flex;align-items:center;cursor:pointer;font-size:12px;margin-left:5px;line-height:1;vertical-align:middle}
 .info-popup{display:none;position:fixed;z-index:1400;width:300px;max-width:88vw;background:var(--ft-navy);color:#fff;font-size:12.5px;line-height:1.6;padding:16px 18px;border-radius:8px;box-shadow:var(--sh-md)}
+.info-popup a{color:var(--ft-jaune);font-weight:700;text-decoration:underline;cursor:pointer}
 .info-popup.show{display:block}
 .info-popup-close{position:absolute;top:8px;right:10px;background:none;border:none;color:#fff;font-size:14px;cursor:pointer;opacity:.8;line-height:1}
 .info-popup-close:hover{opacity:1}
@@ -625,7 +632,9 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css">
 <style>
   /* Habillage driver.js aux couleurs du cockpit */
-  .driver-popover{border-radius:10px;box-shadow:0 8px 28px rgba(13,20,64,.25);max-width:340px}
+  .driver-popover{border-radius:10px;box-shadow:0 8px 28px rgba(13,20,64,.25);max-width:340px;cursor:move}
+  .driver-popover-description,.driver-popover-title{cursor:auto}
+  .driver-popover-footer,.driver-popover-navigation-btns,button.driver-popover-close-btn{cursor:auto}
   .driver-popover-title{color:var(--ft-navy);font-family:var(--ft-font);font-size:15px}
   .driver-popover-description{color:var(--ft-fg-2);font-family:var(--ft-font);font-size:13px;line-height:1.5}
   .driver-popover-progress-text{font-family:var(--ft-font);font-size:11px;color:var(--ft-fg-3)}
@@ -694,7 +703,14 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
   <div id="app" style="display:none">
 
     <div class="cockpit-context-bar" id="cockpitTabsRow">
-      <button class="cockpit-territory-bar" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint" id="territoryChangeHint">✏️ Afficher la carte et les filtres</span></button>
+      <div class="cockpit-territory-bar" id="cockpitTerritoryBarWrap">
+        <button class="territory-toggle" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint" id="territoryChangeHint">✏️ Afficher la carte et les filtres</span></button>
+        <div class="territory-filters-inline" id="territoryFiltersInline">
+          <div class="fgroup"><label for="fRegion">Région</label><select id="fRegion"></select></div>
+          <div class="fgroup"><label for="fDept">Département</label><select id="fDept"></select></div>
+          <div class="fgroup"><label for="fClpe">CLPE</label><input type="text" id="fClpe" list="fClpeList" placeholder="Tous" autocomplete="off"><datalist id="fClpeList"></datalist></div>
+        </div>
+      </div>
       <div class="cockpit-meta-bar" id="cockpitMetaBar">
         <span>Données mises à jour le <b id="dataUpdatedLabel"></b></span>
         <span id="lastPeriodWrap">Dernière période disponible (<span id="lastPeriodBrick"></span>) : <b id="lastPeriodLabel"></b></span>
@@ -754,6 +770,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
           <span>Pour vous accompagner</span>
         </a>
         </div>
+        <a class="btn-reset btn-suggestion-link" id="suggestionLink" href="#" target="_blank" rel="noopener">💡 Suggérer une amélioration</a>
       </div>
       <div class="source-tab-col" id="sourceTabCol" role="button" tabindex="0">
         <span id="sourceTabColText"></span>
@@ -871,9 +888,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="unmatched-note" id="unmatchedNote"></div>
       </div>
       <div class="filterbar-col" id="mainFilterbar">
-        <div class="fgroup"><label for="fRegion">Région</label><select id="fRegion"></select></div>
-        <div class="fgroup"><label for="fDept">Département</label><select id="fDept"></select></div>
-        <div class="fgroup"><label for="fClpe">CLPE</label><input type="text" id="fClpe" list="fClpeList" placeholder="Tous" autocomplete="off"><datalist id="fClpeList"></datalist></div>
+        <div class="territory-filters-slot" id="territoryFiltersSlot"></div>
         <div class="fgroup"><label>Niveau géographique</label>
           <div class="seg" id="mapLevel">
             <button data-level="region">Région</button>
@@ -1193,7 +1208,7 @@ function positionFloating(el, triggerEl) {
 }
 function openInfoPopup(triggerEl, text) {
   var el = document.getElementById('infoPopup');
-  document.getElementById('infoPopupBody').textContent = text;
+  document.getElementById('infoPopupBody').innerHTML = text;
   el.classList.add('show');
   positionFloating(el, triggerEl);
   el._trigger = triggerEl;
@@ -2012,7 +2027,7 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   var html = '<div class="mat-grid"><div class="mat-indic-stack">';
   html += sectionTitle('Principaux résultats', hostId + '-principaux', 'Niveau de maturité et Auto-évaluation sont ramenés sur une échelle de 4 pour une lecture directe. Un écart entre les deux signale une différence entre la perception générale des membres et le détail des réponses. Fondamentaux et Pratiques détaillent les deux dimensions qui composent le niveau de maturité.');
   html += '<div class="mat-pair">';
-  html += '<div class="hero-card"><div class="lbl">Niveau de maturité' + infoIcon("Score total ramené sur une échelle de 4, pour permettre une lecture directe du niveau de maturité du CLPE, indépendamment du barème détaillé du questionnaire. Le score détaillé (sur " + META.totalMax + ") est rappelé entre parenthèses.") + '</div><div class="val">' + niveauHTML(g.total, META.totalMax) + '</div><div class="track"><div class="fill" style="width:' + (niveauValue(g.total, META.totalMax) / 4 * 100) + '%"></div></div>' +
+  html += '<div class="hero-card"><div class="lbl">Niveau de maturité' + infoIcon("Ce score est obtenu grâce aux réponses au questionnaire partagé avec les membres des comités locaux dans le cadre de la Démarche de progression et d'impact des Comités locaux pour l'emploi (CLPE). Score total ramené sur une échelle de 4, pour permettre une lecture directe du niveau de maturité du CLPE, indépendamment du barème détaillé du questionnaire. Le score détaillé (sur " + META.totalMax + ") est rappelé entre parenthèses.<br><br><a href=\"#\" class=\"info-open-source\">Pour en savoir plus</a>") + '</div><div class="val">' + niveauHTML(g.total, META.totalMax) + '</div><div class="track"><div class="fill" style="width:' + (niveauValue(g.total, META.totalMax) / 4 * 100) + '%"></div></div>' +
     (totalHomog == null ? '' : '<div class="homog-line">' + homogBadge(totalHomog) + '</div>') + '</div>';
   html += '<div class="hero-card"><div class="lbl">Auto-évaluation' + infoIcon(partInfoText('auto')) + '</div><div class="val">' + (g.auto == null ? '-' : fmt(g.auto, 1)) + '<span class="unit"> / 4</span></div><div class="auto-lbl">' + esc(autoTxt) + '</div>' +
     (autoHomog == null ? '' : '<div class="homog-line">' + homogBadge(autoHomog) + '</div>') + '</div>';
@@ -2026,7 +2041,7 @@ function renderIndicatorPanel(hostId, g, title, geoLine) {
   });
   html += '</div>';
   html += '</div><div class="mat-col-divider">';
-  html += sectionTitle('Analyse thématique', hostId + '-thematique', 'Répartit le niveau de maturité en 4 dimensions complémentaires (dynamique de fonctionnement, socle commun, pilotage et impact, mutualisation des offres de services). Plus le résultat se rapproche du bord, plus les pratiques correspondantes sont installées, partagées et mobilisées dans la durée.') + '<div class="radar-wrap" id="' + hostId + 'Radar"></div>';
+  html += sectionTitle('Analyse thématique de la maturité', hostId + '-thematique', 'Répartit le niveau de maturité en 4 dimensions complémentaires (dynamique de fonctionnement, socle commun, pilotage et impact, mutualisation des offres de services). Plus le résultat se rapproche du bord, plus les pratiques correspondantes sont installées, partagées et mobilisées dans la durée.') + '<div class="radar-wrap" id="' + hostId + 'Radar"></div>';
   html += '</div></div>';
   html += buildAxesEtPointsFortsHTML(g.items, g);
   host.innerHTML = html;
@@ -2584,7 +2599,7 @@ function renderResponsesBar(g) {
     structMoreBtn.style.display = tagsEl.scrollHeight > tagsEl.clientHeight + 2 ? 'inline-block' : 'none';
   });
   var nCopres = g.n ? g.items.filter(function (r) { return r.copresident; }).length : 0;
-  document.getElementById('globalCopresLine').textContent = g.n === 0 ? '' : (nCopres > 0 ? 'Un co-président a répondu (' + nCopres + ')' : 'Aucun co-président n\u2019a répondu');
+  document.getElementById('globalCopresLine').textContent = g.n === 0 ? '' : (nCopres > 0 ? 'Co-président ayant répondu : ' + nCopres : 'Aucun co-président n\u2019a répondu');
 }
 
 /* ===== Brique : Fréquentation TDB RPE ===== */
@@ -2676,6 +2691,27 @@ function trimestreMonths(tKey) {
   var y = tKey.slice(0, 4), q = +tKey.slice(6);
   var startM = (q - 1) * 3 + 1;
   return [0, 1, 2].map(function (i) { var mm = startM + i; return y + '-' + (mm < 10 ? '0' + mm : mm); });
+}
+/* Moyenne nationale du ratio "cumul depuis janvier pour 1000 habitants", calculée une fois
+   par année (mise en cache) : moyenne des ratios individuels de chaque CLPE disposant à la
+   fois d'un cumul de consultations et d'une population connue - chaque CLPE compte pour un,
+   indépendamment de sa taille, pour donner un repère de territoire "moyen" plutôt qu'un ratio
+   national pondéré par les grandes agglomérations. */
+var freqNationalRatioCache = {};
+function computeNationalFreqRatioAvg(year) {
+  if (freqNationalRatioCache[year] !== undefined) return freqNationalRatioCache[year];
+  var byClpe = {};
+  TDB_DATA.forEach(function (r) { if (r.mois.slice(0, 4) === year) { byClpe[r.clpe] = (byClpe[r.clpe] || 0) + r.nb; } });
+  var popByClpe = {};
+  POP_DATA.forEach(function (r) { popByClpe[r.clpe] = (popByClpe[r.clpe] || 0) + r.population; });
+  var ratios = [];
+  Object.keys(byClpe).forEach(function (clpeName) {
+    var p = popByClpe[clpeName];
+    if (p) ratios.push(byClpe[clpeName] / p * 1000);
+  });
+  var result = ratios.length ? avg(ratios) : null;
+  freqNationalRatioCache[year] = result;
+  return result;
 }
 function renderFreq() {
   var rows = TDB_DATA.filter(inScope);
@@ -2782,7 +2818,7 @@ function renderFreq() {
   kpi.innerHTML =
     '<div class="hero-card"><div class="lbl">Dernier trimestre</div><div class="val">' + fmt(lastTrimVal, 0) + '</div><div class="ct-sub" style="margin-top:4px">' + esc(lastTrim) + (isComplete(lastTrim) ? '' : ' (partiel)') + '</div></div>' +
     '<div class="hero-card"><div class="lbl">Cumul depuis le début de l\u2019année</div><div class="val">' + cumulYTD.toLocaleString('fr-FR') + '</div><div class="ct-sub" style="margin-top:4px">' + esc(currentYear) + '</div></div>' +
-    (pop ? '<div class="hero-card"><div class="lbl">Cumul depuis le début de l\u2019année, pour 1 000 habitants</div><div class="val">' + fmt(cumulYTD / pop * 1000, 2) + '</div></div>' : '') +
+    (pop ? '<div class="hero-card"><div class="lbl">Cumul depuis le début de l\u2019année, pour 1 000 habitants</div><div class="val">' + fmt(cumulYTD / pop * 1000, 2) + '</div>' + (function () { var nat = computeNationalFreqRatioAvg(currentYear); return nat != null ? '<div class="ct-sub" style="margin-top:4px">Moyenne nationale (par CLPE) : ' + fmt(nat, 2) + '</div>' : ''; })() + '</div>' : '') +
     evoHtml;
 }
 
@@ -3624,7 +3660,7 @@ function buildReportPageMaturite() {
 
   var autoTxt = g.auto == null ? 'Non renseignée' : (CONFIG.autoLabels[Math.round(g.auto)] || '-');
   var nCopres = records.filter(function (r) { return r.copresident; }).length;
-  html += '<div class="pr-resp-row"><b>' + (geoLine ? esc(geoLine) + ' \u00b7 ' : '') + g.n + ' répondant' + (g.n > 1 ? 's' : '') + ' \u00b7 ' + structures.length + ' structure' + (structures.length > 1 ? 's' : '') + ' distincte' + (structures.length > 1 ? 's' : '') + ' \u00b7 ' + (nCopres > 0 ? 'un co-président a répondu (' + nCopres + ')' : 'aucun co-président n\u2019a répondu') + '</b>' +
+  html += '<div class="pr-resp-row"><b>' + (geoLine ? esc(geoLine) + ' \u00b7 ' : '') + g.n + ' répondant' + (g.n > 1 ? 's' : '') + ' \u00b7 ' + structures.length + ' structure' + (structures.length > 1 ? 's' : '') + ' distincte' + (structures.length > 1 ? 's' : '') + ' \u00b7 ' + (nCopres > 0 ? 'co-président ayant répondu : ' + nCopres : 'aucun co-président n\u2019a répondu') + '</b>' +
     '<div class="pr-structs">' + structures.map(function (s) { return '<span class="pr-tag">' + esc(s) + '</span>'; }).join('') + '</div></div>';
 
   html += '<div class="pr-sect-intro">Le niveau de maturité permet d\u2019apprécier la capacité du CLPE à fonctionner collectivement, à coordonner les acteurs et à produire des résultats utiles pour le territoire. Il repose sur deux dimensions complémentaires : les <b>fondamentaux</b> nécessaires au bon fonctionnement du comité et les <b>pratiques</b> qui traduisent son niveau de coopération, de pilotage et d\u2019impact.</div>';
@@ -4264,6 +4300,11 @@ function bindEvents() {
     window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     shareMenu.style.display = 'none';
   });
+  (function () {
+    var subject = 'Suggestions d\u2019amélioration Cockpit CLPE';
+    var body = 'Bonjour,\n\nJ\u2019utilise le Cockpit de pilotage des CLPE et je souhaite partager la suggestion d\u2019amélioration suivante :\n\n[Décrivez ici votre suggestion]\n\nMerci !';
+    document.getElementById('suggestionLink').href = 'mailto:denis.gorce@francetravail.fr?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  })();
   document.getElementById('backToTopBtn').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
   (function () {
     var btn = document.getElementById('backToTopBtn');
@@ -4461,6 +4502,17 @@ function bindEvents() {
     var expanded = panel.style.display !== 'none';
     panel.style.display = expanded ? 'none' : '';
     this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    var filtersInline = document.getElementById('territoryFiltersInline');
+    var filtersSlot = document.getElementById('territoryFiltersSlot');
+    if (!expanded) {
+      /* On déplie : la carte apparaît, les filtres territoire rejoignent leur emplacement
+         habituel à droite de la carte. */
+      Array.prototype.slice.call(filtersInline.children).forEach(function (el) { filtersSlot.appendChild(el); });
+    } else {
+      /* On replie : les filtres territoire remontent dans le bandeau, toujours accessibles
+         sans avoir à redéplier la carte. */
+      Array.prototype.slice.call(filtersSlot.children).forEach(function (el) { filtersInline.appendChild(el); });
+    }
     document.getElementById('territoryChangeHint').textContent = expanded ? '\u270F\uFE0F Afficher la carte et les filtres' : '\u270F\uFE0F Masquer la carte et les filtres';
     syncFloatingTerritoryBar();
     if (!expanded) {
@@ -4489,6 +4541,14 @@ function bindEvents() {
     if (!e.target.closest('#infoPopup')) closeInfoPopup();
   });
   document.getElementById('infoPopupClose').addEventListener('click', function (e) { e.stopPropagation(); closeInfoPopup(); });
+  document.getElementById('infoPopupBody').addEventListener('click', function (e) {
+    var link = e.target.closest('.info-open-source');
+    if (!link) return;
+    e.preventDefault();
+    closeInfoPopup();
+    var col = document.getElementById('sourceTabCol');
+    if (col.style.display !== 'none') col.click();
+  });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeInfoPopup(); closeFichesPreco(); document.getElementById('pfTagOverlay').classList.remove('show'); document.getElementById('guidePopupOverlay').classList.remove('show'); document.getElementById('legalMentionsOverlay').classList.remove('show'); } });
   document.querySelectorAll('#clpeTable thead th').forEach(function (th) {
     th.addEventListener('click', function () {
@@ -4723,6 +4783,54 @@ init();
     progressText: '{{current}} / {{total}}'
   };
 
+  /* Infobulles du parcours guidé déplaçables : un clic maintenu sur le contour de l'infobulle
+     (tout sauf les boutons/liens et le texte de description, pour laisser la sélection de
+     texte possible) permet de la faire glisser. Écouteurs délégués sur le document car
+     driver.js recrée l'infobulle à chaque étape. */
+  (function () {
+    var dragEl = null, offsetX = 0, offsetY = 0;
+    function isDraggableStart(target) {
+      var popover = target.closest('.driver-popover');
+      if (!popover) return null;
+      if (target.closest('button, a')) return null;
+      if (target.closest('.driver-popover-description')) return null;
+      return popover;
+    }
+    function startDrag(popover, clientX, clientY) {
+      dragEl = popover;
+      var rect = popover.getBoundingClientRect();
+      offsetX = clientX - rect.left;
+      offsetY = clientY - rect.top;
+      popover.style.position = 'fixed';
+      popover.style.margin = '0';
+      popover.style.left = rect.left + 'px';
+      popover.style.top = rect.top + 'px';
+      popover.style.right = 'auto';
+      popover.style.bottom = 'auto';
+    }
+    function moveDrag(clientX, clientY) {
+      if (!dragEl) return;
+      dragEl.style.left = (clientX - offsetX) + 'px';
+      dragEl.style.top = (clientY - offsetY) + 'px';
+    }
+    document.addEventListener('mousedown', function (e) {
+      var popover = isDraggableStart(e.target);
+      if (!popover) return;
+      startDrag(popover, e.clientX, e.clientY);
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function (e) { if (dragEl) moveDrag(e.clientX, e.clientY); });
+    document.addEventListener('mouseup', function () { dragEl = null; });
+    document.addEventListener('touchstart', function (e) {
+      var popover = isDraggableStart(e.target);
+      if (!popover) return;
+      var t = e.touches[0];
+      startDrag(popover, t.clientX, t.clientY);
+    }, { passive: true });
+    document.addEventListener('touchmove', function (e) { if (dragEl) { moveDrag(e.touches[0].clientX, e.touches[0].clientY); } }, { passive: true });
+    document.addEventListener('touchend', function () { dragEl = null; });
+  })();
+
   /* ---------- Parcours global : navigation générale du site ---------- */
   function globalSteps() {
     var territoryStepOpenedPanel = false;
@@ -4737,7 +4845,7 @@ init();
         element: '#cockpitTerritoryBar',
         popover: {
           title: 'Le territoire sélectionné',
-          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi. Cliquez sur ce bandeau à tout moment pour afficher ou masquer la carte et les filtres, et changer de territoire.',
+          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi. Les filtres région/département/CLPE sont directement accessibles dans ce bandeau, sans avoir besoin d\u2019afficher la carte. Cliquez sur le bandeau lui-même pour afficher ou masquer la carte et le niveau géographique.',
           side: 'bottom'
         }
       },
@@ -4745,7 +4853,7 @@ init();
         element: '.map-filter-row',
         popover: {
           title: 'Choisir un territoire',
-          description: 'Filtrez par région, département ou CLPE à gauche - ou cliquez directement sur la carte à droite : les deux sont toujours synchronisés. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active. Cliquez sur le bandeau "Territoire sélectionné" pour afficher ou masquer ce bloc.',
+          description: 'Une fois la carte affichée, les filtres région/département/CLPE rejoignent son côté droit - ou cliquez directement sur la carte : les deux sont toujours synchronisés. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active. Cliquez sur le bandeau "Territoire sélectionné" pour afficher ou masquer ce bloc ; les filtres retournent alors dans le bandeau.',
           side: 'top'
         },
         onHighlightStarted: function () {
