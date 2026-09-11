@@ -89,17 +89,19 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .filterbar-col .fgroup{display:flex;flex-direction:column;gap:5px}
 .filterbar-col select,.filterbar-col input{width:100%;box-sizing:border-box}
 .cockpit-context-bar{display:flex;flex-direction:column;gap:10px;margin-top:14px;background:var(--ft-white);padding:14px 18px;border-radius:8px;border:1px solid var(--ft-border);box-shadow:var(--sh-sm);box-sizing:border-box}
-.cockpit-territory-bar{display:flex;align-items:center;flex-wrap:wrap;gap:14px;font-family:var(--ft-font);background:var(--ft-indigo-light);padding:7px 16px;border-radius:6px;border:1.5px dashed var(--ft-indigo)}
-.territory-toggle{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--ft-navy);background:none;border:none;padding:0;cursor:pointer;font-family:var(--ft-font)}
-.territory-filters-inline{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
-.territory-filters-inline .fgroup{margin:0}
-.territory-filters-inline label{font-size:10.5px}
-.territory-filters-inline select,.territory-filters-inline input{font-size:12px;padding:5px 8px;min-width:130px}
-@media(max-width:600px){.cockpit-territory-bar{flex-wrap:wrap;font-size:14px;width:100%;box-sizing:border-box}}
-.territory-toggle:hover{color:var(--ft-indigo-dark, var(--ft-indigo))}
-.territory-toggle:hover .territory-change-hint{text-decoration:underline}
-.territory-change-hint{font-size:12px;font-weight:600;color:var(--ft-indigo);white-space:nowrap}
-.floating-territory-bar{position:fixed;top:calc(var(--header-h, 68px) + 10px);left:50%;transform:translateX(-50%);z-index:860;display:none;box-shadow:var(--sh-md);animation:floatTitleIn .15s ease}
+.cockpit-territory-bar{display:flex;align-items:center;justify-content:center;gap:14px;font-family:var(--ft-font);background:var(--ft-indigo-light);padding:10px 18px;border-radius:6px;border:1.5px dashed var(--ft-indigo);width:100%;box-sizing:border-box;flex-wrap:nowrap}
+.territory-filters-inline{display:flex;align-items:center;gap:16px;flex-wrap:nowrap}
+.territory-filters-inline .fgroup{margin:0;flex-direction:row;align-items:center;gap:6px}
+.territory-filters-inline label{font-size:13px;font-weight:600;color:var(--ft-navy);white-space:nowrap}
+.territory-filters-inline select,.territory-filters-inline input{font-size:14px;padding:6px 10px;min-width:150px}
+.territory-toggle-hint{margin-left:auto;flex:none;display:inline-flex;align-items:center;font-size:13px;font-weight:600;color:var(--ft-indigo);white-space:nowrap;background:none;border:none;padding:0;cursor:pointer;font-family:var(--ft-font)}
+.territory-toggle-hint:hover{text-decoration:underline}
+@media(max-width:900px){
+  .cockpit-territory-bar{flex-wrap:wrap;justify-content:flex-start}
+  .territory-filters-inline{flex-wrap:wrap}
+  .territory-toggle-hint{margin-left:0;width:100%;justify-content:center;padding-top:6px}
+}
+.floating-territory-bar{position:fixed;top:calc(var(--header-h, 68px) + 10px);left:50%;transform:translateX(-50%);z-index:860;display:none;box-shadow:var(--sh-md);animation:floatTitleIn .15s ease;width:auto;max-width:92vw}
 @keyframes floatTitleIn{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .cockpit-meta-bar{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ft-fg-3)}
 .cockpit-meta-bar b{color:var(--ft-fg-2);font-weight:600}
@@ -456,11 +458,6 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .preco-meta{font-size:11.5px;color:var(--ft-fg-2);margin-top:3px}
 .preco-hetero .preco-item{border-left-color:var(--ft-orange)}
 .preco-empty{font-size:12.5px;color:var(--ft-fg-3);font-style:italic}
-.pr-correlation-box{margin-top:16px}
-.pr-correlation-box:empty{margin-top:0}
-.pr-correlation-box .pr-correlation-title{font-size:13px;font-weight:700;color:var(--ft-navy);margin-bottom:6px}
-.pr-correlation-box p{font-size:12.5px;color:var(--ft-fg-2);line-height:1.5;margin:4px 0}
-.pr-correlation-note{color:var(--ft-fg-3)!important;font-size:11.5px!important;font-style:italic}
 .preco-hetero-intro{font-size:12px;color:var(--ft-fg-2);margin:0 0 8px}
 
 table.clpe{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
@@ -704,12 +701,13 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
 
     <div class="cockpit-context-bar" id="cockpitTabsRow">
       <div class="cockpit-territory-bar" id="cockpitTerritoryBarWrap">
-        <button class="territory-toggle" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint" id="territoryChangeHint">✏️ Afficher la carte</span></button>
         <div class="territory-filters-inline" id="territoryFiltersInline">
           <div class="fgroup"><label for="fRegion">Région</label><select id="fRegion"></select></div>
           <div class="fgroup"><label for="fDept">Département</label><select id="fDept"></select></div>
           <div class="fgroup"><label for="fClpe">CLPE</label><input type="text" id="fClpe" list="fClpeList" placeholder="Tous" autocomplete="off"><datalist id="fClpeList"></datalist></div>
         </div>
+        <b id="territoryLabel" style="display:none">France entière</b>
+        <button class="territory-toggle-hint" id="cockpitTerritoryBar" type="button" aria-expanded="false">✏️ Afficher la carte</button>
       </div>
       <div class="cockpit-meta-bar" id="cockpitMetaBar">
         <span>Données mises à jour le <b id="dataUpdatedLabel"></b></span>
@@ -863,13 +861,13 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
           <summary><span class="chev"></span><h2>📊 Performance relative des CLPE</h2><span class="hint">Source et enjeux</span></summary>
           <div class="section-body intro-body">
             <p>Ces données proviennent des indicateurs officiels de taux d'accès à l'emploi (TAE) et de taux de présence en emploi (TPE), rapportés à un groupe de territoires socio-économiquement comparables plutôt qu'à une moyenne nationale uniforme.</p>
+            <p>Les données présentées portent sur les accès à l'emploi à 6 mois des cohortes de demandeurs d'emploi inscrits en catégories A, B, F, G en 2025.</p>
             <p class="intro-goal">🎯 <b>L'objectif principal :</b> relativiser la performance d'un CLPE en la comparant à des territoires confrontés à des réalités socio-économiques proches, plutôt qu'à des voisins géographiques aux contextes parfois très différents.</p>
             <h3>📈 Ce que permet cette comparaison</h3>
             <p>Cette lecture a été conçue pour :</p>
             <ul>
               <li>📏 Situer un territoire par rapport à des pairs pertinents, et non par rapport à une moyenne qui gommerait les disparités de contexte.</li>
               <li>💡 Distinguer ce qui relève d'un contexte socio-économique difficile de ce qui relève de marges de progrès propres au pilotage local.</li>
-              <li>🕒 Suivre l'évolution du TAE et du TPE sur un an, pour objectiver une dynamique plutôt qu'une photographie isolée.</li>
             </ul>
             <p>Cette comparaison n'a pas vocation à classer les territoires entre eux, mais à donner un point de repère réaliste pour interpréter des résultats qui, seuls, seraient difficiles à situer.</p>
             <p>ℹ️ <b>Point de pourcentage (pp) :</b> le point de pourcentage mesure l'écart brut entre deux taux (passer de 2&nbsp;% à 3&nbsp;% représente +1 point de pourcentage), tandis que le pourcentage mesure leur évolution relative (+50&nbsp;%).</p>
@@ -912,7 +910,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
               <div class="f-summary" id="fRateSummary"></div>
               <div class="f-summary" id="fSummary"></div>
               <div class="geo" id="globalCopresLine"></div>
-              <div class="part-title struct-title-row" style="margin-top:8px">Structures ayant répondu<span class="meta-badge" id="globalStructCount"></span></div>
+              <div class="part-title struct-title-row" style="margin-top:8px">Différents types de structure ayant répondu<span class="meta-badge" id="globalStructCount"></span></div>
               <div class="tag-list-wrap" id="globalStructTagsWrap">
                 <div class="tag-list" id="globalStructTags"></div>
                 <button class="tag-list-more" id="globalStructMoreBtn" type="button" style="display:none">Voir plus</button>
@@ -1013,7 +1011,6 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
           <div class="section-title" data-guide-key="perf-principaux" role="button" tabindex="0">Principaux résultats<span class="section-title-ico">ℹ️</span></div>
           <div class="hero-row" id="perfHero"></div>
-          <div class="pr-correlation-box" id="perfCorrelationBox"></div>
           <div class="section-title" id="perfTableTitle" data-guide-key="perf-tableau" role="button" tabindex="0" style="display:none">Tableau de comparaison<span class="section-title-ico">ℹ️</span></div>
           <div class="table-scroll">
           <table class="clpe" id="perfTable" style="display:none">
@@ -1025,8 +1022,6 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
               <th data-sort="tpe">TPE</th>
               <th data-sort="deltaTae">Δ TAE</th>
               <th data-sort="deltaTpe">Δ TPE</th>
-              <th data-sort="evolTae">Évolution TAE / an</th>
-              <th data-sort="evolTpe">Évolution TPE / an</th>
             </tr></thead>
             <tbody id="perfTbody"></tbody>
           </table>
@@ -1313,6 +1308,28 @@ function themeInfoText(t) { return CONFIG.themeInfo[t]; }
    apostrophe droite standard, sans toucher au reste du texte - utilisé partout où deux
    graphies d'un même nom de territoire doivent être reconnues comme identiques. */
 function normApostrophes(s) { return (s == null ? '' : String(s)).replace(/[\u2018\u2019\u02BC\u00B4`]/g, "'"); }
+/* Certaines réponses au questionnaire ne passent pas par le fichier de correctif (faute de
+   correspondance sur les questions Q28) et gardent l'orthographe brute de la région telle que
+   saisie - qui ne correspond pas toujours au nom officiel utilisé par le GeoJSON de la carte
+   (casse, accents, tirets). Sans cette table, ces réponses restent invisibles au niveau
+   régional de la carte (observé notamment sur Île-de-France, mais concerne 11 régions). */
+var REGION_NAME_FIXES = {
+  'ILE DE FRANCE': 'Île-de-France',
+  'AUVERGNE-RHONE-ALPES': 'Auvergne-Rhône-Alpes',
+  'BOURGOGNE-FRANCHE-COMTE': 'Bourgogne-Franche-Comté',
+  'CENTRE-VAL DE LOIRE': 'Centre-Val de Loire',
+  'GRAND EST': 'Grand Est',
+  'GUADELOUPE': 'Guadeloupe',
+  'HAUTS-DE-FRANCE': 'Hauts-de-France',
+  'NOUVELLE-AQUITAINE': 'Nouvelle-Aquitaine',
+  'OCCITANIE': 'Occitanie',
+  "PROVENCE ALPES COTE D'AZUR": "Provence-Alpes-Côte d'Azur",
+  'REUNION': 'La Réunion'
+};
+function normRegionName(s) {
+  var v = normApostrophes(s);
+  return REGION_NAME_FIXES[v] || v;
+}
 function norm(s) {
   var t = String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   return t.replace(/[^a-z0-9]+/g, ' ').trim();
@@ -1469,7 +1486,7 @@ function parseWorkbook(buf, correctifRows) {
        typographique ' ou droite ', selon qu'elle vient du correctif ou de la saisie brute
        du répondant) : sans cela, un même CLPE ("Centre Val-d'Oise" vs "Centre Val-d'Oise")
        se scinde en deux lignes distinctes dans les regroupements. */
-    rec.region = normApostrophes(rec.region); rec.departement = normApostrophes(rec.departement); rec.clpe = normApostrophes(rec.clpe);
+    rec.region = normRegionName(rec.region); rec.departement = normApostrophes(rec.departement); rec.clpe = normApostrophes(rec.clpe);
     THEME_KEYS.forEach(function (t) { rec.themes[t] = num(row, CONFIG.sc[t]) || 0; });
     Object.keys(questions).forEach(function (k) {
       var n = +k;
@@ -1831,7 +1848,7 @@ function fillDatalist(id, values) {
   document.getElementById(id).innerHTML = values.map(function (v) { return '<option value="' + esc(v) + '"></option>'; }).join('');
 }
 function refreshFilters() {
-  fillSelect('fRegion', unique(REFERENTIAL.map(function (r) { return r.region; })), 'Toutes');
+  fillSelect('fRegion', unique(REFERENTIAL.map(function (r) { return r.region; })), 'France entière');
   document.getElementById('fRegion').value = state.region;
   var pool = REFERENTIAL.filter(function (r) { return !state.region || r.region === state.region; });
   fillSelect('fDept', unique(pool.map(function (r) { return r.departement; })), 'Tous');
@@ -2645,8 +2662,7 @@ function renderFreqWeek() {
   if (!weeks.length) { host.innerHTML = '<p class="preco-empty">Aucune donnée sur ce périmètre.</p>'; return; }
   var byWeek = {};
   weeks.forEach(function (w) {
-    var vals = rows.filter(function (r) { return r.semaine === w; }).map(function (r) { return r.nb; });
-    byWeek[w] = vals.length ? avg(vals) : 0;
+    byWeek[w] = rows.filter(function (r) { return r.semaine === w; }).reduce(function (s, r) { return s + r.nb; }, 0);
   });
   var vals = weeks.map(function (w) { return byWeek[w]; });
   var rawMax = Math.max.apply(null, vals.concat([1]));
@@ -3211,9 +3227,7 @@ var PERF_INDICATORS = [
   { id: 'deltaTae', label: 'Écart TAE aux territoires proches', get: function (g) { return g.deltaTae; }, dec: 2, unit: '\u00A0pp' },
   { id: 'tae', label: 'Taux d\u2019accès à l\u2019emploi (TAE, 6 mois)', get: function (g) { return g.tae; }, dec: 2, unit: '\u00A0%' },
   { id: 'tpe', label: 'Taux de présence en emploi (TPE, 6 mois)', get: function (g) { return g.tpe; }, dec: 2, unit: '\u00A0%' },
-  { id: 'deltaTpe', label: 'Écart TPE aux territoires proches', get: function (g) { return g.deltaTpe; }, dec: 2, unit: '\u00A0pp' },
-  { id: 'evolTae', label: 'Évolution du TAE sur un an', get: function (g) { return g.evolTae; }, dec: 2, unit: '\u00A0pp' },
-  { id: 'evolTpe', label: 'Évolution du TPE sur un an', get: function (g) { return g.evolTpe; }, dec: 2, unit: '\u00A0pp' }
+  { id: 'deltaTpe', label: 'Écart TPE aux territoires proches', get: function (g) { return g.deltaTpe; }, dec: 2, unit: '\u00A0pp' }
 ];
 function perfAggFor(level) {
   if (level === 'clpe') {
@@ -3237,7 +3251,7 @@ function perfRowHTML(r) {
   function deltaCell(v) { return '<td class="' + (v >= 0 ? 'ecart-pos' : 'ecart-neg') + '">' + (v >= 0 ? '+' : '') + fmt(v, 1) + '\u00A0pp</td>'; }
   return '<tr class="' + cls + '" data-perf-id="' + esc(r.id) + '"><td><b>' + esc(r.clpe) + '</b></td><td>' + esc(r.departement) + '</td><td>' + esc(r.region) + '</td>' +
     '<td>' + fmt(r.tae, 1) + '\u00A0%</td><td>' + fmt(r.tpe, 1) + '\u00A0%</td>' +
-    deltaCell(r.deltaTae) + deltaCell(r.deltaTpe) + deltaCell(r.evolTae) + deltaCell(r.evolTpe) + '</tr>';
+    deltaCell(r.deltaTae) + deltaCell(r.deltaTpe) + '</tr>';
 }
 /* Sélection d'un CLPE sur la brique Performance relative : met en surbrillance ses 10
    territoires les plus proches (socio-économiquement, pas géographiquement) sur la carte
@@ -3289,52 +3303,6 @@ function renderPerfTable() {
   document.getElementById('perfTableTitle').style.display = perfSelectedId ? '' : 'none';
   document.getElementById('perfTable').style.display = perfSelectedId ? '' : 'none';
 }
-/* Croisement entre briques : corrélation (Pearson) entre le niveau de maturité et les
-   indicateurs de Performance relative, calculée une fois sur l'ensemble des CLPE disposant
-   des deux données (indépendamment du territoire actuellement sélectionné) - une lecture
-   purement nationale, destinée à nourrir le dialogue en comité plutôt qu'à évaluer un
-   territoire précis. */
-function pearsonCorrelation(pairs) {
-  var n = pairs.length;
-  if (n < 3) return null;
-  var sx = 0, sy = 0, sxy = 0, sx2 = 0, sy2 = 0;
-  pairs.forEach(function (p) { sx += p[0]; sy += p[1]; sxy += p[0] * p[1]; sx2 += p[0] * p[0]; sy2 += p[1] * p[1]; });
-  var num = n * sxy - sx * sy;
-  var den = Math.sqrt((n * sx2 - sx * sx) * (n * sy2 - sy * sy));
-  return den ? num / den : null;
-}
-var maturitePerfCorrelationCache = null;
-function computeMaturitePerfCorrelation() {
-  if (maturitePerfCorrelationCache) return maturitePerfCorrelationCache;
-  var byClpe = {};
-  ALL.forEach(function (r) { if (r.clpe) { (byClpe[r.clpe] = byClpe[r.clpe] || []).push(r); } });
-  var pairsTae = [], pairsTpe = [];
-  Object.keys(byClpe).forEach(function (clpeName) {
-    var pid = CLPE_TO_PERF_ID[clpeName];
-    var prow = pid ? PERF_ID_TO_ROW[pid] : null;
-    if (!prow) return;
-    var g = equalWeightAgg(byClpe[clpeName]);
-    if (!g.n) return;
-    var niveau = niveauValue(g.total, META.totalMax);
-    if (niveau == null) return;
-    pairsTae.push([niveau, prow.tae]);
-    pairsTpe.push([niveau, prow.tpe]);
-  });
-  maturitePerfCorrelationCache = {
-    n: pairsTae.length,
-    rTae: pearsonCorrelation(pairsTae),
-    rTpe: pearsonCorrelation(pairsTpe)
-  };
-  return maturitePerfCorrelationCache;
-}
-function correlationStrengthLabel(r) {
-  var abs = Math.abs(r);
-  if (abs < 0.1) return 'quasi nulle';
-  if (abs < 0.3) return 'faible';
-  if (abs < 0.5) return 'modérée';
-  if (abs < 0.7) return 'assez marquée';
-  return 'marquée';
-}
 function renderPerf() {
   perfSyncSelection();
   function heroValue(label, row, key, emph) {
@@ -3356,21 +3324,8 @@ function renderPerf() {
     ? '<p class="preco-empty">' + ((state.dept || state.region) ? 'Cette brique ne montre des résultats que pour un CLPE précis (cliquez-en un sur la carte) : pas de résultat pour une sélection région/département.' : 'Sélectionnez un CLPE (carte ou filtres) pour voir son écart aux territoires les plus comparables socio-économiquement.') + '</p>'
     : heroValue('Taux d\u2019accès à l\u2019emploi (TAE)', row, 'tae', true) + heroValue('Taux de présence en emploi (TPE)', row, 'tpe', true) +
       heroValue('TAE moyen des 10 territoires proches', row, 'taeD') + heroValue('TPE moyen des 10 territoires proches', row, 'tpeD') +
-      heroDelta('Écart TAE aux 10 territoires proches', row, 'deltaTae', { self: 'tae', peer: 'taeD' }) + heroDelta('Écart TPE aux 10 territoires proches', row, 'deltaTpe', { self: 'tpe', peer: 'tpeD' }) +
-      heroEvol('Évolution du TAE sur un an', row, 'evolTae') + heroEvol('Évolution du TPE sur un an', row, 'evolTpe');
+      heroDelta('Écart TAE aux 10 territoires proches', row, 'deltaTae', { self: 'tae', peer: 'taeD' }) + heroDelta('Écart TPE aux 10 territoires proches', row, 'deltaTpe', { self: 'tpe', peer: 'tpeD' });
   renderPerfTable();
-  var corr = computeMaturitePerfCorrelation();
-  var corrBox = document.getElementById('perfCorrelationBox');
-  if (!corr || corr.n < 3 || (corr.rTae == null && corr.rTpe == null)) {
-    corrBox.innerHTML = '';
-  } else {
-    var parts = [];
-    if (corr.rTae != null) parts.push('avec le TAE : <b>r&nbsp;=&nbsp;' + fmt(corr.rTae, 2) + '</b> (' + correlationStrengthLabel(corr.rTae) + (corr.rTae >= 0 ? ', positive' : ', négative') + ')');
-    if (corr.rTpe != null) parts.push('avec le TPE : <b>r&nbsp;=&nbsp;' + fmt(corr.rTpe, 2) + '</b> (' + correlationStrengthLabel(corr.rTpe) + (corr.rTpe >= 0 ? ', positive' : ', négative') + ')');
-    corrBox.innerHTML = '<div class="pr-correlation-title">\uD83D\uDD0E Croisement national Maturité \u00d7 Performance relative</div>' +
-      '<p>Sur les ' + corr.n + ' CLPE disposant des deux données, corrélation entre le niveau de maturité et le taux d\u2019accès à l\u2019emploi ' + parts.join(', et ') + '.</p>' +
-      '<p class="pr-correlation-note">Une corrélation ne démontre pas de lien de cause à effet : elle indique seulement si les deux valeurs varient ensemble. Une valeur proche de 0 signifie une absence de lien linéaire visible entre les deux indicateurs à l\u2019échelle nationale ; ce résultat n\u2019invalide pas un lien à l\u2019échelle d\u2019un territoire précis.</p>';
-  }
 }
 
 /* ===== En-têtes des 4 briques (accordéon) ===== */
@@ -3869,11 +3824,10 @@ function buildReportPagePerf() {
   var label = scopeLabel();
   var html = pageHeader(label, 'Performance relative');
   html += '<div class="pr-sect-intro pr-sect-intro-sm">Cette partie situe les résultats du territoire du CLPE par rapport aux territoires présentant des caractéristiques socio-économiques proches - des repères plus pertinents qu\u2019une moyenne nationale ou régionale. <b>Précaution :</b> ces données ne permettent pas d\u2019attribuer directement les résultats à l\u2019action du CLPE ; elles doivent être analysées avec les acteurs locaux, au regard du contexte du territoire.</div>';
-  html += '<div class="pr-dim-defs pr-dim-defs-4">' +
+  html += '<div class="pr-dim-defs">' +
     '<div class="pr-dim-def"><b>Taux d\u2019accès à l\u2019emploi (TAE)</b><p>Part des personnes ayant accédé à un emploi sur la période observée.</p></div>' +
     '<div class="pr-dim-def"><b>Taux de présence en emploi (TPE)</b><p>Part des personnes en emploi à la fin de la période de référence.</p></div>' +
     '<div class="pr-dim-def"><b>Écart</b><p>Différence entre le résultat du CLPE et la moyenne des territoires comparables (positif : supérieur ; négatif : inférieur), exprimée en points de pourcentage (pp) - à distinguer d\u2019une évolution en %.</p></div>' +
-    '<div class="pr-dim-def"><b>Évolution sur un an</b><p>Dynamique du territoire, indépendamment de sa position actuelle.</p></div>' +
     '</div>';
   perfSyncSelection();
   var row = perfSelectedId ? PERF_ID_TO_ROW[perfSelectedId] : null;
@@ -3893,8 +3847,6 @@ function buildReportPagePerf() {
   html += '<div class="pr-perf-heroes pr-perf-heroes-top">' +
     heroDelta('Écart TAE aux 10 proches', 'deltaTae', { self: 'tae', peer: 'taeD' }) +
     heroDelta('Écart TPE aux 10 proches', 'deltaTpe', { self: 'tpe', peer: 'tpeD' }) +
-    heroEvol('Évolution du TAE sur un an', 'evolTae') +
-    heroEvol('Évolution du TPE sur un an', 'evolTpe') +
     '</div>';
   var peerFeats = perfNearbyIds.map(function (id) { return PERF_ID_TO_FEATURE[id]; }).filter(Boolean);
   var selfFeat = PERF_ID_TO_FEATURE[perfSelectedId];
@@ -4123,16 +4075,16 @@ function ensureFloatingTerritoryBar() {
   var el = document.createElement('div');
   el.id = 'floatingTerritoryBar';
   el.className = 'cockpit-territory-bar floating-territory-bar';
-  var toggle = document.createElement('button');
-  toggle.type = 'button';
-  toggle.className = 'territory-toggle';
-  toggle.tabIndex = -1;
-  toggle.addEventListener('click', function () { original.click(); });
   var filters = document.createElement('div');
   filters.className = 'territory-filters-inline';
   filters.id = 'territoryFiltersFloating';
-  el.appendChild(toggle);
+  var toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'territory-toggle-hint';
+  toggle.tabIndex = -1;
+  toggle.addEventListener('click', function () { original.click(); });
   el.appendChild(filters);
+  el.appendChild(toggle);
   document.body.appendChild(el);
   floatingTerritoryBar = el;
   return el;
@@ -4140,7 +4092,7 @@ function ensureFloatingTerritoryBar() {
 function syncFloatingTerritoryBar() {
   var original = document.getElementById('cockpitTerritoryBar');
   var el = ensureFloatingTerritoryBar();
-  el.querySelector('.territory-toggle').innerHTML = original.innerHTML;
+  el.querySelector('.territory-toggle-hint').innerHTML = original.innerHTML;
 }
 /* Les filtres territoire suivent le bandeau visible à l'écran : dans le bandeau flottant une
    fois celui-ci apparu (la page a défilé au-delà du bandeau d'origine), sinon dans le bandeau
@@ -4533,7 +4485,7 @@ function bindEvents() {
        habituel à droite de la carte. On replie : ils remontent dans le bandeau, toujours
        accessibles sans avoir à redéplier la carte. */
     moveTerritoryFiltersTo(expanded ? 'territoryFiltersInline' : 'territoryFiltersSlot');
-    document.getElementById('territoryChangeHint').textContent = expanded ? '\u270F\uFE0F Afficher la carte' : '\u270F\uFE0F Masquer la carte';
+    document.getElementById('cockpitTerritoryBar').textContent = expanded ? '\u270F\uFE0F Afficher la carte' : '\u270F\uFE0F Masquer la carte';
     syncFloatingTerritoryBar();
     if (!expanded) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4887,7 +4839,7 @@ init();
             if (panel.style.display !== 'none') {
               panel.style.display = 'none';
               document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte';
+              document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Afficher la carte';
             }
             territoryStepOpenedPanel = false;
           }
@@ -4919,7 +4871,7 @@ init();
             if (panel.style.display !== 'none') {
               panel.style.display = 'none';
               document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte';
+              document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Afficher la carte';
             }
             territoryStepOpenedPanel = false;
           }
@@ -5221,7 +5173,7 @@ init();
           element: '#perfHero',
           popover: {
             title: 'Les indicateurs clés',
-            description: 'Taux d\u2019accès à l\u2019emploi (TAE) et taux de présence en emploi (TPE) du territoire, la moyenne de ces mêmes taux sur les 10 territoires proches, et l\u2019écart entre les deux exprimé en points de pourcentage (pp) - à ne pas confondre avec une évolution en %. L\u2019évolution sur un an est indiquée séparément.',
+            description: 'Taux d\u2019accès à l\u2019emploi (TAE) et taux de présence en emploi (TPE) du territoire, la moyenne de ces mêmes taux sur les 10 territoires proches, et l\u2019écart entre les deux exprimé en points de pourcentage (pp) - à ne pas confondre avec un pourcentage.',
             side: 'bottom'
           }
         },
@@ -5311,7 +5263,7 @@ init();
           if (panel.style.display !== 'none') {
             panel.style.display = 'none';
             document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-            document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte';
+            document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Afficher la carte';
           }
         }
         if (userOnDestroyed) userOnDestroyed();
