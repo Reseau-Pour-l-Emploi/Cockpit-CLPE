@@ -3920,12 +3920,16 @@ function buildPrintReportHTML() {
   var pages = [buildReportPageMaturite(), buildReportPageMaturiteQuestions(), buildReportPageMaturiteDetail(), buildReportPageFiches(), buildReportPagePerf(), buildReportPageFreq()];
   document.getElementById('printReport').innerHTML = pages.map(function (p) { return '<div class="pr-page">' + p + '</div>'; }).join('');
 }
-/* Résumé texte prêt à coller (mail, Teams...) : reprend, quand elles sont disponibles pour le
-   territoire sélectionné, les 4 valeurs les plus représentatives de chaque brique. Une valeur
-   manquante (ex. Performance relative sans CLPE précis) est simplement omise plutôt que
-   remplacée par un texte d'erreur. */
+/* Résumé texte prêt à coller dans le corps d'un mail : reprend, quand elles sont disponibles
+   pour le territoire sélectionné, les 4 valeurs les plus représentatives de chaque brique.
+   Une valeur manquante (ex. Performance relative sans CLPE précis) est simplement omise
+   plutôt que remplacée par un texte d'erreur. */
 function buildSummaryText(url) {
-  var lines = ['📍 ' + scopeLabel(), ''];
+  var scope = scopeLabel();
+  var intro = scope === 'France entière'
+    ? 'J\u2019ai consulté le Cockpit de pilotage des CLPE pour la France entière et j\u2019ai pensé que cela pouvait t\u2019intéresser.'
+    : 'J\u2019ai consulté le Cockpit de pilotage des CLPE pour le territoire de ' + scope + ' et j\u2019ai pensé que cela pouvait t\u2019intéresser.';
+  var lines = [intro, '', 'Les principaux résultats ci-dessous :', ''];
   var g = equalWeightAgg(getFiltered());
   if (g && g.n) {
     var niv = niveauValue(g.total, META.totalMax);
@@ -3952,7 +3956,7 @@ function buildSummaryText(url) {
       lines.push('📶 Fréquentation : ' + cumul + ' consultations au dernier trimestre (' + lastTrim + ')');
     }
   }
-  lines.push('', '\uD83D\uDD17 Consultez le Cockpit CLPE pour plus de détails : ' + (url || (window.location.origin + window.location.pathname + (state.clpe ? '?clpe=' + encodeURIComponent(state.clpe) : ''))));
+  lines.push('', 'Un rapport complet, des recommandations et tout le détail ici : ' + (url || (window.location.origin + window.location.pathname + (state.clpe ? '?clpe=' + encodeURIComponent(state.clpe) : ''))));
   return lines.join('\n');
 }
 function downloadPdfReport() {
