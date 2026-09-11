@@ -191,8 +191,15 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .btn-preco:hover{background:var(--ft-jaune-dark);color:#fff}
 .btn-pdf-top{margin-left:auto;font-weight:700;background:var(--ft-indigo);color:#fff;border-color:var(--ft-indigo)}
 .btn-pdf-sidebar{width:100%;margin-top:4px;border-top:2px solid var(--ft-border);font-weight:700;background:var(--ft-indigo);color:#fff;border-radius:8px;padding:11px 14px;font-size:12.5px;text-align:center}
+.btn-share{background:var(--ft-white);color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-top:1.5px solid var(--ft-indigo);margin-top:8px;cursor:pointer}
+.btn-share.done{background:var(--ft-vert);color:#fff;border-color:var(--ft-vert)}
+.share-btn-wrap{position:relative}
+.share-menu{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-md);z-index:900;overflow:hidden}
+.share-menu-item{display:block;width:100%;box-sizing:border-box;text-align:left;background:var(--ft-white);color:var(--ft-navy);border:none;padding:10px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--ft-font)}
+.share-menu-item:hover{background:var(--ft-indigo-light)}
+.share-menu-item+.share-menu-item{border-top:1px solid var(--ft-border)}
 .btn-pdf-sidebar:hover{background:var(--ft-indigo-dark)}
-@media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}}
+@media(max-width:900px){.btn-pdf-sidebar{width:auto;border-top:none;margin-top:0}.share-btn-wrap{width:auto;display:inline-block}}
 .sidebar-sep{border:none;border-top:1px solid var(--ft-border);margin:10px 0 8px}
 .btn-sidebar-link{display:block;width:100%;box-sizing:border-box;text-align:center;background:var(--ft-white);color:var(--ft-indigo);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:9px 12px;font-size:11.5px;font-weight:600;text-decoration:none;margin-top:8px;line-height:1.3}
 .btn-academie-link{display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;background:var(--ft-white);border:1.5px solid var(--ft-indigo);border-radius:8px;padding:8px 10px;text-decoration:none;margin-top:8px;overflow:hidden}
@@ -430,6 +437,11 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .preco-meta{font-size:11.5px;color:var(--ft-fg-2);margin-top:3px}
 .preco-hetero .preco-item{border-left-color:var(--ft-orange)}
 .preco-empty{font-size:12.5px;color:var(--ft-fg-3);font-style:italic}
+.pr-correlation-box{margin-top:16px}
+.pr-correlation-box:empty{margin-top:0}
+.pr-correlation-box .pr-correlation-title{font-size:13px;font-weight:700;color:var(--ft-navy);margin-bottom:6px}
+.pr-correlation-box p{font-size:12.5px;color:var(--ft-fg-2);line-height:1.5;margin:4px 0}
+.pr-correlation-note{color:var(--ft-fg-3)!important;font-size:11.5px!important;font-style:italic}
 .preco-hetero-intro{font-size:12px;color:var(--ft-fg-2);margin:0 0 8px}
 
 table.clpe{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
@@ -714,6 +726,13 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
         </div>
         </div>
         <button class="btn-reset btn-pdf-sidebar" id="reportPdfBtn" title="Télécharger le rapport (PDF) du territoire sélectionné">📄 Rapport PDF</button>
+        <div class="share-btn-wrap">
+          <button class="btn-reset btn-pdf-sidebar btn-share" id="shareBtn" type="button" title="Partager cette page">🔗 Partager cette page</button>
+          <div class="share-menu" id="shareMenu" style="display:none">
+            <button class="share-menu-item" id="shareCopyLink" type="button">📋 Copier le lien</button>
+            <button class="share-menu-item" id="shareByEmail" type="button">✉️ Envoyer par mail</button>
+          </div>
+        </div>
         <hr class="sidebar-sep">
         <div class="sidebar-links-group">
         <a class="btn-reset btn-sidebar-link" href="http://pilotage-rpe.francetravail.org/rpe" target="_blank" rel="noopener">🔗 Tableau de Bord du Réseau Pour l'Emploi</a>
@@ -965,6 +984,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
           <div class="section-title" data-guide-key="perf-principaux" role="button" tabindex="0">Principaux résultats<span class="section-title-ico">ℹ️</span></div>
           <div class="hero-row" id="perfHero"></div>
+          <div class="pr-correlation-box" id="perfCorrelationBox"></div>
           <div class="section-title" id="perfTableTitle" data-guide-key="perf-tableau" role="button" tabindex="0" style="display:none">Tableau de comparaison<span class="section-title-ico">ℹ️</span></div>
           <div class="table-scroll">
           <table class="clpe" id="perfTable" style="display:none">
@@ -3219,6 +3239,52 @@ function renderPerfTable() {
   document.getElementById('perfTableTitle').style.display = perfSelectedId ? '' : 'none';
   document.getElementById('perfTable').style.display = perfSelectedId ? '' : 'none';
 }
+/* Croisement entre briques : corrélation (Pearson) entre le niveau de maturité et les
+   indicateurs de Performance relative, calculée une fois sur l'ensemble des CLPE disposant
+   des deux données (indépendamment du territoire actuellement sélectionné) - une lecture
+   purement nationale, destinée à nourrir le dialogue en comité plutôt qu'à évaluer un
+   territoire précis. */
+function pearsonCorrelation(pairs) {
+  var n = pairs.length;
+  if (n < 3) return null;
+  var sx = 0, sy = 0, sxy = 0, sx2 = 0, sy2 = 0;
+  pairs.forEach(function (p) { sx += p[0]; sy += p[1]; sxy += p[0] * p[1]; sx2 += p[0] * p[0]; sy2 += p[1] * p[1]; });
+  var num = n * sxy - sx * sy;
+  var den = Math.sqrt((n * sx2 - sx * sx) * (n * sy2 - sy * sy));
+  return den ? num / den : null;
+}
+var maturitePerfCorrelationCache = null;
+function computeMaturitePerfCorrelation() {
+  if (maturitePerfCorrelationCache) return maturitePerfCorrelationCache;
+  var byClpe = {};
+  ALL.forEach(function (r) { if (r.clpe) { (byClpe[r.clpe] = byClpe[r.clpe] || []).push(r); } });
+  var pairsTae = [], pairsTpe = [];
+  Object.keys(byClpe).forEach(function (clpeName) {
+    var pid = CLPE_TO_PERF_ID[clpeName];
+    var prow = pid ? PERF_ID_TO_ROW[pid] : null;
+    if (!prow) return;
+    var g = equalWeightAgg(byClpe[clpeName]);
+    if (!g.n) return;
+    var niveau = niveauValue(g.total, META.totalMax);
+    if (niveau == null) return;
+    pairsTae.push([niveau, prow.tae]);
+    pairsTpe.push([niveau, prow.tpe]);
+  });
+  maturitePerfCorrelationCache = {
+    n: pairsTae.length,
+    rTae: pearsonCorrelation(pairsTae),
+    rTpe: pearsonCorrelation(pairsTpe)
+  };
+  return maturitePerfCorrelationCache;
+}
+function correlationStrengthLabel(r) {
+  var abs = Math.abs(r);
+  if (abs < 0.1) return 'quasi nulle';
+  if (abs < 0.3) return 'faible';
+  if (abs < 0.5) return 'modérée';
+  if (abs < 0.7) return 'assez marquée';
+  return 'marquée';
+}
 function renderPerf() {
   perfSyncSelection();
   function heroValue(label, row, key, emph) {
@@ -3243,6 +3309,18 @@ function renderPerf() {
       heroDelta('Écart TAE aux 10 territoires proches', row, 'deltaTae', { self: 'tae', peer: 'taeD' }) + heroDelta('Écart TPE aux 10 territoires proches', row, 'deltaTpe', { self: 'tpe', peer: 'tpeD' }) +
       heroEvol('Évolution du TAE sur un an', row, 'evolTae') + heroEvol('Évolution du TPE sur un an', row, 'evolTpe');
   renderPerfTable();
+  var corr = computeMaturitePerfCorrelation();
+  var corrBox = document.getElementById('perfCorrelationBox');
+  if (!corr || corr.n < 3 || (corr.rTae == null && corr.rTpe == null)) {
+    corrBox.innerHTML = '';
+  } else {
+    var parts = [];
+    if (corr.rTae != null) parts.push('avec le TAE : <b>r&nbsp;=&nbsp;' + fmt(corr.rTae, 2) + '</b> (' + correlationStrengthLabel(corr.rTae) + (corr.rTae >= 0 ? ', positive' : ', négative') + ')');
+    if (corr.rTpe != null) parts.push('avec le TPE : <b>r&nbsp;=&nbsp;' + fmt(corr.rTpe, 2) + '</b> (' + correlationStrengthLabel(corr.rTpe) + (corr.rTpe >= 0 ? ', positive' : ', négative') + ')');
+    corrBox.innerHTML = '<div class="pr-correlation-title">\uD83D\uDD0E Croisement national Maturité \u00d7 Performance relative</div>' +
+      '<p>Sur les ' + corr.n + ' CLPE disposant des deux données, corrélation entre le niveau de maturité et le taux d\u2019accès à l\u2019emploi ' + parts.join(', et ') + '.</p>' +
+      '<p class="pr-correlation-note">Une corrélation ne démontre pas de lien de cause à effet : elle indique seulement si les deux valeurs varient ensemble. Une valeur proche de 0 signifie une absence de lien linéaire visible entre les deux indicateurs à l\u2019échelle nationale ; ce résultat n\u2019invalide pas un lien à l\u2019échelle d\u2019un territoire précis.</p>';
+  }
 }
 
 /* ===== En-têtes des 4 briques (accordéon) ===== */
@@ -3828,6 +3906,41 @@ function buildPrintReportHTML() {
   var pages = [buildReportPageMaturite(), buildReportPageMaturiteQuestions(), buildReportPageMaturiteDetail(), buildReportPageFiches(), buildReportPagePerf(), buildReportPageFreq()];
   document.getElementById('printReport').innerHTML = pages.map(function (p) { return '<div class="pr-page">' + p + '</div>'; }).join('');
 }
+/* Résumé texte prêt à coller (mail, Teams...) : reprend, quand elles sont disponibles pour le
+   territoire sélectionné, les 4 valeurs les plus représentatives de chaque brique. Une valeur
+   manquante (ex. Performance relative sans CLPE précis) est simplement omise plutôt que
+   remplacée par un texte d'erreur. */
+function buildSummaryText(url) {
+  var lines = ['📍 ' + scopeLabel(), ''];
+  var g = equalWeightAgg(getFiltered());
+  if (g && g.n) {
+    var niv = niveauValue(g.total, META.totalMax);
+    if (niv != null) lines.push('🧭 Niveau de maturité : ' + fmt(niv, 1) + ' / 4 (' + g.n + ' répondant' + (g.n > 1 ? 's' : '') + ')');
+  }
+  var frows = fichesRows().filter(inScope);
+  var nFiches = frows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
+  if (nFiches) {
+    var globalQ = avg(frows.map(function (r) { return (r.innovant + r.impact + r.qualite + r.bilan) / 4; }));
+    lines.push('🎯 Pilotage des actions : score ' + fmt(globalQ, 1) + ' / 4 sur ' + nFiches + ' fiche' + (nFiches > 1 ? 's' : '') + ' action');
+  }
+  if (perfSelectedId && PERF_ID_TO_ROW[perfSelectedId]) {
+    var prow = PERF_ID_TO_ROW[perfSelectedId];
+    lines.push('📊 Performance relative : écart TAE ' + (prow.deltaTae >= 0 ? '+' : '') + fmt(prow.deltaTae, 1) + ' pp, écart TPE ' + (prow.deltaTpe >= 0 ? '+' : '') + fmt(prow.deltaTpe, 1) + ' pp (vs 10 territoires proches)');
+  }
+  var frows2 = TDB_DATA.filter(inScope);
+  if (frows2.length) {
+    var months = unique(frows2.map(function (r) { return r.mois; })).sort();
+    var trims = unique(months.map(moisToTrimestre)).sort();
+    if (trims.length) {
+      var lastTrim = trims[trims.length - 1];
+      var tMonths = trimestreMonths(lastTrim);
+      var cumul = frows2.filter(function (r) { return tMonths.indexOf(r.mois) >= 0; }).reduce(function (s, r) { return s + r.nb; }, 0);
+      lines.push('📶 Fréquentation : ' + cumul + ' consultations au dernier trimestre (' + lastTrim + ')');
+    }
+  }
+  lines.push('', '\uD83D\uDD17 Consultez le Cockpit CLPE pour plus de détails : ' + (url || (window.location.origin + window.location.pathname + (state.clpe ? '?clpe=' + encodeURIComponent(state.clpe) : ''))));
+  return lines.join('\n');
+}
 function downloadPdfReport() {
   buildPrintReportHTML();
   var container = document.getElementById('printReport');
@@ -4095,6 +4208,44 @@ function updateLastPeriodBar(key) {
 
 function bindEvents() {
   document.getElementById('reportPdfBtn').addEventListener('click', downloadPdfReport);
+  function buildShareUrl() {
+    var params = new URLSearchParams();
+    if (state.clpe) params.set('clpe', state.clpe);
+    else if (state.dept) params.set('departement', state.dept);
+    else if (state.region) params.set('region', state.region);
+    if (activeBrick && activeBrick !== 'maturite') params.set('onglet', activeBrick);
+    return window.location.origin + window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+  }
+  var shareBtn = document.getElementById('shareBtn'), shareMenu = document.getElementById('shareMenu');
+  shareBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    shareMenu.style.display = shareMenu.style.display === 'none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', function () { shareMenu.style.display = 'none'; });
+  shareMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.getElementById('shareCopyLink').addEventListener('click', function () {
+    var url = buildShareUrl();
+    function showCopied() {
+      var original = shareBtn.textContent;
+      shareBtn.textContent = '\u2705 Lien copié';
+      shareBtn.classList.add('done');
+      shareMenu.style.display = 'none';
+      setTimeout(function () { shareBtn.textContent = original; shareBtn.classList.remove('done'); }, 2000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(showCopied).catch(function () { window.prompt('Copiez ce lien :', url); shareMenu.style.display = 'none'; });
+    } else {
+      window.prompt('Copiez ce lien :', url);
+      shareMenu.style.display = 'none';
+    }
+  });
+  document.getElementById('shareByEmail').addEventListener('click', function () {
+    var url = buildShareUrl();
+    var subject = 'Cockpit CLPE \u2013 ' + scopeLabel();
+    var body = 'Bonjour,\n\n' + buildSummaryText(url) + '\n';
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    shareMenu.style.display = 'none';
+  });
   document.getElementById('backToTopBtn').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
   (function () {
     var btn = document.getElementById('backToTopBtn');
@@ -4507,9 +4658,30 @@ function init() {
       document.getElementById('loader').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       syncFloatingTerritoryBar();
+      /* Lien direct partageable : ?clpe=X (ou region=X / departement=X) et &onglet=maturite|
+         fiches|perf|freq préremplissent le territoire et l'onglet actif au chargement, pour
+         permettre d'envoyer un lien direct pointant sur un résultat précis. */
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlClpe = urlParams.get('clpe'), urlRegion = urlParams.get('region'), urlDept = urlParams.get('departement');
+      var urlBrique = urlParams.get('onglet');
+      if (urlClpe) {
+        state.clpe = urlClpe;
+        var ref = REFERENTIAL.filter(function (r) { return r.clpe === urlClpe; })[0];
+        if (ref) { state.region = ref.region; state.dept = ref.departement; }
+      } else if (urlDept) {
+        var refD = REFERENTIAL.filter(function (r) { return r.departement === urlDept; })[0];
+        if (refD) { state.dept = urlDept; state.region = refD.region; }
+      } else if (urlRegion) {
+        if (REFERENTIAL.some(function (r) { return r.region === urlRegion; })) state.region = urlRegion;
+      }
       refreshFilters();
       theMap.show();
       activateBrick('maturite');
+      var brickToTab = { maturite: 0, fiches: 1, perf: 2, freq: 3 };
+      if (urlBrique && urlBrique !== 'maturite' && brickToTab[urlBrique] != null) {
+        var tabBtn = document.querySelectorAll('.cockpit-tab')[brickToTab[urlBrique]];
+        if (tabBtn) tabBtn.click();
+      }
       syncSourceTabCol();
       renderAll();
     }).catch(function (err) { showError(err.message || String(err)); });
@@ -4624,10 +4796,18 @@ init();
         }
       },
       {
+        element: '#shareBtn',
+        popover: {
+          title: 'Partager cette page',
+          description: 'Copiez un lien direct vers le territoire et l\u2019onglet actuellement affichés, ou envoyez-les par mail en un clic - le corps du message reprend automatiquement le résumé des principaux chiffres du territoire, avec une invitation à consulter la page pour le détail.',
+          side: 'right'
+        }
+      },
+      {
         element: '.sidebar-links-group',
         popover: {
           title: 'Les liens utiles',
-          description: 'Sous le rapport PDF : un accès direct au Tableau de Bord du Réseau Pour l\u2019Emploi, à ses Ressources associées (notamment le glossaire, pour les définitions précises des indicateurs) et à l\u2019Académie France Travail, qui propose des vidéos, modules e-learning et formations pour développer vos pratiques au sein du RPE.',
+          description: 'Sous le bouton Partager : un accès direct au Tableau de Bord du Réseau Pour l\u2019Emploi, à ses Ressources associées (notamment le glossaire, pour les définitions précises des indicateurs) et à l\u2019Académie France Travail, qui propose des vidéos, modules e-learning et formations pour développer vos pratiques au sein du RPE.',
           side: 'right'
         }
       },
