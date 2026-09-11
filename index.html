@@ -704,7 +704,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
 
     <div class="cockpit-context-bar" id="cockpitTabsRow">
       <div class="cockpit-territory-bar" id="cockpitTerritoryBarWrap">
-        <button class="territory-toggle" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint" id="territoryChangeHint">✏️ Afficher la carte et les filtres</span></button>
+        <button class="territory-toggle" id="cockpitTerritoryBar" type="button" aria-expanded="false">Territoire sélectionné : <b id="territoryLabel">France entière</b><span class="territory-change-hint" id="territoryChangeHint">✏️ Afficher la carte</span></button>
         <div class="territory-filters-inline" id="territoryFiltersInline">
           <div class="fgroup"><label for="fRegion">Région</label><select id="fRegion"></select></div>
           <div class="fgroup"><label for="fDept">Département</label><select id="fDept"></select></div>
@@ -4120,13 +4120,19 @@ var floatingTerritoryBar = null;
 function ensureFloatingTerritoryBar() {
   if (floatingTerritoryBar) return floatingTerritoryBar;
   var original = document.getElementById('cockpitTerritoryBar');
-  var el = document.createElement('button');
-  el.type = 'button';
+  var el = document.createElement('div');
   el.id = 'floatingTerritoryBar';
   el.className = 'cockpit-territory-bar floating-territory-bar';
-  el.setAttribute('aria-hidden', 'true');
-  el.tabIndex = -1;
-  el.addEventListener('click', function () { original.click(); });
+  var toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'territory-toggle';
+  toggle.tabIndex = -1;
+  toggle.addEventListener('click', function () { original.click(); });
+  var filters = document.createElement('div');
+  filters.className = 'territory-filters-inline';
+  filters.id = 'territoryFiltersFloating';
+  el.appendChild(toggle);
+  el.appendChild(filters);
   document.body.appendChild(el);
   floatingTerritoryBar = el;
   return el;
@@ -4134,7 +4140,20 @@ function ensureFloatingTerritoryBar() {
 function syncFloatingTerritoryBar() {
   var original = document.getElementById('cockpitTerritoryBar');
   var el = ensureFloatingTerritoryBar();
-  el.innerHTML = original.innerHTML;
+  el.querySelector('.territory-toggle').innerHTML = original.innerHTML;
+}
+/* Les filtres territoire suivent le bandeau visible à l'écran : dans le bandeau flottant une
+   fois celui-ci apparu (la page a défilé au-delà du bandeau d'origine), sinon dans le bandeau
+   d'origine (replié) ou à droite de la carte (déplié). moveTerritoryFiltersTo() les déplace
+   vers le conteneur demandé, d'où qu'ils viennent actuellement. */
+function moveTerritoryFiltersTo(containerId) {
+  var target = document.getElementById(containerId);
+  if (!target) return;
+  ['territoryFiltersInline', 'territoryFiltersSlot', 'territoryFiltersFloating'].forEach(function (id) {
+    if (id === containerId) return;
+    var from = document.getElementById(id);
+    if (from) Array.prototype.slice.call(from.children).forEach(function (elChild) { target.appendChild(elChild); });
+  });
 }
 if (typeof IntersectionObserver !== 'undefined') {
   (function () {
@@ -4142,7 +4161,15 @@ if (typeof IntersectionObserver !== 'undefined') {
     if (!original) return;
     var obs = new IntersectionObserver(function (entries) {
       var el = ensureFloatingTerritoryBar();
-      el.style.display = entries[0].isIntersecting ? 'none' : 'inline-flex';
+      var nowVisible = !entries[0].isIntersecting;
+      el.style.display = nowVisible ? 'flex' : 'none';
+      if (nowVisible) {
+        moveTerritoryFiltersTo('territoryFiltersFloating');
+      } else {
+        var panel = document.getElementById('mapFilterCollapse');
+        var expanded = panel && panel.style.display !== 'none';
+        moveTerritoryFiltersTo(expanded ? 'territoryFiltersSlot' : 'territoryFiltersInline');
+      }
     }, { rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 68) + 'px 0px 0px 0px', threshold: 0 });
     obs.observe(original);
   })();
@@ -4502,18 +4529,11 @@ function bindEvents() {
     var expanded = panel.style.display !== 'none';
     panel.style.display = expanded ? 'none' : '';
     this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-    var filtersInline = document.getElementById('territoryFiltersInline');
-    var filtersSlot = document.getElementById('territoryFiltersSlot');
-    if (!expanded) {
-      /* On déplie : la carte apparaît, les filtres territoire rejoignent leur emplacement
-         habituel à droite de la carte. */
-      Array.prototype.slice.call(filtersInline.children).forEach(function (el) { filtersSlot.appendChild(el); });
-    } else {
-      /* On replie : les filtres territoire remontent dans le bandeau, toujours accessibles
-         sans avoir à redéplier la carte. */
-      Array.prototype.slice.call(filtersSlot.children).forEach(function (el) { filtersInline.appendChild(el); });
-    }
-    document.getElementById('territoryChangeHint').textContent = expanded ? '\u270F\uFE0F Afficher la carte et les filtres' : '\u270F\uFE0F Masquer la carte et les filtres';
+    /* On déplie : la carte apparaît, les filtres territoire rejoignent leur emplacement
+       habituel à droite de la carte. On replie : ils remontent dans le bandeau, toujours
+       accessibles sans avoir à redéplier la carte. */
+    moveTerritoryFiltersTo(expanded ? 'territoryFiltersInline' : 'territoryFiltersSlot');
+    document.getElementById('territoryChangeHint').textContent = expanded ? '\u270F\uFE0F Afficher la carte' : '\u270F\uFE0F Masquer la carte';
     syncFloatingTerritoryBar();
     if (!expanded) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4853,7 +4873,7 @@ init();
         element: '.map-filter-row',
         popover: {
           title: 'Choisir un territoire',
-          description: 'Une fois la carte affichée, les filtres région/département/CLPE rejoignent son côté droit - ou cliquez directement sur la carte : les deux sont toujours synchronisés. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active. Cliquez sur le bandeau "Territoire sélectionné" pour afficher ou masquer ce bloc ; les filtres retournent alors dans le bandeau.',
+          description: 'Cliquez directement sur la carte pour sélectionner un territoire - toujours synchronisée avec les filtres du bandeau. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active.',
           side: 'top'
         },
         onHighlightStarted: function () {
@@ -4867,7 +4887,7 @@ init();
             if (panel.style.display !== 'none') {
               panel.style.display = 'none';
               document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte et les filtres';
+              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte';
             }
             territoryStepOpenedPanel = false;
           }
@@ -4899,7 +4919,7 @@ init();
             if (panel.style.display !== 'none') {
               panel.style.display = 'none';
               document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte et les filtres';
+              document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte';
             }
             territoryStepOpenedPanel = false;
           }
@@ -4934,6 +4954,14 @@ init();
         popover: {
           title: 'Les liens utiles',
           description: 'Sous le bouton Partager : un accès direct au Tableau de Bord du Réseau Pour l\u2019Emploi, à ses Ressources associées (notamment le glossaire, pour les définitions précises des indicateurs) et à l\u2019Académie France Travail, qui propose des vidéos, modules e-learning et formations pour développer vos pratiques au sein du RPE.',
+          side: 'right'
+        }
+      },
+      {
+        element: '#suggestionLink',
+        popover: {
+          title: 'Suggérer une amélioration',
+          description: 'Une idée pour faire évoluer ce cockpit ? Ce lien ouvre un mail pré-rempli, tout en bas de la marge de gauche.',
           side: 'right'
         }
       },
@@ -5283,7 +5311,7 @@ init();
           if (panel.style.display !== 'none') {
             panel.style.display = 'none';
             document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-            document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte et les filtres';
+            document.getElementById('territoryChangeHint').textContent = '\u270F\uFE0F Afficher la carte';
           }
         }
         if (userOnDestroyed) userOnDestroyed();
