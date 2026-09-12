@@ -4429,7 +4429,9 @@ function bindEvents() {
     renderTerritoryHierarchy();
   });
   document.addEventListener('click', function (e) {
-    if (!e.target.closest('.territory-hier-group')) closeTerritoryHierarchy();
+    var path = e.composedPath ? e.composedPath() : [e.target];
+    var insideGroup = path.some(function (n) { return n.classList && n.classList.contains('territory-hier-group'); });
+    if (!insideGroup) closeTerritoryHierarchy();
   });
   document.getElementById('fSearch').addEventListener('change', function (e) {
     var v = e.target.value.trim();
