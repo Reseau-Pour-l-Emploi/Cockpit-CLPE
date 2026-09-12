@@ -95,7 +95,7 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .territory-filters-inline label{font-size:13px;font-weight:600;color:var(--ft-navy);white-space:nowrap}
 .territory-filters-inline select,.territory-filters-inline input{font-size:14px;padding:6px 10px;min-width:150px}
 .territory-hier-group{position:relative}
-.territory-hier-btn{font-size:14px;font-weight:600;color:var(--ft-navy);background:var(--ft-white);border:1.5px solid var(--ft-indigo);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:var(--ft-font);min-width:170px;text-align:left;display:inline-flex;align-items:center;justify-content:space-between;gap:8px}
+.territory-hier-btn{font-size:14px;font-weight:600;color:var(--ft-navy);background:var(--ft-white);border:1.5px solid var(--ft-indigo);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:var(--ft-font);min-width:170px;text-align:left;display:inline-flex;align-items:center;justify-content:space-between;gap:8px;touch-action:manipulation}
 .territory-hier-caret{font-size:11px;opacity:.7}
 .territory-hier-panel{position:absolute;top:calc(100% + 6px);left:0;z-index:900;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-md);width:320px;max-width:88vw;padding:10px}
 .territory-hier-breadcrumb{font-size:11.5px;color:var(--ft-fg-3);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--ft-sable-dark);display:flex;flex-wrap:wrap;align-items:center;gap:4px}
@@ -103,19 +103,28 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .hier-crumb:hover{background:var(--ft-indigo-light)}
 .hier-sep{color:var(--ft-fg-3)}
 .territory-hier-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
-.hier-item{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;text-align:left;background:none;border:none;padding:8px 10px;font-size:13px;color:var(--ft-fg-1);cursor:pointer;font-family:var(--ft-font);border-radius:6px}
+.hier-item{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;text-align:left;background:none;border:none;padding:8px 10px;font-size:13px;color:var(--ft-fg-1);cursor:pointer;font-family:var(--ft-font);border-radius:6px;touch-action:manipulation}
 .hier-item:hover{background:var(--ft-indigo-light)}
 .hier-item-all{font-weight:700;color:var(--ft-indigo);border-bottom:1px solid var(--ft-sable-dark);border-radius:0;margin-bottom:4px;padding-bottom:10px}
 .hier-arrow{color:var(--ft-fg-3);font-size:14px}
 @media(max-width:700px){
   .cockpit-territory-bar{flex-wrap:wrap;justify-content:flex-start;padding:8px 12px;gap:8px}
-  .territory-filters-inline{flex-wrap:wrap;width:100%;gap:8px}
-  .territory-filters-inline .fgroup{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:2px}
-  .territory-filters-inline label{font-size:10.5px}
-  .territory-hier-btn{width:100%;min-width:0;font-size:13px;padding:7px 10px}
-  .territory-filters-inline input{width:100%;min-width:0;font-size:13px;padding:7px 10px;box-sizing:border-box}
+  .territory-filters-inline{flex-wrap:wrap;width:100%;gap:14px}
+  .territory-filters-inline .fgroup{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:4px}
+  .territory-filters-inline label{font-size:11px}
+  .territory-hier-btn{width:100%;min-width:0;font-size:14px;padding:12px 10px;min-height:44px;box-sizing:border-box}
+  .territory-filters-inline input{width:100%;min-width:0;font-size:14px;padding:12px 10px;min-height:44px;box-sizing:border-box}
   .territory-toggle-hint{font-size:12px}
-  .territory-hier-panel{width:calc(100vw - 24px);left:50%;transform:translateX(-50%)}
+  .territory-hier-panel{width:calc(100vw - 24px);left:50%;transform:translateX(-50%);max-height:min(335px, calc(100vh - var(--header-h, 68px) - 90px));overflow-y:auto}
+  .territory-hier-list{max-height:none}
+  .hier-item{min-height:44px;box-sizing:border-box}
+  /* L'en-tête, sur un écran étroit, peut prendre jusqu'à un quart de la hauteur visible (logo +
+     titre + sous-titre qui passent à la ligne) : on le resserre pour laisser de la place au
+     bandeau territoire et au panneau qui s'ouvre juste en dessous. */
+  .site-inner{padding:8px 16px;gap:8px}
+  .site-inner img{height:28px}
+  .site-title h1{font-size:14px}
+  .site-title .sub{display:none}
 }
 .territory-toggle-hint{margin-left:auto;flex:none;display:inline-flex;align-items:center;font-size:13px;font-weight:600;color:var(--ft-indigo);white-space:nowrap;background:none;border:none;padding:0;cursor:pointer;font-family:var(--ft-font)}
 .territory-reset-hint{color:var(--ft-fg-3);font-weight:500;text-decoration:underline}
@@ -1937,11 +1946,21 @@ function renderTerritoryHierarchy() {
   list.innerHTML = html;
 }
 function openTerritoryHierarchy() {
-  hierState.region = state.region || null;
-  hierState.dept = state.dept || null;
+  hierState.region = null;
+  hierState.dept = null;
   renderTerritoryHierarchy();
-  document.getElementById('territoryHierPanel').style.display = 'block';
+  var panel = document.getElementById('territoryHierPanel');
+  panel.style.display = 'block';
   document.getElementById('territoryHierBtn').setAttribute('aria-expanded', 'true');
+  /* Sur mobile, l'en-tête peut occuper une bonne partie de la hauteur visible : sans ce
+     recadrage, le panneau qui s'ouvre juste sous le bouton peut déborder sous le bas de
+     l'écran et sembler ne rien afficher. */
+  setTimeout(function () {
+    var rect = panel.getBoundingClientRect();
+    if (rect.bottom > window.innerHeight) {
+      window.scrollBy({ top: rect.bottom - window.innerHeight + 12, behavior: 'smooth' });
+    }
+  }, 0);
 }
 function closeTerritoryHierarchy() {
   document.getElementById('territoryHierPanel').style.display = 'none';
