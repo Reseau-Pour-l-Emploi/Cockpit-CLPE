@@ -94,6 +94,29 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
 .territory-filters-inline .fgroup{margin:0;flex-direction:row;align-items:center;gap:6px}
 .territory-filters-inline label{font-size:13px;font-weight:600;color:var(--ft-navy);white-space:nowrap}
 .territory-filters-inline select,.territory-filters-inline input{font-size:14px;padding:6px 10px;min-width:150px}
+.territory-hier-group{position:relative}
+.territory-hier-btn{font-size:14px;font-weight:600;color:var(--ft-navy);background:var(--ft-white);border:1.5px solid var(--ft-indigo);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:var(--ft-font);min-width:170px;text-align:left;display:inline-flex;align-items:center;justify-content:space-between;gap:8px}
+.territory-hier-caret{font-size:11px;opacity:.7}
+.territory-hier-panel{position:absolute;top:calc(100% + 6px);left:0;z-index:900;background:var(--ft-white);border:1px solid var(--ft-border);border-radius:8px;box-shadow:var(--sh-md);width:320px;max-width:88vw;padding:10px}
+.territory-hier-breadcrumb{font-size:11.5px;color:var(--ft-fg-3);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--ft-sable-dark);display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.hier-crumb{background:none;border:none;padding:2px 4px;font-size:11.5px;color:var(--ft-indigo);cursor:pointer;font-family:var(--ft-font);border-radius:4px}
+.hier-crumb:hover{background:var(--ft-indigo-light)}
+.hier-sep{color:var(--ft-fg-3)}
+.territory-hier-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.hier-item{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;text-align:left;background:none;border:none;padding:8px 10px;font-size:13px;color:var(--ft-fg-1);cursor:pointer;font-family:var(--ft-font);border-radius:6px}
+.hier-item:hover{background:var(--ft-indigo-light)}
+.hier-item-all{font-weight:700;color:var(--ft-indigo);border-bottom:1px solid var(--ft-sable-dark);border-radius:0;margin-bottom:4px;padding-bottom:10px}
+.hier-arrow{color:var(--ft-fg-3);font-size:14px}
+@media(max-width:700px){
+  .cockpit-territory-bar{flex-wrap:wrap;justify-content:flex-start;padding:8px 12px;gap:8px}
+  .territory-filters-inline{flex-wrap:wrap;width:100%;gap:8px}
+  .territory-filters-inline .fgroup{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:2px}
+  .territory-filters-inline label{font-size:10.5px}
+  .territory-hier-btn{width:100%;min-width:0;font-size:13px;padding:7px 10px}
+  .territory-filters-inline input{width:100%;min-width:0;font-size:13px;padding:7px 10px;box-sizing:border-box}
+  .territory-toggle-hint{font-size:12px}
+  .territory-hier-panel{width:calc(100vw - 24px);left:50%;transform:translateX(-50%)}
+}
 .territory-toggle-hint{margin-left:auto;flex:none;display:inline-flex;align-items:center;font-size:13px;font-weight:600;color:var(--ft-indigo);white-space:nowrap;background:none;border:none;padding:0;cursor:pointer;font-family:var(--ft-font)}
 .territory-reset-hint{color:var(--ft-fg-3);font-weight:500;text-decoration:underline}
 .territory-reset-hint:hover{color:var(--ft-indigo)}
@@ -707,9 +730,15 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
     <div class="cockpit-context-bar" id="cockpitTabsRow">
       <div class="cockpit-territory-bar" id="cockpitTerritoryBarWrap">
         <div class="territory-filters-inline" id="territoryFiltersInline">
-          <div class="fgroup"><label for="fRegion">Région</label><select id="fRegion"></select></div>
-          <div class="fgroup"><label for="fDept">Département</label><select id="fDept"></select></div>
-          <div class="fgroup"><label for="fClpe">CLPE</label><input type="text" id="fClpe" list="fClpeList" placeholder="Tous" autocomplete="off"><datalist id="fClpeList"></datalist></div>
+          <div class="fgroup territory-hier-group">
+            <label for="territoryHierBtn">Territoire</label>
+            <button type="button" id="territoryHierBtn" class="territory-hier-btn" aria-haspopup="true" aria-expanded="false">France entière <span class="territory-hier-caret">▾</span></button>
+            <div class="territory-hier-panel" id="territoryHierPanel" style="display:none">
+              <div class="territory-hier-breadcrumb" id="territoryHierBreadcrumb"></div>
+              <div class="territory-hier-list" id="territoryHierList"></div>
+            </div>
+          </div>
+          <div class="fgroup"><label for="fSearch">Rechercher</label><input type="text" id="fSearch" list="fSearchList" placeholder="Région, département ou CLPE" autocomplete="off"><datalist id="fSearchList"></datalist></div>
         </div>
         <b id="territoryLabel" style="display:none">France entière</b>
         <button class="territory-toggle-hint territory-reset-hint" id="territoryResetBtn" type="button">Réinitialiser</button>
@@ -1859,15 +1888,61 @@ function fillSelect(id, values, ph) {
 function fillDatalist(id, values) {
   document.getElementById(id).innerHTML = values.map(function (v) { return '<option value="' + esc(v) + '"></option>'; }).join('');
 }
+/* Sélecteur de territoire hiérarchique : navigation Région > Département > CLPE dans un
+   panneau déroulant, en remplacement des 3 filtres séparés. hierState est un état de
+   navigation temporaire (où on "se promène" dans le panneau), indépendant du territoire
+   réellement appliqué (state.region/dept/clpe) tant qu'aucune sélection n'est validée. */
+var hierState = { region: null, dept: null };
+function renderTerritoryHierarchy() {
+  var crumb = document.getElementById('territoryHierBreadcrumb');
+  var list = document.getElementById('territoryHierList');
+  var parts = ['<button type="button" class="hier-crumb" data-crumb="0">France entière</button>'];
+  if (hierState.region) parts.push('<button type="button" class="hier-crumb" data-crumb="1">' + esc(hierState.region) + '</button>');
+  if (hierState.dept) parts.push('<button type="button" class="hier-crumb" data-crumb="2">' + esc(hierState.dept) + '</button>');
+  crumb.innerHTML = parts.join(' <span class="hier-sep">\u203A</span> ');
+
+  var html = '';
+  if (!hierState.region) {
+    html += '<button type="button" class="hier-item hier-item-all" data-action="select-france">\uD83C\uDF0D Toute la France</button>';
+    unique(REFERENTIAL.map(function (r) { return r.region; })).forEach(function (r) {
+      html += '<button type="button" class="hier-item" data-action="drill-region" data-value="' + esc(r) + '">' + esc(r) + '<span class="hier-arrow">\u203A</span></button>';
+    });
+  } else if (!hierState.dept) {
+    html += '<button type="button" class="hier-item hier-item-all" data-action="select-region" data-value="' + esc(hierState.region) + '">\uD83D\uDCCD Toute la région ' + esc(hierState.region) + '</button>';
+    unique(REFERENTIAL.filter(function (r) { return r.region === hierState.region; }).map(function (r) { return r.departement; })).forEach(function (d) {
+      html += '<button type="button" class="hier-item" data-action="drill-dept" data-value="' + esc(d) + '">' + esc(d) + '<span class="hier-arrow">\u203A</span></button>';
+    });
+  } else {
+    html += '<button type="button" class="hier-item hier-item-all" data-action="select-dept" data-value="' + esc(hierState.dept) + '">\uD83D\uDCCD Tout le département ' + esc(hierState.dept) + '</button>';
+    unique(REFERENTIAL.filter(function (r) { return r.region === hierState.region && r.departement === hierState.dept; }).map(function (r) { return r.clpe; })).forEach(function (c) {
+      html += '<button type="button" class="hier-item" data-action="select-clpe" data-value="' + esc(c) + '">' + esc(c) + '</button>';
+    });
+  }
+  list.innerHTML = html;
+}
+function openTerritoryHierarchy() {
+  hierState.region = state.region || null;
+  hierState.dept = state.dept || null;
+  renderTerritoryHierarchy();
+  document.getElementById('territoryHierPanel').style.display = 'block';
+  document.getElementById('territoryHierBtn').setAttribute('aria-expanded', 'true');
+}
+function closeTerritoryHierarchy() {
+  document.getElementById('territoryHierPanel').style.display = 'none';
+  document.getElementById('territoryHierBtn').setAttribute('aria-expanded', 'false');
+}
+function applyTerritorySelection(region, dept, clpe) {
+  state.region = region || ''; state.dept = dept || ''; state.clpe = clpe || '';
+  closeTerritoryHierarchy();
+  refreshFilters(); renderAll(); applyFilterMapEffects();
+}
 function refreshFilters() {
-  fillSelect('fRegion', unique(REFERENTIAL.map(function (r) { return r.region; })), 'France entière');
-  document.getElementById('fRegion').value = state.region;
-  var pool = REFERENTIAL.filter(function (r) { return !state.region || r.region === state.region; });
-  fillSelect('fDept', unique(pool.map(function (r) { return r.departement; })), 'Tous');
-  document.getElementById('fDept').value = state.dept;
-  var pool2 = pool.filter(function (r) { return !state.dept || r.departement === state.dept; });
-  fillDatalist('fClpeList', unique(pool2.map(function (r) { return r.clpe; })));
-  document.getElementById('fClpe').value = state.clpe;
+  document.getElementById('territoryHierBtn').innerHTML = esc(scopeLabel()) + ' <span class="territory-hier-caret">\u25BE</span>';
+  var searchOptions = [];
+  unique(REFERENTIAL.map(function (r) { return r.region; })).forEach(function (r) { searchOptions.push(r + ' (Région)'); });
+  unique(REFERENTIAL.map(function (r) { return r.departement + '\u0001' + r.region; })).forEach(function (v) { var p = v.split('\u0001'); searchOptions.push(p[0] + ' (Département, ' + p[1] + ')'); });
+  unique(REFERENTIAL.map(function (r) { return r.clpe + '\u0001' + r.departement; })).forEach(function (v) { var p = v.split('\u0001'); searchOptions.push(p[0] + ' (CLPE, ' + p[1] + ')'); });
+  document.getElementById('fSearchList').innerHTML = searchOptions.sort(function (a, b) { return a.localeCompare(b, 'fr'); }).map(function (v) { return '<option value="' + esc(v) + '"></option>'; }).join('');
   var n = getFiltered().length, nClpe = unique(getFiltered().map(function (r) { return r.clpe; })).length;
   document.getElementById('fSummary').textContent = n + ' réponse' + (n > 1 ? 's' : '');
   var totalClpe = totalClpeInScope();
@@ -4179,8 +4254,7 @@ var BRICK_LABELS = { maturite: 'Niveau de maturité', freq: 'Fréquentation TDB 
 function updateLastPeriodBar(key) {
   var wrap = document.getElementById('lastPeriodWrap');
   var label = null;
-  if (key === 'maturite') label = QUARTERS.length ? trimestreLabel(QUARTERS[QUARTERS.length - 1]) : null;
-  else if (key === 'freq') {
+  if (key === 'freq') {
     var months = unique(TDB_DATA.map(function (r) { return r.mois; })).sort();
     label = months.length ? trimestreLabel(moisToTrimestre(months[months.length - 1])) : null;
   } else if (key === 'fiches') {
@@ -4297,15 +4371,43 @@ function bindEvents() {
     var tr = e.target.closest('tr[data-perf-id]'); if (!tr) return;
     selectPerfClpe(tr.dataset.perfId);
   });
-  document.getElementById('fRegion').addEventListener('change', function (e) { state.region = e.target.value; state.dept = ''; state.clpe = ''; refreshFilters(); renderAll(); applyFilterMapEffects(); });
-  document.getElementById('fDept').addEventListener('change', function (e) { state.dept = e.target.value; state.clpe = ''; refreshFilters(); renderAll(); applyFilterMapEffects(); });
-  document.getElementById('fClpe').addEventListener('change', function (e) {
-    state.clpe = e.target.value.trim();
-    if (state.clpe) {
-      var ref = REFERENTIAL.filter(function (r) { return r.clpe === state.clpe; })[0];
-      if (ref) { state.region = ref.region; state.dept = ref.departement; }
+  document.getElementById('territoryHierBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    var panel = document.getElementById('territoryHierPanel');
+    if (panel.style.display === 'none') openTerritoryHierarchy(); else closeTerritoryHierarchy();
+  });
+  document.getElementById('territoryHierList').addEventListener('click', function (e) {
+    var btn = e.target.closest('.hier-item'); if (!btn) return;
+    var action = btn.dataset.action, value = btn.dataset.value;
+    if (action === 'select-france') applyTerritorySelection(null, null, null);
+    else if (action === 'select-region') applyTerritorySelection(value, null, null);
+    else if (action === 'select-dept') applyTerritorySelection(hierState.region, value, null);
+    else if (action === 'select-clpe') applyTerritorySelection(hierState.region, hierState.dept, value);
+    else if (action === 'drill-region') { hierState.region = value; hierState.dept = null; renderTerritoryHierarchy(); }
+    else if (action === 'drill-dept') { hierState.dept = value; renderTerritoryHierarchy(); }
+  });
+  document.getElementById('territoryHierBreadcrumb').addEventListener('click', function (e) {
+    var btn = e.target.closest('.hier-crumb'); if (!btn) return;
+    var level = btn.dataset.crumb;
+    if (level === '0') { hierState.region = null; hierState.dept = null; }
+    else if (level === '1') { hierState.dept = null; }
+    renderTerritoryHierarchy();
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.territory-hier-group')) closeTerritoryHierarchy();
+  });
+  document.getElementById('fSearch').addEventListener('change', function (e) {
+    var v = e.target.value.trim();
+    var m = v.match(/^(.+) \((Région|Département|CLPE)(?:, (.+))?\)$/);
+    if (!m) return;
+    var name = m[1], type = m[2];
+    if (type === 'Région') applyTerritorySelection(name, null, null);
+    else if (type === 'Département') applyTerritorySelection(m[3] || null, name, null);
+    else if (type === 'CLPE') {
+      var ref = REFERENTIAL.filter(function (r) { return r.clpe === name; })[0];
+      if (ref) applyTerritorySelection(ref.region, ref.departement, name);
     }
-    refreshFilters(); renderAll(); applyFilterMapEffects();
+    e.target.value = '';
   });
   document.getElementById('resetBtn').addEventListener('click', function () {
     state.region = ''; state.dept = ''; state.clpe = ''; state.expanded = null;
@@ -4766,7 +4868,7 @@ init();
         element: '#cockpitTerritoryBarWrap',
         popover: {
           title: 'Le territoire sélectionné',
-          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois un filtre choisi. Ce bandeau reste toujours visible à la même position, y compris en haut de page, et les filtres région/département/CLPE y sont directement accessibles sans avoir besoin d\u2019afficher la carte. \u201cRéinitialiser\u201d efface la sélection en cours ; le bouton de droite affiche ou masque la carte et le niveau géographique.',
+          description: 'Tout le cockpit affiche les données du territoire indiqué ici : France entière par défaut, ou une région/département/CLPE une fois choisi. Ce bandeau reste toujours visible à la même position, y compris en haut de page. Le bouton \u201cTerritoire\u201d ouvre une hiérarchie navigable (région \u2192 département \u2192 CLPE), et le champ \u201cRechercher\u201d permet de saisir directement un nom. \u201cRéinitialiser\u201d efface la sélection en cours ; le bouton de droite affiche ou masque la carte et le niveau géographique.',
           side: 'bottom'
         }
       },
