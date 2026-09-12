@@ -127,8 +127,6 @@ main{max-width:90vw;margin:0 auto;padding:20px 24px 56px}
   .territory-filters-inline{flex-wrap:wrap}
   .territory-toggle-hint{margin-left:0;width:100%;justify-content:center;padding-top:6px}
 }
-.floating-territory-bar{position:fixed;top:calc(var(--header-h, 68px) + 10px);left:50%;transform:translateX(-50%);z-index:860;display:none;box-shadow:var(--sh-md);animation:floatTitleIn .15s ease;width:auto;max-width:92vw}
-@keyframes floatTitleIn{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .cockpit-meta-bar{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ft-fg-3)}
 .cockpit-meta-bar b{color:var(--ft-fg-2);font-weight:600}
 /* Barre latérale de gauche : fond blanc pour le conteneur, chaque onglet avec sa propre
@@ -1686,6 +1684,24 @@ function buildReferentialList(csvText) {
     if (!seen[key]) { seen[key] = 1; out.push({ region: region, departement: dept, clpe: clpe }); }
   });
   REFERENTIAL = out;
+}
+/* Filet de sécurité : le fichier référentiel dédié peut être absent, en échec réseau, ou
+   incomplet. Sans lui, le sélecteur hiérarchique de territoire n'aurait rien à proposer -
+   on complète donc REFERENTIAL avec les combinaisons région/département/CLPE déjà présentes
+   dans les autres jeux de données chargés (maturité, fiches action, population), qui
+   couvrent ensemble la quasi-totalité des territoires même si certains ne remontent pas
+   dans le fichier référentiel lui-même. */
+function completeReferentialFromLoadedData() {
+  var seen = {}; REFERENTIAL.forEach(function (r) { seen[r.region + '|' + r.departement + '|' + r.clpe] = 1; });
+  var extra = [];
+  [ALL, FICHES_DATA, POP_DATA].forEach(function (source) {
+    (source || []).forEach(function (r) {
+      if (!r.region || !r.departement || !r.clpe) return;
+      var key = r.region + '|' + r.departement + '|' + r.clpe;
+      if (!seen[key]) { seen[key] = 1; extra.push({ region: r.region, departement: r.departement, clpe: r.clpe }); }
+    });
+  });
+  if (extra.length) REFERENTIAL = REFERENTIAL.concat(extra);
 }
 function totalClpeInScope() {
   if (!REFERENTIAL.length) return null;
@@ -4762,6 +4778,7 @@ function init() {
       /* Lien direct partageable : ?clpe=X (ou region=X / departement=X) et &onglet=maturite|
          fiches|perf|freq préremplissent le territoire et l'onglet actif au chargement, pour
          permettre d'envoyer un lien direct pointant sur un résultat précis. */
+      completeReferentialFromLoadedData();
       var urlParams = new URLSearchParams(window.location.search);
       var urlClpe = urlParams.get('clpe'), urlRegion = urlParams.get('region'), urlDept = urlParams.get('departement');
       var urlBrique = urlParams.get('onglet');
