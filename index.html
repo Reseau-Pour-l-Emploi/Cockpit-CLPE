@@ -923,7 +923,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
 
     <div class="map-filter-collapse" id="mapFilterCollapse" style="display:none">
     <div class="map-filter-row">
-      <div>
+      <div class="map-col">
         <div class="fgroup" id="mapIndicWrap" style="display:none;margin-bottom:10px"><label for="mapIndic">Indicateur représenté</label><select id="mapIndic"></select></div>
         <div id="map" class="cockpit-map"></div>
         <div class="map-legend" id="mapLegend"></div>
@@ -1056,7 +1056,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
           <div class="section-title" data-guide-key="perf-principaux" role="button" tabindex="0">Principaux résultats<span class="section-title-ico">ℹ️</span></div>
           <div class="hero-row" id="perfHero"></div>
           <div class="section-title" id="perfTableTitle" data-guide-key="perf-tableau" role="button" tabindex="0" style="display:none">Tableau de comparaison<span class="section-title-ico">ℹ️</span></div>
-          <div class="table-scroll">
+          <div class="table-scroll" id="perfTableScroll">
           <table class="clpe" id="perfTable" style="display:none">
             <thead><tr>
               <th data-sort="clpe">CLPE</th>
@@ -4836,7 +4836,7 @@ init();
 
   var driverConfig = {
     showProgress: true,
-    smoothScroll: true,
+    smoothScroll: false,
     stagePadding: 6,
     nextBtnText: 'Suivant \u2192',
     prevBtnText: '\u2190 Précédent',
@@ -4893,6 +4893,28 @@ init();
   })();
 
   /* ---------- Parcours global : navigation générale du site ---------- */
+  /* Ouvre le panneau carte de façon synchrone (sans passer par le setTimeout du clic normal
+     sur le bouton) : plusieurs étapes de la visite guidée ciblent des éléments à l'intérieur
+     de ce panneau (carte, sélecteur d'indicateur) - si l'initialisation de la carte reste
+     différée, driver.js mesure la position de l'élément AVANT qu'elle soit prête, et la
+     surbrillance atterrit au mauvais endroit ou sur un élément encore masqué. */
+  function ensureMapPanelOpenForTour() {
+    var panel = document.getElementById('mapFilterCollapse');
+    var wasClosed = panel.style.display === 'none';
+    if (wasClosed) {
+      panel.style.display = '';
+      document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'true');
+      document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Masquer la carte';
+    }
+    try { theMap.init(); theMap.map.invalidateSize(); theMap.setLevel(theMap.level); } catch (e) {}
+    return wasClosed;
+  }
+  function closeMapPanelForTour() {
+    var panel = document.getElementById('mapFilterCollapse');
+    panel.style.display = 'none';
+    document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
+    document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Afficher la carte';
+  }
   function globalSteps() {
     var territoryStepOpenedPanel = false;
     return [
@@ -4911,27 +4933,18 @@ init();
         }
       },
       {
-        element: '.map-filter-row',
+        element: '.map-col',
         popover: {
           title: 'Choisir un territoire',
-          description: 'Cliquez directement sur la carte pour sélectionner un territoire - toujours synchronisée avec les filtres du bandeau. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active.',
+          description: 'Cliquez directement sur la carte pour sélectionner un territoire - toujours synchronisée avec le sélecteur de territoire du bandeau. Une seule carte, commune à tous les onglets, qui change de fond de couleur selon l\u2019indicateur affiché dans la brique active.',
           side: 'top'
         },
-        onHighlightStarted: function () {
-          var panel = document.getElementById('mapFilterCollapse');
-          territoryStepOpenedPanel = panel.style.display === 'none';
-          if (territoryStepOpenedPanel) document.getElementById('cockpitTerritoryBar').click();
+        onHighlightStarted: function (element) {
+          territoryStepOpenedPanel = ensureMapPanelOpenForTour();
+          if (territoryStepOpenedPanel && element) setTimeout(function () { element.scrollIntoView({ block: 'center', inline: 'center' }); }, 60);
         },
         onDeselected: function () {
-          if (territoryStepOpenedPanel) {
-            var panel = document.getElementById('mapFilterCollapse');
-            if (panel.style.display !== 'none') {
-              panel.style.display = 'none';
-              document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-              document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Afficher la carte';
-            }
-            territoryStepOpenedPanel = false;
-          }
+          if (territoryStepOpenedPanel) { closeMapPanelForTour(); territoryStepOpenedPanel = false; }
         }
       },
       {
@@ -4949,21 +4962,12 @@ init();
           description: 'Cliquez sur cette liste déroulante pour choisir l\u2019indicateur représenté par la couleur de la carte - la liste proposée change selon l\u2019onglet actif.',
           side: 'bottom'
         },
-        onHighlightStarted: function () {
-          var panel = document.getElementById('mapFilterCollapse');
-          territoryStepOpenedPanel = panel.style.display === 'none';
-          if (territoryStepOpenedPanel) document.getElementById('cockpitTerritoryBar').click();
+        onHighlightStarted: function (element) {
+          territoryStepOpenedPanel = ensureMapPanelOpenForTour();
+          if (territoryStepOpenedPanel && element) setTimeout(function () { element.scrollIntoView({ block: 'center', inline: 'center' }); }, 60);
         },
         onDeselected: function () {
-          if (territoryStepOpenedPanel) {
-            var panel = document.getElementById('mapFilterCollapse');
-            if (panel.style.display !== 'none') {
-              panel.style.display = 'none';
-              document.getElementById('cockpitTerritoryBar').setAttribute('aria-expanded', 'false');
-              document.getElementById('cockpitTerritoryBar').textContent = '\u270F\uFE0F Afficher la carte';
-            }
-            territoryStepOpenedPanel = false;
-          }
+          if (territoryStepOpenedPanel) { closeMapPanelForTour(); territoryStepOpenedPanel = false; }
         }
       },
       {
@@ -5025,6 +5029,7 @@ init();
   }
 
   /* ---------- Parcours par onglet : indicateurs, navigation, interprétation ---------- */
+  var perfMapStepOpenedPanel = false;
   var tabSteps = {
     maturite: function () {
       var steps = [
@@ -5041,12 +5046,17 @@ init();
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et la méthodologie de cet onglet.',
             side: 'bottom'
           },
-          onHighlightStarted: function () {
+          onHighlightStarted: function (element) {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="maturite"]');
             var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
-            else { details.open = true; syncSourceTabCol(); }
+            if (details.open) {
+              details.open = false; syncSourceTabCol();
+              setTimeout(function () { details.open = true; syncSourceTabCol(); if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60); }, 400);
+            } else {
+              details.open = true; syncSourceTabCol();
+              if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60);
+            }
           },
           onDeselected: function () {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="maturite"]');
@@ -5125,12 +5135,17 @@ init();
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte, la méthodologie de calcul du score et le lien vers l\u2019outil d\u2019évaluation d\u2019une fiche action.',
             side: 'bottom'
           },
-          onHighlightStarted: function () {
+          onHighlightStarted: function (element) {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="fiches"]');
             var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
-            else { details.open = true; syncSourceTabCol(); }
+            if (details.open) {
+              details.open = false; syncSourceTabCol();
+              setTimeout(function () { details.open = true; syncSourceTabCol(); if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60); }, 400);
+            } else {
+              details.open = true; syncSourceTabCol();
+              if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60);
+            }
           },
           onDeselected: function () {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="fiches"]');
@@ -5202,12 +5217,17 @@ init();
               description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
               side: 'bottom'
             },
-            onHighlightStarted: function () {
+            onHighlightStarted: function (element) {
               var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
               var details = activePanel ? activePanel.querySelector('details') : null;
               if (!details) return;
-              if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
-              else { details.open = true; syncSourceTabCol(); }
+              if (details.open) {
+                details.open = false; syncSourceTabCol();
+                setTimeout(function () { details.open = true; syncSourceTabCol(); if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60); }, 400);
+              } else {
+                details.open = true; syncSourceTabCol();
+                if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60);
+              }
             },
             onDeselected: function () {
               var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
@@ -5217,15 +5237,18 @@ init();
             }
           },
           {
-            element: '.map-filter-row',
+            element: '.map-col',
             popover: {
               title: 'Sélectionnez un CLPE',
-              description: 'Cet onglet n\u2019affiche de résultat que pour un CLPE précisément sélectionné - filtrer par région ou département seul ne suffit pas. Choisissez un CLPE ici ou sur la carte pour voir ses indicateurs.',
+              description: 'Cet onglet n\u2019affiche de résultat que pour un CLPE précisément sélectionné - filtrer par région ou département seul ne suffit pas. Choisissez un CLPE sur la carte, ou via le sélecteur \u201cTerritoire\u201d du bandeau, pour voir ses indicateurs.',
               side: 'top'
             },
-            onHighlightStarted: function () {
-              var panel = document.getElementById('mapFilterCollapse');
-              if (panel.style.display === 'none') document.getElementById('cockpitTerritoryBar').click();
+            onHighlightStarted: function (element) {
+              perfMapStepOpenedPanel = ensureMapPanelOpenForTour();
+              if (perfMapStepOpenedPanel && element) setTimeout(function () { element.scrollIntoView({ block: 'center', inline: 'center' }); }, 60);
+            },
+            onDeselected: function () {
+              if (perfMapStepOpenedPanel) { closeMapPanelForTour(); perfMapStepOpenedPanel = false; }
             }
           }
         ];
@@ -5244,12 +5267,17 @@ init();
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte et les précautions de lecture de cet onglet.',
             side: 'bottom'
           },
-          onHighlightStarted: function () {
+          onHighlightStarted: function (element) {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
             var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
-            else { details.open = true; syncSourceTabCol(); }
+            if (details.open) {
+              details.open = false; syncSourceTabCol();
+              setTimeout(function () { details.open = true; syncSourceTabCol(); if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60); }, 400);
+            } else {
+              details.open = true; syncSourceTabCol();
+              if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60);
+            }
           },
           onDeselected: function () {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="perf"]');
@@ -5267,7 +5295,7 @@ init();
           }
         },
         {
-          element: '#perfTable',
+          element: '#perfTableScroll',
           popover: {
             title: 'Le tableau des territoires proches',
             description: 'Liste les 10 CLPE retenus pour la comparaison et leurs résultats. La proximité socio-économique n\u2019est pas réciproque : un territoire peut apparaître comme proche d\u2019un autre sans que l\u2019inverse soit vrai.',
@@ -5297,12 +5325,17 @@ init();
             description: 'Ce bandeau vertical, sur le bord droit, rappelle en permanence sur quel onglet vous êtes. Cliquez dessus pour remonter en haut de page et déplier le contexte de cet onglet.',
             side: 'bottom'
           },
-          onHighlightStarted: function () {
+          onHighlightStarted: function (element) {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="freq"]');
             var details = activePanel ? activePanel.querySelector('details') : null;
             if (!details) return;
-            if (details.open) { details.open = false; syncSourceTabCol(); setTimeout(function () { details.open = true; syncSourceTabCol(); }, 400); }
-            else { details.open = true; syncSourceTabCol(); }
+            if (details.open) {
+              details.open = false; syncSourceTabCol();
+              setTimeout(function () { details.open = true; syncSourceTabCol(); if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60); }, 400);
+            } else {
+              details.open = true; syncSourceTabCol();
+              if (element) setTimeout(function () { element.scrollIntoView({ block: 'start', inline: 'center' }); }, 60);
+            }
           },
           onDeselected: function () {
             var activePanel = document.querySelector('.intro-blocks-panel[data-brick="freq"]');
@@ -5358,7 +5391,45 @@ init();
         if (userOnDestroyed) userOnDestroyed();
       }
     });
-    var cfg = Object.assign({}, driverConfig, { steps: steps }, wrappedOpts);
+    var wrappedSteps = (steps || []).map(function (step) {
+      var originalHook = step.onHighlightStarted;
+      return Object.assign({}, step, {
+        onHighlightStarted: function (element, s, options) {
+          if (originalHook) originalHook(element, s, options);
+          var d = options && options.driver;
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              var stickyBar = document.querySelector('.cockpit-context-bar');
+              var elementIsSticky = element && stickyBar && stickyBar.contains(element);
+              if (element && element.scrollIntoView && !elementIsSticky) {
+                var stickyH = stickyBar ? stickyBar.getBoundingClientRect().height : 0;
+                var availableH = window.innerHeight - stickyH;
+                var elH = element.getBoundingClientRect().height;
+                if (elH > availableH) {
+                  element.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
+                  window.scrollBy(0, -(stickyH + 8));
+                } else {
+                  element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+                  var r = element.getBoundingClientRect();
+                  if (r.top < stickyH) window.scrollBy(0, r.top - stickyH - 8);
+                  else if (r.bottom > window.innerHeight) window.scrollBy(0, Math.min(r.bottom - window.innerHeight + 8, r.top - stickyH - 8));
+                }
+              } else if (!element || elementIsSticky) {
+                /* Étape sans élément ciblé (message d'accueil ou de clôture), ou dont
+                   l'élément fait partie du bandeau fixe (toujours visible à l'écran) :
+                   driver.js déplace malgré tout la page en interne (scrollIntoView sur son
+                   propre contenu de popover), même si celui-ci est en position fixe et n'a
+                   donc besoin d'aucun défilement pour être visible. On neutralise ce
+                   déplacement indésirable en revenant en haut de page. */
+                window.scrollTo({ top: 0, behavior: 'auto' });
+              }
+              if (d) d.refresh();
+            });
+          });
+        }
+      });
+    });
+    var cfg = Object.assign({}, driverConfig, { steps: wrappedSteps }, wrappedOpts);
     var tour = window.driver.js.driver(cfg);
     tour.drive();
     return tour;
@@ -5366,6 +5437,7 @@ init();
 
   function startGlobalTour() {
     clickBrick('maturite');
+    window.scrollTo({ top: 0, behavior: 'auto' });
     runTour(globalSteps());
   }
 
@@ -5392,6 +5464,7 @@ init();
     clearClpeWatcher();
     clickBrick(brick);
     setTimeout(function () {
+      window.scrollTo({ top: 0, behavior: 'auto' });
       var steps = stepsFn();
       var needsClpeWatch = brick === 'perf' && !state.clpe;
       var tour = runTour(steps, needsClpeWatch ? { onDestroyed: clearClpeWatcher } : null);
