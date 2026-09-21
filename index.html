@@ -1703,13 +1703,14 @@ function buildReferentialList(csvText) {
    couvrent ensemble la quasi-totalité des territoires même si certains ne remontent pas
    dans le fichier référentiel lui-même. */
 function completeReferentialFromLoadedData() {
-  var seen = {}; REFERENTIAL.forEach(function (r) { seen[r.region + '|' + r.departement + '|' + r.clpe] = 1; });
+  var seen = {}; REFERENTIAL.forEach(function (r) { seen[normApostrophes(r.region) + '|' + normApostrophes(r.departement) + '|' + normApostrophes(r.clpe)] = 1; });
   var extra = [];
   [ALL, FICHES_DATA, POP_DATA].forEach(function (source) {
     (source || []).forEach(function (r) {
       if (!r.region || !r.departement || !r.clpe) return;
-      var key = r.region + '|' + r.departement + '|' + r.clpe;
-      if (!seen[key]) { seen[key] = 1; extra.push({ region: r.region, departement: r.departement, clpe: r.clpe }); }
+      var region = normApostrophes(r.region), dept = normApostrophes(r.departement), clpe = normApostrophes(r.clpe);
+      var key = region + '|' + dept + '|' + clpe;
+      if (!seen[key]) { seen[key] = 1; extra.push({ region: region, departement: dept, clpe: clpe }); }
     });
   });
   if (extra.length) REFERENTIAL = REFERENTIAL.concat(extra);
@@ -4711,7 +4712,7 @@ function init() {
       buildGeoMatchClpe();
       buildTerritoryIndex();
 
-      SESSIONS_WEEK_DATA = parseSimpleCSV(res[6]).map(function (r) { return { region: r.region, departement: r.departement, clpe: r.clpe, semaine: r.semaine, nb: +r.nb_sessions }; });
+      SESSIONS_WEEK_DATA = parseSimpleCSV(res[6]).map(function (r) { return { region: normRegionName(r.region), departement: normApostrophes(r.departement), clpe: normApostrophes(r.clpe), semaine: r.semaine, nb: +r.nb_sessions }; });
       /* Vue mensuelle dérivée de la même source hebdomadaire (règle ISO du jeudi de la
          semaine pour déterminer le mois d'appartenance) : un seul fichier à tenir à jour,
          les deux vues ne peuvent plus diverger l'une de l'autre. */
@@ -4729,7 +4730,7 @@ function init() {
         var months = {};
         for (var m = 1; m <= 12; m++) { var mm = (m < 10 ? '0' + m : '' + m); months[mm] = +r['nb_fiches_m' + mm] || 0; }
         return {
-          region: r.region, departement: r.departement, clpe: r.clpe, annee: r.annee || '',
+          region: normRegionName(r.region), departement: normApostrophes(r.departement), clpe: normApostrophes(r.clpe), annee: r.annee || '',
           nbFiches: +r.nb_fiches_action, nbActeurs: +r.nb_acteurs_associes, nbBeneficiaires: +r.nb_beneficiaires,
           nbFichesAvecBeneficiaires: +r.nb_fiches_avec_beneficiaires,
           innovant: +r.critere_innovant, impact: +r.critere_impact_usager,
@@ -4765,7 +4766,7 @@ function init() {
         return row;
       });
       buildPerfIndex();
-      POP_DATA = parseSimpleCSV(res[9]).map(function (r) { return { region: r.region, departement: r.departement, clpe: r.clpe, population: +r.population }; });
+      POP_DATA = parseSimpleCSV(res[9]).map(function (r) { return { region: normRegionName(r.region), departement: normApostrophes(r.departement), clpe: normApostrophes(r.clpe), population: +r.population }; });
       RECOMMANDATIONS = {};
       parseSimpleCSV(res[10]).forEach(function (r) {
         var q = +r.question, niv = +r.niveau;
