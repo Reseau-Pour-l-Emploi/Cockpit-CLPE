@@ -1399,8 +1399,33 @@ function updateDataUpdatedLabel() {
    qui ne reflète pas fiablement la date réelle de mise à jour du contenu. */
 var GITHUB_REPO = 'Reseau-Pour-l-Emploi/Cockpit-CLPE';
 var GITHUB_SOURCE_PATH = { maturite: 'data/answers_global.xlsx', fiches: 'data/fiches_action.csv', freq: 'data/tdb_rpe_frequentation.csv', perf: 'data/clpe_tae_tpe.csv' };
+/* L'API GitHub non authentifiée est limitée à 60 requêtes/heure par IP. Avec 4 appels à
+   chaque chargement de page, un réseau partagé (plusieurs personnes sur le même réseau
+   d'entreprise) épuise vite ce quota, faisant retomber la date affichée sur le repli
+   codé en dur CONFIG.dataUpdatedAt de façon imprévisible. On met donc en cache la date
+   obtenue (localStorage, 12h) pour limiter le nombre d'appels par visiteur, et on
+   retombe sur une valeur en cache même expirée plutôt que sur le repli générique si un
+   appel frais échoue - une date réelle un peu ancienne reste plus utile qu'une date
+   fixe qui ne l'est pas. */
+var GH_DATE_CACHE_KEY_PREFIX = 'ghCommitDate_';
+var GH_DATE_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+function readGithubDateCache(brick) {
+  try {
+    var raw = localStorage.getItem(GH_DATE_CACHE_KEY_PREFIX + brick);
+    if (!raw) return null;
+    var parsed = JSON.parse(raw);
+    var d = new Date(parsed.iso);
+    if (isNaN(d)) return null;
+    return { date: d, fresh: (Date.now() - parsed.fetchedAt) < GH_DATE_CACHE_TTL_MS };
+  } catch (e) { return null; }
+}
+function writeGithubDateCache(brick, iso) {
+  try { localStorage.setItem(GH_DATE_CACHE_KEY_PREFIX + brick, JSON.stringify({ iso: iso, fetchedAt: Date.now() })); } catch (e) {}
+}
 function fetchGithubLastCommitDates() {
   Object.keys(GITHUB_SOURCE_PATH).forEach(function (brick) {
+    var cached = readGithubDateCache(brick);
+    if (cached) { sourceLastModified[brick] = cached.date; updateDataUpdatedLabel(); if (cached.fresh) return; }
     var url = 'https://api.github.com/repos/' + GITHUB_REPO + '/commits?path=' + encodeURIComponent(GITHUB_SOURCE_PATH[brick]) + '&page=1&per_page=1';
     fetch(url, { headers: { Accept: 'application/vnd.github+json' } })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -1411,9 +1436,10 @@ function fetchGithubLastCommitDates() {
         var d = new Date(iso);
         if (isNaN(d)) return;
         sourceLastModified[brick] = d;
+        writeGithubDateCache(brick, iso);
         updateDataUpdatedLabel();
       })
-      .catch(function () { /* API GitHub indisponible ou limite de requêtes atteinte : on garde le repli CONFIG.dataUpdatedAt déjà affiché. */ });
+      .catch(function () { /* API GitHub indisponible ou limite de requêtes atteinte : on garde le repli déjà affiché (cache existant, même expiré, ou sinon CONFIG.dataUpdatedAt). */ });
   });
 }
 var state = { region: '', dept: '', clpe: '', qview: 'part', expanded: null, trimestre: '' };
