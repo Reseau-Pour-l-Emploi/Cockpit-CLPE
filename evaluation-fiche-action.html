@@ -102,6 +102,15 @@ input[type=file]{display:none}
 .method-table td{padding:8px 8px;border-bottom:1px solid var(--ft-sable-dark);vertical-align:top;font-size:12px}
 .method-table .mw{width:52px;font-weight:700;color:var(--ft-indigo);white-space:nowrap;text-align:center}
 .method-table tr:first-child td{border-top:1px solid var(--ft-sable-dark)}
+.method-table .ref-fam td{background:var(--ft-indigo-light);color:var(--ft-navy);font-weight:700;font-size:12px;padding:5px 8px}
+.method-table .ref-head td{font-size:11px;color:var(--ft-fg-3)}
+.method-table .ref-axe{color:var(--ft-fg-3);font-size:11px}
+.seuils-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.seuils-grid div{border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.4}
+.seuils-grid .s-axe{background:#fdecea}
+.seuils-grid .s-mid{background:var(--ft-sable)}
+.seuils-grid .s-fort{background:#e7f5ec}
+@media(max-width:700px){.seuils-grid{grid-template-columns:1fr}}
 .reset-row{text-align:center;margin-top:20px}
 </style>
 </head>
@@ -130,7 +139,7 @@ input[type=file]{display:none}
 
         <div id="methodSimple">
           <p>Chaque fiche est notée sur <b>100 points</b>, à partir de 4 grands critères : le <b>score de la description</b> (25&nbsp;%), l'<b>impact usager</b> (30&nbsp;%), le <b>bilan et la valorisation</b> (25&nbsp;%, une fois renseigné) et le <b>caractère innovant</b> (20&nbsp;%, en évaluation de lot uniquement).</p>
-          <p>À partir de ces mêmes éléments, l'outil identifie aussi jusqu'à <b>3 axes de progrès</b> (les points les plus faibles) et <b>3 points forts</b> (les points les plus solides) de chaque fiche. Certains critères comptent plus que d'autres dans ce classement : par exemple, des objectifs non chiffrés pèsent davantage qu'un titre mal formulé, parce que l'absence d'objectifs a un impact plus concret sur le pilotage de l'action.</p>
+          <p>L'outil vérifie aussi <b>19 critères de qualité</b>, identiques pour une fiche seule et pour un lot. Chacun reçoit un score de 0 à 100&nbsp;% et possède deux seuils, calibrés sur les fiches du réseau : sous le premier, c'est un 🔴 <b>axe de progrès</b> ; à partir du second, un 🟢 <b>point fort</b> ; entre les deux, 🟠 <b>à consolider</b>. Un critère ne peut jamais être à la fois point fort et axe de progrès, et chaque fiche reçoit au moins un point fort et un axe de progrès. Ces constats portent sur la <b>qualité de la fiche</b> (documentation, pilotage, capitalisation), pas sur l'efficacité réelle de l'action.</p>
           <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils), pas sur un modèle d'intelligence artificielle : c'est une aide à la relecture, pas un jugement définitif sur la valeur de l'action.</p>
         </div>
 
@@ -144,13 +153,20 @@ input[type=file]{display:none}
           </table>
           <p style="margin-top:10px">En évaluation d'une fiche isolée (PDF), le critère "caractère innovant" n'est pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100&nbsp;%.</p>
 
-          <p style="margin-top:16px"><b>Axes de progrès et points forts (jusqu'à 3 de chaque)</b></p>
-          <p>Chaque fiche est décomposée en 16 sous-critères notés individuellement de 0 à 1 (ex. clarté de la description, présence d'objectifs chiffrés, diversité des acteurs...). Les <b>axes de progrès</b> et les <b>points forts</b> reposent sur le même classement, à l'opposé l'un de l'autre :</p>
+          <p style="margin-top:16px"><b>Référentiel des critères : axes de progrès et points forts</b></p>
+          <p>Un référentiel unique de 19 critères sert à l'évaluation d'une fiche isolée comme à l'évaluation en lot. Chaque critère est noté de 0 à 100&nbsp;%, puis positionné sur ses deux seuils (tableau ci-dessous) :</p>
+          <div class="seuils-grid">
+            <div class="s-axe">🔴 <b>Axe de progrès</b><br>score inférieur au seuil «&nbsp;axe&nbsp;»</div>
+            <div class="s-mid">🟠 <b>À consolider</b><br>entre les deux seuils</div>
+            <div class="s-fort">🟢 <b>Point fort</b><br>score supérieur ou égal au seuil «&nbsp;point fort&nbsp;»</div>
+          </div>
+          <p><b>Calibrage</b> : les seuils ont été déterminés sur <span id="calibN">1&nbsp;527</span> fiches du réseau (septembre 2026). Le seuil «&nbsp;axe&nbsp;» correspond au quart des fiches les moins bien renseignées sur le critère (borné entre 35 et 60&nbsp;%), le seuil «&nbsp;point fort&nbsp;» au quart le mieux renseigné (borné entre 75 et 100&nbsp;%). Un critère atteint par plus de 60&nbsp;% des fiches est un <b>critère socle</b> : non distinctif, il peut signaler un axe de progrès mais pas un point fort. Les <b>critères bonus</b> (nombre de bénéficiaires, cadre dans lequel s'inscrit l'action) sont valorisés comme point fort lorsqu'ils sont renseignés, sans jamais constituer un axe de progrès.</p>
+          <p>Un critère non applicable (étapes et indicateurs de suivi pour une action de 60 jours ou moins, bilan avant l'échéance, texte tronqué dans l'export Excel) n'est ni l'un ni l'autre. Si une fiche n'a aucun point fort, le critère «&nbsp;à consolider&nbsp;» le mieux noté est retenu ; si elle n'a aucun axe de progrès, le critère le plus faible hors point fort est retenu. Ordre d'affichage (3 maximum) :</p>
           <ul style="margin:6px 0 10px;padding-left:20px">
-            <li><b>Priorité d'un axe de progrès</b> = (1 − score du critère) × poids de criticité du critère. Les 3 valeurs les plus hautes deviennent les 3 axes de progrès affichés.</li>
-            <li><b>Priorité d'un point fort</b> = score du critère × poids de criticité du critère. Les 3 valeurs les plus hautes deviennent les 3 points forts affichés.</li>
+            <li><b>Axe de progrès</b> : priorité = (1 − score) × poids de criticité.</li>
+            <li><b>Point fort</b> : priorité = score × poids de criticité.</li>
           </ul>
-          <p>Le <b>poids de criticité</b> reflète l'impact réel de chaque critère sur le pilotage de l'action, de 0,5 (peu impactant, ex. longueur du titre) à 2,0 (très impactant, ex. objectifs chiffrés ou impact usager absent) :</p>
+          <p>Le <b>poids de criticité</b> reflète l'impact du critère sur le pilotage de l'action, de 0,5 (longueur du titre) à 2,0 (objectifs chiffrés, impact usager) :</p>
           <table class="method-table" id="methodWeightsTable"></table>
           <p style="margin-top:10px">En évaluation de lot, la synthèse par territoire (points forts/axes de progrès du périmètre) compte, pour chaque fiche, uniquement son critère n°1 dans chaque classement, puis calcule la fréquence de chaque critère sur l'ensemble du lot.</p>
           <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action.</p>
@@ -449,8 +465,19 @@ function clarityScore(text) {
   var ttrScore = Math.min(1, ttr / 0.62);
   return Math.max(0, Math.min(1, 0.5 * sentScore + 0.5 * ttrScore));
 }
-var USER_KW = ["demandeur d'emploi", 'demandeurs d\'emploi', 'jeune', 'sénior', 'senior', 'rsa', 'femme', 'scolaire', 'chercheur d\'emploi', 'salarié', 'apprenti', 'travailleur handicapé'];
-var SMART_PATTERNS = [/\d+\s*%/, /d['e\s]+ici/i, /objectif/i, /\bcible\b/i, /atteindre/i, /avant\s+(le\s+)?\d/i, /taux\s+d/i, /nombre\s+de\b.{0,20}\d/i, /\d{1,3}\s*(personnes|participants|candidats|demandeurs)/i, /\d+\s*(mois|semaines|jours)/i];
+var USER_KW = [/* Publics usagers finaux : personnes accompagnées (la liste couvre les libellés du champ
+     "Public cible" des fiches). Entreprises, filières, professionnels et financeurs n'en font pas partie. */
+  "demandeur d'emploi", "demandeurs d'emploi", "chercheur d'emploi", 'chômeur', 'chômeurs', 'jeune', 'sénior', 'senior',
+  'rsa', 'femme', 'scolaire', 'étudiant', 'salarié', 'apprenti', 'alternant', 'stagiaire', 'intérimaire', 'saisonnier',
+  'travailleur handicapé', 'situation de handicap', 'handicap', 'qpv', 'quartier prioritaire', 'zone rurale',
+  'réfugié', 'primo-arrivant', 'étranger', 'allophone', 'invisible', 'infra bac', 'illettrisme', 'licencié',
+  "créateur d'entreprise", "créateurs d'entreprise", 'cadre', 'sous main de justice', 'sans domicile', 'transfrontalier',
+  'longue durée', 'bénéficiaire', 'personne', 'habitant', 'parent', 'famille', 'zone r', 'travailleur'];
+var SMART_PATTERNS = [/\d+([.,]\d+)?\s*(%|pour\s?cent)/i, /d['e\s]+ici/i, /\bobjectif/i, /\bcible\b/i, /atteindre/i,
+  /avant\s+(le\s+)?\d/i, /taux\s+d/i, /nombre\s+de\b.{0,20}\d/i,
+  /\d{1,4}\s*(personnes|participants|candidats|demandeurs|jeunes|bénéficiaires|entreprises|employeurs|recrutements|embauches|contrats|immersions|entrées|sorties|placements|offres|postes|places|inscrits|stagiaires|femmes|séniors|seniors|visiteurs|ateliers|sessions|réunions|rencontres|actions|structures|établissements)/i,
+  /\d+\s*(mois|semaines|jours|ans|an)\b/i, /(fin|courant|début|au)\s+(\d{4}|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|\d{1,2}(er|e)?\s+trimestre|\d{1,2}(er|e)?\s+semestre)/i,
+  /par\s+(an|mois|trimestre|semestre|semaine|session|promotion)\b/i, /sorties?\s+positives?/i, /(au\s+moins|minimum|a\s+minima)\s+\d/i];
 function hasSmart(t) { return SMART_PATTERNS.some(function (p) { return p.test(t || ''); }); }
 function isUserFacing(publics) {
   var joined = (publics || []).join(' ').toLowerCase();
@@ -463,9 +490,28 @@ function daysSince(d, ref) { return d ? (ref - d) / 86400000 : null; }
    MOTEUR DE NOTATION UNIFIÉ - partagé par l'évaluation d'une fiche isolée (PDF)
    et l'évaluation en lot (Excel). Toutes les notes sont sur 100.
    ============================================================================ */
-var USER_KW = ["demandeur d'emploi", 'demandeurs d\'emploi', 'jeune', 'sénior', 'senior', 'rsa', 'femme', 'scolaire', 'chercheur d\'emploi', 'salarié', 'apprenti', 'travailleur handicapé'];
-var SMART_PATTERNS = [/\d+\s*%/, /d['e\s]+ici/i, /objectif/i, /\bcible\b/i, /atteindre/i, /avant\s+(le\s+)?\d/i, /taux\s+d/i, /nombre\s+de\b.{0,20}\d/i, /\d{1,3}\s*(personnes|participants|candidats|demandeurs)/i, /\d+\s*(mois|semaines|jours)/i];
+var USER_KW = [/* Publics usagers finaux : personnes accompagnées (la liste couvre les libellés du champ
+     "Public cible" des fiches). Entreprises, filières, professionnels et financeurs n'en font pas partie. */
+  "demandeur d'emploi", "demandeurs d'emploi", "chercheur d'emploi", 'chômeur', 'chômeurs', 'jeune', 'sénior', 'senior',
+  'rsa', 'femme', 'scolaire', 'étudiant', 'salarié', 'apprenti', 'alternant', 'stagiaire', 'intérimaire', 'saisonnier',
+  'travailleur handicapé', 'situation de handicap', 'handicap', 'qpv', 'quartier prioritaire', 'zone rurale',
+  'réfugié', 'primo-arrivant', 'étranger', 'allophone', 'invisible', 'infra bac', 'illettrisme', 'licencié',
+  "créateur d'entreprise", "créateurs d'entreprise", 'cadre', 'sous main de justice', 'sans domicile', 'transfrontalier',
+  'longue durée', 'bénéficiaire', 'personne', 'habitant', 'parent', 'famille', 'zone r', 'travailleur'];
+var SMART_PATTERNS = [/\d+([.,]\d+)?\s*(%|pour\s?cent)/i, /d['e\s]+ici/i, /\bobjectif/i, /\bcible\b/i, /atteindre/i,
+  /avant\s+(le\s+)?\d/i, /taux\s+d/i, /nombre\s+de\b.{0,20}\d/i,
+  /\d{1,4}\s*(personnes|participants|candidats|demandeurs|jeunes|bénéficiaires|entreprises|employeurs|recrutements|embauches|contrats|immersions|entrées|sorties|placements|offres|postes|places|inscrits|stagiaires|femmes|séniors|seniors|visiteurs|ateliers|sessions|réunions|rencontres|actions|structures|établissements)/i,
+  /\d+\s*(mois|semaines|jours|ans|an)\b/i, /(fin|courant|début|au)\s+(\d{4}|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|\d{1,2}(er|e)?\s+trimestre|\d{1,2}(er|e)?\s+semestre)/i,
+  /par\s+(an|mois|trimestre|semestre|semaine|session|promotion)\b/i, /sorties?\s+positives?/i, /(au\s+moins|minimum|a\s+minima)\s+\d/i];
 function hasSmart(t) { return SMART_PATTERNS.some(function (p) { return p.test(t || ''); }); }
+/* Objectif chiffré ET daté : une quantité (nombre, taux, pourcentage) associée à un horizon
+   temporel (échéance, durée, période). Plus exigeant que hasSmart, qui accepte l'un ou l'autre. */
+var QUANTITE_PATTERNS = [/\d+([.,]\d+)?\s*(%|pour\s?cent)/i, /taux\s+d/i, /\d{1,4}\s*[a-zéèêàç]{3,}/i, /(au\s+moins|minimum|a\s+minima)\s+\d/i];
+var HORIZON_PATTERNS = [/d['e\s]+ici/i, /\d+\s*(mois|semaines|jours|ans|an)\b/i, /(avant|fin|courant|début|au|en)\s+(le\s+)?(\d{4}|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|\d{1,2}(er|e)?\s+(trimestre|semestre))/i, /par\s+(an|mois|trimestre|semestre|semaine|promotion|session)\b/i, /(à|a)\s+l['’]issue/i, /\b20\d{2}\b/];
+function hasObjectifChiffreDate(t) {
+  t = t || '';
+  return QUANTITE_PATTERNS.some(function (p) { return p.test(t); }) && HORIZON_PATTERNS.some(function (p) { return p.test(t); });
+}
 function countSmartHits(t) { var n = 0; SMART_PATTERNS.forEach(function (p) { if (p.test(t || '')) n++; }); return n; }
 function isUserFacing(publics) {
   var joined = (publics || []).join(' ').toLowerCase();
@@ -475,26 +521,54 @@ function daysSince(d, ref) { return d ? (ref - d) / 86400000 : null; }
 
 var VERBES_ACTION = ['mobiliser', 'former', 'orienter', 'accompagner', 'développer', 'renforcer', 'structurer',
   'coordonner', 'informer', 'faciliter', 'créer', 'organiser', 'animer', 'déployer', 'proposer', 'construire',
-  'identifier', 'sécuriser', 'favoriser', 'améliorer', 'mettre en place', 'mettre en œuvre'];
-var JARGON_FLOU = ['synergie', 'synergies', 'dynamique', 'transversal', 'transversale', 'écosystème',
-  'proactif', 'disruptif', 'accompagnement global', 'à 360°', 'à 360'];
-var PUBLICS_PRIORITAIRES_KW = ['qpv', 'quartier prioritaire', 'zrr', 'zone de revitalisation', 'deld',
-  'longue durée', 'jeune', 'senior', 'sénior', 'travailleur handicapé', 'travailleuse handicapée', 'rsa',
-  'bénéficiaire du rsa', 'femme', 'primo-arrivant', 'réfugié'];
-var TYPOLOGIE_NIVEAU3_KW = ["accès à l'emploi", "accès direct à l'emploi", 'formation qualifiante',
-  'contrat de travail', 'embauche', 'recrutement', 'insertion professionnelle', "retour à l'emploi"];
-var TYPOLOGIE_NIVEAU2_KW = ['compétence', 'compétences', 'levée de frein', 'lever les freins',
-  'freins périphériques', 'qualification', 'montée en compétence'];
-var TYPOLOGIE_NIVEAU1_KW = ['information', 'sensibilisation', 'sensibiliser', 'découverte', 'communication'];
-var RETEX_FORTS_KW = ['point fort', 'points forts', 'réussite', 'réussites', 'succès', 'satisfaction'];
+  'identifier', 'sécuriser', 'favoriser', 'améliorer', 'mettre en place', 'mettre en œuvre', 'mettre en oeuvre',
+  'définir', 'recenser', 'promouvoir', 'sensibiliser', 'réaliser', 'préparer', 'valoriser', 'communiquer',
+  'présenter', 'déterminer', 'réunir', 'établir', 'etablir', 'cibler', 'repérer', 'recueillir', 'partager',
+  'lever', 'intégrer', 'prospecter', 'rencontrer', 'adapter', 'élaborer', 'planifier', 'cartographier',
+  'contacter', 'analyser', 'évaluer', 'diagnostiquer', 'recruter', 'insérer', 'outiller', 'co-construire',
+  'expérimenter', 'piloter', 'suivre', 'dresser', 'constituer', 'formaliser', 'diffuser', 'lancer', 'élargir',
+  'étendre', 'consolider', 'mutualiser', 'capitaliser', 'aller vers', 'remobiliser', 'positionner', 'prescrire'];
+var JARGON_FLOU = ['synergie', 'synergies', 'dynamique partenariale', 'transversal', 'transversale', 'écosystème',
+  'proactif', 'disruptif', 'accompagnement global', 'à 360°', 'à 360', 'holistique', 'fluidifier', 'impulser',
+  'dynamiser', 'optimiser les', 'booster', 'catalyser', 'intelligence collective', 'en mode projet', 'leviers d\'actions',
+  'démarche globale', 'approche globale', 'et cetera', 'etc.'];
+var PUBLICS_PRIORITAIRES_KW = ['qpv', 'quartier prioritaire', 'zrr', 'zone de revitalisation', 'zone rurale', 'deld',
+  'longue durée', 'jeune', 'senior', 'sénior', 'travailleur handicapé', 'travailleuse handicapée', 'situation de handicap',
+  'rsa', 'bénéficiaire du rsa', 'femme', 'primo-arrivant', 'réfugié', 'invisible', 'infra bac', 'allophone',
+  'illettrisme', 'sous main de justice', 'sans domicile', 'iae', 'décrocheur', 'neet', 'parent isolé', 'famille monoparentale'];
+var TYPOLOGIE_NIVEAU3_KW = ["accès à l'emploi", "accès direct à l'emploi", 'formation qualifiante', 'formation certifiante',
+  'contrat de travail', 'embauche', 'recrutement', 'insertion professionnelle', "retour à l'emploi", "retour en emploi",
+  "mise en emploi", 'emploi durable', 'sortie positive', 'sorties positives', 'cdi', 'cdd', 'alternance',
+  "contrat d'apprentissage", 'contrat de professionnalisation', 'job dating', 'job-dating', 'placement', "prise de poste", 'intermédiation',
+  'promotion de profils', 'mise en relation', 'zéro chômeur', 'zero chomeur', 'duo day', 'duoday'];
+var TYPOLOGIE_NIVEAU2_KW = ['compétence', 'compétences', 'levée de frein', 'lever les freins', 'freins périphériques',
+  'qualification', 'montée en compétence', 'immersion', 'pmsmp', 'mise en situation', 'savoir-être', 'savoir être',
+  'mobilité', "garde d'enfant", 'logement', 'permis de conduire', 'remobilisation', 'confiance en soi',
+  'préqualification', 'pré-qualification', 'projet professionnel', 'estime de soi', 'savoirs de base', 'mentorat',
+  'parrainage', 'travail sur les compétences', 'diagnostic', 'formation'];
+var TYPOLOGIE_NIVEAU1_KW = ['information', 'sensibilisation', 'sensibiliser', 'découverte', 'communication', 'forum',
+  "réunion d'information", 'salon', 'visite', 'présentation des métiers', 'webinaire'];
+var RETEX_FORTS_KW = ['point fort', 'points forts', 'réussite', 'réussi', 'succès', 'satisfaction', 'satisfait',
+  'a permis', 'ont permis', 'positif', 'positive', 'retours positifs', 'objectif atteint', 'objectifs atteints',
+  'dépassé', 'bonne participation', 'forte mobilisation', 'sorties positives', 'plus-value', 'bénéfique',
+  'satisfaction', 'satisfaits', 'retours très positifs', 'bons retours', 'retour à l\'emploi', 'retour en emploi',
+  'embauché', 'embauchés', 'recrutés', 'ont été recrutés', 'en emploi', 'intégré', 'intégrés', 'ont trouvé',
+  'mobilisé', 'dynamique créée', 'appréciée', 'apprécié', 'efficace', 'pertinente', 'intérêt', 'fructueux'];
 var RETEX_AMELIO_KW = ["axe d'amélioration", "axes d'amélioration", 'point de vigilance', 'difficulté',
-  'difficultés', 'limite', 'limites', 'frein rencontré'];
+  'difficultés', 'limite', 'limites', 'frein rencontré', 'à améliorer', 'insuffisant', 'insuffisante', 'faible',
+  'manque de', 'faute de', "n'a pas pu", 'pas pu être', 'annulé', 'annulée', 'reporté', 'peu de participants',
+  'mobilisation difficile', 'absence de', 'à retravailler', 'à revoir', "n'a pas", "n'ont pas", 'pas été',
+  'moins de', 'peu de', 'faible participation', 'absentéisme', 'désistement', 'désistements', 'abandon',
+  'difficile', 'compliqué', 'manque', 'regret', 'déception', 'en deçà', 'pas atteint', 'non atteint',
+  'à ajuster', 'à adapter', 'amélioration', 'pistes', 'enseignement', 'enseignements', 'leçon'];
 var RETEX_REPLIC_KW = ['reproductible', 'réplicable', 'transposable', 'généralisable', 'duplicable',
-  'à essaimer', 'essaimage'];
+  'à essaimer', 'essaimage', 'reconduire', 'reconduction', 'reconduite', 'étendre', 'extension', 'modélisable', 'déployer sur'];
 var INNOVATION_LEVERS_KW = ['aller vers', 'aller-vers', 'co-construction', 'coconstruction', 'co-construit',
   'open badge', 'open badges', 'gamification', 'ludification', 'intelligence artificielle', 'ia générative',
   'hackathon', 'prototypage', 'test and learn', 'méthode agile', 'living lab', 'tiers-lieu', 'tiers lieu',
-  'pair-aidance', 'pair aidance', 'mentorat par les pairs', 'design thinking', 'expérimentation'];
+  'pair-aidance', 'pair aidance', 'mentorat par les pairs', 'design thinking', 'expérimentation', 'escape game',
+  'serious game', 'jeu sérieux', 'réalité virtuelle', 'sans cv', 'recrutement par simulation', 'hors les murs',
+  'itinérant', 'par le sport', 'duo day', 'duoday', 'job dating inversé', 'théâtre', 'podcast', 'marraine', 'parrainage'];
 var STOPWORDS_FR = {};
 ['le', 'la', 'les', 'de', 'des', 'du', 'un', 'une', 'et', 'en', 'à', 'au', 'aux', 'pour', 'dans', 'sur',
   'par', 'avec', 'ce', 'cette', 'ces', 'est', 'sont', 'être', 'avoir', 'plus', 'ou', 'que', 'qui', 'se',
@@ -548,13 +622,75 @@ function ciblageScore(nf, weight) {
   if (nf.solutions.length >= 5) pen += Math.min(1, (nf.solutions.length - 4) / 8) * 0.3;
   return Math.max(0, weight * (1 - pen));
 }
-function beneficiairesScore(n, weight) {
-  if (n == null || n <= 0) return 0;
-  if (n > 1000) return weight * 0.5; /* un nombre très élevé peut signaler un manque de ciblage */
-  return weight;
+/* ---------- Rôles des acteurs ----------
+   Pour chaque catégorie d'acteur du formulaire, les façons de le désigner dans le champ
+   "Rôles" (texte libre), en minuscules sans accents. Construit à partir des fiches du réseau.
+   Une catégorie absente de cette table (ex. "_Autre(s)") n'est pas comptée. */
+var ACTEURS_ALIAS = {
+  'france travail': ['prescripteur', '\\bspe\\b', 'service public de l.emploi', 'acteurs de l.emploi', 'france travail', '\\bft\\b', 'pole emploi', '\\bpe\\b', 'conseiller(e)?s? (emploi|entreprise|france travail)', '\\brpe\\b', '\\bagence'],
+  'mission locale': ['prescripteur', '\\bspe\\b', 'service public de l.emploi', 'acteurs de l.emploi', 'mission(s)? locale', 'missions locales', '\\bml\\b', '\\bmlj\\b', '\\bmilo\\b'],
+  'conseil departemental': ['prescripteur', 'departement', 'conseil departemental', '\\bcd ?\\d{0,3}\\b', '\\bcd\\d{2}\\b', 'insertion du departement', 'travailleurs? soci', '\\bmds\\b', 'solidarites'],
+  'cap emploi': ['prescripteur', '\\bspe\\b', 'service public de l.emploi', 'acteurs de l.emploi', 'cap emploi', '\\bcap\\b'],
+  'dreets / ddets': ['dreets', 'ddets', 'ddeets', 'deets', 'dreet', '\\betat\\b', 'services? de l.etat'],
+  'collectivite(s) locale(s)': ['collectivite', 'commune', 'mairie', '\\bville\\b', 'communaute (de communes|d.agglo)', 'agglo', 'epci', 'metropole', '\\bcc\\b', 'comcom', 'intercommunal', '\\belus?\\b', '\\bccas\\b', '\\bcias\\b'],
+  'conseil regional': ['region', 'conseil regional', '\\bcr\\b'],
+  'task force entreprise': ['task force', '\\btfe\\b', 'force entreprise'],
+  'organisme de formation': ['organisme(s)? de formation', '\\bof\\b', 'formateur', '\\bafpa\\b', '\\bgreta\\b', '\\bcfa\\b', '\\bcnam\\b', 'centre de formation'],
+  'prefecture / sous-prefecture': ['prefecture', 'prefet', 'sous-prefe', 'sous prefe'],
+  "chambre de commerce et d'industrie": ['\\bcci\\b', 'chambre de commerce', 'consulaire'],
+  "structure d'insertion pour l'activite economique": ['\\bsiae\\b', '\\biae\\b', 'chantier(s)? d.insertion', '\\baci\\b', 'entreprise(s)? d.insertion', '\\bei\\b', '\\betti\\b', 'association intermediaire', '\\bgeiq\\b', 'structure(s)? d.insertion'],
+  'associations': ['association', '\\basso\\b'],
+  "organisation professionnelle d'employeurs": ['\\bmedef\\b', '\\bcpme\\b', '\\bu2p\\b', '\\bumih\\b', '\\bcapeb\\b', '\\bffb\\b', '\\bfnsea\\b', 'organisation(s)? professionnelle', 'federation', 'syndicat patronal', '\\bgpe\\b', 'club d.entreprises', 'groupement d.employeurs'],
+  'branche / filiere': ['branche', 'filiere'],
+  'education nationale': ['education nationale', 'lycee', 'college', 'etablissement(s)? scolaire', 'rectorat', '\\bdasen\\b', '\\bcio\\b', 'proviseur', 'principal', 'enseignant', 'academie', '\\bdsden\\b', '\\bmlds\\b'],
+  "chambre des metiers et de l'artisanat": ['\\bcma\\b', 'chambre des metiers', 'chambre de metiers', 'consulaire'],
+  'operateurs de competences': ['\\bopco\\b', '\\bakto\\b', 'constructys', 'ocapiat', 'uniformation', '\\batlas\\b', '\\bopco ?2i\\b', '\\bafdas\\b', 'opco sante', 'opco mobilites', 'opco commerce'],
+  "maison de l'emploi": ['maison de l.emploi', '\\bmde\\b', '\\bmdef\\b'],
+  "chambre d'agriculture": ['chambre d.agriculture', 'chambre agri', 'consulaire', '\\bmsa\\b'],
+  'entreprise de travail temporaire': ['interim', 'travail temporaire', '\\bett\\b', 'agence(s)? d.emploi'],
+  "plans locaux pluriannuels pour l'insertion et l'emploi": ['\\bplie\\b'],
+  'france services': ['france services?'],
+  'apec': ['\\bapec\\b'],
+  'agence de developpement economique': ['developpement economique', 'agence de developpement', '\\bad\\b'],
+  "caisse d'allocations familiales": ['\\bcaf\\b', 'caisse d.allocations'],
+  'gpect': ['\\bgpect\\b', '\\bgpec\\b'],
+  'organisation syndicale de salaries': ['syndicat', '\\bcfdt\\b', '\\bcgt\\b', '\\bfo\\b', '\\bcfe', '\\bcftc\\b', '\\bunsa\\b'],
+  "cite de l'emploi": ['cite(s)? de l.emploi'],
+  'experts comptables': ['expert(s)?[- ]comptable', 'ordre des experts']
+};
+var ACTEURS_ALIAS_RE = {};
+Object.keys(ACTEURS_ALIAS).forEach(function (k) { ACTEURS_ALIAS_RE[k] = ACTEURS_ALIAS[k].map(function (p) { return new RegExp(p, 'i'); }); });
+function sansAccents(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[\u2019`]/g, "'"); }
+/* Retrouve la catégorie du formulaire correspondant à un libellé d'acteur (y compris tronqué). */
+function categorieActeur(label) {
+  var l = sansAccents(label).trim();
+  if (l.length < 4 || l.indexOf('autre') >= 0) return null;
+  var keys = Object.keys(ACTEURS_ALIAS);
+  for (var i = 0; i < keys.length; i++) { if (keys[i] === l || keys[i].indexOf(l) === 0) return keys[i]; }
+  return null;
 }
+/* Part des acteurs associés dont le rôle est décrit dans le champ "Rôles". */
+function rolesScore(nf) {
+  var cats = [];
+  (nf.acteurs || []).forEach(function (a) { var c = categorieActeur(a); if (c && cats.indexOf(c) < 0) cats.push(c); });
+  if (!cats.length) return null;
+  var txt = ' ' + sansAccents(nf.roles) + ' ';
+  if (wc(nf.roles) < 3) return 0;
+  var found = cats.filter(function (c) { return ACTEURS_ALIAS_RE[c].some(function (re) { return re.test(txt); }); }).length;
+  /* "Tout ou partie" des acteurs : le score est plein dès que la moitié des acteurs cochés
+     (arrondie au supérieur) voient leur rôle décrit. */
+  return Math.min(1, found / Math.ceil(cats.length / 2));
+}
+function hasBeneficiaires(nf) {
+  var b = nf.beneficiaires;
+  return b != null && String(b).trim() !== '' && !/non renseign/i.test(String(b));
+}
+/* Nombre de bénéficiaires : indicateur de l'ambition de l'action lorsqu'il est renseigné,
+   quelle que soit sa valeur (un petit nombre peut correspondre à un test avant passage à
+   l'échelle). */
+function beneficiairesScore(nf, weight) { return hasBeneficiaires(nf) ? weight : 0; }
 function typologieScore(nf, weight) {
-  var t = (nf.indicResultats + ' ' + nf.description + ' ' + nf.problematique).toLowerCase();
+  var t = (nf.indicResultats + ' ' + nf.description + ' ' + nf.problematique + ' ' + (nf.solutions || []).join(' ')).toLowerCase();
   if (countKeywordHits(t, TYPOLOGIE_NIVEAU3_KW)) return weight;
   if (countKeywordHits(t, TYPOLOGIE_NIVEAU2_KW)) return weight * 0.65;
   if (countKeywordHits(t, TYPOLOGIE_NIVEAU1_KW)) return weight * 0.35;
@@ -610,8 +746,10 @@ function evalDescription(nf) {
   var jargon = Math.max(0, 5 - jargonHits * 2);
   var titre = titleScore(nf.titre, 5);
   var ciblage = ciblageScore(nf, 10);
-  /* Sous-totaux sur 95 points, ramenés sur 100. */
-  var total = (completude + volDesc + volProb + lisibilite + verbes + jargon + titre + ciblage) * 100 / 95;
+  /* Sous-totaux sur 95 points, ramenés sur 100, + bonus de 5 points si la fiche indique le cadre
+     dans lequel elle s'inscrit (convergence des instances), plafonné à 100. */
+  var bonusCadre = (nf.rattachement && nf.rattachement.length) ? 5 : 0;
+  var total = (completude + volDesc + volProb + lisibilite + verbes + jargon + titre + ciblage) * 100 / 95 + bonusCadre;
   return { total: Math.max(0, Math.min(100, total)), detail: { completude: completude, volume: volDesc + volProb, lisibilite: lisibilite, verbes: verbes, jargon: jargon, titre: titre, ciblage: ciblage } };
 }
 function evalImpact(nf) {
@@ -620,7 +758,7 @@ function evalImpact(nf) {
   var resultats = sectionScore(nf.indicResultats, 20, 300, 10) + (wc(nf.indicResultats) >= 6 ? clarityScore(nf.indicResultats) * 5 : 0);
   var publicsPrio = Math.min(1, countKeywordHits(nf.publics.join(' '), PUBLICS_PRIORITAIRES_KW) / 2) * 15;
   var typo = typologieScore(nf, 15);
-  var benef = beneficiairesScore(nf.beneficiaires, 15);
+  var benef = beneficiairesScore(nf, 15);
   var total = quantif + suivi + resultats + publicsPrio + typo + benef;
   var userFacing = isUserFacing(nf.publics);
   if (!userFacing) total = total * 0.15;
@@ -629,6 +767,7 @@ function evalImpact(nf) {
 function evalBilan(nf) {
   var bilanW = wc(nf.bilanText);
   if (nf.bilanVide || bilanW < 5) return null; /* signal "complétez le bilan", pas de score */
+  if (nf.bilanTronque) return null; /* texte coupé par l'export : non évaluable */
   var tauxReal = Math.min(1, countSmartHits(nf.bilanText) / 2) * 25;
   var volume = sectionScore(nf.bilanText, 50, 500, 14) + clarityScore(nf.bilanText) * 6;
   var forts = countKeywordHits(nf.bilanText, RETEX_FORTS_KW) ? 10 : 0;
@@ -669,99 +808,160 @@ function buildCorpusFreq(allTexts) {
   return { freq: docFreq, totalDocs: allTexts.length };
 }
 
-/* ---------- Les 13 axes de progrès détaillés (inchangés dans leur principe, formules mises à jour) ---------- */
-var AXE_LABELS = {
-  description: "Mieux décrire l'action (contexte, contenu)", problematique: 'Mieux formuler la problématique traitée',
-  etapes: 'Détailler davantage les étapes de mise en œuvre', ciblage: "Mieux cibler l'action",
-  suivi: 'Renseigner des indicateurs de suivi', resultats: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)',
-  impact_usager: "Mieux prendre en compte l'impact sur l'usager final", maj: 'Mettre à jour le suivi de l\'action plus régulièrement',
-  bilan: 'Renseigner le bilan et les enseignements', diversite_acteurs: 'Élargir la diversité des acteurs mobilisés',
-  vigilance: 'Anticiper les points de vigilance', moyens: 'Préciser les moyens mobilisés (ressources, budget, RH)',
-  titre: 'Raccourcir le titre de l\'action', diagnostic: 'Mieux distinguer la problématique de la description',
-  valorisation: "Valoriser l'action (reconduction, transposition)"
-};
-var AXE_TEXTS = {
-  description: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques.",
-  problematique: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte.",
-  etapes: "Pour les actions qui se déroulent dans la durée, détaillez au moins 2 à 3 étapes de mise en œuvre avec un minimum d'explication pour chacune (une simple date sans description ne suffit pas).",
-  ciblage: "Limitez le nombre de publics cibles (moins de 3 recommandé), de thématiques et de solutions mobilisées (moins de 5 recommandé) à ce qui est réellement pertinent : cocher très large nuit à la lisibilité.",
-  suivi: "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori.",
-  resultats: "Fixez des objectifs de résultat chiffrés et datés (ex. « 80 % des participants en emploi à 6 mois ») plutôt que des formulations vagues.",
-  impact_usager: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain.",
-  maj: "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche sans mise à jour depuis plusieurs mois perd en fiabilité.",
-  bilan: "Renseignez le bilan dès que l'échéance prévisionnelle est atteinte, même de façon synthétique : c'est surtout indispensable si la date de fin est dépassée et qu'aucun bilan n'a encore été saisi.",
-  diversite_acteurs: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint.",
-  vigilance: "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action.",
-  moyens: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti.",
-  titre: "Un titre concis (moins de 12 mots recommandé) est plus facilement lisible dans les tableaux de bord et les listes d'actions.",
-  diagnostic: "Distinguez plus nettement la problématique de la description : une problématique qui reformule simplement l'action n'objective pas le diagnostic du territoire à son origine.",
-  valorisation: "Précisez si l'action a été reconduite, transposée sur un autre territoire ou partagée en tant que retour d'expérience : cela permet de capitaliser sur les résultats obtenus."
-};
+/* ============================================================================
+   RÉFÉRENTIEL UNIQUE DES CRITÈRES D'ÉVALUATION
+   Source unique partagée par l'évaluation d'une fiche isolée (PDF) et par l'évaluation
+   en lot (Excel). Chaque critère est noté de 0 à 1 et possède deux seuils propres :
+     - score <  seuilAxe  : axe de progrès
+     - score >= seuilFort : point fort
+     - entre les deux     : à consolider (ni l'un ni l'autre)
+     - score non calculé  : non applicable à la fiche
+   seuilFort = null : critère "socle", atteint par la grande majorité des fiches, donc non
+   distinctif : il peut signaler un axe de progrès mais jamais un point fort.
 
-/* ---------- Points forts : symétrique des axes de progrès, pour les axes où la fiche est
-   au contraire particulièrement bien renseignée (score \u2265 0,75). ---------- */
-var POINT_FORT_LABELS = {
-  ciblage: 'Ciblage précis', etapes: 'Jalonnage régulier', titre: 'Titre court et clair',
-  resultats: 'Objectifs quantifiés et datés', vigilance: 'Anticipation des risques',
-  bilan: 'Bilan capitalisable', diagnostic: 'Diagnostic objectivé',
-  description: 'Description claire et complète', problematique: 'Problématique bien posée',
-  suivi: 'Suivi bien outillé', impact_usager: 'Impact usager direct', maj: 'Suivi à jour',
-  diversite_acteurs: 'Diversité des acteurs', moyens: 'Moyens précisés', valorisation: 'Action valorisée'
-};
-var POINT_FORT_TEXTS = {
-  ciblage: "Le nombre de publics et de thématiques ciblés est limité, ce qui témoigne d'une action bien focalisée et à fort impact potentiel.",
-  etapes: "Les étapes de mise en œuvre sont détaillées, un gage de pilotage régulier de l'action.",
-  titre: "Un titre court et clair donne envie de lire la suite et facilite le repérage de l'action dans les tableaux de bord.",
-  resultats: "Les indicateurs de résultat comportent un objectif quantitatif et un horizon temporel défini, ce qui permettra d'évaluer précisément l'atteinte des objectifs.",
-  vigilance: "Les points d'attention identifiés montrent la prudence et le sérieux de l'étude du projet.",
-  bilan: "Un bilan riche permettra de capitaliser sur les actions futures et d'éclairer d'autres territoires susceptibles de mettre en place une action similaire.",
-  diagnostic: "La problématique posée se distingue clairement de la description : un diagnostic objectif du territoire a été posé plutôt qu'une simple reformulation de l'action.",
-  description: "La description est suffisamment détaillée et clairement rédigée pour comprendre concrètement l'action.",
-  problematique: "La problématique est bien formulée et étayée.",
-  suivi: "Des indicateurs de suivi sont renseignés dès la conception de l'action.",
-  impact_usager: "L'action a un effet direct et mesurable sur un usager final.",
-  maj: "Le suivi de la fiche est régulièrement mis à jour.",
-  diversite_acteurs: "Une diversité d'acteurs est mobilisée autour de l'action.",
-  moyens: "Les moyens mobilisés (ressources, budget, RH) sont précisés.",
-  valorisation: "L'action a été valorisée (reconduction, transposition ou partage d'expérience)."
-};
+   Calibrage (septembre 2026, 1 527 fiches du modèle d'évaluation en lot, export complet) : seuilAxe = 1er quartile du critère
+   borné entre 0,35 et 0,60 ; seuilFort = 3e quartile borné entre 0,75 et 1 ; critère socle si
+   plus de 60 % des fiches atteignent le niveau point fort (export complet, bilans non tronqués).
+   seuilAxe = null : critère "bonus" (bénéficiaires, cadre), valorisé lorsqu'il est renseigné,
+   jamais un axe de progrès.
+   Libellés, textes, poids, seuils et guide de lecture sont tous dérivés de ce tableau.
+   ============================================================================ */
+var REFERENTIEL = [
+  { key: 'description', famille: 'Description', poids: 1.3, seuilAxe: 0.6, seuilFort: 0.95,
+    calcul: "50 % longueur de la description (plein score à 60 mots) + 50 % clarté de rédaction (longueur des phrases, richesse du vocabulaire).",
+    axe: { label: "Mieux décrire l'action (contexte, contenu)", texte: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques." },
+    fort: { label: 'Description claire et complète', texte: "La description est suffisamment détaillée et clairement rédigée pour comprendre concrètement l'action." } },
+  { key: 'problematique', famille: 'Description', poids: 1.3, seuilAxe: 0.6, seuilFort: 0.95,
+    calcul: "50 % longueur de la problématique (plein score à 40 mots) + 50 % clarté de rédaction.",
+    axe: { label: 'Mieux formuler la problématique traitée', texte: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte." },
+    fort: { label: 'Problématique bien posée', texte: "La problématique est bien formulée et étayée." } },
+  { key: 'diagnostic', famille: 'Description', poids: 1.3, seuilAxe: 0.6, seuilFort: 0.9,
+    calcul: "1 − (recouvrement du vocabulaire entre problématique et description ÷ 50 %). Non applicable si l'un des deux champs fait moins de 10 mots.",
+    axe: { label: 'Mieux distinguer la problématique de la description', texte: "Distinguez plus nettement la problématique de la description : une problématique qui reformule simplement l'action n'objective pas le diagnostic du territoire à son origine." },
+    fort: { label: 'Diagnostic objectivé', texte: "La problématique posée se distingue clairement de la description : un diagnostic objectif du territoire a été posé plutôt qu'une simple reformulation de l'action." } },
+  { key: 'ciblage', famille: 'Description', poids: 1.0, seuilAxe: 0.55, seuilFort: 0.95,
+    calcul: "1 − pénalités : 3 publics ou plus (jusqu'à −0,35), plus de 4 thématiques (jusqu'à −0,30), 5 solutions ou plus (jusqu'à −0,35).",
+    axe: { label: "Mieux cibler l'action", texte: "Limitez le nombre de publics cibles (moins de 3 recommandé), de thématiques et de solutions mobilisées (moins de 5 recommandé) à ce qui est réellement pertinent : cocher très large nuit à la lisibilité." },
+    fort: { label: 'Ciblage précis', texte: "Le nombre de publics et de thématiques ciblés est limité, ce qui témoigne d'une action bien focalisée et à fort impact potentiel." } },
+  { key: 'titre', famille: 'Description', poids: 0.5, seuilAxe: 0.6, seuilFort: null,
+    calcul: "Plein score jusqu'à 12 mots, puis décroissance linéaire jusqu'à 0 à 24 mots.",
+    axe: { label: "Raccourcir le titre de l'action", texte: "Un titre concis (moins de 12 mots recommandé) est plus facilement lisible dans les tableaux de bord et les listes d'actions." },
+    fort: { label: 'Titre court et clair', texte: "Un titre court et clair donne envie de lire la suite et facilite le repérage de l'action dans les tableaux de bord." } },
+  { key: 'impact_usager', famille: 'Impact usager', poids: 2.0, seuilAxe: 0.6, seuilFort: null,
+    calcul: "1 si au moins un public ciblé est un usager final (demandeurs d'emploi, jeunes, seniors, salariés...), 0 sinon.",
+    axe: { label: "Mieux prendre en compte l'impact sur l'usager final", texte: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain." },
+    fort: { label: 'Impact usager direct', texte: "L'action a un effet direct et mesurable sur un usager final." } },
+  { key: 'resultats', famille: 'Impact usager', poids: 2.0, seuilAxe: 0.45, seuilFort: 0.75,
+    calcul: "60 % longueur des indicateurs de résultat (plein score à 20 mots) + 20 % clarté (si 6 mots ou plus) + 20 % si un objectif à la fois chiffré (nombre, taux, pourcentage) et daté (échéance, durée, période) est détecté dans les indicateurs de suivi ou de résultat.",
+    axe: { label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)', texte: "Fixez des objectifs de résultat chiffrés et datés (ex. « 80 % des participants en emploi à 6 mois ») plutôt que des formulations vagues." },
+    fort: { label: 'Objectifs quantifiés et datés', texte: "Les indicateurs de résultat comportent un objectif quantitatif et un horizon temporel défini, ce qui permettra d'évaluer précisément l'atteinte des objectifs." } },
+  { key: 'beneficiaires', famille: 'Impact usager', poids: 1.0, seuilAxe: null, seuilFort: 1,
+    calcul: "Bonus : 1 si le nombre de bénéficiaires est renseigné, quelle que soit sa valeur (un petit nombre peut correspondre à un test avant passage à l'échelle). Non évalué sinon (jamais un axe de progrès).",
+    axe: { label: 'Renseigner le nombre de bénéficiaires', texte: "Renseignez le nombre de bénéficiaires visés ou touchés : il traduit l'ambition de l'action, même modeste." },
+    fort: { label: 'Ambition chiffrée', texte: "Le nombre de bénéficiaires est renseigné : la fiche affiche l'ambition de l'action (un petit volume peut correspondre à un test avant passage à l'échelle)." } },
+  { key: 'suivi', famille: 'Pilotage', poids: 1.3, seuilAxe: 0.6, seuilFort: 1,
+    calcul: "Longueur des indicateurs de suivi (plein score à 15 mots). Non applicable aux actions de 60 jours ou moins.",
+    axe: { label: 'Renseigner des indicateurs de suivi', texte: "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori." },
+    fort: { label: 'Suivi bien outillé', texte: "Des indicateurs de suivi sont renseignés dès la conception de l'action." } },
+  { key: 'etapes', famille: 'Pilotage', poids: 1.0, seuilAxe: 0.6, seuilFort: 1,
+    calcul: "50 % nombre d'étapes (plein score à 3) + 50 % détail moyen par étape (plein score à 12 mots). Non applicable aux actions de 60 jours ou moins.",
+    axe: { label: 'Détailler davantage les étapes de mise en œuvre', texte: "Pour les actions qui se déroulent dans la durée, détaillez au moins 2 à 3 étapes de mise en œuvre avec un minimum d'explication pour chacune (une simple date sans description ne suffit pas)." },
+    fort: { label: 'Jalonnage régulier', texte: "Les étapes de mise en œuvre sont détaillées, un gage de pilotage régulier de l'action." } },
+  { key: 'moyens', famille: 'Pilotage', poids: 0.9, seuilAxe: 0.35, seuilFort: 1,
+    calcul: "Nombre de mots des champs « Ressource mobilisable » et « Moyens humains et financiers » (plein score à 20 mots).",
+    axe: { label: 'Préciser les moyens mobilisés (ressources, budget, RH)', texte: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti." },
+    fort: { label: 'Moyens précisés', texte: "Les moyens mobilisés (ressources, budget, RH) sont précisés." } },
+  { key: 'diversite_acteurs', famille: 'Pilotage', poids: 0.8, seuilAxe: 0.6, seuilFort: null,
+    calcul: "Nombre d'acteurs de l'équipe et du partenariat (plein score à 6).",
+    axe: { label: 'Élargir la diversité des acteurs mobilisés', texte: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint." },
+    fort: { label: 'Diversité des acteurs', texte: "Une diversité d'acteurs est mobilisée autour de l'action." } },
+  { key: 'roles', famille: 'Pilotage', poids: 1.2, seuilAxe: 0.35, seuilFort: 0.75,
+    calcul: "Acteurs associés dont le rôle est décrit dans le champ « Rôles » (reconnaissance du nom de l'acteur, de son sigle ou de ses variantes usuelles), rapportés à la moitié des acteurs cochés : tout ou partie des acteurs doit être retrouvé, plein score dès la moitié. 0 si le champ fait moins de 3 mots. Non applicable si aucun acteur identifiable n'est coché.",
+    axe: { label: 'Préciser le rôle de chaque acteur', texte: "Pour chaque acteur associé, indiquez dans le champ « Rôles » ce qu'il apporte concrètement (repérage des publics, mise à disposition de locaux, financement, animation...) : une formulation collective (« co-pilotage », « mobilisation des partenaires ») ne permet pas de savoir qui fait quoi." },
+    fort: { label: 'Rôles des acteurs explicites', texte: "Le rôle de chacun des acteurs associés est décrit : la fiche permet de savoir qui fait quoi dans l'action." } },
+  { key: 'vigilance', famille: 'Pilotage', poids: 0.6, seuilAxe: 0.35, seuilFort: 0.8,
+    calcul: "Longueur du champ « Points d'attention » (plein score à 15 mots).",
+    axe: { label: 'Anticiper les points de vigilance', texte: "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action." },
+    fort: { label: 'Anticipation des risques', texte: "Les points d'attention identifiés montrent la prudence et le sérieux de l'étude du projet." } },
+  { key: 'maj', famille: 'Pilotage', poids: 0.8, seuilAxe: 0.35, seuilFort: 0.9,
+    calcul: "Fiche terminée ou abandonnée : 1 (statut à jour, le bilan est évalué à part) ; sinon 1 − (jours depuis la dernière mise à jour ÷ 365).",
+    axe: { label: "Mettre à jour le suivi de l'action plus régulièrement", texte: "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche sans mise à jour depuis plusieurs mois perd en fiabilité." },
+    fort: { label: 'Suivi à jour', texte: "Le suivi de la fiche est régulièrement mis à jour." } },
+  { key: 'cadre', famille: 'Pilotage', poids: 0.8, seuilAxe: null, seuilFort: 1,
+    calcul: "Bonus : 1 si la question « Cette action s'inscrit-elle dans le cadre de : » est renseignée. Non évalué sinon (jamais un axe de progrès). Apporte aussi un bonus de 5 points au score de la description.",
+    axe: { label: "Indiquer le cadre dans lequel s'inscrit l'action", texte: "Indiquez dans quel cadre s'inscrit l'action (champ « Cette action s'inscrit-elle dans le cadre de : »)." },
+    fort: { label: 'Convergence des instances', texte: "La fiche indique le cadre dans lequel s'inscrit l'action : une bonne pratique de convergence entre les instances du réseau." } },
+  { key: 'bilan', famille: 'Bilan et valorisation', poids: 1.5, seuilAxe: 0.35, seuilFort: 0.75,
+    calcul: "Bilan vide (moins de 5 mots) : 0, plafonné à 0,1 si l'action est terminée, abandonnée ou si la date de fin est dépassée ; sinon bilan analytique : 40 % longueur (plein score à 60 mots) + 20 % clarté + 20 % résultats chiffrés + 20 % retour d'expérience (ce qui a fonctionné ou non). Non applicable si le bilan est vide et que l'action est en cours avant son échéance, ou si son texte est tronqué dans l'export Excel.",
+    axe: { label: 'Renseigner le bilan et les enseignements', texte: "Renseignez le bilan dès que l'échéance prévisionnelle est atteinte, même de façon synthétique : c'est surtout indispensable si la date de fin est dépassée et qu'aucun bilan n'a encore été saisi." },
+    fort: { label: 'Bilan capitalisable', texte: "Un bilan riche permettra de capitaliser sur les actions futures et d'éclairer d'autres territoires susceptibles de mettre en place une action similaire." } },
+  { key: 'efficacite', famille: 'Bilan et valorisation', poids: 1.0, seuilAxe: 0.6, seuilFort: null,
+    calcul: "Applicable lorsque le bilan est saisi : 1 si l'efficacité de l'action est auto-évaluée (note de 0 à 10), 0 sinon. Non évalué sur une fiche PDF (champ absent de l'export).",
+    axe: { label: "Auto-évaluer l'efficacité de l'action", texte: "Le bilan est saisi : complétez aussi l'auto-évaluation de l'efficacité de l'action (0 à 10), qui témoigne a minima d'une évaluation qualitative." },
+    fort: { label: 'Efficacité auto-évaluée', texte: "L'efficacité de l'action est auto-évaluée : a minima, une évaluation qualitative de l'action a été réalisée en complément du bilan." } },
+  { key: 'valorisation', famille: 'Bilan et valorisation', poids: 1.0, seuilAxe: 0.6, seuilFort: 0.8,
+    calcul: "Reconduction (oui 40 %, peut-être 20 %) + transposition (oui 40 %) + texte de valorisation (40 % à 15 mots, ignoré s'il est tronqué dans l'export), plafonné à 100 %. Non applicable si aucune de ces informations n'est renseignée.",
+    axe: { label: "Valoriser l'action (reconduction, transposition)", texte: "Précisez si l'action a été reconduite, transposée sur un autre territoire ou partagée en tant que retour d'expérience : cela permet de capitaliser sur les résultats obtenus." },
+    fort: { label: 'Action valorisée', texte: "L'action a été valorisée (reconduction, transposition ou partage d'expérience)." } }
+];
+/* Vues dérivées du référentiel (anciens noms conservés pour le reste du code). */
+var AXE_LABELS = {}, AXE_TEXTS = {}, POINT_FORT_LABELS = {}, POINT_FORT_TEXTS = {}, CRITICITE_WEIGHTS = {};
+REFERENTIEL.forEach(function (c) {
+  AXE_LABELS[c.key] = c.axe.label; AXE_TEXTS[c.key] = c.axe.texte;
+  POINT_FORT_LABELS[c.key] = c.fort.label; POINT_FORT_TEXTS[c.key] = c.fort.texte;
+  CRITICITE_WEIGHTS[c.key] = c.poids;
+});
+var REFERENTIEL_BY_KEY = {};
+REFERENTIEL.forEach(function (c) { REFERENTIEL_BY_KEY[c.key] = c; });
+function niveauCritere(key, v) {
+  var c = REFERENTIEL_BY_KEY[key];
+  if (v == null || !c) return 'na';
+  if (c.seuilAxe != null && v < c.seuilAxe) return 'axe';
+  if (c.seuilFort != null && v >= c.seuilFort - 1e-9) return 'fort';
+  return 'consolider';
+}
 
 function isLongRunning(nf) { return nf.dCreation && nf.dFin && (nf.dFin - nf.dCreation) / 86400000 > 60; }
 
-/* ---------- Pondération de criticité ----------
-   Les axes de progrès et points forts reposent sur le même algorithme (classement pondéré
-   des sous-scores), seule la formulation change selon le sens (score faible = axe de
-   progrès, score élevé = point fort). La pondération reflète l'impact réel de chaque critère
-   sur la qualité d'une fiche action : un titre mal formulé (0,5) est nettement moins
-   impactant que des objectifs non chiffrés (2,0) ou un impact usager absent (2,0). */
-var CRITICITE_WEIGHTS = {
-  description: 1.3, problematique: 1.3, etapes: 1.0, ciblage: 1.0, suivi: 1.3,
-  resultats: 2.0, impact_usager: 2.0, maj: 0.8, bilan: 1.5, valorisation: 1.0,
-  diversite_acteurs: 0.8, vigilance: 0.6, moyens: 0.9, titre: 0.5, diagnostic: 1.3
-};
-/* Classe les sous-scores renseignés d'une fiche par priorité pondérée : prioriteAxe élevée =
-   score faible sur un critère important (axe de progrès prioritaire) ; prioriteFort élevée =
-   score élevé sur un critère important (point fort marquant). */
+/* Classement pondéré au sein de chaque catégorie :
+   axes de progrès : priorité = (1 − score) × poids ; points forts : priorité = score × poids. */
 function weightedRanking(subs) {
-  return Object.keys(subs).filter(function (k) { return subs[k] != null; }).map(function (k) {
-    var w = CRITICITE_WEIGHTS[k] || 1;
-    return { key: k, v: subs[k], weight: w, prioriteAxe: (1 - subs[k]) * w, prioriteFort: subs[k] * w };
+  return REFERENTIEL.filter(function (c) { return subs[c.key] != null; }).map(function (c) {
+    var v = subs[c.key];
+    return { key: c.key, v: v, weight: c.poids, niveau: niveauCritere(c.key, v), prioriteAxe: (1 - v) * c.poids, prioriteFort: v * c.poids };
   });
 }
-/* Un même critère ne peut pas être à la fois point fort et axe de progrès : seuil unique de
-   partage (score >= 0,75 : point fort possible ; score < 0,75 : axe de progrès possible). */
-var SEUIL_POINT_FORT = 0.75;
-function selectAxesProgres(subs, n) {
-  return weightedRanking(subs).filter(function (x) { return x.v < SEUIL_POINT_FORT; }).sort(function (a, b) { return b.prioriteAxe - a.prioriteAxe; }).slice(0, n || 3);
+/* Restitution : axes de progrès et points forts selon les seuils du référentiel. Pour que
+   chaque fiche ait au moins un de chaque, un repli s'applique si une liste est vide :
+   - aucun point fort : le critère "à consolider" le mieux noté (hors critères socle) ;
+   - aucun axe : le critère non point fort le plus faible.
+   Les éléments issus du repli sont marqués relatif = true. Les deux listes restent disjointes. */
+function selectRestitution(subs, nAxes, nForts) {
+  var items = weightedRanking(subs);
+  var byAxe = function (a, b) { return b.prioriteAxe - a.prioriteAxe; }, byFort = function (a, b) { return b.prioriteFort - a.prioriteFort; };
+  var forts = items.filter(function (x) { return x.niveau === 'fort'; }).sort(byFort);
+  if (!forts.length) {
+    var cf = items.filter(function (x) { return x.niveau === 'consolider' && REFERENTIEL_BY_KEY[x.key].seuilFort != null; }).sort(byFort)[0];
+    if (cf) forts = [Object.assign({}, cf, { relatif: true })];
+  }
+  var axes = items.filter(function (x) { return x.niveau === 'axe'; }).sort(byAxe);
+  if (!axes.length) {
+    var ca = items.filter(function (x) { return x.niveau !== 'fort' && !forts.some(function (f) { return f.key === x.key; }); }).sort(byAxe)[0];
+    if (ca) axes = [Object.assign({}, ca, { relatif: true })];
+  }
+  return { axes: axes.slice(0, nAxes || 3), forts: forts.slice(0, nForts || 3) };
 }
-function selectPointsForts(subs, n) {
-  return weightedRanking(subs).filter(function (x) { return x.v >= SEUIL_POINT_FORT; }).sort(function (a, b) { return b.prioriteFort - a.prioriteFort; }).slice(0, n || 3);
-}
+function selectAxesProgres(subs, n) { return selectRestitution(subs, n, 3).axes; }
+function selectPointsForts(subs, n) { return selectRestitution(subs, 3, n).forts; }
 
 function evaluateFiche(nf, refDate, corpus) {
   var today = refDate || new Date();
   var staleDays = daysSince(nf.dMaj, today);
   var overdue = nf.dFin && nf.dFin < today;
+  /* Une action terminée ou abandonnée est clôturée : son bilan est attendu comme si
+     l'échéance était atteinte, et son statut est à jour par définition. */
+  var cloturee = nf.statut === 'Terminée' || nf.statut === 'Abandonnée';
+  var echeance = cloturee || overdue;
 
   var evalDesc = evalDescription(nf);
   var evalImp = evalImpact(nf);
@@ -778,9 +978,10 @@ function evaluateFiche(nf, refDate, corpus) {
   var wSum = wDesc + wImpact, weightedSum = wDesc * evalDesc.total + wImpact * evalImp.total;
   var excludedCriteria = [];
   var bilanEmpty = evalBil == null;
-  var bilanNotYetDue = bilanEmpty && nf.dFin && !overdue;
+  var bilanNotYetDue = bilanEmpty && nf.dFin && !echeance;
   if (evalBil != null) { wSum += wBilan; weightedSum += wBilan * evalBil; }
   else if (bilanNotYetDue) excludedCriteria.push({ label: 'Bilan et valorisation', reason: "l'action n'est pas encore arrivée à échéance (fin prévue le " + nf.dFin.toLocaleDateString('fr-FR') + ')', actionable: false });
+  else if (nf.bilanTronque && wc(nf.bilanText) >= 5) excludedCriteria.push({ label: 'Bilan et valorisation', reason: "texte du bilan tronqué dans l'export Excel, non évaluable", actionable: false });
   else excludedCriteria.push({ label: 'Bilan et valorisation', reason: 'bilan non renseigné', actionable: true });
   if (corpus) { wSum += wInno; weightedSum += wInno * (evalInno || 0); }
   else excludedCriteria.push({ label: 'Caractère innovant', reason: 'non calculable sur une fiche isolée, nécessite de comparer au reste du réseau', actionable: false });
@@ -788,19 +989,23 @@ function evaluateFiche(nf, refDate, corpus) {
 
   /* Axes de progrès détaillés (0 à 1), pour les pistes d'amélioration prioritaires. */
   var bilanW = wc(nf.bilanText);
-  var subEtapes = !isLongRunning(nf) ? 0.95 : etapesScore(nf, 1);
-  var subSuivi = !isLongRunning(nf) ? 0.95 : Math.min(1, wc(nf.indicSuivi) / 15);
+  var subEtapes = !isLongRunning(nf) ? null : etapesScore(nf, 1);
+  var subSuivi = !isLongRunning(nf) ? null : Math.min(1, wc(nf.indicSuivi) / 15);
   var subDiversite = Math.min(1, nf.acteurs.length / 6);
   var subVigilance = Math.min(1, wc(nf.pointAttention) / 15);
   var subMoyens = Math.min(1, (wc(nf.ressources) + wc(nf.moyens)) / 20);
-  var subMaj = nf.statut === 'Terminée' ? 1 : (nf.statut === 'Abandonnée' ? 0 : Math.max(0, 1 - (staleDays || 0) / 365));
+  var subMaj = cloturee ? 1 : Math.max(0, 1 - (staleDays || 0) / 365);
   var subBilanVide = nf.bilanVide || bilanW < 5;
   var subBilan;
-  if (subBilanVide && nf.dFin && !overdue) {
+  if (subBilanVide && nf.dFin && !echeance) {
     subBilan = null; /* pas encore pertinent : l'échéance n'est pas atteinte */
   } else {
-    subBilan = subBilanVide ? 0 : Math.min(1, bilanW / 25) * 0.7 + (bilanW >= 6 ? clarityScore(nf.bilanText) * 0.3 : 0);
-    if (overdue && subBilanVide) subBilan = Math.min(subBilan, 0.1);
+    /* Bilan analytique : volume (40 %, plein à 60 mots), clarté (20 %), résultats chiffrés (20 %)
+       et retour d'expérience, c'est-à-dire ce qui a fonctionné ou non (20 %). */
+    subBilan = subBilanVide ? 0 : (nf.bilanTronque ? null : Math.min(1, bilanW / 60) * 0.4 + (bilanW >= 6 ? clarityScore(nf.bilanText) * 0.2 : 0)
+      + (countSmartHits(nf.bilanText) ? 0.2 : 0)
+      + (countKeywordHits(nf.bilanText, RETEX_FORTS_KW) || countKeywordHits(nf.bilanText, RETEX_AMELIO_KW) ? 0.2 : 0));
+    if (echeance && subBilanVide) subBilan = Math.min(subBilan, 0.1);
   }
   var subDescription = Math.min(1, wc(nf.description) / 60) * 0.5 + clarityScore(nf.description) * 0.5;
   var subProblematique = Math.min(1, wc(nf.problematique) / 40) * 0.5 + clarityScore(nf.problematique) * 0.5;
@@ -809,13 +1014,23 @@ function evaluateFiche(nf, refDate, corpus) {
   if (nf.thematiques.length > 4) pen += Math.min(1, (nf.thematiques.length - 4) / 6) * 0.3;
   if (nf.solutions.length >= 5) pen += Math.min(1, (nf.solutions.length - 4) / 8) * 0.35;
   var subCiblage = Math.max(0, 1 - pen);
-  var subResultats = Math.min(1, Math.min(1, wc(nf.indicResultats) / 20) * 0.6 + (wc(nf.indicResultats) >= 6 ? clarityScore(nf.indicResultats) : 0) * 0.2 + (hasSmart(nf.indicSuivi + ' ' + nf.indicResultats) ? 0.2 : 0));
+  var subResultats = Math.min(1, Math.min(1, wc(nf.indicResultats) / 20) * 0.6 + (wc(nf.indicResultats) >= 6 ? clarityScore(nf.indicResultats) : 0) * 0.2 + (hasObjectifChiffreDate(nf.indicSuivi + ' ' + nf.indicResultats) ? 0.2 : 0));
   var subImpactUsager = evalImp.userFacing ? 1 : 0;
-  var subValorisation = nf.reconduction != null || nf.transposition != null || nf.valorisationTxt
-    ? Math.min(1, Math.min(1, wc(nf.valorisationTxt) / 15) * 0.7 + (nf.reconduction === 'oui' ? 0.15 : 0) + (nf.transposition === 'oui' ? 0.15 : 0))
+  /* Valorisation : reconduction (oui 0,4 ; peut-être 0,2), transposition (oui 0,4) et texte de
+     valorisation (0,4 à 15 mots, ignoré s'il est tronqué par l'export), plafonné à 1. */
+  var recondV = nf.reconduction === 'oui' ? 0.4 : (nf.reconduction && String(nf.reconduction).indexOf('peut') >= 0 ? 0.2 : 0);
+  var valTxtV = nf.valorisationTronque ? 0 : Math.min(1, wc(nf.valorisationTxt) / 15) * 0.4;
+  var subValorisation = nf.reconduction != null || nf.transposition != null || (nf.valorisationTxt && !nf.valorisationTronque)
+    ? Math.min(1, recondV + (nf.transposition === 'oui' ? 0.4 : 0) + valTxtV)
     : null;
   var subTitre = Math.min(1, wc(nf.titre) <= 12 ? 1 : Math.max(0, 1 - (wc(nf.titre) - 12) / 12));
   var subDiagnostic = (wc(nf.description) >= 10 && wc(nf.problematique) >= 10) ? diagnosticScore(nf) : null;
+  var subRoles = rolesScore(nf);
+  /* Bonus : ne comptent que lorsqu'ils sont renseignés (jamais un axe de progrès). */
+  var subBeneficiaires = hasBeneficiaires(nf) ? 1 : null;
+  var subCadre = (nf.rattachement && nf.rattachement.length) ? 1 : null;
+  /* Efficacité auto-évaluée : attendue dès que le bilan est saisi (évaluation qualitative a minima). */
+  var subEfficacite = (!subBilanVide && nf.efficacite !== undefined) ? (nf.efficacite != null ? 1 : 0) : null;
 
   return {
     evalDescription: evalDesc, evalImpact: evalImp, evalBilan: evalBil, evalInnovation: evalInno,
@@ -824,7 +1039,7 @@ function evaluateFiche(nf, refDate, corpus) {
       description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
       suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
       valorisation: subValorisation, diversite_acteurs: subDiversite, vigilance: subVigilance, moyens: subMoyens,
-      titre: subTitre, diagnostic: subDiagnostic
+      titre: subTitre, diagnostic: subDiagnostic, roles: subRoles, beneficiaires: subBeneficiaires, efficacite: subEfficacite, cadre: subCadre
     },
     userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide, bilanNotYetDue: bilanNotYetDue
   };
@@ -840,7 +1055,7 @@ function normalizeFromPdf(f) {
     solutions: f.solutions, acteurs: f.acteurs, porteurs: f.porteurs, beneficiaires: f.beneficiaires,
     rattachement: f.rattachement || [],
     nEtapes: f.nEtapes, etapeWordCounts: f.etapeWordCounts || [], dCreation: f.dCree, dFin: f.dFin, dMaj: f.dMaj,
-    reconduction: null, transposition: null, valorisationTxt: '', efficacite: null
+    reconduction: null, transposition: null, valorisationTxt: '', efficacite: undefined /* non présent dans l'export PDF : critère non évalué */
   };
 }
 
@@ -883,7 +1098,7 @@ function renderResults(f, res, rawText) {
     axesHtml = '<div class="ok-box">\uD83C\uDF89 Aucun axe de progrès majeur détecté : les éléments analysés dans cette fiche sont globalement bien renseignés.</div>';
   } else {
     axes.forEach(function (x, i) {
-      axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">' + (i + 1) + '</span>' + AXE_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + AXE_TEXTS[x.key] + '</p></div>';
+      axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">' + (i + 1) + '</span>' + AXE_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%' + (x.relatif ? ', critère le plus faible de la fiche' : '') + ')</span></div><p>' + AXE_TEXTS[x.key] + '</p></div>';
     });
   }
   document.getElementById('axesList').innerHTML = axesHtml;
@@ -894,7 +1109,7 @@ function renderResults(f, res, rawText) {
     pointsFortsHtml = '<div class="preco-empty">Aucun élément exploitable pour identifier un point fort sur cette fiche.</div>';
   } else {
     forts.forEach(function (x) {
-      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%)</span></div><p>' + POINT_FORT_TEXTS[x.key] + '</p></div>';
+      pointsFortsHtml += '<div class="point-fort-card"><div class="point-fort-h">\u2705 ' + POINT_FORT_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%' + (x.relatif ? ', critère le plus solide de la fiche' : '') + ')</span></div><p>' + POINT_FORT_TEXTS[x.key] + '</p></div>';
     });
   }
   document.getElementById('pointsFortsList').innerHTML = pointsFortsHtml;
@@ -1014,8 +1229,29 @@ function toDate(v) {
 function isFilled(v, minWords) { return wc(v) >= (minWords == null ? 3 : minWords); }
 
 /* ---------- Adaptateur : ligne de l'export Excel -> objet normalisé ---------- */
-function normalizeFromXlsx(row, refDate) {
-  var get = function (key) { return row[COLS[key]]; };
+/* L'export Excel des fiches coupe certains textes à une longueur fixe (ex. bilan à 49 caractères,
+   texte de valorisation à 1 caractère). Une colonne est considérée comme tronquée si sa longueur
+   maximale est courte (< 120 caractères) et atteinte par au moins 20 % des cellules remplies :
+   son contenu n'est alors pas évalué sur sa longueur. */
+/* Accès à une colonne : nom exact, sinon par préfixe (les en-têtes de l'export sont tronqués
+   différemment selon la version : "Cette action est-elle transposab..." ou "...transposable à d'a..."). */
+function getCol(row, key) {
+  var v = row[COLS[key]];
+  return v !== undefined ? v : findColByPrefix(row, COLS[key]);
+}
+function detectTruncatedCols(rows) {
+  var out = {};
+  ['bilanTexte', 'valorisationTxt'].forEach(function (key) {
+    var lens = rows.map(function (r) { var v = getCol(r, key); return v == null ? 0 : String(v).length; }).filter(function (n) { return n > 0; });
+    if (!lens.length) { out[key] = false; return; }
+    var max = Math.max.apply(null, lens), atMax = lens.filter(function (n) { return n === max; }).length;
+    out[key] = max < 120 && atMax / lens.length >= 0.2;
+  });
+  return out;
+}
+function normalizeFromXlsx(row, refDate, trunc) {
+  trunc = trunc || {};
+  var get = function (key) { return getCol(row, key); };
   var nEtapes = 0, etapeWordCounts = [];
   ETAPE_COLS.forEach(function (c) {
     if (isFilled(row[c])) { nEtapes++; etapeWordCounts.push(wc(row[c])); }
@@ -1031,12 +1267,12 @@ function normalizeFromXlsx(row, refDate) {
     bilanVide: wc(bilanTexte) < 5, indicSuivi: get('suivi') || '', indicResultats: get('resultats') || '',
     indicStrategiques: get('strategiques') || '', publics: splitMulti(get('publicCible')),
     thematiques: splitMulti(get('thematique')), solutions: splitMulti(get('solutions')),
-    acteurs: splitMulti(get('acteurs')), porteurs: [], beneficiaires: (function () { var v = get('beneficiaires'); var n = parseFloat(v); return isNaN(n) ? null : n; })(),
+    acteurs: splitMulti(get('acteurs')), porteurs: [], beneficiaires: (function () { var v = get('beneficiaires'); if (v == null || String(v).trim() === '') return null; var n = parseFloat(v); return isNaN(n) ? String(v).trim() : n; })(),
     rattachement: splitMulti(findColByPrefix(row, RATTACHEMENT_PREFIX)),
     nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, dCreation: toDate(get('dateCreation')),
     dFin: toDate(get('dateFin')), dMaj: toDate(get('dateMaj')),
     reconduction: recond === 'oui' ? 'oui' : (recond || null), transposition: transp === 'oui' ? 'oui' : (transp || null),
-    valorisationTxt: get('valorisationTxt') || '',
+    valorisationTxt: get('valorisationTxt') || '', bilanTronque: !!trunc.bilanTexte, valorisationTronque: !!trunc.valorisationTxt,
     efficacite: (function () { var v = get('efficacite'); var n = parseFloat(v); return isNaN(n) ? null : n; })()
   };
 }
@@ -1086,7 +1322,10 @@ function toFrenchTitleCase(s) {
    défaut sa date de création. Les axes de progrès/points forts de chaque fiche (n°1 de
    chaque classement pondéré par criticité) alimentent les colonnes axe_pct et axe_pct_fort,
    exactement comme sur le site. */
-var SITE_SOURCE_AXES = ['description', 'problematique', 'etapes', 'ciblage', 'suivi', 'resultats', 'impact_usager', 'maj', 'bilan', 'valorisation', 'diversite_acteurs', 'efficacite', 'vigilance', 'moyens'];
+/* Colonnes axe_pct_* / axe_pct_fort_* du fichier data/fiches_action.csv du Cockpit : les 14
+   critères historiques dans leur ordre d'origine, puis les critères ajoutés au référentiel. */
+var SITE_SOURCE_AXES = ['description', 'problematique', 'etapes', 'ciblage', 'suivi', 'resultats', 'impact_usager', 'maj', 'bilan', 'valorisation', 'diversite_acteurs', 'efficacite', 'vigilance', 'moyens',
+  'titre', 'diagnostic', 'roles', 'beneficiaires', 'cadre'];
 async function buildSiteSourceCsv(rows, normalized, allScores) {
   var casing = await fetchReferentielCasingLookup();
   var nCasingHits = 0;
@@ -1125,7 +1364,7 @@ async function buildSiteSourceCsv(rows, normalized, allScores) {
     g.idxs.forEach(function (idx) {
       var nf = normalized[idx], s = allScores[idx], row = rows[idx];
       nbActeurs += nf.acteurs.length;
-      if (nf.beneficiaires != null) { nbBenef += nf.beneficiaires; if (nf.beneficiaires > 0) nbFichesAvecBenef++; }
+      if (hasBeneficiaires(nf)) { if (typeof nf.beneficiaires === 'number') nbBenef += nf.beneficiaires; nbFichesAvecBenef++; }
       sumInnovant += s.evalInnovation / 25;
       sumImpact += s.evalImpact.total / 25;
       sumQualite += s.evalDescription.total / 25;
@@ -1185,12 +1424,17 @@ async function fetchReferentielCasingLookup() {
 async function processBulkFile(file) {
   var buf = await file.arrayBuffer();
   var wb = XLSX.read(buf, { type: 'array', cellDates: true });
-  var ws = wb.Sheets[wb.SheetNames[0]];
+  /* Le modèle fourni place un onglet "Instructions" avant l'onglet "Fiches action" : on lit
+     l'onglet "Fiches action" s'il existe, sinon l'onglet le plus rempli. */
+  var sheetName = wb.SheetNames.filter(function (n) { return /fiches?\s*action/i.test(n) && !/évaluées/i.test(n); })[0];
+  if (!sheetName) sheetName = wb.SheetNames.slice().sort(function (a, b) { var ra = wb.Sheets[a]['!ref'] ? XLSX.utils.decode_range(wb.Sheets[a]['!ref']).e.r : 0, rb = wb.Sheets[b]['!ref'] ? XLSX.utils.decode_range(wb.Sheets[b]['!ref']).e.r : 0; return rb - ra; })[0];
+  var ws = wb.Sheets[sheetName];
   var rows = XLSX.utils.sheet_to_json(ws, { defval: null });
   if (!rows.length) throw new Error('Aucune ligne trouvée dans ce fichier.');
 
   var refDate = new Date();
-  var normalized = rows.map(function (r) { return normalizeFromXlsx(r, refDate); });
+  var truncCols = detectTruncatedCols(rows);
+  var normalized = rows.map(function (r) { return normalizeFromXlsx(r, refDate, truncCols); });
 
   /* Corpus de fréquence des mots, sur la description + problématique + solutions +
      thématiques de l'ensemble du lot déposé : sert de base à l'évaluation du caractère
@@ -1293,10 +1537,14 @@ document.getElementById('methodToggle').addEventListener('click', function (e) {
   document.getElementById('methodDetail').style.display = btn.dataset.mode === 'detail' ? 'block' : 'none';
 });
 (function () {
-  var keys = Object.keys(CRITICITE_WEIGHTS).sort(function (a, b) { return CRITICITE_WEIGHTS[b] - CRITICITE_WEIGHTS[a]; });
-  document.getElementById('methodWeightsTable').innerHTML = keys.map(function (k) {
-    return '<tr><td class="mw">' + CRITICITE_WEIGHTS[k].toFixed(1) + '</td><td>' + (AXE_LABELS[k] || k) + '</td></tr>';
-  }).join('');
+  var pct = function (v) { return Math.round(v * 100) + '\u00A0%'; };
+  var html = '<tr class="ref-head"><td class="mw">Poids</td><td><b>Critère</b></td><td class="mw">🔴 Axe si</td><td class="mw">🟢 Fort si</td><td><b>Mode de calcul (score de 0 à 100\u00A0%)</b></td></tr>', fam = null;
+  REFERENTIEL.forEach(function (c) {
+    if (c.famille !== fam) { fam = c.famille; html += '<tr class="ref-fam"><td colspan="5">' + fam + '</td></tr>'; }
+    html += '<tr><td class="mw">' + c.poids.toFixed(1).replace('.', ',') + '</td><td><b>' + c.fort.label + '</b><br><span class="ref-axe">Axe\u00A0: ' + c.axe.label + '</span></td>' +
+      '<td class="mw">' + (c.seuilAxe == null ? '<span class="ref-axe">bonus</span>' : '&lt;\u00A0' + pct(c.seuilAxe)) + '</td><td class="mw">' + (c.seuilFort == null ? '<span class="ref-axe">socle</span>' : '&ge;\u00A0' + pct(c.seuilFort)) + '</td><td>' + c.calcul + '</td></tr>';
+  });
+  document.getElementById('methodWeightsTable').innerHTML = html;
 })();
 document.getElementById('downloadBulkBtn').addEventListener('click', function () {
   if (!lastBulkWorkbook) return;

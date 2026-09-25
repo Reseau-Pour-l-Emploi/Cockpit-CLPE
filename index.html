@@ -892,13 +892,23 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
             <p>Pour rester cohérent avec le niveau de maturité, affiché lui aussi sur une échelle de 0 à 4, ce score est ensuite ramené sur cette même échelle (division par 25) partout où il est présenté dans le cockpit.</p>
             <div class="table-scroll">
             <table class="method-table">
-              <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions).</td></tr>
-              <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, pertinence des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires cohérent (un nombre très élevé peut signaler un manque de ciblage). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
+              <tr><td class="mw">25&nbsp;%</td><td><b>Score de la description</b></td><td>Complétude des champs, longueur utile de la description et de la problématique (ni trop courte, ni trop longue), clarté rédactionnelle (longueur de phrase, richesse du vocabulaire), présence de verbes d'action, absence de jargon flou, titre concis, ciblage resserré (publics, thématiques, solutions). Bonus de 5 points si la fiche indique le cadre dans lequel elle s'inscrit (convergence des instances).</td></tr>
+              <tr><td class="mw">30&nbsp;%</td><td><b>Impact usager</b></td><td>Présence d'objectifs chiffrés et datés, pertinence des indicateurs de suivi et de résultat, ciblage de publics prioritaires (QPV, ZRR, jeunes, DELD...), niveau d'impact visé (simple information &lt; levée de freins &lt; accès à l'emploi), nombre de bénéficiaires renseigné, quelle que soit sa valeur (il traduit l'ambition de l'action ; un petit nombre peut correspondre à un test avant passage à l'échelle). Fortement réduit si l'action ne vise aucun usager final.</td></tr>
               <tr><td class="mw">25&nbsp;%</td><td><b>Bilan et valorisation</b></td><td>Non calculé tant que le bilan n'est pas renseigné (et non exigé tant que l'échéance de l'action n'est pas atteinte). Une fois rempli : taux de réalisation par rapport aux objectifs, profondeur du retour d'expérience (réussites, difficultés, conditions de réplicabilité), reconduction/transposition envisagées, présence de témoignages ou de pièces jointes.</td></tr>
               <tr><td class="mw">20&nbsp;%</td><td><b>Caractère innovant</b></td><td>Les actions sont regroupées par similarité (thématique, solutions mobilisées, contenu) ; une action difficile à rattacher à un groupe existant, ou dont le vocabulaire se distingue du reste du réseau, est jugée plus innovante.</td></tr>
             </table>
             </div>
             <p style="margin-top:10px">Un critère non évalué (bilan non renseigné, notamment) n'entre pas dans le score global : les poids des autres critères sont alors reproportionnés pour totaliser 100&nbsp;%, plutôt que de compter comme 0.</p>
+            <h3>🎯 Référentiel des points forts et axes de progrès</h3>
+            <p>Chaque fiche est aussi examinée sur <b>19 critères de qualité</b>, identiques pour une fiche isolée et pour un lot. Chaque critère est noté de 0 à 100&nbsp;% et possède deux seuils propres, calibrés sur 1&nbsp;527 fiches du réseau (septembre 2026) : sous le premier, 🔴 <b>axe de progrès</b> ; à partir du second, 🟢 <b>point fort</b> ; entre les deux, 🟠 <b>à consolider</b>.</p>
+            <ul>
+              <li><b>Critères socle</b> (titre, impact usager, diversité des acteurs, auto-évaluation de l'efficacité) : atteints par la grande majorité des fiches, ils peuvent signaler un axe de progrès mais jamais un point fort.</li>
+              <li><b>Critères bonus</b> (nombre de bénéficiaires, cadre dans lequel s'inscrit l'action) : valorisés comme point fort lorsqu'ils sont renseignés, jamais comptés comme axe de progrès.</li>
+              <li><b>Rôles des acteurs</b> : part des acteurs associés dont le rôle est décrit dans le champ «&nbsp;Rôles&nbsp;», pour vérifier que chacun sait ce qu'il doit faire.</li>
+              <li><b>Efficacité</b> : attendue dès que le bilan est saisi, elle atteste a minima d'une évaluation qualitative de l'action.</li>
+              <li>Un critère non applicable (étapes et suivi d'une action de 60 jours ou moins, bilan avant l'échéance) n'est ni l'un ni l'autre. Chaque fiche reçoit au moins un point fort et un axe de progrès, et un même critère n'est jamais les deux à la fois.</li>
+            </ul>
+            <p>Ces constats portent sur la <b>qualité de la fiche</b> (documentation, pilotage, capitalisation), pas sur l'efficacité réelle de l'action. Le détail des critères, seuils et modes de calcul est disponible dans la note méthodologique de l'<a href="evaluation-fiche-action.html" target="_blank" rel="noopener">outil d'évaluation des fiches action</a>.</p>
             <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils) et non sur un modèle d'intelligence artificielle : il donne une indication utile pour progresser sur la forme de la saisie, pas un jugement définitif sur la valeur de l'action.</p>
           </div>
         </details>
@@ -3204,7 +3214,12 @@ var FICHES_AXE_PRECO_TEXT = {
   diversite_acteurs: "Documentez une diversité d\u2019acteurs adaptée à l\u2019action plutôt qu\u2019un noyau restreint.",
   efficacite: "Auto-évaluez l\u2019efficacité de l\u2019action pour objectiver son bilan.",
   vigilance: "Anticipez les points de vigilance (risques, dépendances, contraintes de calendrier).",
-  moyens: "Précisez les moyens mobilisés (ressources, budget, temps humain dédié)."
+  moyens: "Précisez les moyens mobilisés (ressources, budget, temps humain dédié).",
+  roles: "Indiquez dans le champ \u00ab Rôles \u00bb ce que fait concrètement chaque acteur associé, pour savoir qui fait quoi.",
+  titre: "Raccourcissez les titres (moins de 12 mots) pour faciliter le repérage des actions.",
+  diagnostic: "Distinguez la problématique de la description : elle doit objectiver le diagnostic du territoire.",
+  beneficiaires: "Renseignez le nombre de bénéficiaires, même modeste : il traduit l\u2019ambition de l\u2019action.",
+  cadre: "Indiquez le cadre dans lequel s\u2019inscrit l\u2019action (convergence des instances)."
 };
 var FICHES_AXE_FORT_TEXT = {
   description: "Les descriptions sont généralement claires et détaillées sur ce périmètre.",
@@ -3220,7 +3235,12 @@ var FICHES_AXE_FORT_TEXT = {
   diversite_acteurs: "Une bonne diversité d\u2019acteurs est généralement mobilisée autour des actions.",
   efficacite: "L\u2019efficacité des actions est généralement auto-évaluée.",
   vigilance: "Les points de vigilance sont généralement bien anticipés.",
-  moyens: "Les moyens mobilisés sont généralement bien précisés."
+  moyens: "Les moyens mobilisés sont généralement bien précisés.",
+  roles: "Le rôle de chaque acteur associé est généralement décrit : on sait qui fait quoi.",
+  titre: "Les titres sont généralement courts et clairs.",
+  diagnostic: "Les problématiques objectivent généralement un diagnostic du territoire, distinct de la description.",
+  beneficiaires: "Le nombre de bénéficiaires est renseigné : les fiches affichent l\u2019ambition des actions, même modeste.",
+  cadre: "Les fiches indiquent le cadre dans lequel s\u2019inscrivent les actions, signe d\u2019une convergence des instances."
 };
 function renderFichesAxes(rows, nFiches) {
   /* Chaque piste de progrès précise de quel critère elle relève (couleur), pour garder le
@@ -3239,7 +3259,12 @@ function renderFichesAxes(rows, nFiches) {
     { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés', color: cssVar('--ft-orange') },
     { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action', color: cssVar('--ft-orange') },
     { key: 'vigilance', label: 'Anticiper les points de vigilance', color: cssVar('--ft-orange') },
-    { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)', color: cssVar('--ft-orange') }
+    { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)', color: cssVar('--ft-orange') },
+    { key: 'roles', label: 'Préciser le rôle de chaque acteur', color: cssVar('--ft-orange') },
+    { key: 'titre', label: 'Raccourcir le titre de l\u2019action', color: cssVar('--ft-bleu') },
+    { key: 'diagnostic', label: 'Mieux distinguer la problématique de la description', color: cssVar('--ft-bleu') },
+    { key: 'beneficiaires', label: 'Renseigner le nombre de bénéficiaires', color: cssVar('--ft-violet') },
+    { key: 'cadre', label: 'Indiquer le cadre dans lequel s\u2019inscrit l\u2019action', color: cssVar('--ft-orange') }
   ];
   var withPct = defs.map(function (d) {
     var nConcerned = rows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
@@ -3302,7 +3327,9 @@ var FICHES_AXE_FORT_LABEL = {
   resultats: 'Objectifs quantifiés et datés', impact_usager: 'Impact usager direct',
   maj: 'Suivi à jour', bilan: 'Bilan capitalisable', valorisation: 'Action valorisée',
   diversite_acteurs: 'Diversité des acteurs', efficacite: 'Efficacité auto-évaluée',
-  vigilance: 'Anticipation des risques', moyens: 'Moyens précisés'
+  vigilance: 'Anticipation des risques', moyens: 'Moyens précisés',
+  roles: 'Rôles des acteurs explicites', titre: 'Titre court et clair', diagnostic: 'Diagnostic objectivé',
+  beneficiaires: 'Ambition chiffrée', cadre: 'Convergence des instances'
 };
 function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
   var hostPF = document.getElementById('fichesPointsFortsPerso');
@@ -3585,7 +3612,13 @@ function buildFichesPointsFortsHTML() {
     },
     {
       title: 'Mesurer l\u2019impact', items: [
-        "Des indicateurs de résultat assortis d'un objectif quantitatif et d'un horizon temporel défini (ex. \u00ab 80 % à 6 mois \u00bb) permettent réellement de suivre l'atteinte des objectifs, bien au-delà d'une intention générale."
+        "Des indicateurs de résultat assortis d'un objectif quantitatif et d'un horizon temporel défini (ex. \u00ab 80 % à 6 mois \u00bb) permettent réellement de suivre l'atteinte des objectifs, bien au-delà d'une intention générale.",
+        "Un nombre de bénéficiaires renseigné affiche l'ambition de l'action, même modeste : un petit volume peut correspondre à un test avant un passage à l'échelle."
+      ]
+    },
+    {
+      title: 'Mobiliser et organiser les acteurs', items: [
+        "Indiquer le cadre dans lequel s'inscrit l'action (question \u00ab Cette action s'inscrit-elle dans le cadre de \u00bb) témoigne d'une bonne pratique de convergence entre les instances du réseau."
       ]
     },
     {
@@ -3624,7 +3657,6 @@ function buildFichesPreconisationsHTML() {
       title: 'Mesurer l\u2019impact', items: [
         "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche (nombre de participants visé, jalons), pas seulement a posteriori.",
         "Fixez des objectifs de résultat chiffrés et datés (ex. \u00ab 80 % des participants en emploi à 6 mois \u00bb) plutôt que des formulations vagues : ce sont ces objectifs \u00ab SMART \u00bb qui permettent réellement de suivre l'action et d'en faire le bilan.",
-        "Précisez le nombre de bénéficiaires, y compris de façon prévisionnelle dès la création, et mettez-le à jour au fil de l'action.",
         "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle ou de coordination interne, aussi utile soit-elle, n'a pas le même impact usager qu'une action de terrain."
       ]
     },
@@ -3636,7 +3668,7 @@ function buildFichesPreconisationsHTML() {
     },
     {
       title: 'Mobiliser et organiser les acteurs', items: [
-        "Renseignez systématiquement la répartition des rôles entre partenaires (champ \u00ab Rôles \u00bb) : ce champ est souvent laissé vide ou trop sommaire, alors qu'il est clé pour comprendre qui fait quoi dans l'action.",
+        "Décrivez dans le champ \u00ab Rôles \u00bb ce que fait concrètement chaque acteur associé (repérage des publics, mise à disposition de locaux, financement, animation...) : une formulation collective (\u00ab co-pilotage \u00bb, \u00ab mobilisation des partenaires \u00bb) ne permet pas de savoir qui fait quoi. L'outil d'évaluation vérifie que les acteurs cochés sont bien retrouvés dans ce champ.",
         "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint et toujours identique d'un dispositif à l'autre."
       ]
     },
@@ -3649,7 +3681,7 @@ function buildFichesPreconisationsHTML() {
     },
     {
       title: 'Piloter et sécuriser l\u2019action', items: [
-        "Auto-évaluez l'efficacité de l'action (champ dédié, noté de 0 à 10) : ce champ, aujourd'hui rempli dans moins d'un tiers des fiches, est un signal direct et rapide à renseigner, utile pour prioriser les actions à approfondir.",
+        "Dès que le bilan est saisi, auto-évaluez l'efficacité de l'action (champ dédié, noté de 0 à 10) : c'est la trace minimale d'une évaluation qualitative de l'action, rapide à renseigner et utile pour prioriser les actions à approfondir.",
         "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action : cela permet d'ajuster le pilotage en cours de route plutôt que de découvrir les difficultés a posteriori.",
         "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer si le résultat obtenu est à la hauteur de l'investissement consenti, ou de dimensionner une action similaire ailleurs."
       ]
@@ -3660,7 +3692,7 @@ function buildFichesPreconisationsHTML() {
       ]
     }
   ];
-  var html = '<div class="preco-summary">20 pistes concrètes pour améliorer la rédaction et le suivi des fiches action, organisées en 7 thèmes.</div>';
+  var html = '<div class="preco-summary">18 pistes concrètes pour améliorer la rédaction et le suivi des fiches action, organisées en 7 thèmes.</div>';
   groups.forEach(function (g) {
     html += '<div class="preco-section"><h4>' + esc(g.title) + '</h4>';
     g.items.forEach(function (it) { html += '<div class="preco-item">' + esc(it) + '</div>'; });
@@ -3929,7 +3961,12 @@ function buildReportPageFiches() {
       { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
       { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
       { key: 'vigilance', label: 'Anticiper les points de vigilance' },
-      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' }
+      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' },
+      { key: 'roles', label: 'Préciser le rôle de chaque acteur' },
+      { key: 'titre', label: 'Raccourcir le titre de l\u2019action' },
+      { key: 'diagnostic', label: 'Mieux distinguer la problématique de la description' },
+      { key: 'beneficiaires', label: 'Renseigner le nombre de bénéficiaires' },
+      { key: 'cadre', label: 'Indiquer le cadre dans lequel s\u2019inscrit l\u2019action' }
     ];
     var withPctPdf = defs.map(function (d) {
       var n = frows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
@@ -4761,7 +4798,9 @@ function init() {
             resultats: +r.axe_pct_resultats, impact_usager: +r.axe_pct_impact_usager,
             maj: +r.axe_pct_maj, bilan: +r.axe_pct_bilan, valorisation: +r.axe_pct_valorisation,
             diversite_acteurs: +r.axe_pct_diversite_acteurs, efficacite: +r.axe_pct_efficacite,
-            vigilance: +r.axe_pct_vigilance, moyens: +r.axe_pct_moyens
+            vigilance: +r.axe_pct_vigilance, moyens: +r.axe_pct_moyens,
+            titre: +r.axe_pct_titre || 0, diagnostic: +r.axe_pct_diagnostic || 0, roles: +r.axe_pct_roles || 0,
+            beneficiaires: +r.axe_pct_beneficiaires || 0, cadre: +r.axe_pct_cadre || 0
           },
           axePctFort: {
             description: +r.axe_pct_fort_description, problematique: +r.axe_pct_fort_problematique,
@@ -4769,7 +4808,9 @@ function init() {
             resultats: +r.axe_pct_fort_resultats, impact_usager: +r.axe_pct_fort_impact_usager,
             maj: +r.axe_pct_fort_maj, bilan: +r.axe_pct_fort_bilan, valorisation: +r.axe_pct_fort_valorisation,
             diversite_acteurs: +r.axe_pct_fort_diversite_acteurs, efficacite: +r.axe_pct_fort_efficacite,
-            vigilance: +r.axe_pct_fort_vigilance, moyens: +r.axe_pct_fort_moyens
+            vigilance: +r.axe_pct_fort_vigilance, moyens: +r.axe_pct_fort_moyens,
+            titre: +r.axe_pct_fort_titre || 0, diagnostic: +r.axe_pct_fort_diagnostic || 0, roles: +r.axe_pct_fort_roles || 0,
+            beneficiaires: +r.axe_pct_fort_beneficiaires || 0, cadre: +r.axe_pct_fort_cadre || 0
           },
           months: months,
           codeClpe: r.code_clpe || ''
