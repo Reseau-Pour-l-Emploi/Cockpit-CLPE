@@ -1328,6 +1328,7 @@ var SITE_SOURCE_AXES = ['description', 'problematique', 'etapes', 'ciblage', 'su
   'titre', 'diagnostic', 'roles', 'beneficiaires', 'cadre'];
 async function buildSiteSourceCsv(rows, normalized, allScores) {
   var casing = await fetchReferentielCasingLookup();
+  var codes = await fetchClpeCodeLookup();
   var nCasingHits = 0;
   var groups = {};
   rows.forEach(function (row, idx) {
@@ -1340,7 +1341,7 @@ async function buildSiteSourceCsv(rows, normalized, allScores) {
     if (!clpe || !nf.dCreation) return;
     var annee = nf.dCreation.getFullYear();
     var key = region + '|' + dept + '|' + clpe + '|' + annee;
-    if (!groups[key]) groups[key] = { region: region, departement: dept, clpe: clpe, annee: annee, idxs: [], codeClpe: row['C_TERRITOIRE_ID'] || '' };
+    if (!groups[key]) groups[key] = { region: region, departement: dept, clpe: clpe, annee: annee, idxs: [], codeClpe: row['C_TERRITOIRE_ID'] || codes[normRefKey(rawClpe)] || codes[normRefKey(clpe)] || '' };
     groups[key].idxs.push(idx);
     if (!groups[key].codeClpe && row['C_TERRITOIRE_ID']) groups[key].codeClpe = row['C_TERRITOIRE_ID'];
   });
@@ -1403,6 +1404,23 @@ function normRefKey(s) {
    majuscules). Si l'outil est hébergé au même endroit que le site (même dossier data/), on
    récupère le référentiel existant pour recaser les noms à l'identique ; à défaut, on retombe
    sur la conversion algorithmique (toFrenchTitleCase), moins fidèle mais toujours lisible. */
+/* Codes CLPE (C_TERRITOIRE_ID) par nom de CLPE, lus dans data/clpe_tae_tpe.csv du site : le
+   modèle d'évaluation en lot n'a pas cette colonne, or le code sert aux liens "Consulter les
+   fiches action" du Cockpit. */
+var clpeCodeLookup = null;
+async function fetchClpeCodeLookup() {
+  if (clpeCodeLookup) return clpeCodeLookup;
+  clpeCodeLookup = {};
+  try {
+    var r = await fetch('data/clpe_tae_tpe.csv');
+    if (!r.ok) return clpeCodeLookup;
+    var lines = (await r.text()).replace(/^\uFEFF/, '').split(/\r\n|\n/);
+    var h = lines[0].split(';'), iId = h.indexOf('C_TERRITOIRE_ID'), iLbl = h.indexOf('C_LBLTERRITOIRE');
+    if (iId < 0 || iLbl < 0) return clpeCodeLookup;
+    lines.slice(1).forEach(function (line) { var c = line.split(';'); if (c[iId] && c[iLbl]) clpeCodeLookup[normRefKey(c[iLbl])] = c[iId].trim(); });
+  } catch (e) { /* hors du site : pas de code, le Cockpit le retrouvera lui-même par le nom */ }
+  return clpeCodeLookup;
+}
 var referentielCasingLookup = null;
 async function fetchReferentielCasingLookup() {
   if (referentielCasingLookup) return referentielCasingLookup;

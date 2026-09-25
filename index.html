@@ -482,6 +482,18 @@ details.section>summary .hint{font-size:12px;color:var(--ft-fg-3);font-weight:40
 .method-table tr:first-child td{border-top:1px solid var(--ft-sable-dark)}
 .point-fort-item{border-left-color:var(--ft-vert)}
 .preco-sep{border:none;border-top:2px solid var(--ft-sable-dark);margin:22px 0}
+.ref-legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.ref-pill{display:inline-block;font-size:11px;font-weight:600;border-radius:10px;padding:2px 8px;white-space:nowrap}
+.ref-pill.ref-axe{background:#fdecea;color:#8a1c12}
+.ref-pill.ref-mid{background:#fff3e0;color:#8a4b00}
+.ref-pill.ref-fort{background:#e7f5ec;color:#1b5e20}
+.ref-pill.ref-bonus{background:var(--ft-indigo-light);color:var(--ft-navy)}
+.ref-note{font-size:12px;line-height:1.5;color:var(--ft-fg-2);margin:6px 0 16px}
+.ref-crit{margin-bottom:14px}
+.ref-crit-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;font-size:13px;color:var(--ft-navy)}
+.ref-pills{display:flex;gap:4px}
+.ref-crit .preco-item{margin-bottom:6px}
+.preco-repere{border-left-color:var(--ft-fg-3)}
 .preco-main-title{font-size:15px;font-weight:700;color:var(--ft-navy);margin:0 0 8px}
 .preco-q{font-size:12.5px;font-weight:700;color:var(--ft-fg-1)}
 .preco-score{font-weight:400;color:var(--ft-fg-3);margin-left:4px}
@@ -1061,7 +1073,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
               <div id="fichesPrecoPerso"></div>
             </div>
           </div>
-          <div class="preco-pdf-row"><button class="btn-reset btn-preco" id="fichesPrecoBtn">Voir le référentiel complet (20 bonnes pratiques génériques)</button></div>
+          <div class="preco-pdf-row"><button class="btn-reset btn-preco" id="fichesPrecoBtn">Voir le référentiel complet (19 critères, seuils, points forts et préconisations)</button></div>
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
@@ -3308,9 +3320,21 @@ function findClpeWithPointFort(axisKey, excludeClpe) {
     if (nb < 2) return;
     var nConcerned = rows.reduce(function (s, r) { return s + (r.axePctFort[axisKey] / 100) * r.nbFiches; }, 0);
     var pct = nConcerned / nb * 100;
-    if (pct > bestPct) { bestPct = pct; best = { clpe: clpeName, codeClpe: rows.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || null, pct: pct }; }
+    if (pct > bestPct) { bestPct = pct; best = { clpe: clpeName, codeClpe: rows.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || null, pct: pct, mode: 'fort' }; }
   });
-  return best;
+  if (best && best.pct > 0) return best;
+  /* Critère socle (jamais point fort) ou jamais point fort ailleurs : on propose le CLPE où
+     cet axe de progrès est le moins fréquent, parmi ceux d'au moins 5 fiches. */
+  var bestAxe = null, lowPct = 101;
+  Object.keys(groups).forEach(function (clpeName) {
+    if (clpeName === excludeClpe) return;
+    var rows = groups[clpeName];
+    var nb = rows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
+    if (nb < 5) return;
+    var pctAxe = rows.reduce(function (s, r) { return s + (r.axePct[axisKey] / 100) * r.nbFiches; }, 0) / nb * 100;
+    if (pctAxe < lowPct) { lowPct = pctAxe; bestAxe = { clpe: clpeName, codeClpe: rows.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || null, pct: pctAxe, nb: nb, mode: 'axe' }; }
+  });
+  return bestAxe;
 }
 function fichesClpeLinkHTML(codeClpe, label) {
   if (!codeClpe) return '';
@@ -3361,7 +3385,7 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
   hostPreco.innerHTML = preco.length ? preco.map(function (d) {
     var ref = findClpeWithPointFort(d.key, currentClpe);
     var refLink = ref && ref.codeClpe && ref.clpe !== currentClpe
-      ? '<div class="ref-territoire-line">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> Point fort de <b>' + esc(ref.clpe) + '</b> (' + fmt(ref.pct, 0) + '\u00A0% de ses fiches)' + fichesClpeLinkHTML(ref.codeClpe, 'Consulter ses fiches action') + '</div>'
+      ? '<div class="ref-territoire-line">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, qui maîtrise ce critère" style="cursor:help">\u2139\uFE0F</span> ' + (ref.mode === 'fort' ? 'Point fort de <b>' + esc(ref.clpe) + '</b> (' + fmt(ref.pct, 0) + '\u00A0% de ses fiches)' : 'Critère bien maîtrisé par <b>' + esc(ref.clpe) + '</b> (' + (ref.pct > 0 ? 'axe de progrès pour ' + fmt(ref.pct, 0) + '\u00A0% seulement de ses ' + ref.nb + ' fiches' : 'aucune de ses ' + ref.nb + ' fiches en axe de progrès') + ')') + fichesClpeLinkHTML(ref.codeClpe, 'Consulter ses fiches action') + '</div>'
       : '';
     return '<div class="preco-item"><b>' + esc(d.label) + '</b>' + scoreOuVide(d.pct, '(' + fmt(d.pct, 0) + '\u00A0% des fiches concernées)') + fiabiliteAlerte(d.pct) + '<p>' + esc(FICHES_AXE_PRECO_TEXT[d.key]) + '</p>' + refLink + '</div>';
   }).join('') : '<p class="preco-empty">Aucun axe de progrès identifiable sur ce périmètre (aucune fiche exploitable).</p>';
@@ -3375,7 +3399,7 @@ function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
        référence, à la fois bien noté et riche en points forts, qui peut servir d'inspiration. */
     var inspi = findInspiringTerritory(currentClpe);
     hostPF.innerHTML = '<p class="preco-empty">Aucun point fort identifiable sur ce périmètre (aucune fiche exploitable).</p>' +
-      (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, pour lequel c\u2019est un point fort" style="cursor:help">\u2139\uFE0F</span> <b>' + esc(inspi.clpe) + '</b> affiche un score global élevé (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
+      (inspi ? '<div class="ref-territoire-line ref-territoire-box">\uD83D\uDCA1 <b>Inspiration</b> <span title="Pour travailler sur cet axe de progrès, vous pouvez vous inspirer de ce territoire, qui maîtrise ce critère" style="cursor:help">\u2139\uFE0F</span> <b>' + esc(inspi.clpe) + '</b> affiche un score global élevé (' + fmt(inspi.global) + '\u00A0/\u00A04) sur ' + inspi.nbFiches + ' fiches et peut servir d\u2019inspiration.' + fichesClpeLinkHTML(inspi.codeClpe, 'Consulter ses fiches action') + '</div>' : '');
   }
 }
 
@@ -3596,106 +3620,108 @@ function percentileOf(sortedArr, p) {
   var idx = (sortedArr.length - 1) * p, lo = Math.floor(idx), hi = Math.min(lo + 1, sortedArr.length - 1);
   return sortedArr[lo] + (sortedArr[hi] - sortedArr[lo]) * (idx - lo);
 }
-/* Points forts "Fiches action" : pendant positif des préconisations ci-dessous, organisé
-   selon les mêmes 7 thèmes. Chaque item explique la valeur d'une bonne pratique une fois
-   acquise, sans jamais recouper le même point précis qu'une préconisation - une pratique
-   donnée n'apparaît que d'un seul côté : soit comme piste à travailler, soit comme point
-   fort à reconnaître quand elle est déjà là. */
-function buildFichesPointsFortsHTML() {
-  var groups = [
-    {
-      title: 'Décrire et cadrer l\u2019action', items: [
-        "Un nombre de publics cibles et de thématiques limité traduit une action bien focalisée, avec un impact potentiel plus fort qu'une action qui ratisse large. Un titre court et clair donne envie de lire la suite et facilite le repérage de l'action dans les tableaux de bord.",
-        "Une problématique clairement distincte de la description témoigne d'un diagnostic objectif du territoire, plutôt que d'une simple reformulation de l'action.",
-        "Un jalonnage régulier, avec des étapes de mise en œuvre détaillées, traduit un pilotage rigoureux de l'action dans la durée."
-      ]
-    },
-    {
-      title: 'Mesurer l\u2019impact', items: [
-        "Des indicateurs de résultat assortis d'un objectif quantitatif et d'un horizon temporel défini (ex. \u00ab 80 % à 6 mois \u00bb) permettent réellement de suivre l'atteinte des objectifs, bien au-delà d'une intention générale.",
-        "Un nombre de bénéficiaires renseigné affiche l'ambition de l'action, même modeste : un petit volume peut correspondre à un test avant un passage à l'échelle."
-      ]
-    },
-    {
-      title: 'Mobiliser et organiser les acteurs', items: [
-        "Indiquer le cadre dans lequel s'inscrit l'action (question \u00ab Cette action s'inscrit-elle dans le cadre de \u00bb) témoigne d'une bonne pratique de convergence entre les instances du réseau."
-      ]
-    },
-    {
-      title: 'Suivre et valoriser dans la durée', items: [
-        "Un bilan riche, qui va au-delà des chiffres pour expliquer ce qui a fonctionné ou non, permet de capitaliser sur les actions futures et d'éclairer d'autres territoires susceptibles de mettre en place une action similaire."
-      ]
-    },
-    {
-      title: 'Piloter et sécuriser l\u2019action', items: [
-        "Des points d'attention qui anticipent clairement les risques (mobilisation du public, dépendance à un acteur, contraintes de calendrier...) montrent la prudence et le sérieux de l'étude du projet."
-      ]
-    }
-  ];
-  var html = '<div class="preco-summary">Ce que les fiches action les mieux renseignées ont en commun, à titre de repère.</div>';
-  groups.forEach(function (g) {
-    html += '<div class="preco-section"><h4>' + esc(g.title) + '</h4>';
-    g.items.forEach(function (it) { html += '<div class="preco-item point-fort-item">' + esc(it) + '</div>'; });
+/* Référentiel des fiches action affiché dans la popup "Points forts et préconisations".
+   Copie de la constante REFERENTIEL de evaluation-fiche-action.html (critères, seuils
+   calibrés sur 1 527 fiches en septembre 2026, libellés) : à maintenir identique.
+   seuilFort null = critère socle (jamais point fort) ; seuilAxe null = critère bonus
+   (jamais axe de progrès). */
+var FICHES_REFERENTIEL = [
+  { domaine: 'Décrire et cadrer l\u2019action', criteres: [
+    { key: 'description', axe: 0.6, fort: 0.95, label: 'Description claire et complète',
+      pf: "La description est suffisamment détaillée et clairement rédigée pour comprendre concrètement l'action.",
+      preco: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques." },
+    { key: 'problematique', axe: 0.6, fort: 0.95, label: 'Problématique bien posée',
+      pf: "La problématique est bien formulée et étayée par des constats locaux.",
+      preco: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte." },
+    { key: 'diagnostic', axe: 0.6, fort: 0.9, label: 'Diagnostic objectivé',
+      pf: "La problématique se distingue clairement de la description : un diagnostic objectif du territoire a été posé plutôt qu'une simple reformulation de l'action.",
+      preco: "Distinguez nettement la problématique de la description : une problématique qui reformule simplement l'action n'objective pas le diagnostic à son origine." },
+    { key: 'ciblage', axe: 0.55, fort: 0.95, label: 'Ciblage précis',
+      pf: "Un nombre limité de publics, de thématiques et de solutions traduit une action bien focalisée, à fort impact potentiel.",
+      preco: "Limitez les publics cibles (moins de 3), les thématiques et les solutions mobilisées (moins de 5) à ce qui est réellement pertinent : cocher très large nuit à la lisibilité." },
+    { key: 'etapes', axe: 0.6, fort: 1, label: 'Jalonnage régulier',
+      pf: "Les étapes de mise en œuvre sont détaillées, gage d'un pilotage régulier de l'action dans la durée.",
+      preco: "Pour les actions de plus de 60 jours, détaillez au moins 2 à 3 étapes de mise en œuvre avec un minimum d'explication pour chacune." },
+    { key: 'titre', axe: 0.6, fort: null, label: 'Titre court et clair',
+      preco: "Raccourcissez le titre (moins de 12 mots) : il sera plus lisible dans les tableaux de bord et les listes d'actions." }
+  ] },
+  { domaine: 'Mesurer l\u2019impact', criteres: [
+    { key: 'resultats', axe: 0.45, fort: 0.75, label: 'Objectifs quantifiés et datés',
+      pf: "Les indicateurs de résultat comportent un objectif chiffré et une échéance (ex. \u00ab 80 % des participants en emploi à 6 mois \u00bb) : l'atteinte des objectifs pourra être mesurée.",
+      preco: "Fixez des objectifs de résultat à la fois chiffrés et datés plutôt que des formulations vagues : ce sont ces objectifs \u00ab SMART \u00bb qui permettent de suivre l'action." },
+    { key: 'suivi', axe: 0.6, fort: 1, label: 'Suivi bien outillé',
+      pf: "Des indicateurs de suivi sont renseignés dès la conception de l'action.",
+      preco: "Pour les actions de plus de 60 jours, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori." },
+    { key: 'impact_usager', axe: 0.6, fort: null, label: 'Impact usager direct',
+      preco: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain." },
+    { key: 'beneficiaires', axe: null, fort: 1, label: 'Ambition chiffrée',
+      pf: "Le nombre de bénéficiaires est renseigné : la fiche affiche l'ambition de l'action, même modeste (un petit volume peut correspondre à un test avant passage à l'échelle)." }
+  ] },
+  { domaine: 'Mobiliser et organiser les acteurs', criteres: [
+    { key: 'roles', axe: 0.35, fort: 0.75, label: 'Rôles des acteurs explicites',
+      pf: "Le rôle des acteurs associés est décrit : la fiche permet de savoir qui fait quoi dans l'action.",
+      preco: "Indiquez dans le champ \u00ab Rôles \u00bb ce que fait concrètement chaque acteur associé (repérage des publics, locaux, financement, animation...) : une formulation collective (\u00ab co-pilotage \u00bb) ne permet pas de savoir qui fait quoi. Au moins la moitié des acteurs cochés doit être retrouvée dans ce champ." },
+    { key: 'diversite_acteurs', axe: 0.6, fort: null, label: 'Diversité des acteurs',
+      preco: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint." },
+    { key: 'cadre', axe: null, fort: 1, label: 'Convergence des instances',
+      pf: "La fiche indique le cadre dans lequel s'inscrit l'action (question \u00ab Cette action s'inscrit-elle dans le cadre de \u00bb) : une bonne pratique de convergence entre les instances du réseau." }
+  ] },
+  { domaine: 'Suivre et valoriser dans la durée', criteres: [
+    { key: 'maj', axe: 0.35, fort: 0.9, label: 'Suivi à jour',
+      pf: "Le statut de la fiche est régulièrement mis à jour (une fiche terminée ou abandonnée est considérée à jour).",
+      preco: "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche sans mise à jour depuis plusieurs mois perd en fiabilité." },
+    { key: 'bilan', axe: 0.35, fort: 0.75, label: 'Bilan capitalisable',
+      pf: "Le bilan est analytique : il chiffre les résultats et explique ce qui a fonctionné ou non, ce qui permet de capitaliser et d'éclairer d'autres territoires.",
+      preco: "Renseignez le bilan dès que l'action est terminée, abandonnée ou que sa date de fin est dépassée : chiffrez les résultats, puis expliquez avec honnêteté ce qui a fonctionné et ce qui n'a pas fonctionné." },
+    { key: 'efficacite', axe: 0.6, fort: null, label: 'Efficacité auto-évaluée',
+      preco: "Dès que le bilan est saisi, auto-évaluez l'efficacité de l'action (0 à 10) : c'est la trace minimale d'une évaluation qualitative." },
+    { key: 'valorisation', axe: 0.6, fort: 0.8, label: 'Action valorisée',
+      pf: "L'action est valorisée : reconduction, transposition ou partage d'expérience sont renseignés.",
+      preco: "Précisez si l'action sera reconduite, si elle est transposable et comment elle a été valorisée (retour d'expérience, témoignages, communication)." }
+  ] },
+  { domaine: 'Piloter et sécuriser l\u2019action', criteres: [
+    { key: 'moyens', axe: 0.35, fort: 1, label: 'Moyens précisés',
+      pf: "Les moyens mobilisés (ressources matérielles, budget, temps humain) sont précisés.",
+      preco: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti ou de dimensionner une action similaire." },
+    { key: 'vigilance', axe: 0.35, fort: 0.8, label: 'Anticipation des risques',
+      pf: "Les points d'attention anticipent les risques (mobilisation du public, dépendance à un acteur, calendrier) : un signe de prudence et de sérieux dans la préparation.",
+      preco: "Anticipez les points de vigilance (mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action." }
+  ] }
+];
+var FICHES_REPERES_NON_MESURES = [
+  { titre: 'Impliquer les usagers', items: [
+    "Associer les usagers à la construction de l'action permet de s'assurer qu'elle répond à des problématiques concrètes plutôt qu'à une vision uniquement descendante.",
+    "Recueillir des témoignages, par enquête ou en direct, permet de valoriser l'action avec les mots mêmes des usagers, souvent plus parlants qu'un indicateur chiffré seul."
+  ] },
+  { titre: 'Une ou plusieurs fiches action ?', items: [
+    "Une seule fiche suffit pour des actions répétitives visant le même public et mobilisant les mêmes leviers (précisez alors la fréquence et l'objectif annuel), ou pour un parcours continu en plusieurs étapes. Créez plusieurs fiches lorsque les publics, les partenaires ou les objectifs diffèrent réellement."
+  ] }
+];
+/* Popup "Points forts et préconisations" : présentation du référentiel unique, domaine par
+   domaine. Pour chaque critère : seuils, formulation en point fort et en axe de progrès. */
+function buildFichesReferentielHTML() {
+  var pct = function (v) { return Math.round(v * 100) + '\u00A0%'; };
+  var nCrit = 0; FICHES_REFERENTIEL.forEach(function (d) { nCrit += d.criteres.length; });
+  var html = '<div class="preco-summary">Les fiches action sont examinées sur <b>' + nCrit + ' critères de qualité</b>, identiques pour une fiche seule et pour un lot. ' +
+    'Chaque critère est noté de 0 à 100\u00A0% puis positionné sur deux seuils calibrés sur 1\u00A0527 fiches du réseau :</div>' +
+    '<div class="ref-legend"><span class="ref-pill ref-axe">🔴 Axe de progrès : sous le 1er seuil</span><span class="ref-pill ref-mid">🟠 À consolider : entre les deux</span><span class="ref-pill ref-fort">🟢 Point fort : à partir du 2e seuil</span></div>' +
+    '<p class="ref-note">Un critère n\u2019est jamais à la fois point fort et axe de progrès, et chaque fiche reçoit au moins un de chaque. <b>Socle</b> : critère atteint par la grande majorité des fiches, signalé seulement s\u2019il manque. <b>Bonus</b> : valorisé lorsqu\u2019il est renseigné, jamais pénalisé. Ces constats portent sur la qualité de la fiche, pas sur l\u2019efficacité réelle de l\u2019action.</p>';
+  FICHES_REFERENTIEL.forEach(function (d) {
+    html += '<div class="preco-section"><h4>' + esc(d.domaine) + '</h4>';
+    d.criteres.forEach(function (c) {
+      var seuils = (c.axe == null ? '<span class="ref-pill ref-bonus">Bonus</span>' : '<span class="ref-pill ref-axe">🔴 &lt;\u00A0' + pct(c.axe) + '</span>') +
+        (c.fort == null ? '<span class="ref-pill ref-bonus">Socle</span>' : '<span class="ref-pill ref-fort">🟢 &ge;\u00A0' + pct(c.fort) + '</span>');
+      html += '<div class="ref-crit"><div class="ref-crit-head"><b>' + esc(c.label) + '</b><span class="ref-pills">' + seuils + '</span></div>';
+      if (c.pf) html += '<div class="preco-item point-fort-item"><b>Point fort</b><p>' + esc(c.pf) + '</p></div>';
+      if (c.preco) html += '<div class="preco-item"><b>Si axe de progrès</b><p>' + esc(c.preco) + '</p></div>';
+      html += '</div>';
+    });
     html += '</div>';
   });
-  return html;
-}
-/* Préconisations "Fiches action" : liste méthodologique statique (bonnes pratiques de
-   rédaction et de suivi), à la différence des préconisations Maturité qui sont calculées
-   dynamiquement à partir des réponses filtrées. */
-function buildFichesPreconisationsHTML() {
-  var groups = [
-    {
-      title: 'Décrire et cadrer l\u2019action', items: [
-        "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques, qui ne permettent pas de comprendre concrètement ce qui est fait ni pourquoi.",
-        "Formulez une problématique qui objective un vrai diagnostic du territoire (constats, chiffres), nettement distincte de la description de l'action : une problématique qui se contente de reformuler ce qui est fait n'apporte pas d'éclairage supplémentaire.",
-        "Pour les actions qui se déroulent dans la durée (plusieurs phases, écart important entre la date de création et la date de fin), détaillez au moins 2 à 3 étapes de mise en œuvre avec leurs échéances : cela objective le déroulé de l'action et facilite le suivi. Pour une action ponctuelle, ce n'est pas nécessaire.",
-        "Limitez le nombre de publics cibles et de thématiques cochés à ce qui est réellement pertinent : cocher très large par défaut nuit à la lisibilité et donne l'impression d'une action mal ciblée."
-      ]
-    },
-    {
-      title: 'Mesurer l\u2019impact', items: [
-        "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche (nombre de participants visé, jalons), pas seulement a posteriori.",
-        "Fixez des objectifs de résultat chiffrés et datés (ex. \u00ab 80 % des participants en emploi à 6 mois \u00bb) plutôt que des formulations vagues : ce sont ces objectifs \u00ab SMART \u00bb qui permettent réellement de suivre l'action et d'en faire le bilan.",
-        "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle ou de coordination interne, aussi utile soit-elle, n'a pas le même impact usager qu'une action de terrain."
-      ]
-    },
-    {
-      title: 'Impliquer les usagers', items: [
-        "Associer les usagers à la construction de l'action est une option à envisager, pour s'assurer qu'elle répond à des problématiques concrètes plutôt qu'à une vision uniquement descendante.",
-        "Recueillir des témoignages, par enquête ou en direct, permet de valoriser l'action avec les mots mêmes des usagers - un apport souvent plus parlant qu'un indicateur chiffré seul."
-      ]
-    },
-    {
-      title: 'Mobiliser et organiser les acteurs', items: [
-        "Décrivez dans le champ \u00ab Rôles \u00bb ce que fait concrètement chaque acteur associé (repérage des publics, mise à disposition de locaux, financement, animation...) : une formulation collective (\u00ab co-pilotage \u00bb, \u00ab mobilisation des partenaires \u00bb) ne permet pas de savoir qui fait quoi. L'outil d'évaluation vérifie que les acteurs cochés sont bien retrouvés dans ce champ.",
-        "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint et toujours identique d'un dispositif à l'autre."
-      ]
-    },
-    {
-      title: 'Suivre et valoriser dans la durée', items: [
-        "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche \u00ab en cours \u00bb sans mise à jour depuis plusieurs mois perd en fiabilité.",
-        "Faites un bilan \u00ab à chaud \u00bb avec les premiers résultats disponibles, puis mettez-le à jour une fois les données permettant de chiffrer l'atteinte des objectifs. Renseigner un bilan n'est vraiment indispensable que si la date de fin est dépassée et qu'aucun bilan n'a encore été saisi.",
-        "Faites preuve d'humilité et d'honnêteté sur les objectifs et les résultats : un bilan nuancé, qui reconnaît aussi ce qui n'a pas fonctionné, est plus utile au réseau qu'un bilan uniformément positif."
-      ]
-    },
-    {
-      title: 'Piloter et sécuriser l\u2019action', items: [
-        "Dès que le bilan est saisi, auto-évaluez l'efficacité de l'action (champ dédié, noté de 0 à 10) : c'est la trace minimale d'une évaluation qualitative de l'action, rapide à renseigner et utile pour prioriser les actions à approfondir.",
-        "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action : cela permet d'ajuster le pilotage en cours de route plutôt que de découvrir les difficultés a posteriori.",
-        "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer si le résultat obtenu est à la hauteur de l'investissement consenti, ou de dimensionner une action similaire ailleurs."
-      ]
-    },
-    {
-      title: 'Une ou plusieurs fiches action ?', items: [
-        "Une seule fiche suffit pour des actions répétitives visant le même public et mobilisant les mêmes leviers (précisez alors la fréquence et l'objectif annuel dans la description), ou pour un parcours continu regroupant plusieurs étapes pour une même cohorte. À l'inverse, créez des fiches distinctes dès que le public cible diffère ou que le dispositif est spécifique à un profil particulier (ex. travailleurs handicapés, quartiers prioritaires) - et évitez une fiche unique pour toute une feuille de route, qui ne permettrait pas un suivi assez fin."
-      ]
-    }
-  ];
-  var html = '<div class="preco-summary">18 pistes concrètes pour améliorer la rédaction et le suivi des fiches action, organisées en 7 thèmes.</div>';
-  groups.forEach(function (g) {
-    html += '<div class="preco-section"><h4>' + esc(g.title) + '</h4>';
-    g.items.forEach(function (it) { html += '<div class="preco-item">' + esc(it) + '</div>'; });
+  html += '<hr class="preco-sep"><h4 class="preco-main-title">Repères complémentaires (non évalués automatiquement)</h4>';
+  FICHES_REPERES_NON_MESURES.forEach(function (g) {
+    html += '<div class="preco-section"><h4>' + esc(g.titre) + '</h4>';
+    g.items.forEach(function (it) { html += '<div class="preco-item preco-repere">' + esc(it) + '</div>'; });
     html += '</div>';
   });
   return html;
@@ -4560,10 +4586,7 @@ function bindEvents() {
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', function (e) { if (e.target.id === 'modalOverlay') closeModal(); });
   document.getElementById('fichesPrecoBtn').addEventListener('click', function () {
-    document.getElementById('fichesPrecoBody').innerHTML =
-      '<h4 class="preco-main-title">\u2705 Points forts</h4>' + buildFichesPointsFortsHTML() +
-      '<hr class="preco-sep">' +
-      '<h4 class="preco-main-title">Préconisations</h4>' + buildFichesPreconisationsHTML();
+    document.getElementById('fichesPrecoBody').innerHTML = buildFichesReferentielHTML();
     document.getElementById('fichesPrecoOverlay').classList.add('show');
   });
   document.getElementById('fichesPrecoClose').addEventListener('click', closeFichesPreco);
@@ -4827,6 +4850,15 @@ function init() {
         return row;
       });
       buildPerfIndex();
+      /* Code CLPE des fiches action (liens "Consulter les fiches action" et suggestions de
+         territoire inspirant) : si le fichier fiches_action.csv n'a pas de code_clpe (fichier
+         produit depuis le modèle d'évaluation, sans colonne C_TERRITOIRE_ID), on le retrouve
+         par le nom du CLPE dans les données de performance relative, qui portent ce code. */
+      (function () {
+        var codeByName = {};
+        PERF_DATA.forEach(function (p) { if (p.id && p.clpe) codeByName[norm(p.clpe)] = p.id; });
+        FICHES_DATA.forEach(function (r) { if (!r.codeClpe && r.clpe) r.codeClpe = codeByName[norm(r.clpe)] || ''; });
+      })();
       POP_DATA = parseSimpleCSV(res[9]).map(function (r) { return { region: normRegionName(r.region), departement: normApostrophes(r.departement), clpe: normApostrophes(r.clpe), population: +r.population }; });
       RECOMMANDATIONS = {};
       parseSimpleCSV(res[10]).forEach(function (r) {
