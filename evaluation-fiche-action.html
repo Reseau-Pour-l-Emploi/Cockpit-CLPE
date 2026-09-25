@@ -748,11 +748,14 @@ function weightedRanking(subs) {
     return { key: k, v: subs[k], weight: w, prioriteAxe: (1 - subs[k]) * w, prioriteFort: subs[k] * w };
   });
 }
+/* Un même critère ne peut pas être à la fois point fort et axe de progrès : seuil unique de
+   partage (score >= 0,75 : point fort possible ; score < 0,75 : axe de progrès possible). */
+var SEUIL_POINT_FORT = 0.75;
 function selectAxesProgres(subs, n) {
-  return weightedRanking(subs).sort(function (a, b) { return b.prioriteAxe - a.prioriteAxe; }).slice(0, n || 3);
+  return weightedRanking(subs).filter(function (x) { return x.v < SEUIL_POINT_FORT; }).sort(function (a, b) { return b.prioriteAxe - a.prioriteAxe; }).slice(0, n || 3);
 }
 function selectPointsForts(subs, n) {
-  return weightedRanking(subs).sort(function (a, b) { return b.prioriteFort - a.prioriteFort; }).slice(0, n || 3);
+  return weightedRanking(subs).filter(function (x) { return x.v >= SEUIL_POINT_FORT; }).sort(function (a, b) { return b.prioriteFort - a.prioriteFort; }).slice(0, n || 3);
 }
 
 function evaluateFiche(nf, refDate, corpus) {
