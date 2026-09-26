@@ -3038,10 +3038,25 @@ function combineFichesYearRows(rowsForClpe) {
     nbActeurs: rowsForClpe.reduce(function (s, r) { return s + r.nbActeurs; }, 0),
     nbBeneficiaires: rowsForClpe.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0),
     nbFichesAvecBeneficiaires: rowsForClpe.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0),
+    benefValeurs: rowsForClpe.every(function (r) { return r.benefValeurs; }) ? [].concat.apply([], rowsForClpe.map(function (r) { return r.benefValeurs; })) : null,
+    nbFichesBenefPlafonnees: rowsForClpe.reduce(function (s, r) { return s + r.nbFichesBenefPlafonnees; }, 0),
     innovant: wavg('innovant'), impact: wavg('impact'), qualite: wavg('qualite'), bilan: wavg('bilan'),
     axePct: axePct, axePctFort: axePctFort,
     codeClpe: rowsForClpe.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || ''
   };
+}
+/* Bénéficiaires : chaque fiche est plafonnée à 1 000 (forums, événements ou public potentiel
+   saisi à la place des bénéficiaires écraseraient sinon les calculs), pour le total comme pour
+   la moyenne et la médiane, calculées sur les fiches renseignant ce champ. */
+function benefStats(rows) {
+  var total = rows.reduce(function (s, r) { return s + (r.nbBeneficiaires || 0); }, 0);
+  var nFiches = rows.reduce(function (s, r) { return s + (r.nbFichesAvecBeneficiaires || 0); }, 0);
+  var nPlaf = rows.reduce(function (s, r) { return s + (r.nbFichesBenefPlafonnees || 0); }, 0);
+  var vals = rows.every(function (r) { return r.benefValeurs; }) ? [].concat.apply([], rows.map(function (r) { return r.benefValeurs; })).sort(function (a, b) { return a - b; }) : null;
+  var n = vals ? vals.length : nFiches;
+  var med = null;
+  if (vals && vals.length) { var m = vals.length >> 1; med = vals.length % 2 ? vals[m] : (vals[m - 1] + vals[m]) / 2; }
+  return { total: total, nFiches: n, nPlafonnees: nPlaf, moy: n ? total / n : null, mediane: med };
 }
 function fichesRows() {
   var y = fichesYearSelected();
@@ -3066,7 +3081,8 @@ function fichesAggFor(level) {
       nbFiches: nbFiches,
       nbActeurs: rows.reduce(function (s, r) { return s + r.nbActeurs; }, 0),
       nbBeneficiaires: nbBeneficiaires,
-      moyBeneficiairesParAction: nbFichesAvecBenef ? nbBeneficiaires / nbFichesAvecBenef : null,
+      moyBeneficiairesParAction: nbFichesAvecBenef ? benefStats(rows).moy : null,
+      medBeneficiairesParAction: nbFichesAvecBenef ? benefStats(rows).mediane : null,
       innovant: avg(rows.map(function (r) { return r.innovant; })),
       impact: avg(rows.map(function (r) { return r.impact; })),
       qualite: avg(rows.map(function (r) { return r.qualite; })),
@@ -3087,7 +3103,8 @@ var FICHES_CRITERIA = [
 var FICHES_INDICATORS = [
   { id: 'nbFiches', label: 'Nombre de fiches action', get: function (g) { return g.nbFiches; }, dec: 0 },
   { id: 'nbBeneficiaires', label: 'Nombre de bénéficiaires', get: function (g) { return g.moyBeneficiairesParAction != null ? g.nbBeneficiaires : null; }, dec: 0 },
-  { id: 'moyBeneficiairesParAction', label: 'Bénéficiaires en moyenne par action', get: function (g) { return g.moyBeneficiairesParAction; }, dec: 1 },
+  { id: 'moyBeneficiairesParAction', label: 'Bénéficiaires en moyenne par action', get: function (g) { return g.moyBeneficiairesParAction; }, dec: 0 },
+  { id: 'medBeneficiairesParAction', label: 'Bénéficiaires par action (médiane)', get: function (g) { return g.medBeneficiairesParAction; }, dec: 0 },
   { id: 'global', label: 'Score global (/4)', get: function (g) { return g.global; }, dec: 2 }
 ].concat(FICHES_CRITERIA.map(function (c) {
   return { id: c.id, label: 'Critère : ' + c.label + ' (/4)', get: function (g) { return g[c.id]; }, dec: 2 };
@@ -3188,11 +3205,13 @@ function renderFiches() {
   var nFiches = rows.reduce(function (s, r) { return s + r.nbFiches; }, 0);
   var nBeneficiaires = rows.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0);
   var nFichesAvecBenef = rows.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0);
-  var moyBeneficiaires = nFichesAvecBenef ? nBeneficiaires / nFichesAvecBenef : null;
+  var bStats = benefStats(rows);
+  nBeneficiaires = bStats.total;
+  var moyBeneficiaires = nFichesAvecBenef ? bStats.moy : null;
   var globalQ = rows.length ? avg(rows.map(function (r) { return (r.innovant + r.impact + r.qualite + r.bilan) / 4; })) : null;
   document.getElementById('fichesHero').innerHTML =
     '<div class="hero-card"><div class="lbl">Fiches action saisies</div><div class="val">' + nFiches + '</div></div>' +
-    '<div class="hero-card"><div class="lbl">Nombre de bénéficiaires</div><div class="val">' + (nFichesAvecBenef ? nBeneficiaires : '<span style="color:var(--ft-fg-3)">-</span>') + '</div>' + (moyBeneficiaires == null ? (nFichesAvecBenef ? '' : '<div class="ct-sub" style="margin-top:4px">Champ non renseigné sur ce périmètre</div>') : '<div class="ct-sub" style="margin-top:4px">Soit ' + fmt(moyBeneficiaires, 1) + ' en moyenne, sur les ' + nFichesAvecBenef + ' fiche' + (nFichesAvecBenef > 1 ? 's' : '') + ' renseignant ce champ</div>') + '</div>' +
+    '<div class="hero-card"><div class="lbl">Nombre de bénéficiaires</div><div class="val">' + (nFichesAvecBenef ? nBeneficiaires : '<span style="color:var(--ft-fg-3)">-</span>') + '</div>' + (moyBeneficiaires == null ? (nFichesAvecBenef ? '' : '<div class="ct-sub" style="margin-top:4px">Champ non renseigné sur ce périmètre</div>') : '<div class="ct-sub" style="margin-top:4px">Moyenne : <b>' + fmt(moyBeneficiaires, 0) + '</b>' + (bStats.mediane != null ? ' \u00B7 Médiane : <b>' + fmt(bStats.mediane, 0) + '</b>' : '') + ' par action, sur les ' + bStats.nFiches + ' fiche' + (bStats.nFiches > 1 ? 's' : '') + ' renseignant ce champ' + (bStats.nPlafonnees ? ' (' + bStats.nPlafonnees + ' fiche' + (bStats.nPlafonnees > 1 ? 's' : '') + ' ramenée' + (bStats.nPlafonnees > 1 ? 's' : '') + ' à 1\u00A0000 : forums, événements...)' : '') + '</div>') + '</div>' +
     '<div class="hero-card"><div class="lbl">Score global</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>';
   var codeClpe = state.clpe ? (rows.map(function (r) { return r.codeClpe; }).filter(Boolean)[0] || null) : null;
   var linkHost = document.getElementById('fichesClpeLink');
@@ -3956,14 +3975,16 @@ function buildReportPageFiches() {
   html += '<div class="pr-split-col"><div class="pr-split-title">Vue d\u2019ensemble</div>';
   html += '<div class="pr-sect-intro pr-sect-intro-sm">Les fiches action traduisent la feuille de route du CLPE en actions opérationnelles. Leur analyse permet d\u2019apprécier le cadrage, le suivi des bénéficiaires, la mesure des résultats et la capacité à capitaliser ou à valoriser les actions conduites.</div>';
   var fy = fichesYearSelected();
-  html += '<div class="pr-q-legend"><b>' + esc(fy ? 'Année ' + fy : 'Toutes années confondues') + ' :</b> Fiches saisies - nombre total d\u2019actions enregistrées. Bénéficiaires - nombre de bénéficiaires des actions saisies. Bénéficiaires par action - moyenne du nombre de bénéficiaires par action saisie. Score global - appréciation synthétique du niveau de renseignement et de suivi des fiches.</div>';
+  html += '<div class="pr-q-legend"><b>' + esc(fy ? 'Année ' + fy : 'Toutes années confondues') + ' :</b> Fiches saisies - nombre total d\u2019actions enregistrées. Bénéficiaires - nombre de bénéficiaires des actions saisies. Bénéficiaires par action - moyenne et médiane sur les fiches renseignant ce champ. Chaque fiche est plafonnée à 1\u00A0000 bénéficiaires (forums, événements), total compris. Score global - appréciation synthétique du niveau de renseignement et de suivi des fiches.</div>';
   var nBenef = frows.reduce(function (s, r) { return s + r.nbBeneficiaires; }, 0);
   var nFichesAvecBenef = frows.reduce(function (s, r) { return s + r.nbFichesAvecBeneficiaires; }, 0);
-  var moyBenef = nFichesAvecBenef ? nBenef / nFichesAvecBenef : null;
+  var bStatsPdf = benefStats(frows);
+  nBenef = bStatsPdf.total;
+  var moyBenef = nFichesAvecBenef ? bStatsPdf.moy : null;
   var globalQ = frows.length ? avg(frows.map(function (r) { return (r.innovant + r.impact + r.qualite + r.bilan) / 4; })) : null;
   html += '<div class="pr-fiches-heroes pr-fiches-heroes-row">' +
     '<div class="pr-hero"><div class="lbl">Fiches saisies</div><div class="val">' + nFiches + '</div></div>' +
-    '<div class="pr-hero"><div class="lbl">Bénéficiaires</div><div class="val">' + nBenef + '</div>' + (moyBenef == null ? '' : '<div class="pr-auto-lbl">' + fmt(moyBenef, 1) + '/action</div>') + '</div>' +
+    '<div class="pr-hero"><div class="lbl">Bénéficiaires</div><div class="val">' + nBenef + '</div>' + (moyBenef == null ? '' : '<div class="pr-auto-lbl">Moyenne ' + fmt(moyBenef, 0) + (bStatsPdf.mediane != null ? ' \u00B7 médiane ' + fmt(bStatsPdf.mediane, 0) : '') + ' par action</div>') + '</div>' +
     '<div class="pr-hero"><div class="lbl">Score global</div><div class="val">' + (globalQ == null ? '-' : fmt(globalQ)) + '<span class="unit"> / 4</span></div></div>' +
     '</div>';
   html += '<div class="pr-sect-intro pr-sect-intro-sm">Le graphique analyse, via un algorithme, les fiches action selon quatre critères.</div>';
@@ -4824,6 +4845,10 @@ function init() {
           region: normRegionName(r.region), departement: normApostrophes(r.departement), clpe: normApostrophes(r.clpe), annee: r.annee || '',
           nbFiches: +r.nb_fiches_action, nbActeurs: +r.nb_acteurs_associes, nbBeneficiaires: +r.nb_beneficiaires,
           nbFichesAvecBeneficiaires: +r.nb_fiches_avec_beneficiaires,
+          /* Valeurs par fiche, plafonnées à 1 000 par l'outil d'évaluation (null pour les anciens
+             fichiers sans cette colonne : la médiane n'est alors pas calculable). */
+          benefValeurs: r.beneficiaires_valeurs != null ? String(r.beneficiaires_valeurs).split('|').filter(function (x) { return x !== ''; }).map(Number) : null,
+          nbFichesBenefPlafonnees: +r.nb_fiches_benef_plafonnees || 0,
           innovant: +r.critere_innovant, impact: +r.critere_impact_usager,
           qualite: +r.critere_qualite_description, bilan: +r.critere_bilan_valorisation,
           axePct: {

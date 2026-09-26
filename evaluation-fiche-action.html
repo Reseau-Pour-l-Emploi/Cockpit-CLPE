@@ -1324,6 +1324,7 @@ function toFrenchTitleCase(s) {
    exactement comme sur le site. */
 /* Colonnes axe_pct_* / axe_pct_fort_* du fichier data/fiches_action.csv du Cockpit : les 14
    critères historiques dans leur ordre d'origine, puis les critères ajoutés au référentiel. */
+var BENEF_PLAFOND = 1000;
 var SITE_SOURCE_AXES = ['description', 'problematique', 'etapes', 'ciblage', 'suivi', 'resultats', 'impact_usager', 'maj', 'bilan', 'valorisation', 'diversite_acteurs', 'efficacite', 'vigilance', 'moyens',
   'titre', 'diagnostic', 'roles', 'beneficiaires', 'cadre'];
 async function buildSiteSourceCsv(rows, normalized, allScores) {
@@ -1352,11 +1353,17 @@ async function buildSiteSourceCsv(rows, normalized, allScores) {
   for (var m = 1; m <= 12; m++) header.push('nb_fiches_m' + (m < 10 ? '0' + m : '' + m));
   SITE_SOURCE_AXES.forEach(function (a) { header.push('axe_pct_fort_' + a); });
   header.push('code_clpe');
+  /* Bénéficiaires : chaque fiche est plafonnée à BENEF_PLAFOND (forums, événements ou saisie d'un
+     public potentiel écraseraient sinon total et moyenne). nb_beneficiaires est la somme
+     plafonnée ; beneficiaires_valeurs liste les valeurs plafonnées (séparées par "|") pour que le
+     Cockpit calcule moyenne et médiane à tout niveau géographique ; nb_fiches_benef_plafonnees
+     compte les fiches ramenées au plafond. */
+  header.push('beneficiaires_valeurs', 'nb_fiches_benef_plafonnees');
   var lines = [header.join(';')];
 
   Object.keys(groups).sort().forEach(function (key) {
     var g = groups[key], n = g.idxs.length;
-    var nbActeurs = 0, nbBenef = 0, nbFichesAvecBenef = 0;
+    var nbActeurs = 0, nbBenef = 0, nbFichesAvecBenef = 0, benefValeurs = [], nbFichesBenefPlafonnees = 0;
     var sumInnovant = 0, sumImpact = 0, sumQualite = 0, sumBilan = 0, nBilan = 0;
     var axeWeakCount = {}, axeStrongCount = {}, monthCount = {};
     SITE_SOURCE_AXES.forEach(function (a) { axeWeakCount[a] = 0; axeStrongCount[a] = 0; });
@@ -1365,7 +1372,14 @@ async function buildSiteSourceCsv(rows, normalized, allScores) {
     g.idxs.forEach(function (idx) {
       var nf = normalized[idx], s = allScores[idx], row = rows[idx];
       nbActeurs += nf.acteurs.length;
-      if (hasBeneficiaires(nf)) { if (typeof nf.beneficiaires === 'number') nbBenef += nf.beneficiaires; nbFichesAvecBenef++; }
+      if (hasBeneficiaires(nf)) {
+        if (typeof nf.beneficiaires === 'number') {
+          var bv = Math.min(nf.beneficiaires, BENEF_PLAFOND);
+          if (nf.beneficiaires > BENEF_PLAFOND) nbFichesBenefPlafonnees++;
+          nbBenef += bv; benefValeurs.push(Math.round(bv));
+        }
+        nbFichesAvecBenef++;
+      }
       sumInnovant += s.evalInnovation / 25;
       sumImpact += s.evalImpact.total / 25;
       sumQualite += s.evalDescription.total / 25;
@@ -1387,6 +1401,7 @@ async function buildSiteSourceCsv(rows, normalized, allScores) {
     for (var m2 = 1; m2 <= 12; m2++) out.push(monthCount[m2]);
     SITE_SOURCE_AXES.forEach(function (a) { out.push((axeStrongCount[a] / n * 100).toFixed(2)); });
     out.push(g.codeClpe);
+    out.push(benefValeurs.join('|'), nbFichesBenefPlafonnees);
     lines.push(out.map(function (v) { return String(v).replace(/;/g, ','); }).join(';'));
   });
 
