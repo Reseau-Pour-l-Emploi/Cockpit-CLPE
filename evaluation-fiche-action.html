@@ -829,80 +829,80 @@ function buildCorpusFreq(allTexts) {
 var REFERENTIEL = [
   { key: 'description', famille: 'Description', poids: 1.3, seuilAxe: 0.6, seuilFort: 0.95,
     calcul: "50 % longueur de la description (plein score à 60 mots) + 50 % clarté de rédaction (longueur des phrases, richesse du vocabulaire).",
-    axe: { label: "Mieux décrire l'action (contexte, contenu)", texte: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques." },
-    fort: { label: 'Description claire et complète', texte: "La description est suffisamment détaillée et clairement rédigée pour comprendre concrètement l'action." } },
+    axe: { label: "Détailler le déroulé de l'action", texte: "Détaillez ce que l'action fait concrètement : contenu, modalités, calendrier, lieux. Visez au moins 60 mots, en phrases courtes." },
+    fort: { label: "Action décrite en détail", texte: "La description détaille concrètement le déroulé de l'action (contenu, modalités, calendrier) dans une rédaction lisible." } },
   { key: 'problematique', famille: 'Description', poids: 1.3, seuilAxe: 0.6, seuilFort: 0.95,
     calcul: "50 % longueur de la problématique (plein score à 40 mots) + 50 % clarté de rédaction.",
-    axe: { label: 'Mieux formuler la problématique traitée', texte: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte." },
-    fort: { label: 'Problématique bien posée', texte: "La problématique est bien formulée et étayée." } },
+    axe: { label: "Développer la problématique", texte: "La problématique est trop courte ou peu lisible : exposez en quelques phrases (40 mots environ) le besoin auquel répond l'action, qui est concerné et quelle difficulté il rencontre." },
+    fort: { label: "Besoin clairement exposé", texte: "La problématique expose de façon développée et lisible le besoin auquel répond l'action : qui est concerné et quelle difficulté il rencontre." } },
   { key: 'diagnostic', famille: 'Description', poids: 1.3, seuilAxe: 0.6, seuilFort: 0.9,
     calcul: "1 − (recouvrement du vocabulaire entre problématique et description ÷ 50 %). Non applicable si l'un des deux champs fait moins de 10 mots.",
-    axe: { label: 'Mieux distinguer la problématique de la description', texte: "Distinguez plus nettement la problématique de la description : une problématique qui reformule simplement l'action n'objective pas le diagnostic du territoire à son origine." },
-    fort: { label: 'Diagnostic objectivé', texte: "La problématique posée se distingue clairement de la description : un diagnostic objectif du territoire a été posé plutôt qu'une simple reformulation de l'action." } },
+    axe: { label: "Ne pas reformuler l'action dans la problématique", texte: "La problématique reprend en grande partie les mots de la description : elle décrit la solution plutôt que le constat. Appuyez-la sur des éléments propres au territoire (chiffres, observations des acteurs), sans parler de l'action." },
+    fort: { label: "Constat distinct de la solution", texte: "La problématique ne reprend pas les termes de la description : le constat de départ est posé indépendamment de la solution retenue, ce qui objective le diagnostic." } },
   { key: 'ciblage', famille: 'Description', poids: 1.0, seuilAxe: 0.55, seuilFort: 0.95,
     calcul: "1 − pénalités : 3 publics ou plus (jusqu'à −0,35), plus de 4 thématiques (jusqu'à −0,30), 5 solutions ou plus (jusqu'à −0,35).",
-    axe: { label: "Mieux cibler l'action", texte: "Limitez le nombre de publics cibles (moins de 3 recommandé), de thématiques et de solutions mobilisées (moins de 5 recommandé) à ce qui est réellement pertinent : cocher très large nuit à la lisibilité." },
-    fort: { label: 'Ciblage précis', texte: "Le nombre de publics et de thématiques ciblés est limité, ce qui témoigne d'une action bien focalisée et à fort impact potentiel." } },
+    axe: { label: "Resserrer publics, thématiques et solutions", texte: "Trop de cases sont cochées : limitez les publics (moins de 3), les thématiques (4 au plus) et les solutions (moins de 5) à celles qui sont réellement au cœur de l'action." },
+    fort: { label: "Action focalisée", texte: "Peu de publics, de thématiques et de solutions sont cochés : l'action vise un périmètre précis." } },
   { key: 'titre', famille: 'Description', poids: 0.5, seuilAxe: 0.6, seuilFort: null,
     calcul: "Plein score jusqu'à 12 mots, puis décroissance linéaire jusqu'à 0 à 24 mots.",
-    axe: { label: "Raccourcir le titre de l'action", texte: "Un titre concis (moins de 12 mots recommandé) est plus facilement lisible dans les tableaux de bord et les listes d'actions." },
-    fort: { label: 'Titre court et clair', texte: "Un titre court et clair donne envie de lire la suite et facilite le repérage de l'action dans les tableaux de bord." } },
+    axe: { label: "Raccourcir le titre", texte: "Le titre dépasse 12 mots : raccourcissez-le pour qu'il reste lisible dans les listes et les tableaux de bord, en renvoyant les détails à la description." },
+    fort: { label: "Titre concis", texte: "Le titre compte 12 mots au plus : il est facile à repérer dans les listes et les tableaux de bord." } },
   { key: 'impact_usager', famille: 'Impact usager', poids: 2.0, seuilAxe: 0.6, seuilFort: null,
     calcul: "1 si au moins un public ciblé est un usager final (demandeurs d'emploi, jeunes, seniors, salariés...), 0 sinon.",
-    axe: { label: "Mieux prendre en compte l'impact sur l'usager final", texte: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain." },
-    fort: { label: 'Impact usager direct', texte: "L'action a un effet direct et mesurable sur un usager final." } },
+    axe: { label: "Cibler un usager final", texte: "Aucun public coché n'est un usager final : si l'action bénéficie in fine à des personnes (demandeurs d'emploi, jeunes, salariés...), cochez ce public ; sinon, expliquez comment elle leur profitera indirectement." },
+    fort: { label: "Usager final ciblé", texte: "Au moins un public ciblé est un usager final (demandeurs d'emploi, jeunes, salariés...)." } },
   { key: 'resultats', famille: 'Impact usager', poids: 2.0, seuilAxe: 0.45, seuilFort: 0.75,
     calcul: "60 % longueur des indicateurs de résultat (plein score à 20 mots) + 20 % clarté (si 6 mots ou plus) + 20 % si un objectif à la fois chiffré (nombre, taux, pourcentage) et daté (échéance, durée, période) est détecté dans les indicateurs de suivi ou de résultat.",
-    axe: { label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)', texte: "Fixez des objectifs de résultat chiffrés et datés (ex. « 80 % des participants en emploi à 6 mois ») plutôt que des formulations vagues." },
-    fort: { label: 'Objectifs quantifiés et datés', texte: "Les indicateurs de résultat comportent un objectif quantitatif et un horizon temporel défini, ce qui permettra d'évaluer précisément l'atteinte des objectifs." } },
+    axe: { label: "Chiffrer et dater les objectifs de résultat", texte: "Les indicateurs de résultat sont absents, vagues ou sans échéance : fixez une cible chiffrée (nombre, taux) et une date ou une durée (ex. « 30 entrées en formation d'ici juin »)." },
+    fort: { label: "Objectifs chiffrés et datés", texte: "Les indicateurs de résultat fixent une cible chiffrée assortie d'une échéance (ex. « 80 % en emploi à 6 mois ») : l'atteinte des objectifs pourra être vérifiée." } },
   { key: 'beneficiaires', famille: 'Impact usager', poids: 1.0, seuilAxe: null, seuilFort: 1,
     calcul: "Bonus : 1 si le nombre de bénéficiaires est renseigné, quelle que soit sa valeur (un petit nombre peut correspondre à un test avant passage à l'échelle). Non évalué sinon (jamais un axe de progrès).",
-    axe: { label: 'Renseigner le nombre de bénéficiaires', texte: "Renseignez le nombre de bénéficiaires visés ou touchés : il traduit l'ambition de l'action, même modeste." },
-    fort: { label: 'Ambition chiffrée', texte: "Le nombre de bénéficiaires est renseigné : la fiche affiche l'ambition de l'action (un petit volume peut correspondre à un test avant passage à l'échelle)." } },
+    axe: { label: "Renseigner le nombre de bénéficiaires", texte: "Indiquez le nombre de bénéficiaires visés ou touchés, même modeste : il traduit l'ambition de l'action." },
+    fort: { label: "Ambition chiffrée", texte: "Le nombre de bénéficiaires est renseigné : la fiche affiche l'ambition de l'action, même modeste (un petit volume peut correspondre à un test avant passage à l'échelle)." } },
   { key: 'suivi', famille: 'Pilotage', poids: 1.3, seuilAxe: 0.6, seuilFort: 1,
     calcul: "Longueur des indicateurs de suivi (plein score à 15 mots). Non applicable aux actions de 60 jours ou moins.",
-    axe: { label: 'Renseigner des indicateurs de suivi', texte: "Pour les actions qui se déroulent dans la durée, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori." },
-    fort: { label: 'Suivi bien outillé', texte: "Des indicateurs de suivi sont renseignés dès la conception de l'action." } },
+    axe: { label: "Définir des indicateurs de suivi", texte: "Pour une action de plus de 60 jours, précisez comment son avancement sera mesuré en cours de route (nombre de participants, d'ateliers, d'entretiens...), distinctement des résultats finaux." },
+    fort: { label: "Indicateurs de suivi définis", texte: "Des indicateurs mesurent l'avancement de l'action pendant son déroulement (participants, ateliers réalisés, entretiens...)." } },
   { key: 'etapes', famille: 'Pilotage', poids: 1.0, seuilAxe: 0.6, seuilFort: 1,
     calcul: "50 % nombre d'étapes (plein score à 3) + 50 % détail moyen par étape (plein score à 12 mots). Non applicable aux actions de 60 jours ou moins.",
-    axe: { label: 'Détailler davantage les étapes de mise en œuvre', texte: "Pour les actions qui se déroulent dans la durée, détaillez au moins 2 à 3 étapes de mise en œuvre avec un minimum d'explication pour chacune (une simple date sans description ne suffit pas)." },
-    fort: { label: 'Jalonnage régulier', texte: "Les étapes de mise en œuvre sont détaillées, un gage de pilotage régulier de l'action." } },
+    axe: { label: "Découper l'action en étapes", texte: "Pour une action de plus de 60 jours, décrivez au moins 3 étapes, chacune en une phrase d'une douzaine de mots : une date seule ne suffit pas." },
+    fort: { label: "Mise en œuvre jalonnée", texte: "Au moins 3 étapes de mise en œuvre sont décrites, chacune avec une explication : le calendrier de l'action est lisible." } },
   { key: 'moyens', famille: 'Pilotage', poids: 0.9, seuilAxe: 0.35, seuilFort: 1,
     calcul: "Nombre de mots des champs « Ressource mobilisable » et « Moyens humains et financiers » (plein score à 20 mots).",
-    axe: { label: 'Préciser les moyens mobilisés (ressources, budget, RH)', texte: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti." },
-    fort: { label: 'Moyens précisés', texte: "Les moyens mobilisés (ressources, budget, RH) sont précisés." } },
+    axe: { label: "Détailler les moyens mobilisés", texte: "Les moyens sont absents ou résumés en quelques mots : précisez le temps humain, le budget et les ressources matérielles engagés." },
+    fort: { label: "Moyens détaillés", texte: "Les ressources et les moyens humains et financiers sont détaillés : l'investissement consenti est lisible." } },
   { key: 'diversite_acteurs', famille: 'Pilotage', poids: 0.8, seuilAxe: 0.6, seuilFort: null,
     calcul: "Nombre d'acteurs de l'équipe et du partenariat (plein score à 6).",
-    axe: { label: 'Élargir la diversité des acteurs mobilisés', texte: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint." },
-    fort: { label: 'Diversité des acteurs', texte: "Une diversité d'acteurs est mobilisée autour de l'action." } },
+    axe: { label: "Élargir le partenariat", texte: "Peu d'acteurs sont associés : identifiez les partenaires qui pourraient renforcer l'action (entreprises, associations, formation, collectivités...) et cochez-les s'ils y contribuent." },
+    fort: { label: "Partenariat étendu", texte: "Six acteurs ou plus sont associés à l'action." } },
   { key: 'roles', famille: 'Pilotage', poids: 1.2, seuilAxe: 0.35, seuilFort: 0.75,
     calcul: "Acteurs associés dont le rôle est décrit dans le champ « Rôles » (reconnaissance du nom de l'acteur, de son sigle ou de ses variantes usuelles), rapportés à la moitié des acteurs cochés : tout ou partie des acteurs doit être retrouvé, plein score dès la moitié. 0 si le champ fait moins de 3 mots. Non applicable si aucun acteur identifiable n'est coché.",
-    axe: { label: 'Préciser le rôle de chaque acteur', texte: "Pour chaque acteur associé, indiquez dans le champ « Rôles » ce qu'il apporte concrètement (repérage des publics, mise à disposition de locaux, financement, animation...) : une formulation collective (« co-pilotage », « mobilisation des partenaires ») ne permet pas de savoir qui fait quoi." },
-    fort: { label: 'Rôles des acteurs explicites', texte: "Le rôle de chacun des acteurs associés est décrit : la fiche permet de savoir qui fait quoi dans l'action." } },
+    axe: { label: "Attribuer un rôle à chaque acteur", texte: "Le champ « Rôles » nomme trop peu des acteurs cochés : indiquez pour chacun sa contribution (repérage, locaux, financement, animation...) plutôt qu'une formule collective comme « co-pilotage »." },
+    fort: { label: "Qui fait quoi", texte: "Le champ « Rôles » attribue une contribution à au moins la moitié des acteurs cochés : la répartition des tâches est explicite." } },
   { key: 'vigilance', famille: 'Pilotage', poids: 0.6, seuilAxe: 0.35, seuilFort: 0.8,
     calcul: "Longueur du champ « Points d'attention » (plein score à 15 mots).",
-    axe: { label: 'Anticiper les points de vigilance', texte: "Anticipez les points de vigilance (risques de mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action." },
-    fort: { label: 'Anticipation des risques', texte: "Les points d'attention identifiés montrent la prudence et le sérieux de l'étude du projet." } },
+    axe: { label: "Identifier les points de vigilance", texte: "Le champ « Points d'attention » est vide ou très bref : listez les risques qui pourraient compromettre l'action et la façon de les prévenir." },
+    fort: { label: "Risques anticipés", texte: "Les points d'attention identifient les risques propres à l'action (mobilisation du public, dépendance à un acteur, calendrier)." } },
   { key: 'maj', famille: 'Pilotage', poids: 0.8, seuilAxe: 0.35, seuilFort: 0.9,
     calcul: "Fiche terminée ou abandonnée : 1 (statut à jour, le bilan est évalué à part) ; sinon 1 − (jours depuis la dernière mise à jour ÷ 365).",
-    axe: { label: "Mettre à jour le suivi de l'action plus régulièrement", texte: "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche sans mise à jour depuis plusieurs mois perd en fiabilité." },
-    fort: { label: 'Suivi à jour', texte: "Le suivi de la fiche est régulièrement mis à jour." } },
+    axe: { label: "Actualiser la fiche", texte: "La dernière mise à jour date de plusieurs mois : actualisez le statut et l'avancement à chaque jalon franchi." },
+    fort: { label: "Fiche actualisée", texte: "La fiche a été mise à jour récemment, ou l'action est close (terminée ou abandonnée) : son statut reflète la réalité." } },
   { key: 'cadre', famille: 'Pilotage', poids: 0.8, seuilAxe: null, seuilFort: 1,
     calcul: "Bonus : 1 si la question « Cette action s'inscrit-elle dans le cadre de : » est renseignée. Non évalué sinon (jamais un axe de progrès). Apporte aussi un bonus de 5 points au score de la description.",
-    axe: { label: "Indiquer le cadre dans lequel s'inscrit l'action", texte: "Indiquez dans quel cadre s'inscrit l'action (champ « Cette action s'inscrit-elle dans le cadre de : »)." },
-    fort: { label: 'Convergence des instances', texte: "La fiche indique le cadre dans lequel s'inscrit l'action : une bonne pratique de convergence entre les instances du réseau." } },
+    axe: { label: "Indiquer le cadre de l'action", texte: "Indiquez dans quel cadre s'inscrit l'action (champ « Cette action s'inscrit-elle dans le cadre de »)." },
+    fort: { label: "Convergence des instances", texte: "La fiche indique le cadre dans lequel s'inscrit l'action (question « Cette action s'inscrit-elle dans le cadre de ») : une bonne pratique de convergence entre les instances du réseau." } },
   { key: 'bilan', famille: 'Bilan et valorisation', poids: 1.5, seuilAxe: 0.35, seuilFort: 0.75,
     calcul: "Bilan vide (moins de 5 mots) : 0, plafonné à 0,1 si l'action est terminée, abandonnée ou si la date de fin est dépassée ; sinon bilan analytique : 40 % longueur (plein score à 60 mots) + 20 % clarté + 20 % résultats chiffrés + 20 % retour d'expérience (ce qui a fonctionné ou non). Non applicable si le bilan est vide et que l'action est en cours avant son échéance, ou si son texte est tronqué dans l'export Excel.",
-    axe: { label: 'Renseigner le bilan et les enseignements', texte: "Renseignez le bilan dès que l'échéance prévisionnelle est atteinte, même de façon synthétique : c'est surtout indispensable si la date de fin est dépassée et qu'aucun bilan n'a encore été saisi." },
-    fort: { label: 'Bilan capitalisable', texte: "Un bilan riche permettra de capitaliser sur les actions futures et d'éclairer d'autres territoires susceptibles de mettre en place une action similaire." } },
+    axe: { label: "Rédiger un bilan analytique", texte: "L'action est close ou échue et le bilan est absent ou succinct : chiffrez les résultats obtenus et expliquez ce qui a fonctionné et ce qui n'a pas fonctionné." },
+    fort: { label: "Bilan analytique", texte: "Le bilan chiffre les résultats obtenus et explique ce qui a fonctionné ou non : il peut éclairer d'autres territoires." } },
   { key: 'efficacite', famille: 'Bilan et valorisation', poids: 1.0, seuilAxe: 0.6, seuilFort: null,
     calcul: "Applicable lorsque le bilan est saisi : 1 si l'efficacité de l'action est auto-évaluée (note de 0 à 10), 0 sinon. Non évalué sur une fiche PDF (champ absent de l'export).",
-    axe: { label: "Auto-évaluer l'efficacité de l'action", texte: "Le bilan est saisi : complétez aussi l'auto-évaluation de l'efficacité de l'action (0 à 10), qui témoigne a minima d'une évaluation qualitative." },
-    fort: { label: 'Efficacité auto-évaluée', texte: "L'efficacité de l'action est auto-évaluée : a minima, une évaluation qualitative de l'action a été réalisée en complément du bilan." } },
+    axe: { label: "Noter l'efficacité de l'action", texte: "Le bilan est saisi mais l'efficacité n'est pas notée : attribuez une note de 0 à 10, trace minimale d'une évaluation qualitative." },
+    fort: { label: "Efficacité auto-évaluée", texte: "L'efficacité de l'action est notée (0 à 10) en complément du bilan : une évaluation qualitative a été faite." } },
   { key: 'valorisation', famille: 'Bilan et valorisation', poids: 1.0, seuilAxe: 0.6, seuilFort: 0.8,
     calcul: "Reconduction (oui 40 %, peut-être 20 %) + transposition (oui 40 %) + texte de valorisation (40 % à 15 mots, ignoré s'il est tronqué dans l'export), plafonné à 100 %. Non applicable si aucune de ces informations n'est renseignée.",
-    axe: { label: "Valoriser l'action (reconduction, transposition)", texte: "Précisez si l'action a été reconduite, transposée sur un autre territoire ou partagée en tant que retour d'expérience : cela permet de capitaliser sur les résultats obtenus." },
-    fort: { label: 'Action valorisée', texte: "L'action a été valorisée (reconduction, transposition ou partage d'expérience)." } }
+    axe: { label: "Préciser les suites de l'action", texte: "Indiquez si l'action sera reconduite, si elle est transposable à d'autres territoires et comment elle a été diffusée (retour d'expérience, communication)." },
+    fort: { label: "Suites de l'action précisées", texte: "La fiche indique si l'action sera reconduite, si elle est transposable ailleurs et comment elle a été diffusée." } }
 ];
 /* Vues dérivées du référentiel (anciens noms conservés pour le reste du code). */
 var AXE_LABELS = {}, AXE_TEXTS = {}, POINT_FORT_LABELS = {}, POINT_FORT_TEXTS = {}, CRITICITE_WEIGHTS = {};
@@ -1341,7 +1341,7 @@ async function buildSiteSourceCsv(rows, normalized, allScores) {
     if (!clpe || !nf.dCreation) return;
     var annee = nf.dCreation.getFullYear();
     var key = region + '|' + dept + '|' + clpe + '|' + annee;
-    if (!groups[key]) groups[key] = { region: region, departement: dept, clpe: clpe, annee: annee, idxs: [], codeClpe: row['C_TERRITOIRE_ID'] || codes[normRefKey(rawClpe)] || codes[normRefKey(clpe)] || '' };
+    if (!groups[key]) groups[key] = { region: region, departement: dept, clpe: clpe, annee: annee, idxs: [], codeClpe: row['C_TERRITOIRE_ID'] || codeForClpe(codes, rawClpe) || codeForClpe(codes, clpe) || '' };
     groups[key].idxs.push(idx);
     if (!groups[key].codeClpe && row['C_TERRITOIRE_ID']) groups[key].codeClpe = row['C_TERRITOIRE_ID'];
   });
@@ -1420,6 +1420,15 @@ async function fetchClpeCodeLookup() {
     lines.slice(1).forEach(function (line) { var c = line.split(';'); if (c[iId] && c[iLbl]) clpeCodeLookup[normRefKey(c[iLbl])] = c[iId].trim(); });
   } catch (e) { /* hors du site : pas de code, le Cockpit le retrouvera lui-même par le nom */ }
   return clpeCodeLookup;
+}
+/* Code d'un CLPE : correspondance exacte du nom, sinon par préfixe (les libellés du fichier de
+   performance sont parfois tronqués, ex. "... PAYS DU CE"), à condition qu'elle soit unique. */
+function codeForClpe(codes, name) {
+  var k = normRefKey(name);
+  if (!k) return '';
+  if (codes[k]) return codes[k];
+  var hits = Object.keys(codes).filter(function (c) { return c.length >= 15 && (k.indexOf(c) === 0 || c.indexOf(k) === 0); });
+  return hits.length === 1 ? codes[hits[0]] : '';
 }
 var referentielCasingLookup = null;
 async function fetchReferentielCasingLookup() {

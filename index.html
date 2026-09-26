@@ -3213,70 +3213,70 @@ function renderFiches() {
    est fréquemment le point faible des fiches du périmètre) et le point fort (s'il l'est
    rarement). */
 var FICHES_AXE_PRECO_TEXT = {
-  description: "Décrivez précisément le contexte, le contenu et la finalité de l\u2019action, en la reliant à des constats du territoire.",
-  problematique: "Formulez une problématique qui objective un vrai diagnostic (constats, chiffres), distincte de la description de l\u2019action.",
-  etapes: "Détaillez au moins 2 à 3 étapes de mise en œuvre avec leurs échéances pour objectiver le déroulé de l\u2019action.",
-  ciblage: "Limitez le nombre de publics cibles et de thématiques cochés à ce qui est réellement pertinent.",
-  suivi: "Renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori.",
-  resultats: "Fixez des objectifs de résultat chiffrés et datés plutôt que des formulations vagues.",
-  impact_usager: "Vérifiez que l\u2019action a un effet direct et mesurable sur l\u2019usager final.",
-  maj: "Mettez à jour le statut de la fiche dès qu\u2019un jalon est franchi.",
-  bilan: "Renseignez le bilan dès que l\u2019échéance est atteinte, même de façon synthétique.",
-  valorisation: "Précisez si l\u2019action sera reconduite ou transposable à d\u2019autres territoires.",
-  diversite_acteurs: "Documentez une diversité d\u2019acteurs adaptée à l\u2019action plutôt qu\u2019un noyau restreint.",
-  efficacite: "Auto-évaluez l\u2019efficacité de l\u2019action pour objectiver son bilan.",
-  vigilance: "Anticipez les points de vigilance (risques, dépendances, contraintes de calendrier).",
-  moyens: "Précisez les moyens mobilisés (ressources, budget, temps humain dédié).",
-  roles: "Indiquez dans le champ \u00ab Rôles \u00bb ce que fait concrètement chaque acteur associé, pour savoir qui fait quoi.",
-  titre: "Raccourcissez les titres (moins de 12 mots) pour faciliter le repérage des actions.",
-  diagnostic: "Distinguez la problématique de la description : elle doit objectiver le diagnostic du territoire.",
-  beneficiaires: "Renseignez le nombre de bénéficiaires, même modeste : il traduit l\u2019ambition de l\u2019action.",
-  cadre: "Indiquez le cadre dans lequel s\u2019inscrit l\u2019action (convergence des instances)."
+  description: "Détaillez le déroulé concret de l'action (contenu, modalités, calendrier) en au moins 60 mots.",
+  problematique: "Développez la problématique (40 mots environ) : quel besoin, pour qui, quelle difficulté.",
+  diagnostic: "Formulez la problématique comme un constat du territoire (chiffres, observations), sans reprendre les termes de l'action.",
+  ciblage: "Réduisez les publics (moins de 3), thématiques et solutions cochés à l'essentiel.",
+  titre: "Raccourcissez les titres à 12 mots au plus.",
+  etapes: "Découpez les actions de plus de 60 jours en au moins 3 étapes décrites.",
+  resultats: "Fixez des objectifs de résultat chiffrés et datés (ex. « 30 entrées en formation d'ici juin »).",
+  suivi: "Définissez des indicateurs d'avancement pour les actions de plus de 60 jours (participants, ateliers...).",
+  impact_usager: "Cochez le public d'usagers finaux concerné (demandeurs d'emploi, jeunes...) ou expliquez l'effet indirect sur eux.",
+  beneficiaires: "Indiquez le nombre de bénéficiaires, même modeste : il traduit l'ambition de l'action.",
+  roles: "Nommez chaque acteur coché dans le champ « Rôles » avec sa contribution concrète.",
+  diversite_acteurs: "Associez davantage de partenaires contributeurs (entreprises, associations, formation...).",
+  cadre: "Indiquez le cadre dans lequel s'inscrit l'action (convergence des instances).",
+  maj: "Actualisez les fiches à chaque jalon franchi (dernière mise à jour ancienne).",
+  bilan: "Rédigez un bilan dès l'échéance : résultats chiffrés et analyse de ce qui a fonctionné ou non.",
+  efficacite: "Notez l'efficacité (0 à 10) dès que le bilan est saisi.",
+  valorisation: "Précisez reconduction, transposition et diffusion de l'action.",
+  moyens: "Détaillez temps humain, budget et ressources matérielles engagés.",
+  vigilance: "Listez les risques de l'action et leur prévention dans « Points d'attention »."
 };
 var FICHES_AXE_FORT_TEXT = {
-  description: "Les descriptions sont généralement claires et détaillées sur ce périmètre.",
-  problematique: "Les problématiques posées se distinguent bien de la description de l\u2019action, signe d\u2019un vrai diagnostic.",
-  etapes: "Le jalonnage des actions est généralement bien détaillé, gage d\u2019un pilotage régulier.",
-  ciblage: "Les actions sont généralement bien ciblées (peu de publics/thématiques cumulés).",
-  suivi: "Les indicateurs de suivi sont généralement bien renseignés dès la conception.",
-  resultats: "Les objectifs de résultat sont généralement chiffrés et datés.",
-  impact_usager: "Les actions ont généralement un effet direct sur l\u2019usager final.",
-  maj: "Le suivi des fiches est généralement mis à jour régulièrement.",
-  bilan: "Les bilans sont généralement renseignés une fois les actions arrivées à échéance.",
-  valorisation: "Les actions sont généralement valorisées (reconduction, transposition envisagées).",
-  diversite_acteurs: "Une bonne diversité d\u2019acteurs est généralement mobilisée autour des actions.",
-  efficacite: "L\u2019efficacité des actions est généralement auto-évaluée.",
-  vigilance: "Les points de vigilance sont généralement bien anticipés.",
-  moyens: "Les moyens mobilisés sont généralement bien précisés.",
-  roles: "Le rôle de chaque acteur associé est généralement décrit : on sait qui fait quoi.",
-  titre: "Les titres sont généralement courts et clairs.",
-  diagnostic: "Les problématiques objectivent généralement un diagnostic du territoire, distinct de la description.",
-  beneficiaires: "Le nombre de bénéficiaires est renseigné : les fiches affichent l\u2019ambition des actions, même modeste.",
-  cadre: "Les fiches indiquent le cadre dans lequel s\u2019inscrivent les actions, signe d\u2019une convergence des instances."
+  description: "Les descriptions détaillent généralement le déroulé concret des actions.",
+  problematique: "Les problématiques exposent généralement de façon développée le besoin auquel répondent les actions.",
+  diagnostic: "Les problématiques posent généralement un constat distinct de la solution retenue.",
+  ciblage: "Les fiches visent généralement un périmètre précis (peu de publics, thématiques et solutions cochés).",
+  titre: "Les titres sont généralement concis.",
+  etapes: "Les actions longues sont généralement découpées en étapes décrites.",
+  resultats: "Les indicateurs de résultat fixent généralement une cible chiffrée et datée.",
+  suivi: "Les actions longues disposent généralement d'indicateurs d'avancement.",
+  impact_usager: "Les fiches ciblent généralement un usager final.",
+  beneficiaires: "Le nombre de bénéficiaires est renseigné : les fiches affichent l'ambition des actions, même modeste.",
+  roles: "Le champ « Rôles » attribue généralement une contribution à chaque acteur.",
+  diversite_acteurs: "Les actions associent généralement un partenariat étendu.",
+  cadre: "Les fiches indiquent le cadre dans lequel s'inscrivent les actions, signe d'une convergence des instances.",
+  maj: "Les fiches sont généralement actualisées régulièrement.",
+  bilan: "Les bilans chiffrent généralement les résultats et analysent ce qui a fonctionné ou non.",
+  efficacite: "L'efficacité est généralement notée lorsque le bilan est saisi.",
+  valorisation: "Les fiches précisent généralement les suites des actions (reconduction, transposition, diffusion).",
+  moyens: "Les moyens humains, financiers et matériels sont généralement détaillés.",
+  vigilance: "Les points d'attention identifient généralement les risques propres aux actions."
 };
 function renderFichesAxes(rows, nFiches) {
   /* Chaque piste de progrès précise de quel critère elle relève (couleur), pour garder le
      lien avec les 4 notes affichées par ailleurs, tout en restant actionnable concrètement. */
   var defs = [
-    { key: 'description', label: "Mieux décrire l'action (contexte, contenu)", color: cssVar('--ft-bleu') },
-    { key: 'problematique', label: 'Mieux formuler la problématique traitée', color: cssVar('--ft-bleu') },
-    { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre', color: cssVar('--ft-bleu') },
-    { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)', color: cssVar('--ft-bleu') },
-    { key: 'suivi', label: 'Renseigner des indicateurs de suivi', color: cssVar('--ft-violet') },
-    { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)', color: cssVar('--ft-violet') },
-    { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final', color: cssVar('--ft-violet') },
-    { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement', color: cssVar('--ft-jaune-dark') },
-    { key: 'bilan', label: 'Renseigner le bilan et les enseignements', color: cssVar('--ft-jaune-dark') },
-    { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)', color: cssVar('--ft-jaune-dark') },
-    { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés', color: cssVar('--ft-orange') },
-    { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action', color: cssVar('--ft-orange') },
-    { key: 'vigilance', label: 'Anticiper les points de vigilance', color: cssVar('--ft-orange') },
-    { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)', color: cssVar('--ft-orange') },
-    { key: 'roles', label: 'Préciser le rôle de chaque acteur', color: cssVar('--ft-orange') },
-    { key: 'titre', label: 'Raccourcir le titre de l\u2019action', color: cssVar('--ft-bleu') },
-    { key: 'diagnostic', label: 'Mieux distinguer la problématique de la description', color: cssVar('--ft-bleu') },
-    { key: 'beneficiaires', label: 'Renseigner le nombre de bénéficiaires', color: cssVar('--ft-violet') },
-    { key: 'cadre', label: 'Indiquer le cadre dans lequel s\u2019inscrit l\u2019action', color: cssVar('--ft-orange') }
+    { key: 'description', label: "Détailler le déroulé de l'action", color: cssVar('--ft-bleu') },
+    { key: 'problematique', label: "Développer la problématique", color: cssVar('--ft-bleu') },
+    { key: 'etapes', label: "Découper l'action en étapes", color: cssVar('--ft-bleu') },
+    { key: 'ciblage', label: "Resserrer publics, thématiques et solutions", color: cssVar('--ft-bleu') },
+    { key: 'suivi', label: "Définir des indicateurs de suivi", color: cssVar('--ft-violet') },
+    { key: 'resultats', label: "Chiffrer et dater les objectifs de résultat", color: cssVar('--ft-violet') },
+    { key: 'impact_usager', label: "Cibler un usager final", color: cssVar('--ft-violet') },
+    { key: 'maj', label: "Actualiser la fiche", color: cssVar('--ft-jaune-dark') },
+    { key: 'bilan', label: "Rédiger un bilan analytique", color: cssVar('--ft-jaune-dark') },
+    { key: 'valorisation', label: "Préciser les suites de l'action", color: cssVar('--ft-jaune-dark') },
+    { key: 'diversite_acteurs', label: "Élargir le partenariat", color: cssVar('--ft-orange') },
+    { key: 'efficacite', label: "Noter l'efficacité de l'action", color: cssVar('--ft-orange') },
+    { key: 'vigilance', label: "Identifier les points de vigilance", color: cssVar('--ft-orange') },
+    { key: 'moyens', label: "Détailler les moyens mobilisés", color: cssVar('--ft-orange') },
+    { key: 'roles', label: "Attribuer un rôle à chaque acteur", color: cssVar('--ft-orange') },
+    { key: 'titre', label: "Raccourcir le titre", color: cssVar('--ft-bleu') },
+    { key: 'diagnostic', label: "Ne pas reformuler l'action dans la problématique", color: cssVar('--ft-bleu') },
+    { key: 'beneficiaires', label: "Renseigner le nombre de bénéficiaires", color: cssVar('--ft-violet') },
+    { key: 'cadre', label: "Indiquer le cadre de l'action", color: cssVar('--ft-orange') }
   ];
   var withPct = defs.map(function (d) {
     var nConcerned = rows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
@@ -3346,14 +3346,25 @@ function fichesClpeLinkHTML(codeClpe, label) {
    plus / moins fréquemment en difficulté sur CE périmètre précis, à partir des mêmes
    données que le graphique "Axes de progrès identifiés" juste au-dessus. */
 var FICHES_AXE_FORT_LABEL = {
-  description: 'Description claire et complète', problematique: 'Problématique bien posée',
-  etapes: 'Jalonnage régulier', ciblage: 'Ciblage précis', suivi: 'Suivi bien outillé',
-  resultats: 'Objectifs quantifiés et datés', impact_usager: 'Impact usager direct',
-  maj: 'Suivi à jour', bilan: 'Bilan capitalisable', valorisation: 'Action valorisée',
-  diversite_acteurs: 'Diversité des acteurs', efficacite: 'Efficacité auto-évaluée',
-  vigilance: 'Anticipation des risques', moyens: 'Moyens précisés',
-  roles: 'Rôles des acteurs explicites', titre: 'Titre court et clair', diagnostic: 'Diagnostic objectivé',
-  beneficiaires: 'Ambition chiffrée', cadre: 'Convergence des instances'
+  description: "Action décrite en détail",
+  problematique: "Besoin clairement exposé",
+  diagnostic: "Constat distinct de la solution",
+  ciblage: "Action focalisée",
+  titre: "Titre concis",
+  etapes: "Mise en œuvre jalonnée",
+  resultats: "Objectifs chiffrés et datés",
+  suivi: "Indicateurs de suivi définis",
+  impact_usager: "Usager final ciblé",
+  beneficiaires: "Ambition chiffrée",
+  roles: "Qui fait quoi",
+  diversite_acteurs: "Partenariat étendu",
+  cadre: "Convergence des instances",
+  maj: "Fiche actualisée",
+  bilan: "Bilan analytique",
+  efficacite: "Efficacité auto-évaluée",
+  valorisation: "Suites de l'action précisées",
+  moyens: "Moyens détaillés",
+  vigilance: "Risques anticipés"
 };
 function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
   var hostPF = document.getElementById('fichesPointsFortsPerso');
@@ -3627,65 +3638,65 @@ function percentileOf(sortedArr, p) {
    (jamais axe de progrès). */
 var FICHES_REFERENTIEL = [
   { domaine: 'Décrire et cadrer l\u2019action', criteres: [
-    { key: 'description', axe: 0.6, fort: 0.95, label: 'Description claire et complète',
-      pf: "La description est suffisamment détaillée et clairement rédigée pour comprendre concrètement l'action.",
-      preco: "Décrivez précisément le contexte, le contenu et la finalité de l'action, en la reliant à des constats ou des chiffres du territoire : évitez les formulations trop génériques." },
-    { key: 'problematique', axe: 0.6, fort: 0.95, label: 'Problématique bien posée',
-      pf: "La problématique est bien formulée et étayée par des constats locaux.",
-      preco: "Formulez la problématique en la reliant à des constats locaux ou des chiffres du territoire, plutôt qu'à une généralité déconnectée du contexte." },
-    { key: 'diagnostic', axe: 0.6, fort: 0.9, label: 'Diagnostic objectivé',
-      pf: "La problématique se distingue clairement de la description : un diagnostic objectif du territoire a été posé plutôt qu'une simple reformulation de l'action.",
-      preco: "Distinguez nettement la problématique de la description : une problématique qui reformule simplement l'action n'objective pas le diagnostic à son origine." },
-    { key: 'ciblage', axe: 0.55, fort: 0.95, label: 'Ciblage précis',
-      pf: "Un nombre limité de publics, de thématiques et de solutions traduit une action bien focalisée, à fort impact potentiel.",
-      preco: "Limitez les publics cibles (moins de 3), les thématiques et les solutions mobilisées (moins de 5) à ce qui est réellement pertinent : cocher très large nuit à la lisibilité." },
-    { key: 'etapes', axe: 0.6, fort: 1, label: 'Jalonnage régulier',
-      pf: "Les étapes de mise en œuvre sont détaillées, gage d'un pilotage régulier de l'action dans la durée.",
-      preco: "Pour les actions de plus de 60 jours, détaillez au moins 2 à 3 étapes de mise en œuvre avec un minimum d'explication pour chacune." },
-    { key: 'titre', axe: 0.6, fort: null, label: 'Titre court et clair',
-      preco: "Raccourcissez le titre (moins de 12 mots) : il sera plus lisible dans les tableaux de bord et les listes d'actions." }
+    { key: 'description', axe: 0.6, fort: 0.95, label: "Action décrite en détail",
+      pf: "La description détaille concrètement le déroulé de l'action (contenu, modalités, calendrier) dans une rédaction lisible.",
+      preco: "Détaillez ce que l'action fait concrètement : contenu, modalités, calendrier, lieux. Visez au moins 60 mots, en phrases courtes." },
+    { key: 'problematique', axe: 0.6, fort: 0.95, label: "Besoin clairement exposé",
+      pf: "La problématique expose de façon développée et lisible le besoin auquel répond l'action : qui est concerné et quelle difficulté il rencontre.",
+      preco: "La problématique est trop courte ou peu lisible : exposez en quelques phrases (40 mots environ) le besoin auquel répond l'action, qui est concerné et quelle difficulté il rencontre." },
+    { key: 'diagnostic', axe: 0.6, fort: 0.9, label: "Constat distinct de la solution",
+      pf: "La problématique ne reprend pas les termes de la description : le constat de départ est posé indépendamment de la solution retenue, ce qui objective le diagnostic.",
+      preco: "La problématique reprend en grande partie les mots de la description : elle décrit la solution plutôt que le constat. Appuyez-la sur des éléments propres au territoire (chiffres, observations des acteurs), sans parler de l'action." },
+    { key: 'ciblage', axe: 0.55, fort: 0.95, label: "Action focalisée",
+      pf: "Peu de publics, de thématiques et de solutions sont cochés : l'action vise un périmètre précis.",
+      preco: "Trop de cases sont cochées : limitez les publics (moins de 3), les thématiques (4 au plus) et les solutions (moins de 5) à celles qui sont réellement au cœur de l'action." },
+    { key: 'etapes', axe: 0.6, fort: 1, label: "Mise en œuvre jalonnée",
+      pf: "Au moins 3 étapes de mise en œuvre sont décrites, chacune avec une explication : le calendrier de l'action est lisible.",
+      preco: "Pour une action de plus de 60 jours, décrivez au moins 3 étapes, chacune en une phrase d'une douzaine de mots : une date seule ne suffit pas." },
+    { key: 'titre', axe: 0.6, fort: null, label: "Titre concis",
+      preco: "Le titre dépasse 12 mots : raccourcissez-le pour qu'il reste lisible dans les listes et les tableaux de bord, en renvoyant les détails à la description." }
   ] },
   { domaine: 'Mesurer l\u2019impact', criteres: [
-    { key: 'resultats', axe: 0.45, fort: 0.75, label: 'Objectifs quantifiés et datés',
-      pf: "Les indicateurs de résultat comportent un objectif chiffré et une échéance (ex. \u00ab 80 % des participants en emploi à 6 mois \u00bb) : l'atteinte des objectifs pourra être mesurée.",
-      preco: "Fixez des objectifs de résultat à la fois chiffrés et datés plutôt que des formulations vagues : ce sont ces objectifs \u00ab SMART \u00bb qui permettent de suivre l'action." },
-    { key: 'suivi', axe: 0.6, fort: 1, label: 'Suivi bien outillé',
-      pf: "Des indicateurs de suivi sont renseignés dès la conception de l'action.",
-      preco: "Pour les actions de plus de 60 jours, renseignez des indicateurs de suivi dès la création de la fiche, pas seulement a posteriori." },
-    { key: 'impact_usager', axe: 0.6, fort: null, label: 'Impact usager direct',
-      preco: "Vérifiez que l'action a un effet direct et mesurable sur l'usager final (demandeur d'emploi, jeune, etc.) : une action purement institutionnelle n'a pas le même impact usager qu'une action de terrain." },
-    { key: 'beneficiaires', axe: null, fort: 1, label: 'Ambition chiffrée',
+    { key: 'resultats', axe: 0.45, fort: 0.75, label: "Objectifs chiffrés et datés",
+      pf: "Les indicateurs de résultat fixent une cible chiffrée assortie d'une échéance (ex. « 80 % en emploi à 6 mois ») : l'atteinte des objectifs pourra être vérifiée.",
+      preco: "Les indicateurs de résultat sont absents, vagues ou sans échéance : fixez une cible chiffrée (nombre, taux) et une date ou une durée (ex. « 30 entrées en formation d'ici juin »)." },
+    { key: 'suivi', axe: 0.6, fort: 1, label: "Indicateurs de suivi définis",
+      pf: "Des indicateurs mesurent l'avancement de l'action pendant son déroulement (participants, ateliers réalisés, entretiens...).",
+      preco: "Pour une action de plus de 60 jours, précisez comment son avancement sera mesuré en cours de route (nombre de participants, d'ateliers, d'entretiens...), distinctement des résultats finaux." },
+    { key: 'impact_usager', axe: 0.6, fort: null, label: "Usager final ciblé",
+      preco: "Aucun public coché n'est un usager final : si l'action bénéficie in fine à des personnes (demandeurs d'emploi, jeunes, salariés...), cochez ce public ; sinon, expliquez comment elle leur profitera indirectement." },
+    { key: 'beneficiaires', axe: null, fort: 1, label: "Ambition chiffrée",
       pf: "Le nombre de bénéficiaires est renseigné : la fiche affiche l'ambition de l'action, même modeste (un petit volume peut correspondre à un test avant passage à l'échelle)." }
   ] },
   { domaine: 'Mobiliser et organiser les acteurs', criteres: [
-    { key: 'roles', axe: 0.35, fort: 0.75, label: 'Rôles des acteurs explicites',
-      pf: "Le rôle des acteurs associés est décrit : la fiche permet de savoir qui fait quoi dans l'action.",
-      preco: "Indiquez dans le champ \u00ab Rôles \u00bb ce que fait concrètement chaque acteur associé (repérage des publics, locaux, financement, animation...) : une formulation collective (\u00ab co-pilotage \u00bb) ne permet pas de savoir qui fait quoi. Au moins la moitié des acteurs cochés doit être retrouvée dans ce champ." },
-    { key: 'diversite_acteurs', axe: 0.6, fort: null, label: 'Diversité des acteurs',
-      preco: "Documentez une diversité d'acteurs adaptée à l'action (institutionnels, associatifs, entreprises, opérateurs de formation...) plutôt qu'un noyau restreint." },
-    { key: 'cadre', axe: null, fort: 1, label: 'Convergence des instances',
-      pf: "La fiche indique le cadre dans lequel s'inscrit l'action (question \u00ab Cette action s'inscrit-elle dans le cadre de \u00bb) : une bonne pratique de convergence entre les instances du réseau." }
+    { key: 'roles', axe: 0.35, fort: 0.75, label: "Qui fait quoi",
+      pf: "Le champ « Rôles » attribue une contribution à au moins la moitié des acteurs cochés : la répartition des tâches est explicite.",
+      preco: "Le champ « Rôles » nomme trop peu des acteurs cochés : indiquez pour chacun sa contribution (repérage, locaux, financement, animation...) plutôt qu'une formule collective comme « co-pilotage »." },
+    { key: 'diversite_acteurs', axe: 0.6, fort: null, label: "Partenariat étendu",
+      preco: "Peu d'acteurs sont associés : identifiez les partenaires qui pourraient renforcer l'action (entreprises, associations, formation, collectivités...) et cochez-les s'ils y contribuent." },
+    { key: 'cadre', axe: null, fort: 1, label: "Convergence des instances",
+      pf: "La fiche indique le cadre dans lequel s'inscrit l'action (question « Cette action s'inscrit-elle dans le cadre de ») : une bonne pratique de convergence entre les instances du réseau." }
   ] },
   { domaine: 'Suivre et valoriser dans la durée', criteres: [
-    { key: 'maj', axe: 0.35, fort: 0.9, label: 'Suivi à jour',
-      pf: "Le statut de la fiche est régulièrement mis à jour (une fiche terminée ou abandonnée est considérée à jour).",
-      preco: "Mettez à jour le statut de la fiche dès qu'un jalon est franchi, même si l'action n'est pas terminée : une fiche sans mise à jour depuis plusieurs mois perd en fiabilité." },
-    { key: 'bilan', axe: 0.35, fort: 0.75, label: 'Bilan capitalisable',
-      pf: "Le bilan est analytique : il chiffre les résultats et explique ce qui a fonctionné ou non, ce qui permet de capitaliser et d'éclairer d'autres territoires.",
-      preco: "Renseignez le bilan dès que l'action est terminée, abandonnée ou que sa date de fin est dépassée : chiffrez les résultats, puis expliquez avec honnêteté ce qui a fonctionné et ce qui n'a pas fonctionné." },
-    { key: 'efficacite', axe: 0.6, fort: null, label: 'Efficacité auto-évaluée',
-      preco: "Dès que le bilan est saisi, auto-évaluez l'efficacité de l'action (0 à 10) : c'est la trace minimale d'une évaluation qualitative." },
-    { key: 'valorisation', axe: 0.6, fort: 0.8, label: 'Action valorisée',
-      pf: "L'action est valorisée : reconduction, transposition ou partage d'expérience sont renseignés.",
-      preco: "Précisez si l'action sera reconduite, si elle est transposable et comment elle a été valorisée (retour d'expérience, témoignages, communication)." }
+    { key: 'maj', axe: 0.35, fort: 0.9, label: "Fiche actualisée",
+      pf: "La fiche a été mise à jour récemment, ou l'action est close (terminée ou abandonnée) : son statut reflète la réalité.",
+      preco: "La dernière mise à jour date de plusieurs mois : actualisez le statut et l'avancement à chaque jalon franchi." },
+    { key: 'bilan', axe: 0.35, fort: 0.75, label: "Bilan analytique",
+      pf: "Le bilan chiffre les résultats obtenus et explique ce qui a fonctionné ou non : il peut éclairer d'autres territoires.",
+      preco: "L'action est close ou échue et le bilan est absent ou succinct : chiffrez les résultats obtenus et expliquez ce qui a fonctionné et ce qui n'a pas fonctionné." },
+    { key: 'efficacite', axe: 0.6, fort: null, label: "Efficacité auto-évaluée",
+      preco: "Le bilan est saisi mais l'efficacité n'est pas notée : attribuez une note de 0 à 10, trace minimale d'une évaluation qualitative." },
+    { key: 'valorisation', axe: 0.6, fort: 0.8, label: "Suites de l'action précisées",
+      pf: "La fiche indique si l'action sera reconduite, si elle est transposable ailleurs et comment elle a été diffusée.",
+      preco: "Indiquez si l'action sera reconduite, si elle est transposable à d'autres territoires et comment elle a été diffusée (retour d'expérience, communication)." }
   ] },
   { domaine: 'Piloter et sécuriser l\u2019action', criteres: [
-    { key: 'moyens', axe: 0.35, fort: 1, label: 'Moyens précisés',
-      pf: "Les moyens mobilisés (ressources matérielles, budget, temps humain) sont précisés.",
-      preco: "Précisez les moyens mobilisés (ressources matérielles, budget, temps humain dédié) : sans cette information, il est difficile d'évaluer l'investissement consenti ou de dimensionner une action similaire." },
-    { key: 'vigilance', axe: 0.35, fort: 0.8, label: 'Anticipation des risques',
-      pf: "Les points d'attention anticipent les risques (mobilisation du public, dépendance à un acteur, calendrier) : un signe de prudence et de sérieux dans la préparation.",
-      preco: "Anticipez les points de vigilance (mobilisation du public, dépendance à un acteur, contraintes de calendrier...) dès la construction de l'action." }
+    { key: 'moyens', axe: 0.35, fort: 1, label: "Moyens détaillés",
+      pf: "Les ressources et les moyens humains et financiers sont détaillés : l'investissement consenti est lisible.",
+      preco: "Les moyens sont absents ou résumés en quelques mots : précisez le temps humain, le budget et les ressources matérielles engagés." },
+    { key: 'vigilance', axe: 0.35, fort: 0.8, label: "Risques anticipés",
+      pf: "Les points d'attention identifient les risques propres à l'action (mobilisation du public, dépendance à un acteur, calendrier).",
+      preco: "Le champ « Points d'attention » est vide ou très bref : listez les risques qui pourraient compromettre l'action et la façon de les prévenir." }
   ] }
 ];
 var FICHES_REPERES_NON_MESURES = [
@@ -3974,25 +3985,25 @@ function buildReportPageFiches() {
     html += '<p class="pr-empty">Aucune fiche action sur ce périmètre.</p>';
   } else {
     var defs = [
-      { key: 'description', label: "Mieux décrire l'action (contexte, contenu)" },
-      { key: 'problematique', label: 'Mieux formuler la problématique traitée' },
-      { key: 'etapes', label: 'Détailler davantage les étapes de mise en œuvre' },
-      { key: 'ciblage', label: 'Mieux cibler l\u2019action (moins de publics/thématiques à la fois)' },
-      { key: 'suivi', label: 'Renseigner des indicateurs de suivi' },
-      { key: 'resultats', label: 'Définir des indicateurs de résultat chiffrés (objectifs SMART)' },
-      { key: 'impact_usager', label: 'Mieux prendre en compte l\u2019impact sur l\u2019usager final' },
-      { key: 'maj', label: 'Mettre à jour le suivi de l\u2019action plus régulièrement' },
-      { key: 'bilan', label: 'Renseigner le bilan et les enseignements' },
-      { key: 'valorisation', label: 'Valoriser davantage l\u2019action (partage, transposition)' },
-      { key: 'diversite_acteurs', label: 'Élargir la diversité des acteurs mobilisés' },
-      { key: 'efficacite', label: 'Auto-évaluer l\u2019efficacité de l\u2019action' },
-      { key: 'vigilance', label: 'Anticiper les points de vigilance' },
-      { key: 'moyens', label: 'Préciser les moyens mobilisés (ressources, budget, RH)' },
-      { key: 'roles', label: 'Préciser le rôle de chaque acteur' },
-      { key: 'titre', label: 'Raccourcir le titre de l\u2019action' },
-      { key: 'diagnostic', label: 'Mieux distinguer la problématique de la description' },
-      { key: 'beneficiaires', label: 'Renseigner le nombre de bénéficiaires' },
-      { key: 'cadre', label: 'Indiquer le cadre dans lequel s\u2019inscrit l\u2019action' }
+      { key: 'description', label: "Détailler le déroulé de l'action" },
+      { key: 'problematique', label: "Développer la problématique" },
+      { key: 'etapes', label: "Découper l'action en étapes" },
+      { key: 'ciblage', label: "Resserrer publics, thématiques et solutions" },
+      { key: 'suivi', label: "Définir des indicateurs de suivi" },
+      { key: 'resultats', label: "Chiffrer et dater les objectifs de résultat" },
+      { key: 'impact_usager', label: "Cibler un usager final" },
+      { key: 'maj', label: "Actualiser la fiche" },
+      { key: 'bilan', label: "Rédiger un bilan analytique" },
+      { key: 'valorisation', label: "Préciser les suites de l'action" },
+      { key: 'diversite_acteurs', label: "Élargir le partenariat" },
+      { key: 'efficacite', label: "Noter l'efficacité de l'action" },
+      { key: 'vigilance', label: "Identifier les points de vigilance" },
+      { key: 'moyens', label: "Détailler les moyens mobilisés" },
+      { key: 'roles', label: "Attribuer un rôle à chaque acteur" },
+      { key: 'titre', label: "Raccourcir le titre" },
+      { key: 'diagnostic', label: "Ne pas reformuler l'action dans la problématique" },
+      { key: 'beneficiaires', label: "Renseigner le nombre de bénéficiaires" },
+      { key: 'cadre', label: "Indiquer le cadre de l'action" }
     ];
     var withPctPdf = defs.map(function (d) {
       var n = frows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
@@ -4857,7 +4868,15 @@ function init() {
       (function () {
         var codeByName = {};
         PERF_DATA.forEach(function (p) { if (p.id && p.clpe) codeByName[norm(p.clpe)] = p.id; });
-        FICHES_DATA.forEach(function (r) { if (!r.codeClpe && r.clpe) r.codeClpe = codeByName[norm(r.clpe)] || ''; });
+        var names = Object.keys(codeByName);
+        FICHES_DATA.forEach(function (r) {
+          if (r.codeClpe || !r.clpe) return;
+          var k = norm(r.clpe);
+          if (codeByName[k]) { r.codeClpe = codeByName[k]; return; }
+          /* libellés parfois tronqués dans les données de performance : correspondance par préfixe unique */
+          var hits = names.filter(function (n) { return n.length >= 15 && (k.indexOf(n) === 0 || n.indexOf(k) === 0); });
+          r.codeClpe = hits.length === 1 ? codeByName[hits[0]] : '';
+        });
       })();
       POP_DATA = parseSimpleCSV(res[9]).map(function (r) { return { region: normRegionName(r.region), departement: normApostrophes(r.departement), clpe: normApostrophes(r.clpe), population: +r.population }; });
       RECOMMANDATIONS = {};
