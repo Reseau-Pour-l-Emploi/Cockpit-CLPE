@@ -912,12 +912,13 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
             </div>
             <p style="margin-top:10px">Un critère non évalué (bilan non renseigné, notamment) n'entre pas dans le score global : les poids des autres critères sont alors reproportionnés pour totaliser 100&nbsp;%, plutôt que de compter comme 0.</p>
             <h3>🎯 Référentiel des points forts et axes de progrès</h3>
-            <p>Chaque fiche est aussi examinée sur <b>19 critères de qualité</b>, identiques pour une fiche isolée et pour un lot. Chaque critère est noté de 0 à 100&nbsp;% et possède deux seuils propres, calibrés sur 1&nbsp;527 fiches du réseau (septembre 2026) : sous le premier, 🔴 <b>axe de progrès</b> ; à partir du second, 🟢 <b>point fort</b> ; entre les deux, 🟠 <b>à consolider</b>.</p>
+            <p>Chaque fiche est aussi examinée sur <b>20 critères de qualité</b>, identiques pour une fiche isolée et pour un lot. Chaque critère est noté de 0 à 100&nbsp;% et possède deux seuils propres, calibrés sur 1&nbsp;527 fiches du réseau (septembre 2026) : sous le premier, 🔴 <b>axe de progrès</b> ; à partir du second, 🟢 <b>point fort</b> ; entre les deux, 🟠 <b>à consolider</b>.</p>
             <ul>
-              <li><b>Critères socle</b> (titre, impact usager, diversité des acteurs, auto-évaluation de l'efficacité) : atteints par la grande majorité des fiches, ils peuvent signaler un axe de progrès mais jamais un point fort.</li>
+              <li><b>Critères socle</b> (titre, impact usager, diversité des acteurs, auto-évaluation de l'efficacité, saisie au fil de l'eau) : atteints par la grande majorité des fiches, ils peuvent signaler un axe de progrès mais jamais un point fort.</li>
               <li><b>Critères bonus</b> (nombre de bénéficiaires, cadre dans lequel s'inscrit l'action) : valorisés comme point fort lorsqu'ils sont renseignés, jamais comptés comme axe de progrès.</li>
               <li><b>Rôles des acteurs</b> : part des acteurs associés dont le rôle est décrit dans le champ «&nbsp;Rôles&nbsp;», pour vérifier que chacun sait ce qu'il doit faire.</li>
               <li><b>Efficacité</b> : attendue dès que le bilan est saisi, elle atteste a minima d'une évaluation qualitative de l'action.</li>
+              <li><b>Saisie au fil de l'eau</b> : une fiche créée après la fin de sa première étape, ou jamais mise à jour depuis sa création, signale un usage de l'outil comme support final plutôt que comme reporting au fil de l'eau.</li>
               <li>Un critère non applicable (étapes et suivi d'une action de 60 jours ou moins, bilan avant l'échéance) n'est ni l'un ni l'autre. Chaque fiche reçoit au moins un point fort et un axe de progrès, et un même critère n'est jamais les deux à la fois.</li>
             </ul>
             <p>Ces constats portent sur la <b>qualité de la fiche</b> (documentation, pilotage, capitalisation), pas sur l'efficacité réelle de l'action. Le détail des critères, seuils et modes de calcul est disponible dans la note méthodologique de l'<a href="evaluation-fiche-action.html" target="_blank" rel="noopener">outil d'évaluation des fiches action</a>.</p>
@@ -1073,7 +1074,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
               <div id="fichesPrecoPerso"></div>
             </div>
           </div>
-          <div class="preco-pdf-row"><button class="btn-reset btn-preco" id="fichesPrecoBtn">Voir le référentiel complet (19 critères, seuils, points forts et préconisations)</button></div>
+          <div class="preco-pdf-row"><button class="btn-reset btn-preco" id="fichesPrecoBtn">Voir le référentiel complet (20 critères, seuils, points forts et préconisations)</button></div>
         </div>
 
         <div class="tab-panel" data-brick="perf" id="panelPerf" style="display:none">
@@ -3250,7 +3251,8 @@ var FICHES_AXE_PRECO_TEXT = {
   efficacite: "Notez l'efficacité (0 à 10) dès que le bilan est saisi.",
   valorisation: "Précisez reconduction, transposition et diffusion de l'action.",
   moyens: "Détaillez temps humain, budget et ressources matérielles engagés.",
-  vigilance: "Listez les risques de l'action et leur prévention dans « Points d'attention »."
+  vigilance: "Listez les risques de l'action et leur prévention dans « Points d'attention ».",
+  fil_eau: "Utilisez l'outil comme reporting au fil de l'eau : saisissez la fiche dès le lancement, mettez-la à jour à chaque étape, puis saisissez un bilan à chaud (et à froid pour les actions d'envergure)."
 };
 var FICHES_AXE_FORT_TEXT = {
   description: "Les descriptions détaillent généralement le déroulé concret des actions.",
@@ -3271,7 +3273,8 @@ var FICHES_AXE_FORT_TEXT = {
   efficacite: "L'efficacité est généralement notée lorsque le bilan est saisi.",
   valorisation: "Les fiches précisent généralement les suites des actions (reconduction, transposition, diffusion).",
   moyens: "Les moyens humains, financiers et matériels sont généralement détaillés.",
-  vigilance: "Les points d'attention identifient généralement les risques propres aux actions."
+  vigilance: "Les points d'attention identifient généralement les risques propres aux actions.",
+  fil_eau: "Les fiches sont généralement créées dès le lancement de l'action et mises à jour depuis."
 };
 function renderFichesAxes(rows, nFiches) {
   /* Chaque piste de progrès précise de quel critère elle relève (couleur), pour garder le
@@ -3295,7 +3298,8 @@ function renderFichesAxes(rows, nFiches) {
     { key: 'titre', label: "Raccourcir le titre", color: cssVar('--ft-bleu') },
     { key: 'diagnostic', label: "Ne pas reformuler l'action dans la problématique", color: cssVar('--ft-bleu') },
     { key: 'beneficiaires', label: "Renseigner le nombre de bénéficiaires", color: cssVar('--ft-violet') },
-    { key: 'cadre', label: "Indiquer le cadre de l'action", color: cssVar('--ft-orange') }
+    { key: 'cadre', label: "Indiquer le cadre de l'action", color: cssVar('--ft-orange') },
+    { key: 'fil_eau', label: "Tenir la fiche au fil de l'eau", color: cssVar('--ft-orange') }
   ];
   var withPct = defs.map(function (d) {
     var nConcerned = rows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
@@ -3383,7 +3387,8 @@ var FICHES_AXE_FORT_LABEL = {
   efficacite: "Efficacité auto-évaluée",
   valorisation: "Suites de l'action précisées",
   moyens: "Moyens détaillés",
-  vigilance: "Risques anticipés"
+  vigilance: "Risques anticipés",
+  fil_eau: "Fiche tenue au fil de l'eau"
 };
 function renderFichesPointsFortsPreco(withPct, withPctFort, nFiches) {
   var hostPF = document.getElementById('fichesPointsFortsPerso');
@@ -3700,6 +3705,8 @@ var FICHES_REFERENTIEL = [
     { key: 'maj', axe: 0.35, fort: 0.9, label: "Fiche actualisée",
       pf: "La fiche a été mise à jour récemment, ou l'action est close (terminée ou abandonnée) : son statut reflète la réalité.",
       preco: "La dernière mise à jour date de plusieurs mois : actualisez le statut et l'avancement à chaque jalon franchi." },
+    { key: 'fil_eau', axe: 0.6, fort: null, label: "Fiche tenue au fil de l'eau",
+      preco: "La fiche a été saisie après le démarrage de l'action (après la fin de l'étape 1) ou n'a jamais été mise à jour depuis sa création : l'outil peut servir de reporting au fil de l'eau, en parallèle des outils de suivi utilisés pendant l'action, plutôt que de support final. Mettez la fiche à jour régulièrement pendant le déroulement de l'action, puis a posteriori pour saisir un bilan à chaud et, pour les actions de plus grande envergure, un bilan à froid." },
     { key: 'bilan', axe: 0.35, fort: 0.75, label: "Bilan analytique",
       pf: "Le bilan chiffre les résultats obtenus et explique ce qui a fonctionné ou non : il peut éclairer d'autres territoires.",
       preco: "L'action est close ou échue et le bilan est absent ou succinct : chiffrez les résultats obtenus et expliquez ce qui a fonctionné et ce qui n'a pas fonctionné." },
@@ -4024,7 +4031,8 @@ function buildReportPageFiches() {
       { key: 'titre', label: "Raccourcir le titre" },
       { key: 'diagnostic', label: "Ne pas reformuler l'action dans la problématique" },
       { key: 'beneficiaires', label: "Renseigner le nombre de bénéficiaires" },
-      { key: 'cadre', label: "Indiquer le cadre de l'action" }
+      { key: 'cadre', label: "Indiquer le cadre de l'action" },
+      { key: 'fil_eau', label: "Tenir la fiche au fil de l'eau" }
     ];
     var withPctPdf = defs.map(function (d) {
       var n = frows.reduce(function (s, r) { return s + (r.axePct[d.key] / 100) * r.nbFiches; }, 0);
@@ -4859,7 +4867,7 @@ function init() {
             diversite_acteurs: +r.axe_pct_diversite_acteurs, efficacite: +r.axe_pct_efficacite,
             vigilance: +r.axe_pct_vigilance, moyens: +r.axe_pct_moyens,
             titre: +r.axe_pct_titre || 0, diagnostic: +r.axe_pct_diagnostic || 0, roles: +r.axe_pct_roles || 0,
-            beneficiaires: +r.axe_pct_beneficiaires || 0, cadre: +r.axe_pct_cadre || 0
+            beneficiaires: +r.axe_pct_beneficiaires || 0, cadre: +r.axe_pct_cadre || 0, fil_eau: +r.axe_pct_fil_eau || 0
           },
           axePctFort: {
             description: +r.axe_pct_fort_description, problematique: +r.axe_pct_fort_problematique,
@@ -4869,7 +4877,7 @@ function init() {
             diversite_acteurs: +r.axe_pct_fort_diversite_acteurs, efficacite: +r.axe_pct_fort_efficacite,
             vigilance: +r.axe_pct_fort_vigilance, moyens: +r.axe_pct_fort_moyens,
             titre: +r.axe_pct_fort_titre || 0, diagnostic: +r.axe_pct_fort_diagnostic || 0, roles: +r.axe_pct_fort_roles || 0,
-            beneficiaires: +r.axe_pct_fort_beneficiaires || 0, cadre: +r.axe_pct_fort_cadre || 0
+            beneficiaires: +r.axe_pct_fort_beneficiaires || 0, cadre: +r.axe_pct_fort_cadre || 0, fil_eau: +r.axe_pct_fort_fil_eau || 0
           },
           months: months,
           codeClpe: r.code_clpe || ''

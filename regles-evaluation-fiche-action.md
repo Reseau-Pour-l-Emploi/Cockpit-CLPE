@@ -41,11 +41,11 @@ Seuils déterminés sur **1527 fiches** du réseau (fichier `modele_fiches_actio
 - critère socle si plus de 60 % des fiches atteignent le niveau point fort ;
 - export complet (bilans, valorisation, bénéficiaires et étapes non tronqués) : tous les critères sont calibrés, y compris le bilan.
 
-Résultat sur ce jeu : 100 % des fiches ont au moins un point fort et un axe de progrès, dont 3,8 % grâce au repli.
+Résultat sur ce jeu : 100 % des fiches ont au moins un point fort et un axe de progrès, dont 3,7 % grâce au repli.
 
 Ces seuils sont des seuils de gestion calés sur la distribution observée, pas des seuils de qualité absolus : à recalibrer quand le corpus évolue.
 
-## 3. Les 19 critères
+## 3. Les 20 critères
 
 ### Description
 
@@ -76,6 +76,7 @@ Ces seuils sont des seuils de gestion calés sur la distribution observée, pas 
 | `roles` | 1,2 | < 35 % | ≥ 75 % | 55 % / 27 % | Acteurs associés dont le rôle est décrit dans le champ « Rôles » (reconnaissance du nom de l'acteur, de son sigle ou de ses variantes usuelles), rapportés à la moitié des acteurs cochés : tout ou partie des acteurs doit être retrouvé, plein score dès la moitié. 0 si le champ fait moins de 3 mots. Non applicable si aucun acteur identifiable n'est coché. | **Attribuer un rôle à chaque acteur** : Le champ « Rôles » nomme trop peu des acteurs cochés : indiquez pour chacun sa contribution (repérage, locaux, financement, animation...) plutôt qu'une formule collective comme « co-pilotage ». | **Qui fait quoi** : Le champ « Rôles » attribue une contribution à au moins la moitié des acteurs cochés : la répartition des tâches est explicite. |
 | `vigilance` | 0,6 | < 35 % | ≥ 80 % | 65 % / 26 % | Longueur du champ « Points d'attention » (plein score à 15 mots). | **Identifier les points de vigilance** : Le champ « Points d'attention » est vide ou très bref : listez les risques qui pourraient compromettre l'action et la façon de les prévenir. | **Risques anticipés** : Les points d'attention identifient les risques propres à l'action (mobilisation du public, dépendance à un acteur, calendrier). |
 | `maj` | 0,8 | < 35 % | ≥ 90 % | 34 % / 27 % | Fiche terminée ou abandonnée : 1 (statut à jour, le bilan est évalué à part) ; sinon 1 − (jours depuis la dernière mise à jour ÷ 365). | **Actualiser la fiche** : La dernière mise à jour date de plusieurs mois : actualisez le statut et l'avancement à chaque jalon franchi. | **Fiche actualisée** : La fiche a été mise à jour récemment, ou l'action est close (terminée ou abandonnée) : son statut reflète la réalité. |
+| `fil_eau` | 0,9 | < 60 % | socle | 26 % / socle | Deux contrôles, chacun compté s'il est applicable : la fiche a été créée au plus tard à la date de fin de l'étape 1 (pas de saisie a posteriori) ; elle a été mise à jour au moins une fois après le jour de sa création (contrôle appliqué aux fiches créées depuis plus de 30 jours). Score = part des contrôles respectés. Non applicable si aucune de ces dates n'est disponible. | **Tenir la fiche au fil de l'eau** : La fiche a été saisie après le démarrage de l'action ou n'a jamais été mise à jour depuis sa création : l'outil peut servir de reporting au fil de l'eau, en complément des outils de suivi utilisés pendant l'action, plutôt que de support final rempli une fois l'action terminée. Mettez-la à jour à chaque étape, puis a posteriori pour saisir un bilan à chaud et, pour les actions de plus grande envergure, un bilan à froid. | **Fiche tenue au fil de l'eau** : La fiche a été créée dès le lancement de l'action et mise à jour depuis : elle sert de reporting au fil de l'eau et non seulement de support final. |
 | `cadre` | 0,8 | bonus | ≥ 100 % | bonus / 100 % | Bonus : 1 si la question « Cette action s'inscrit-elle dans le cadre de : » est renseignée. Non évalué sinon (jamais un axe de progrès). Apporte aussi un bonus de 5 points au score de la description. | **Indiquer le cadre de l'action** : Indiquez dans quel cadre s'inscrit l'action (champ « Cette action s'inscrit-elle dans le cadre de »). | **Convergence des instances** : La fiche indique le cadre dans lequel s'inscrit l'action (question « Cette action s'inscrit-elle dans le cadre de ») : une bonne pratique de convergence entre les instances du réseau. |
 
 ### Bilan et valorisation

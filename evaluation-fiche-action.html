@@ -139,7 +139,7 @@ input[type=file]{display:none}
 
         <div id="methodSimple">
           <p>Chaque fiche est notée sur <b>100 points</b>, à partir de 4 grands critères : le <b>score de la description</b> (25&nbsp;%), l'<b>impact usager</b> (30&nbsp;%), le <b>bilan et la valorisation</b> (25&nbsp;%, une fois renseigné) et le <b>caractère innovant</b> (20&nbsp;%, en évaluation de lot uniquement).</p>
-          <p>L'outil vérifie aussi <b>19 critères de qualité</b>, identiques pour une fiche seule et pour un lot. Chacun reçoit un score de 0 à 100&nbsp;% et possède deux seuils, calibrés sur les fiches du réseau : sous le premier, c'est un 🔴 <b>axe de progrès</b> ; à partir du second, un 🟢 <b>point fort</b> ; entre les deux, 🟠 <b>à consolider</b>. Un critère ne peut jamais être à la fois point fort et axe de progrès, et chaque fiche reçoit au moins un point fort et un axe de progrès. Ces constats portent sur la <b>qualité de la fiche</b> (documentation, pilotage, capitalisation), pas sur l'efficacité réelle de l'action.</p>
+          <p>L'outil vérifie aussi <b>20 critères de qualité</b>, identiques pour une fiche seule et pour un lot. Chacun reçoit un score de 0 à 100&nbsp;% et possède deux seuils, calibrés sur les fiches du réseau : sous le premier, c'est un 🔴 <b>axe de progrès</b> ; à partir du second, un 🟢 <b>point fort</b> ; entre les deux, 🟠 <b>à consolider</b>. Un critère ne peut jamais être à la fois point fort et axe de progrès, et chaque fiche reçoit au moins un point fort et un axe de progrès. Ces constats portent sur la <b>qualité de la fiche</b> (documentation, pilotage, capitalisation), pas sur l'efficacité réelle de l'action.</p>
           <p style="margin-bottom:0">L'outil repose sur des règles simples (comptages, mots-clés, seuils), pas sur un modèle d'intelligence artificielle : c'est une aide à la relecture, pas un jugement définitif sur la valeur de l'action.</p>
         </div>
 
@@ -154,7 +154,7 @@ input[type=file]{display:none}
           <p style="margin-top:10px">En évaluation d'une fiche isolée (PDF), le critère "caractère innovant" n'est pas calculable : les 3 autres poids sont reproportionnés pour totaliser 100&nbsp;%.</p>
 
           <p style="margin-top:16px"><b>Référentiel des critères : axes de progrès et points forts</b></p>
-          <p>Un référentiel unique de 19 critères sert à l'évaluation d'une fiche isolée comme à l'évaluation en lot. Chaque critère est noté de 0 à 100&nbsp;%, puis positionné sur ses deux seuils (tableau ci-dessous) :</p>
+          <p>Un référentiel unique de 20 critères sert à l'évaluation d'une fiche isolée comme à l'évaluation en lot. Chaque critère est noté de 0 à 100&nbsp;%, puis positionné sur ses deux seuils (tableau ci-dessous) :</p>
           <div class="seuils-grid">
             <div class="s-axe">🔴 <b>Axe de progrès</b><br>score inférieur au seuil «&nbsp;axe&nbsp;»</div>
             <div class="s-mid">🟠 <b>À consolider</b><br>entre les deux seuils</div>
@@ -428,6 +428,8 @@ function parseFiche(rawText) {
   var etapesBlock = extractBetween(text, 'Étapes de l\'action', []);
   var etapeParts = etapesBlock.split(/Étape\s*N\s*°\s*\d+/gi).slice(1);
   var nEtapes = etapeParts.length;
+  /* Date de fin de l'étape 1 ("Termine le ..."), pour repérer une fiche saisie a posteriori. */
+  var dEtape1 = etapeParts.length ? parseFrenchDate((etapeParts[0].match(/Termine le([^\n]{0,60})/i) || [])[1] || '') : null;
   var etapeWordCounts = etapeParts.map(function (p) {
     /* Chaque partie commence par la date de fin ("Termine le ...") avant le texte utile :
        on la retire pour ne compter que le contenu réellement descriptif de l'étape. */
@@ -449,7 +451,7 @@ function parseFiche(rawText) {
     thematiques: thematiques, publics: publics, solutions: solutions, acteurs: acteurs, rattachement: rattachement,
     roles: roles, pointAttention: pointAttention, ressources: ressources, moyens: moyens,
     beneficiaires: benefNum ? +benefNum : null, indicSuivi: indicSuivi, indicResultats: indicResultats,
-    indicStrategiques: indicStrategiques, nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, bilanVide: bilanVide, bilanText: bilanText
+    indicStrategiques: indicStrategiques, nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, bilanVide: bilanVide, bilanText: bilanText, dEtape1: dEtape1
   };
 }
 
@@ -887,6 +889,10 @@ var REFERENTIEL = [
     calcul: "Fiche terminée ou abandonnée : 1 (statut à jour, le bilan est évalué à part) ; sinon 1 − (jours depuis la dernière mise à jour ÷ 365).",
     axe: { label: "Actualiser la fiche", texte: "La dernière mise à jour date de plusieurs mois : actualisez le statut et l'avancement à chaque jalon franchi." },
     fort: { label: "Fiche actualisée", texte: "La fiche a été mise à jour récemment, ou l'action est close (terminée ou abandonnée) : son statut reflète la réalité." } },
+  { key: 'fil_eau', famille: 'Pilotage', poids: 0.9, seuilAxe: 0.6, seuilFort: null,
+    calcul: "Deux contrôles, chacun compté s'il est applicable : la fiche a été créée au plus tard à la date de fin de l'étape 1 (pas de saisie a posteriori) ; elle a été mise à jour au moins une fois après le jour de sa création (contrôle appliqué aux fiches créées depuis plus de 30 jours). Score = part des contrôles respectés. Non applicable si aucune de ces dates n'est disponible.",
+    axe: { label: "Tenir la fiche au fil de l'eau", texte: "La fiche a été saisie après le démarrage de l'action ou n'a jamais été mise à jour depuis sa création : l'outil peut servir de reporting au fil de l'eau, en complément des outils de suivi utilisés pendant l'action, plutôt que de support final rempli une fois l'action terminée. Mettez-la à jour à chaque étape, puis a posteriori pour saisir un bilan à chaud et, pour les actions de plus grande envergure, un bilan à froid." },
+    fort: { label: "Fiche tenue au fil de l'eau", texte: "La fiche a été créée dès le lancement de l'action et mise à jour depuis : elle sert de reporting au fil de l'eau et non seulement de support final." } },
   { key: 'cadre', famille: 'Pilotage', poids: 0.8, seuilAxe: null, seuilFort: 1,
     calcul: "Bonus : 1 si la question « Cette action s'inscrit-elle dans le cadre de : » est renseignée. Non évalué sinon (jamais un axe de progrès). Apporte aussi un bonus de 5 points au score de la description.",
     axe: { label: "Indiquer le cadre de l'action", texte: "Indiquez dans quel cadre s'inscrit l'action (champ « Cette action s'inscrit-elle dans le cadre de »)." },
@@ -913,6 +919,22 @@ REFERENTIEL.forEach(function (c) {
 });
 var REFERENTIEL_BY_KEY = {};
 REFERENTIEL.forEach(function (c) { REFERENTIEL_BY_KEY[c.key] = c; });
+/* Message détaillé du critère "fil de l'eau", selon le ou les contrôles non respectés. */
+function texteFilEau(fe) {
+  if (!fe) return AXE_TEXTS.fil_eau;
+  var parts = [];
+  if (fe.saisieTardive) parts.push("La fiche a été créée après la fin de l'étape 1 : l'outil peut servir de reporting au fil de l'eau, en parallèle des outils de suivi utilisés pendant le déroulé de l'action, plutôt que de support final rempli a posteriori.");
+  if (fe.jamaisMaj) parts.push("La fiche n'a pas été mise à jour depuis le jour de sa création : actualisez-la régulièrement pendant le déroulement de l'action, puis a posteriori pour saisir un bilan à chaud" +
+    (fe.envergure ? " et, s'agissant d'une action d'envergure, un bilan à froid quelques mois plus tard." : " (et un bilan à froid pour les actions de plus grande envergure)."));
+  return parts.length ? parts.join(' ') : AXE_TEXTS.fil_eau;
+}
+function resumeFilEau(fe) {
+  if (!fe) return '';
+  var p = [];
+  if (fe.saisieTardive) p.push('saisie après la fin de l\u2019étape 1');
+  if (fe.jamaisMaj) p.push('jamais mise à jour depuis la création' + (fe.envergure ? ' (action d\u2019envergure : prévoir un bilan à froid)' : ''));
+  return p.join(' ; ');
+}
 function niveauCritere(key, v) {
   var c = REFERENTIEL_BY_KEY[key];
   if (v == null || !c) return 'na';
@@ -1031,6 +1053,16 @@ function evaluateFiche(nf, refDate, corpus) {
   var subCadre = (nf.rattachement && nf.rattachement.length) ? 1 : null;
   /* Efficacité auto-évaluée : attendue dès que le bilan est saisi (évaluation qualitative a minima). */
   var subEfficacite = (!subBilanVide && nf.efficacite !== undefined) ? (nf.efficacite != null ? 1 : 0) : null;
+  /* Saisie au fil de l'eau : deux contrôles, chacun applicable seulement si les dates le permettent.
+     - saisie tardive : fiche créée après la date de fin de l'étape 1 ;
+     - jamais mise à jour : dernière mise à jour le jour même de la création, alors que la fiche
+       existe depuis plus de 30 jours. */
+  var ageJours = nf.dCreation ? (today - nf.dCreation) / 86400000 : 0;
+  var saisieTardive = (nf.dCreation && nf.dEtape1) ? (nf.dCreation.toDateString() !== nf.dEtape1.toDateString() && nf.dCreation > nf.dEtape1) : null;
+  var jamaisMaj = (nf.dCreation && nf.dMaj && ageJours > 30) ? nf.dMaj.toDateString() === nf.dCreation.toDateString() : null;
+  var controlesFilEau = [saisieTardive, jamaisMaj].filter(function (x) { return x != null; });
+  var subFilEau = controlesFilEau.length ? controlesFilEau.filter(function (x) { return !x; }).length / controlesFilEau.length : null;
+  var envergure = (nf.dCreation && nf.dFin && (nf.dFin - nf.dCreation) / 86400000 > 180) || (typeof nf.beneficiaires === 'number' && nf.beneficiaires >= 100);
 
   return {
     evalDescription: evalDesc, evalImpact: evalImp, evalBilan: evalBil, evalInnovation: evalInno,
@@ -1039,9 +1071,10 @@ function evaluateFiche(nf, refDate, corpus) {
       description: subDescription, problematique: subProblematique, etapes: subEtapes, ciblage: subCiblage,
       suivi: subSuivi, resultats: subResultats, impact_usager: subImpactUsager, maj: subMaj, bilan: subBilan,
       valorisation: subValorisation, diversite_acteurs: subDiversite, vigilance: subVigilance, moyens: subMoyens,
-      titre: subTitre, diagnostic: subDiagnostic, roles: subRoles, beneficiaires: subBeneficiaires, efficacite: subEfficacite, cadre: subCadre
+      titre: subTitre, diagnostic: subDiagnostic, roles: subRoles, beneficiaires: subBeneficiaires, efficacite: subEfficacite, cadre: subCadre, fil_eau: subFilEau
     },
-    userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide, bilanNotYetDue: bilanNotYetDue
+    userFacing: evalImp.userFacing, overdue: overdue, staleDays: staleDays, bilanVide: subBilanVide, bilanNotYetDue: bilanNotYetDue,
+    filEau: { saisieTardive: saisieTardive, jamaisMaj: jamaisMaj, envergure: !!envergure }
   };
 }
 
@@ -1054,7 +1087,7 @@ function normalizeFromPdf(f) {
     indicStrategiques: f.indicStrategiques, publics: f.publics, thematiques: f.thematiques,
     solutions: f.solutions, acteurs: f.acteurs, porteurs: f.porteurs, beneficiaires: f.beneficiaires,
     rattachement: f.rattachement || [],
-    nEtapes: f.nEtapes, etapeWordCounts: f.etapeWordCounts || [], dCreation: f.dCree, dFin: f.dFin, dMaj: f.dMaj,
+    nEtapes: f.nEtapes, etapeWordCounts: f.etapeWordCounts || [], dCreation: f.dCree, dFin: f.dFin, dMaj: f.dMaj, dEtape1: f.dEtape1 || null,
     reconduction: null, transposition: null, valorisationTxt: '', efficacite: undefined /* non présent dans l'export PDF : critère non évalué */
   };
 }
@@ -1098,8 +1131,13 @@ function renderResults(f, res, rawText) {
     axesHtml = '<div class="ok-box">\uD83C\uDF89 Aucun axe de progrès majeur détecté : les éléments analysés dans cette fiche sont globalement bien renseignés.</div>';
   } else {
     axes.forEach(function (x, i) {
-      axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">' + (i + 1) + '</span>' + AXE_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%' + (x.relatif ? ', critère le plus faible de la fiche' : '') + ')</span></div><p>' + AXE_TEXTS[x.key] + '</p></div>';
+      axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">' + (i + 1) + '</span>' + AXE_LABELS[x.key] + '<span class="axe-score">(' + Math.round(x.v * 100) + '\u00A0%' + (x.relatif ? ', critère le plus faible de la fiche' : '') + ')</span></div><p>' + (x.key === 'fil_eau' ? texteFilEau(res.filEau) : AXE_TEXTS[x.key]) + '</p></div>';
     });
+  }
+  /* Saisie au fil de l'eau : rappel systématique si un contrôle n'est pas respecté, même quand
+     le critère ne figure pas parmi les 3 axes prioritaires. */
+  if (res.filEau && (res.filEau.saisieTardive || res.filEau.jamaisMaj) && !axes.some(function (x) { return x.key === 'fil_eau'; })) {
+    axesHtml += '<div class="axe-card"><div class="axe-h"><span class="axe-rank">\uD83D\uDD51</span>' + AXE_LABELS.fil_eau + '</div><p>' + texteFilEau(res.filEau) + '</p></div>';
   }
   document.getElementById('axesList').innerHTML = axesHtml;
 
@@ -1201,7 +1239,7 @@ var COLS = {
   ressources: 'Ressources mobilisables', moyens: 'Moyens humains et financiers',
   beneficiaires: "Nombre de bénéficiaires de l'act", suivi: 'Indicateurs de suivi',
   resultats: "Indicateurs de résultats / d'imp", strategiques: 'Indicateurs stratégiques impacté',
-  bilanTexte: 'Principaux résultats et enseigne', efficacite: "Efficacité de l'action",
+  bilanTexte: 'Principaux résultats et enseigne', efficacite: "Efficacité de l'action", dateEtape1: "Date de fin de l'étape",
   reconduction: 'Cette action sera-t-elle recondu', transposition: 'Cette action est-elle transposab',
   valorisationTxt: 'Comment avez-vous valorisé votre', dateCreation: 'Creation date', dateMaj: 'Last update',
   clpe: 'C_LBLTERRITOIRE'
@@ -1269,7 +1307,7 @@ function normalizeFromXlsx(row, refDate, trunc) {
     thematiques: splitMulti(get('thematique')), solutions: splitMulti(get('solutions')),
     acteurs: splitMulti(get('acteurs')), porteurs: [], beneficiaires: (function () { var v = get('beneficiaires'); if (v == null || String(v).trim() === '') return null; var n = parseFloat(v); return isNaN(n) ? String(v).trim() : n; })(),
     rattachement: splitMulti(findColByPrefix(row, RATTACHEMENT_PREFIX)),
-    nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, dCreation: toDate(get('dateCreation')),
+    nEtapes: nEtapes, etapeWordCounts: etapeWordCounts, dCreation: toDate(get('dateCreation')), dEtape1: toDate(getCol(row, 'dateEtape1')),
     dFin: toDate(get('dateFin')), dMaj: toDate(get('dateMaj')),
     reconduction: recond === 'oui' ? 'oui' : (recond || null), transposition: transp === 'oui' ? 'oui' : (transp || null),
     valorisationTxt: get('valorisationTxt') || '', bilanTronque: !!trunc.bilanTexte, valorisationTronque: !!trunc.valorisationTxt,
@@ -1326,7 +1364,7 @@ function toFrenchTitleCase(s) {
    critères historiques dans leur ordre d'origine, puis les critères ajoutés au référentiel. */
 var BENEF_PLAFOND = 1000;
 var SITE_SOURCE_AXES = ['description', 'problematique', 'etapes', 'ciblage', 'suivi', 'resultats', 'impact_usager', 'maj', 'bilan', 'valorisation', 'diversite_acteurs', 'efficacite', 'vigilance', 'moyens',
-  'titre', 'diagnostic', 'roles', 'beneficiaires', 'cadre'];
+  'titre', 'diagnostic', 'roles', 'beneficiaires', 'cadre', 'fil_eau'];
 async function buildSiteSourceCsv(rows, normalized, allScores) {
   var casing = await fetchReferentielCasingLookup();
   var codes = await fetchClpeCodeLookup();
@@ -1500,6 +1538,7 @@ async function processBulkFile(file) {
     out['Éval - Critères non évalués (exclus du score global)'] = s.excludedCriteria.length ? s.excludedCriteria.map(function (x) { return x.label + ' (' + x.reason + ')'; }).join(' ; ') : '-';
     out['Éval - Points forts'] = forts.length ? forts.map(function (x) { return POINT_FORT_LABELS[x.key]; }).join(' ; ') : '-';
     out['Éval - Axe de progrès prioritaire'] = axes.length ? AXE_LABELS_FR[axes[0].key] : '-';
+    out['Éval - Saisie au fil de l\u2019eau'] = resumeFilEau(s.filEau) || 'OK';
     return out;
   });
 
