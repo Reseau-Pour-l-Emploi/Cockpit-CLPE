@@ -822,7 +822,7 @@ footer.site .inner{max-width:86vw;margin:0 auto;padding:16px 24px;font-size:12px
         <div class="sidebar-links-group">
         <a class="btn-reset btn-sidebar-link" href="http://pilotage-rpe.francetravail.org/rpe" target="_blank" rel="noopener">🔗 Tableau de Bord du Réseau Pour l'Emploi</a>
         <a class="btn-reset btn-sidebar-link" href="https://reseau-pour-l-emploi.github.io/Ressources-Tableau-de-bord-RPE/" target="_blank" rel="noopener">🔗 Ressources du Tableau de Bord du RPE</a>
-        <a class="btn-reset btn-academie-link" href="https://www.academiefrancetravail.org/o/s_12b363fea-6bde-411e-8c0f-72df47b8de30" target="_blank" rel="noopener" title="Développez vos pratiques au sein du RPE&#10;L'Académie France Travail accompagne les acteurs du Réseau pour l'emploi en mettant à leur disposition des ressources pour enrichir leurs pratiques, valoriser leur complémentarité et mieux agir au service des publics.&#10;Connectez-vous pour accéder aux vidéos, modules e-learning et formations disponibles : https://www.academiefrancetravail.org/">
+        <a class="btn-reset btn-academie-link" href="https://www.academiefrancetravail.org/" target="_blank" rel="noopener" title="Développez vos pratiques au sein du RPE&#10;L'Académie France Travail accompagne les acteurs du Réseau pour l'emploi en mettant à leur disposition des ressources pour enrichir leurs pratiques, valoriser leur complémentarité et mieux agir au service des publics.&#10;Connectez-vous pour accéder aux vidéos, modules e-learning et formations disponibles : https://www.academiefrancetravail.org/">
           <img src="assets/academie-logo.png" alt="Académie France Travail">
           <span>Pour vous accompagner</span>
         </a>
@@ -2828,6 +2828,19 @@ function niceStep(maxV, nTicks) {
   var step = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10) * mag;
   return step > 0 ? step : 1;
 }
+/* Axe des ordonnées commun aux graphiques SVG : ligne d'axe, graduations "rondes" (0 inclus),
+   quadrillage horizontal et titre d'axe au-dessus de la zone de tracé (padT réservé). */
+function svgYAxis(o) {
+  var out = '';
+  if (o.title) out += '<text x="4" y="10" font-size="8.5" text-anchor="start" fill="' + cssVar('--ft-fg-3') + '">' + esc(o.title) + '</text>';
+  out += '<line x1="' + o.padL + '" y1="' + o.padT + '" x2="' + o.padL + '" y2="' + (o.H - o.padB) + '" stroke="' + cssVar('--ft-gray-400') + '" stroke-width="1.2"/>';
+  for (var tv = 0; tv <= o.max + 0.0001; tv += o.step) {
+    var ty = o.H - o.padB - (tv / o.max) * (o.H - o.padT - o.padB);
+    out += '<line x1="' + o.padL + '" y1="' + ty.toFixed(1) + '" x2="' + (o.W - o.padR) + '" y2="' + ty.toFixed(1) + '" stroke="' + cssVar('--ft-sable-dark') + '" stroke-width="1"/>';
+    out += '<text x="' + (o.padL - 5) + '" y="' + (ty + 3).toFixed(1) + '" font-size="' + (o.fs || 9) + '" text-anchor="end" fill="' + cssVar('--ft-fg-3') + '">' + tv.toLocaleString('fr-FR', { minimumFractionDigits: o.dec || 0, maximumFractionDigits: o.dec || 0 }).replace(/\u202F/g, '\u00A0') + '</text>';
+  }
+  return out;
+}
 function renderFreqWeek() {
   var rows = SESSIONS_WEEK_DATA.filter(inScope);
   var weeks = unique(rows.map(function (r) { return r.semaine; })).sort();
@@ -2841,7 +2854,7 @@ function renderFreqWeek() {
   var rawMax = Math.max.apply(null, vals.concat([1]));
   var step = niceStep(rawMax, 4);
   var niceMax = Math.ceil(rawMax / step) * step;
-  var W = 760, H = 190, padL = 40, padR = 12, padT = 22, padB = 26;
+  var W = 760, H = 190, padL = 44, padR = 12, padT = 22, padB = 26;
   var stepX = weeks.length > 1 ? (W - padL - padR) / (weeks.length - 1) : 0;
   var pts = vals.map(function (v, i) { return [padL + i * stepX, H - padB - (v / niceMax) * (H - padT - padB)]; });
   var pathD = pts.map(function (p, i) { return (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
@@ -2849,15 +2862,7 @@ function renderFreqWeek() {
   var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Nombre de sessions par semaine (échelle 0 à ' + fmt(niceMax, 0) + ')">';
   /* Titre de l'axe des ordonnées tout en haut, au-dessus de la zone de tracé (padT réservé
      à cet effet) : ne recouvre plus la graduation la plus haute. */
-  svg += '<text x="4" y="10" font-size="8.5" text-anchor="start" fill="' + cssVar('--ft-fg-3') + '">Sessions / sem.</text>';
-  /* Échelle des ordonnées : graduations à intervalle "rond" (step), ligne d'axe verticale
-     bien visible, et libellé de valeur à chaque palier. */
-  svg += '<line x1="' + padL + '" y1="' + padT + '" x2="' + padL + '" y2="' + (H - padB) + '" stroke="' + cssVar('--ft-gray-400') + '" stroke-width="1.2"/>';
-  for (var tv = 0; tv <= niceMax + 0.0001; tv += step) {
-    var ty = H - padB - (tv / niceMax) * (H - padT - padB);
-    svg += '<line x1="' + padL + '" y1="' + ty.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + ty.toFixed(1) + '" stroke="' + cssVar('--ft-sable-dark') + '" stroke-width="1"/>';
-    svg += '<text x="' + (padL - 8) + '" y="' + (ty + 3).toFixed(1) + '" font-size="9.5" text-anchor="end" fill="' + cssVar('--ft-fg-3') + '">' + fmt(tv, 0) + '</text>';
-  }
+  svg += svgYAxis({ W: W, H: H, padL: padL, padR: padR, padT: padT, padB: padB, max: niceMax, step: step, fs: 9.5, title: 'Sessions / sem.' });
   svg += '<path d="' + areaD + '" fill="' + cssVar('--ft-bleu') + '" fill-opacity="0.12"/>';
   svg += '<path d="' + pathD + '" fill="none" stroke="' + cssVar('--ft-bleu') + '" stroke-width="2.2"/>';
   var labelEvery = Math.max(1, Math.ceil(weeks.length / 10));
@@ -2866,7 +2871,7 @@ function renderFreqWeek() {
     if (i % labelEvery === 0 || i === weeks.length - 1) {
       /* Année suivie du numéro de semaine (ex : "2025-01"), plutôt qu'une abréviation "S01". */
       var lbl = wk.replace('-W', '-');
-      svg += '<text x="' + pts[i][0].toFixed(1) + '" y="' + (H - 8) + '" font-size="9" text-anchor="middle" fill="' + cssVar('--ft-fg-3') + '">' + esc(lbl) + '</text>';
+      svg += '<text x="' + pts[i][0].toFixed(1) + '" y="' + (H - 8) + '" font-size="9" text-anchor="' + (i === weeks.length - 1 && i > 0 ? 'end' : (i === 0 ? 'start' : 'middle')) + '" fill="' + cssVar('--ft-fg-3') + '">' + esc(lbl) + '</text>';
     }
   });
   svg += '</svg>';
@@ -2948,15 +2953,13 @@ function renderFreq() {
       });
       var maxMV = Math.max.apply(null, years.reduce(function (acc, y) { return acc.concat(byYearMonth[y]); }, []).concat([1]));
       var moisLbl = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-      var W = 900, H = 220, padL = 34, padR = 10, padT = 14, padB = 26;
+      var stepMV = niceStep(maxMV, 4);
+      maxMV = Math.ceil(maxMV / stepMV) * stepMV;
+      var W = 900, H = 230, padL = 44, padR = 10, padT = 22, padB = 26;
       var groupW = (W - padL - padR) / 12;
       var barGap = 2, barW = Math.max(3, (groupW - barGap * (years.length + 1)) / years.length);
       var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Consultations par mois, comparaison annuelle">';
-      [0.25, 0.5, 0.75, 1].forEach(function (f) {
-        var y = H - padB - f * (H - padT - padB);
-        svg += '<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '" stroke="' + cssVar('--ft-sable-dark') + '" stroke-width="1"/>';
-        svg += '<text x="' + (padL - 6) + '" y="' + (y + 3).toFixed(1) + '" font-size="9" text-anchor="end" fill="' + cssVar('--ft-fg-3') + '">' + fmt(f * maxMV, 0) + '</text>';
-      });
+      svg += svgYAxis({ W: W, H: H, padL: padL, padR: padR, padT: padT, padB: padB, max: maxMV, step: stepMV, title: 'Consultations / mois' });
       for (var mi = 0; mi < 12; mi++) {
         var gx = padL + mi * groupW;
         years.forEach(function (y, yi) {
@@ -3165,7 +3168,7 @@ function renderFichesMonthChart() {
   var years = unique(rows.map(function (r) { return r.mois.slice(0, 4); })).sort();
   var palette = [cssVar('--ft-indigo'), cssVar('--ft-bleu'), cssVar('--ft-violet'), cssVar('--ft-jaune-dark')];
   var colors = {}; years.forEach(function (y, i) { colors[y] = palette[i % palette.length]; });
-  var W = 340, H = 210, padL = 26, padR = 10, padT = 12, padB = 22;
+  var W = 340, H = 216, padL = 30, padR = 10, padT = 22, padB = 22;
   var seriesByYear = {}, maxV = 1;
   years.forEach(function (y) {
     var pts = [];
@@ -3179,18 +3182,20 @@ function renderFichesMonthChart() {
     }
     seriesByYear[y] = pts;
   });
+  var moisLong = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  var yStep = niceStep(maxV, 4);
+  if (maxV <= 4) yStep = maxV <= 2 ? 0.5 : 1;
+  maxV = Math.ceil(maxV / yStep) * yStep;
   var stepX = (W - padL - padR) / 11;
-  function xy(i, v) { return [padL + i * stepX, H - padB - (v / maxV) * (H - padT - padB)]; }
-  var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Fiches action saisies par mois, comparaison annuelle">';
-  [0.25, 0.5, 0.75, 1].forEach(function (f) {
-    var y = xy(0, f * maxV)[1];
-    svg += '<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '" stroke="' + cssVar('--ft-sable-dark') + '" stroke-width="1"/>';
-  });
+  function xy(i, v) { return [padL + 6 + i * (stepX - 12 / 11), H - padB - (v / maxV) * (H - padT - padB)]; }
+  var yTitle = state.clpe ? 'Fiches action / mois' : 'Fiches action / mois (moy. par CLPE)';
+  var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + yTitle + ', comparaison annuelle (échelle 0 à ' + fmt(maxV, yStep < 1 ? 1 : 0) + ')">';
+  svg += svgYAxis({ W: W, H: H, padL: padL, padR: padR, padT: padT, padB: padB, max: maxV, step: yStep, dec: yStep < 1 ? 1 : 0, fs: 8.5, title: yTitle });
   years.forEach(function (y) {
     var pts = seriesByYear[y], d = '';
     pts.forEach(function (v, i) { if (v == null) return; var p = xy(i, v); d += (d === '' ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1) + ' '; });
     svg += '<path d="' + d + '" fill="none" stroke="' + colors[y] + '" stroke-width="2.4" stroke-linejoin="round"/>';
-    pts.forEach(function (v, i) { if (v == null) return; var p = xy(i, v); svg += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2.8" fill="' + colors[y] + '"/>'; });
+    pts.forEach(function (v, i) { if (v == null) return; var p = xy(i, v); svg += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2.8" fill="' + colors[y] + '"><title>' + y + ' - ' + moisLong[i] + ' : ' + fmt(v, v % 1 ? 1 : 0) + '</title></circle>'; });
   });
   var moisLbl = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   for (var i = 0; i < 12; i++) {
