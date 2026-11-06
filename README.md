@@ -39,6 +39,7 @@ data/region.geojson                 contours des régions
 data/tdb_rpe_consultations.csv      fréquentation TDB RPE, cumul mensuel par CLPE
 data/tdb_rpe_sessions_semaine.csv   fréquentation TDB RPE, sessions hebdomadaires par CLPE
 data/population_clpe.csv            population par CLPE (pour le ratio "pour 1 000 habitants")
+data/population_communes.csv        population par commune (code_commune;departement;clpe;population) : rattachement des CLPE à cheval
 
 data/fiches_action.csv              fiches action par trimestre : nombre, bénéficiaires, 4 critères qualité
 data/fiches_action_mensuel.csv      nombre de fiches action saisies, par mois (pour la courbe annuelle superposée)
@@ -74,6 +75,12 @@ Ces fichiers sont indépendants du fichier Qualtrics : mettre à jour l'un ne n�
 ## Rattachement carte (CLPE)
 
 Les noms de CLPE (réponses Qualtrics, jeux de données des autres briques) sont rapprochés automatiquement des libellés du geojson CLPE (normalisation, expansion des codes département, recouvrement de mots, repli sur préfixe pour les identifiants type `CLPE67001`). Un CLPE non rattaché est listé sous la carte : ajouter alors une entrée dans `CONFIG.aliases` en tête du script de `index.html`. Les niveaux région et département sont rattachés directement (nom de région, code INSEE de département), sans ambiguïté.
+
+## CLPE à cheval sur plusieurs départements
+
+Un CLPE n'apparaît qu'une fois dans la hiérarchie Région > Département > CLPE : il est rattaché au département dont l'ensemble de ses communes compte le plus d'habitants (`data/population_communes.csv`), et sa région est celle de ce département. Toutes les données (réponses, fiches action, fréquentation, population) sont ramenées à ce rattachement. En performance relative, si la source contient une ligne par partie régionale d'un même CLPE, seule la ligne de la région de rattachement est conservée. Sans fichier de population, le département qui compte le plus de communes dans le référentiel est retenu.
+
+Le fichier est construit par croisement spatial (centre de chaque commune dans les contours `clpe.geojson`), avec les populations légales INSEE. À régénérer si le découpage des CLPE change.
 
 ## Détail des questions et modalités (brique Maturité)
 

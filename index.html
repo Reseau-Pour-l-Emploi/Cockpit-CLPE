@@ -1212,6 +1212,9 @@ var CONFIG = {
   textesPointsFortsFile: 'data/textes_points_forts.csv',
   perfFile: 'data/clpe_tae_tpe.csv',
   popFile: 'data/population_clpe.csv',
+  /* Facultatif : population par commune (code_commune;departement;clpe;population), pour rattacher
+     un CLPE à cheval sur plusieurs départements à celui qui concentre le plus d'habitants. */
+  populationCommunesFile: 'data/population_communes.csv',
   aliases: {
     'mortagne perche': "Vimoutiers - L'Aigle - Mortagne",
     'dieppe littoral': 'Dieppe',
@@ -1711,7 +1714,7 @@ function matchDeptFeature(dname) {
 }
 
 var rhoneSplitNote = '';
-var REFERENTIAL = [];
+var REFERENTIAL = [], REF_COMMUNE_COUNT = {}, CLPE_HOME = {}, clpeHomeNote = '';
 /* Référentiel complet des CLPE (indépendant des réponses trimestrielles) : sert à calculer
    le taux de CLPE ayant répondu (nombre de CLPE répondants / nombre de CLPE existants). */
 /* Parseur CSV minimal (point-virgule, sans guillemets/valeurs multi-lignes) pour les
@@ -1738,9 +1741,11 @@ function buildReferentialList(csvText) {
   (csvText || '').split(/\r\n|\n/).forEach(function (line) {
     if (!line) return;
     var parts = line.split(';');
-    if (parts.length !== 3) return;
+    if (parts.length < 3 || /^r[ée]gion$/i.test(parts[0].trim())) return;
     var region = normApostrophes(parts[0].trim()), dept = normApostrophes(parts[1].trim()), clpe = normApostrophes(parts[2].trim());
+    if (!region || !dept || !clpe) return;
     var key = region + '|' + dept + '|' + clpe;
+    REF_COMMUNE_COUNT[key] = (REF_COMMUNE_COUNT[key] || 0) + 1;
     if (!seen[key]) { seen[key] = 1; out.push({ region: region, departement: dept, clpe: clpe }); }
   });
   REFERENTIAL = out;
@@ -1751,6 +1756,79 @@ function buildReferentialList(csvText) {
    dans les autres jeux de données chargés (maturité, fiches action, population), qui
    couvrent ensemble la quasi-totalité des territoires même si certains ne remontent pas
    dans le fichier référentiel lui-même. */
+/* Rattachement unique d'un CLPE à cheval sur plusieurs départements (et/ou régions) : le CLPE
+   est rattaché au département dont l'ensemble des communes compte le plus d'habitants
+   (fichier facultatif data/population_communes.csv : code_commune;departement;clpe;population).
+   À défaut de population pour ce CLPE, repli sur le département qui compte le plus de communes
+   dans le référentiel. La région est celle du département retenu. Toutes les sources
+   (référentiel, réponses, fiches, fréquentation, population, performance) sont ensuite
+   ramenées à ce rattachement : un CLPE n'apparaît qu'une fois dans la hiérarchie
+   Région > Département > CLPE et ses données ne sont pas éclatées entre plusieurs territoires. */
+function buildClpeHome(popCommunesText) {
+  CLPE_HOME = {}; clpeHomeNote = '';
+  var deptRegion = {};
+  REFERENTIAL.forEach(function (r) { deptRegion[norm(r.departement)] = { region: r.region, departement: r.departement }; });
+  var byClpe = {};
+  REFERENTIAL.forEach(function (r) {
+    var k = norm(r.clpe);
+    if (!byClpe[k]) byClpe[k] = { clpe: r.clpe, depts: {} };
+    var dk = norm(r.departement);
+    if (!byClpe[k].depts[dk]) byClpe[k].depts[dk] = { pop: 0, communes: 0 };
+    byClpe[k].depts[dk].communes += REF_COMMUNE_COUNT[r.region + '|' + r.departement + '|' + r.clpe] || 1;
+  });
+  var hasPop = {};
+  parseSimpleCSV(popCommunesText || '').forEach(function (r) {
+    var clpe = normApostrophes(r.clpe || r.libelle_clpe || ''), dept = normApostrophes(r.departement || '');
+    var pop = +String(r.population || '').replace(/\s/g, '').replace(',', '.');
+    if (!clpe || !dept || !(pop >= 0)) return;
+    var k = norm(clpe), dk = norm(dept);
+    if (!byClpe[k]) byClpe[k] = { clpe: clpe, depts: {} };
+    if (!byClpe[k].depts[dk]) byClpe[k].depts[dk] = { pop: 0, communes: 0 };
+    byClpe[k].depts[dk].pop += pop; hasPop[k] = 1;
+  });
+  var multi = [];
+  Object.keys(byClpe).forEach(function (k) {
+    var e = byClpe[k], dks = Object.keys(e.depts).filter(function (dk) { return deptRegion[dk]; });
+    if (!dks.length) return;
+    dks.sort(function (a, b) {
+      var A = e.depts[a], B = e.depts[b];
+      return hasPop[k] ? (B.pop - A.pop) || (B.communes - A.communes) : (B.communes - A.communes);
+    });
+    CLPE_HOME[k] = { region: deptRegion[dks[0]].region, departement: deptRegion[dks[0]].departement, clpe: e.clpe };
+    if (dks.length > 1) multi.push(e.clpe + ' → ' + deptRegion[dks[0]].departement + (hasPop[k] ? '' : ' (nb de communes)'));
+  });
+  var seen = {}, out = [];
+  REFERENTIAL.forEach(function (r) {
+    var h = CLPE_HOME[norm(r.clpe)] || r;
+    var key = h.region + '|' + h.departement + '|' + r.clpe;
+    if (!seen[key]) { seen[key] = 1; out.push({ region: h.region, departement: h.departement, clpe: r.clpe }); }
+  });
+  REFERENTIAL = out;
+  if (multi.length) clpeHomeNote = 'CLPE à cheval sur plusieurs départements, rattachés au département le plus peuplé : ' + multi.join(', ') + '.';
+}
+function applyClpeHome(rows) {
+  (rows || []).forEach(function (r) {
+    if (!r || !r.clpe) return;
+    var h = CLPE_HOME[norm(r.clpe)];
+    if (h) { r.region = h.region; r.departement = h.departement; }
+  });
+}
+/* Performance relative : la source peut contenir une ligne par partie régionale d'un même CLPE
+   (ex. Redon : Bretagne et Pays de la Loire). On ne garde qu'une ligne par CLPE : celle de la
+   région du département de rattachement. */
+function dedupePerfData() {
+  var deptRegion = {};
+  REFERENTIAL.forEach(function (r) { deptRegion[norm(r.departement)] = r.region; });
+  var groups = {}, order = [];
+  PERF_DATA.forEach(function (r) { if (!groups[r.id]) { groups[r.id] = []; order.push(r.id); } groups[r.id].push(r); });
+  PERF_DATA = order.map(function (id) {
+    var g = groups[id];
+    if (g.length === 1) return g[0];
+    var h = CLPE_HOME[norm(normApostrophes(g[0].clpe))];
+    var targetRegion = h ? h.region : deptRegion[norm(g[0].departement)];
+    return g.filter(function (r) { return targetRegion && norm(normRegionName(r.region)) === norm(targetRegion); })[0] || g[0];
+  });
+}
 function completeReferentialFromLoadedData() {
   var seen = {}; REFERENTIAL.forEach(function (r) { seen[normApostrophes(r.region) + '|' + normApostrophes(r.departement) + '|' + normApostrophes(r.clpe)] = 1; });
   var extra = [];
@@ -1789,8 +1867,9 @@ function splitRhoneDepartment(csvText) {
   csvText.split(/\r\n|\n/).forEach(function (line) {
     if (!line) return;
     var parts = line.split(';');
-    if (parts.length !== 3) return;
-    byClpe[parts[2].trim()] = parts[1].trim();
+    if (parts.length < 3) return;
+    var home = CLPE_HOME[norm(normApostrophes(parts[2].trim()))];
+    byClpe[parts[2].trim()] = home ? home.departement : parts[1].trim();
   });
   var clpeByName = {};
   geoData.clpe.features.forEach(function (f) { clpeByName[f.properties[CONFIG.clpeNameProp]] = f; });
@@ -4823,7 +4902,8 @@ function init() {
     fetchFresh(CONFIG.perfFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.popFile).then(function (r) { return r.ok ? r.text() : ''; }),
     fetchFresh(CONFIG.recommandationsFile).then(function (r) { return r.ok ? r.text() : ''; }),
-    fetchFresh(CONFIG.textesPointsFortsFile).then(function (r) { return r.ok ? r.text() : ''; })
+    fetchFresh(CONFIG.textesPointsFortsFile).then(function (r) { return r.ok ? r.text() : ''; }),
+    fetchFresh(CONFIG.populationCommunesFile).then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; })
   ])
     .then(function (res) {
       var parsed = parseWorkbook(res[0], parseSimpleCSV(res[5]));
@@ -4832,6 +4912,8 @@ function init() {
 
       geoData.clpe = res[1]; geoData.region = res[2]; geoData.departement = res[3];
       buildReferentialList(res[4] || '');
+      buildClpeHome(res[12] || '');
+      applyClpeHome(ALL);
       splitRhoneDepartment(res[4] || '');
       buildStaticGeoIndex();
       buildGeoMatchClpe();
@@ -4898,6 +4980,7 @@ function init() {
         for (var i = 1; i <= 10; i++) row['peer' + i] = r['TERRITOIRE_PROCHE' + i];
         return row;
       });
+      dedupePerfData();
       buildPerfIndex();
       /* Code CLPE des fiches action (liens "Consulter les fiches action" et suggestions de
          territoire inspirant) : si le fichier fiches_action.csv n'a pas de code_clpe (fichier
@@ -4938,9 +5021,11 @@ function init() {
         });
       });
 
+      [SESSIONS_WEEK_DATA, TDB_DATA, FICHES_DATA, FICHES_MENSUEL_DATA, POP_DATA].forEach(applyClpeHome);
       var notes = [];
       if (unmatchedClpe.length) notes.push('CLPE non rattachés au fond de carte (à ajouter dans CONFIG.aliases) : ' + unmatchedClpe.join(', ') + '.');
       if (rhoneSplitNote) notes.push(rhoneSplitNote);
+      if (clpeHomeNote && window.console) console.info(clpeHomeNote);
       document.getElementById('unmatchedNote').textContent = notes.join(' ');
 
       bindEvents();
